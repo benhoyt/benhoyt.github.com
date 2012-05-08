@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+ <title>{{ page.title }}</title>
+ <link rel="openid.server" href="http://www.myopenid.com/server">
+ <link rel="openid.delegate" href="http://benhoyt.myopenid.com">
+ <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+ <meta name='description' content="Ben Hoyt is a software engineer at Oyster.com. He and his wife and two kids live in New York City.">
+ <meta name='keywords' content="Ben Hoyt, Benjamin Hoyt, Ben, Hoyt, software, engineer, Oyster.com, Brush Technology, Ben Hoyt's CV, Ben Hoyt's resume">
+ <meta name='author' content='Ben Hoyt'>
+ <style type='text/css'>
+  body { background: white; color: #603000; font-family: Tahoma, Geneva, sans-serif; font-size: 15px; line-height: 1.6; word-spacing: 0.15em; margin: 0 auto; width: 48em; }
+  #container { padding: 2.5em 0; float: left; }
+  #sidebar { width: 10em; float: left; font-size: 80%; padding-right: 2.8em; }
+  #sidebar img, a.logo, a.logo:hover { border: none; }
+  #sidebar p { margin: 1.7em 0; }
+  #sidebar p.contact { margin: 0.3em 0; }
+  #content { width: 35em; float: right; border-left: 1px solid #603000; padding-left: 2em; }
+  h1, h2, p, ul { margin: 0.8em 0; }
+  p.gap { margin-top: 1.8em; }
+  p.subtitle { margin-top: 0; font-style: italic; }
+  a { text-decoration: none; border-bottom: 1px dotted; }
+  a:hover { border-bottom: 1px solid; }
+  a:link { color: #e87000; }
+  a:visited { color: #c04000; }
+  h1 a { color: #603000 !important; border-bottom: none; }
+  h1, h2 { font-family: Georgia; font-weight: normal; letter-spacing: 0.15em; font-variant: small-caps; }
+  h1 { margin: 0 0 0 -0.07em; font-size: 180%; }
+  h2 { margin: 1.8em 0 -0.2em 0; font-size: 135%; }
+  ul { padding: 0; list-style-type: disc; }
+  li { padding: 0; margin-left: 1.4em; margin-bottom: 0.5em; }
+  blockquote { font-size: 80%; margin: 2em; }
+  #sidebar p.hofstadter { margin-top: 156em; font-size: 87%; width: 11.8em; font-style: italic; font-family: Georgia, serif; }
+  .sc { font-variant: small-caps; }
+ </style>
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="sidebar">
+ {% if page.title %}
+ <img title="You're at the home page" src="/images/unicycling_glory.jpg" alt="Unicycling glory" width="120" height="173">
+ {% else %}
+ <a class="logo" href="/" title="Go to the home page"><img src="/images/unicycling_glory.jpg" alt="Unicycling glory" width="120" height="173"></a>
+ {% endif %}
+ <p>
+  {% if page.title %}<b>Home</b>{% else %}<a href='/' title='Go to the home page'>Home</a>{% endif %}<br>
+  {% if page.title %}<b>CV / Resume</b>{% else %}<a href='/cv' title='Go to my CV / Resume'>CV / Resume</a>{% endif %}<br>
+  {% if page.title %}<b>Writings</b>{% else %}<a href='/writings/' title="Stuff I've written">Writings</a>{% endif %}
+ </p>
+
+ <p><b>Visit our blog:</b><br>
+  <a href="http://aliensintheapple.wordpress.com/">Aliens in the Apple</a>
+ </p>
+
+ <p class='contact' id='contact' style='margin-top: 1.7em;'><b>Contact me:</b><br>
+  {% if page.title %}
+  <a href='http://brush.co.nz/email?d=gmail.com&amp;e=benhoyt' title='Email me' onmouseover='e="benhoyt"+String.fromCharCode(64)+"gmail.com"; this.href="mai"+"lto:"+e; this.firstChild.nodeValue=e;'>benh...@gmail.com</a>
+  {% else %}
+  <a href='mailto:benhoyt@gmail.com' title='Email me' >benhoyt@gmail.com</a>
+  {% endif %}
+ </p>
+ <p class='contact'>+1 347 314 3624</p>
+
+</div>
+
+<div id="content">
+{{ content }}
+</div>
+
+</div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-883290-5";
+if (typeof(urchinTracker) == 'function') urchinTracker();
+</script>
+
+</body>
+</html>
