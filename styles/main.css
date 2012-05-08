@@ -1,0 +1,23 @@
+body { background: white; color: #603000; font-family: Tahoma, Geneva, sans-serif; font-size: 15px; line-height: 1.6; word-spacing: 0.15em; margin: 0 auto; width: 48em; }
+#container { padding: 2.5em 0; float: left; }
+#sidebar { width: 10em; float: left; font-size: 80%; padding-right: 2.8em; }
+#sidebar img, a.logo, a.logo:hover { border: none; }
+#sidebar p { margin: 1.7em 0; }
+#sidebar p.contact { margin: 0.3em 0; }
+#content { width: 35em; float: right; border-left: 1px solid #603000; padding-left: 2em; }
+h1, h2, p, ul { margin: 0.8em 0; }
+p.gap { margin-top: 1.8em; }
+p.subtitle { margin-top: 0; font-style: italic; }
+a { text-decoration: none; border-bottom: 1px dotted; }
+a:hover { border-bottom: 1px solid; }
+a:link { color: #e87000; }
+a:visited { color: #c04000; }
+h1 a { color: #603000 !important; border-bottom: none; }
+h1, h2 { font-family: Georgia; font-weight: normal; letter-spacing: 0.15em; font-variant: small-caps; }
+h1 { margin: 0 0 0 -0.07em; font-size: 180%; }
+h2 { margin: 1.8em 0 -0.2em 0; font-size: 135%; }
+ul { padding: 0; list-style-type: disc; }
+li { padding: 0; margin-left: 1.4em; margin-bottom: 0.5em; }
+blockquote { font-size: 80%; margin: 2em; }
+#sidebar p.hofstadter { margin-top: 156em; font-size: 87%; width: 11.8em; font-style: italic; font-family: Georgia, serif; }
+.sc { font-variant: small-caps; }
