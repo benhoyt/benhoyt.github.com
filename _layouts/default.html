@@ -18,15 +18,15 @@
 <div id="container">
 
 <div id="sidebar">
- {% if page.title %}
+ {% if page.url == '/' %}
  <img title="You're at the home page" src="/images/unicycling_glory.jpg" alt="Unicycling glory" width="120" height="173">
  {% else %}
  <a class="logo" href="/" title="Go to the home page"><img src="/images/unicycling_glory.jpg" alt="Unicycling glory" width="120" height="173"></a>
  {% endif %}
  <p>
-  {% if page.title %}<b>Home</b>{% else %}<a href='/' title='Go to the home page'>Home</a>{% endif %}<br>
-  {% if page.title %}<b>CV / Resume</b>{% else %}<a href='/cv' title='Go to my CV / Resume'>CV / Resume</a>{% endif %}<br>
-  {% if page.title %}<b>Writings</b>{% else %}<a href='/writings/' title="Stuff I've written">Writings</a>{% endif %}
+  {% if page.url == '/' %}<b>Home</b>{% else %}<a href='/' title='Go to the home page'>Home</a>{% endif %}<br>
+  {% if page.url == '/cv' %}<b>CV / Resume</b>{% else %}<a href='/cv' title='Go to my CV / Resume'>CV / Resume</a>{% endif %}<br>
+  {% if page.url == '/writings/' %}<b>Writings</b>{% else %}<a href='/writings/' title="Stuff I've written">Writings</a>{% endif %}
  </p>
 
  <p><b>Visit our blog:</b><br>
