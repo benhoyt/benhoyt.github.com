@@ -1,6 +1,140 @@
 ---
 layout: default
-title: Ben Hoyt's CV / Resume
+title: Ben Hoyt’s CV / Resume
 permalink: /cv/index.html
 ---
-test cv
+<h1><a href="/cv/">{{ page.title }}</a></h1>
+
+<blockquote>
+<p><b>Intro:</b> I currently work for <a href='http://www.oyster.com/'>Oyster.com</a> in New York City,
+so I&rsquo;m not looking for work at the moment, but feel free to get in touch with
+<a href='http://brush.co.nz/'>Brush Technology</a> if you need a software project done.</p>
+<?php if ($_REQUEST['print'] != '1') { ?>
+<p style='word-spacing: 0.13em;'><b>Go to:</b>
+ <a href='#summary'>Summary</a> |
+ <a href='#skills'>Skills</a> |
+ <a href='#experience'>Experience</a> |
+ <a href='#education'>Education</a> |
+ <a href='#aboutme'>About me</a> |
+ <a href='#references'>References</a> |
+ <a href='/cv/ben-hoyt-cv-resume.pdf' title='Click for a PDF version of my CV / resume'>PDF</a>
+</p>
+<?php } ?>
+</blockquote>
+
+<h2 id='summary'>Summary</h2>
+
+<p>I&rsquo;m a software engineer with eight years of experience designing and
+developing web applications and embedded firmware. I&rsquo;m fluent in Python,
+C, C++, HTML+CSS, and English. I learn quickly, care about detail, and love
+computers and mathematics.</p>
+
+<h2 id='skills'>Skills: what I do...</h2>
+
+<ul>
+ <li>Develop <b>web applications</b> that perform well and are easy to use.
+  I&rsquo;ve used various databases, and I&rsquo;m familiar with scaling and
+  caching issues.</li>
+ <li>Create <b>embedded firmware</b> for data loggers, control systems and
+  other electronic devices, using 16-bit and 32-bit microcontrollers. I&rsquo;m
+  familiar with many comms protocols, such as CAN, J1939, SPI, and IP.</li>
+ <li>Write <b>desktop tools</b> and automated test software.</li>
+ <li>Administer <b>web servers</b> and networking tools on Windows or
+  Linux.</li>
+ <li><b>Communicate and document</b> effectively and relate well to people. I
+  also design, write specifications for, and manage projects.
+</ul>
+
+<p>I&rsquo;m fluent in Python, C, C++, HTML+CSS, and <a href="/writings/">English</a>. I&rsquo;ve also
+done a fair bit in C#, JavaScript, SQL, PHP, and various assembly
+languages.</p>
+
+<h2 id='experience'>Experience</h2>
+
+<p>At <a href='http://brush.co.nz/'><b>Brush Technology</b></a> I&rsquo;ve been
+a software engineer and co-director since August 2006. Some of the things
+I&rsquo;ve done are:</p>
+
+<ul>
+ <li>Co-founded and designed the <a href='http://micropledge.com/'>microPledge</a>
+  crowd funding website, and developed about a third of its codebase (in
+  Python and PostgreSQL). microPledge implements secure financial transactions,
+  advanced Ajax-based voting, and it scales to thousands of campaigns and
+  users.</li>
+ <li>Designed and implemented <a href='http://giftyweddings.com/'>Gifty</a>, a
+  website that helps couples make wedding gift registries (again using Python
+  and PostgreSQL). Promoting Gifty gave me experience with internet advertising
+  and e-commerce.</li>
+ <li>Embedded programming in C++, automated testing in Python, and developing
+  GUI tools for <a href='http://www.hamjet.co.nz/'>Hamilton Jet&rsquo;s</a>
+  large-scale jet control systems.</li>
+ <li>Cellular telemetry firmware and GPS interfacing using 8-bit and ARM7
+  micros for
+  <a href='http://www.baycity-technologies.com/'>Baycity Technologies</a>
+  and <a href='http://www.ilr.co.nz/'>ILR</a>.</li>
+<?php if (0) { /* wait for permission */ ?>
+ <li>Developed high-speed IP networking software in C and Python.</li>
+<?php } ?>
+ <li>Co-authored several small <a href='/#projects'>open source projects</a>
+  including a Python-based build tool and a row-object mapper for web.py.
+  Wrote articles for our <a href='http://blog.brush.co.nz/'>programming
+  blog</a>, for example, on <a href="http://blog.brush.co.nz/2009/04/knuth/">Knuth</a>,
+  <a href="http://blog.brush.co.nz/2008/07/protothreads/">protothreads</a>, and
+  <a href="http://blog.brush.co.nz/2008/06/snappy-software/">bloatware</a>.</li>
+ <li>Managed projects and staff, and am heavily involved with the
+  company&rsquo;s business planning and decisions.</li>
+</ul>
+
+<p class='gap'>At <a href='http://www.harvest.com/'><b>Harvest
+Electronics</b></a> I was a software engineer from October 2002 to July 2006,
+and I:</p>
+
+<ul>
+ <li>Designed and developed the <a href="http://www.harvestnz.com/">web and
+  admin interface</a> for their solar-powered weather stations &ndash; the
+  clean UI and weather graphs really made Harvest&rsquo;s product stand out. I
+  wrote software to interface to the GPRS modems and administered associated
+  databases and web servers.</li>
+ <li>Wrote embedded firmware in C and assembler for MSP430 and ARM7 micros,
+  including low-level boot loaders, serial and radio comms, digital audio, and
+  I/O control logic.</li>
+ <li>Developed various network and serial comms tools in C, C++, and Python.
+  Worked heavily with the Win32 API.</li> 
+</ul> 
+
+<p class='gap'>At <a href="http://www.vmsl.co.nz/"><b>VMSL</b></a> (between
+years at university, summers 2000 to 2002) I developed embedded firmware in C and
+HC11 assembler and tested software for their vending machine controllers.</p>
+
+<h2 id='education'>Education</h2>
+
+<p>I have a B.E. in electrical and computer engineering, and graduated from the
+<a href='http://www.canterbury.ac.nz/'>University of Canterbury</a> in 2002
+with first class honors, <a href='http://www.canterbury.ac.nz/courses/glossary.shtml#g' title='Scale: A+ is 9, D is 0'>GPA</a>&nbsp;7.9/9.
+For my final-year project I designed a small stack-based CPU in VHDL.</p>
+
+<h2 id='aboutme'>About me</h2>
+
+<p>My dad taught me how to program by teaching me the Tao of
+<a href='http://en.wikipedia.org/wiki/Forth_(programming_language)'>Forth</a>.
+Two of my first projects were writing a Forth compiler in x86 assembly, and
+then writing a small 32-bit OS in my Forth. I love things small, fast, and
+light&nbsp;&ndash; and that&rsquo;s paid off, especially in my embedded
+work.</p>
+
+<p>Other than that, I edited and designed a
+<a href='http://prismmagazine.co.nz/'>small-scale magazine</a>. I&rsquo;m into
+unicycling, typography, and piano. I aim to keep the commandments, but you may
+find me breaking the conventions.</p>
+
+<h2 id='references'>References</h2>
+
+<ul>
+ <li>Michael Hope, software engineer who led the team at Hamilton Jet. Now
+  director of <a href="http://seabright.co.nz/" title='Click here for contact details'>Seabright
+  Technology</a>.</li>
+ <li>Peter Munn, owner of <a href="http://harvest.com/contact.htm" title='Click here for contact details'>Harvest
+  Electronics</a>.</li>
+ <li>Derek Cressy, mechanical engineer and long-time friend. His mobile number
+  is +64&nbsp;27&nbsp;482&nbsp;2155.</li>
+</ul>
