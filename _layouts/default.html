@@ -25,7 +25,7 @@
  {% endif %}
  <p>
   {% if page.url == '/' %}<b>Home</b>{% else %}<a href='/' title='Go to the home page'>Home</a>{% endif %}<br>
-  {% if page.url == '/cv' %}<b>CV / Resume</b>{% else %}<a href='/cv' title='Go to my CV / Resume'>CV / Resume</a>{% endif %}<br>
+  {% if page.url == '/cv/' %}<b>CV / Resume</b>{% else %}<a href='/cv/' title='Go to my CV / Resume'>CV / Resume</a>{% endif %}<br>
   {% if page.url == '/writings/' %}<b>Writings</b>{% else %}<a href='/writings/' title="Stuff I've written">Writings</a>{% endif %}
  </p>
 
@@ -45,7 +45,6 @@
 </div>
 
 <div id="content">
-<h1><a href="{{ page.url }}">{{ page.title }}</a></h1>
 {{ content }}
 </div>
 
