@@ -21,3 +21,4 @@ li { padding: 0; margin-left: 1.4em; margin-bottom: 0.5em; }
 blockquote { font-size: 80%; margin: 2em; }
 #sidebar p.hofstadter { margin-top: 197em; font-size: 87%; width: 11.8em; font-style: italic; font-family: Georgia, serif; }
 .sc { font-variant: small-caps; }
+.print-only { display: none; }

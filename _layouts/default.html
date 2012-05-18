@@ -23,24 +23,24 @@
  {% else %}
  <a class="logo" href="/" title="Go to the home page"><img src="/images/unicycling_glory.jpg" alt="Unicycling glory" width="120" height="173"></a>
  {% endif %}
- <p>
+ <p class='no-print'>
   {% if page.url == '/' %}<b>Home</b>{% else %}<a href='/' title='Go to the home page'>Home</a>{% endif %}<br>
   {% if page.url == '/cv/index.html' %}<b>CV / Resume</b>{% else %}<a href='/cv/' title='Go to my CV / Resume'>CV / Resume</a>{% endif %}<br>
   {% if page.url == '/writings/index.html' %}<b>Writings</b>{% else %}<a href='/writings/' title="Stuff I've written">Writings</a>{% endif %}
  </p>
 
- <p><b>Visit our blog:</b><br>
+ <p class='no-print'><b>Visit our blog:</b><br>
   <a href="http://aliensintheapple.com/">Aliens in the Apple</a>
  </p>
 
- <p class='contact' id='contact' style='margin-top: 1.7em;'><b>Contact me:</b><br>
-  {% if page.title %}
+ <p class='contact' id='contact' style='margin-top: 1.7em;'><b>Email me:</b><br>
   <a href='http://brush.co.nz/email?d=gmail.com&amp;e=benhoyt' title='Email me' onmouseover='e="benhoyt"+String.fromCharCode(64)+"gmail.com"; this.href="mai"+"lto:"+e; this.firstChild.nodeValue=e;'>benh...@gmail.com</a>
-  {% else %}
-  <a href='mailto:benhoyt@gmail.com' title='Email me' >benhoyt@gmail.com</a>
-  {% endif %}
  </p>
- <p class='contact'>+1 347 314 3624</p>
+
+ <p class='contact print-only' style='margin-top: 1.7em;'><b>Visit my website:</b><br>
+  <a href='http://benhoyt.com/'>benhoyt.com</a>
+ </p>
+
  {{ page.sidebar_extra }}
 </div>
 
