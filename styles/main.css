@@ -1,6 +1,6 @@
 body { background: white; color: #603000; font-family: Tahoma, Geneva, sans-serif; font-size: 17px; line-height: 1.6; word-spacing: 0.15em; margin: 0 auto; width: 48em; }
 #container { padding: 2.5em 0; float: left; }
-#sidebar { width: 10em; float: left; font-size: 80%; padding-right: 2.8em; }
+#sidebar { width: 10em; float: left; font-size: 80%; padding-right: 1.5em; }
 #sidebar img, a.logo, a.logo:hover { border: none; }
 #sidebar p { margin: 1.7em 0; }
 #sidebar p.contact { margin: 0.3em 0; }
