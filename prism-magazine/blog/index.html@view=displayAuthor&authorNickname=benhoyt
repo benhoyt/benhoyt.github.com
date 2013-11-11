@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+ <title>Prism magazine</title>
+ <link rel="stylesheet" href="../main.css" type="text/css">
+ <link rel="icon" href="../favicon.ico" type="image/x-icon">
+ <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body><div id="container">
+<div id="topRightCorner"></div>
+
+<div id="pageBox">
+ <div id="mainLogo">
+  <a href="http://prismmagazine.co.nz/index.php"><img src="../images/mainLogo.jpg" alt="Prism logo"></a>
+ </div>
+
+ <div id="topBar">
+  <div id="links">
+   <a href="http://prismmagazine.co.nz/index.php">home</a>
+   <a href="http://prismmagazine.co.nz/issues.php">back issues</a>
+   <a href="index.html@view=listPosts">blog</a>
+   <a href="http://prismmagazine.co.nz/contact.php">contact us</a>
+  </div>
+  <img src="../images/leapingMan.jpg" alt="">
+ </div>
+
+ <div id="sidebar">
+  <ul>
+   <li style="margin-right: 5px;" class="firstLink"><a href="http://prismmagazine.co.nz/index.php">Home</a></li>
+   <li style="margin-right: 25px;"><a href="index.html@view=listPosts">Blog</a></li>
+   <li style="margin-right: 39px;"><a href="index.html@view=displayBlogInfo">About</a></li>
+   <li style="margin-right: 50px;"><a href="index.html@view=viewSections">Sections</a></li>
+   <li style="margin-right: 59px;"><a href="index.html@view=displayAuthor">Authors</a></li>
+  </ul>
+ </div>
+
+ <div id="content">
+  <div id='minHeightHack'></div>
+<link rel='stylesheet' type='text/css' href='blog.css'><script language='javascript' src='javascript/include.js'></script><h2>The Authors</h2>
+
+
+
+  
+
+  <h3>Bryan Hoyt</h3>
+
+  <p>bryhoyt</p>
+
+  <p>
+   <a href="index.html@view=displayAuthor&amp;authorNickname=benhoyt"></a>
+  </p>
+
+  <p>
+   Webmaster of <i>Prism</i>, primary founder of <a href="http://www.brush.co.nz/">Brush Technology</a>.
+  </p>
+
+  <hr>
+
+  <br>
+
+
+  
+
+  <h3>Ben Hoyt</h3>
+
+  <p>benhoyt</p>
+
+  <p>
+   <a href="http://benhoyt.com/">http://benhoyt.com/</a>
+  </p>
+
+  <p>
+   Editor of <i>Prism</i> and co-founder of <a href="http://www.brush.co.nz/">Brush Technology</a>, Christchurch.
+  </p>
+
+  <hr>
+
+  <br>
+
+
+  <div id="footer">
+   <a href='http://benhoyt.com/' title='Contact editor'>Contact editor</a>
+  </div>
+ </div>
+
+</div>
+
+<div id="shadowBottom"></div>
+
+</div></body>
+</html>

@@ -1,0 +1,144 @@
+/* Just a coupla things that need to be different for the blog */
+#sidebar { height: 325px; }
+#content { min-height: 350px; }
+#minHeightHack { height: 350px; }
+
+
+/* ----------------------------- Element Classes ------------------------------- */
+
+.postDate, .shortDescription {
+  font-family: "Times New Roman", times, serif;
+  margin-left: 20px;
+  text-align: center;
+  font-size: 9.5pt;
+  letter-spacing: 2.5px;
+}
+
+ul.topMenu {
+  list-style-type: none;
+  text-align: center;
+  font-family: "Times New Roman", times, serif;
+}
+ul.topMenu li {
+  display: inline;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-left: 1px solid #65573c;
+}
+ul.topMenu li:first-child {
+  border-left: none;
+}
+ul.topMenu li a {
+  color: #65573c;
+  background: none;
+  text-decoration: none;
+}
+ul.topMenu li a:hover {
+  text-decoration: underline;
+}
+
+ul.postAdmin, ul.commentAdmin, ul.contentAction {
+  font-family: "Times New Roman", times, serif;
+  letter-spacing: 1px;
+  float: right; display: inline;
+  text-align: right;
+  margin: 10px;
+  margin-right: 0;
+  padding: 0px;
+  list-style-type: none;
+  list-style-position: inside;
+}
+ul.postAdmin li, ul.commentAdmin li, ul.contentAction li {
+  padding-bottom: 5px;
+}
+
+ul.commentAdmin {
+  margin-top: 0px;
+}
+
+.comment {
+  margin-bottom: 30px;
+}
+
+
+p.right {
+  text-align: right;
+}
+
+
+.postFooter {
+  font-family: "Times New Roman", times, serif;
+  letter-spacing: 1px;
+  font-size: 9pt;
+  text-align: right;
+  margin-left: 15%;
+  margin-bottom: 35px;
+  width: 83%;
+  _clear: none;
+}
+
+
+.commentFooter {
+  font-family: "Times New Roman", times, serif;
+  letter-spacing: 1px;
+  font-size: 9pt;
+  text-align: right;
+  clear: right;
+}
+
+.imageInput {
+  margin-top: 10px;
+}
+
+/* --------------------------- Elements In a Context --------------------------- */
+
+.postFooter hr {
+  margin-bottom: 0;
+  clear: right;
+}
+.postFooter .item {
+  margin-left: 30px;
+}
+.postFooter a {
+  text-decoration: underline;
+  background: transparent;
+}
+.postFooter a:hover {
+  background: transparent;
+}
+
+.commentFooter .item {
+  margin-left: 30px;
+}
+.commentFooter a {
+  text-decoration: underline;
+  background: transparent;
+}
+.commentFooter a:hover {
+  background: transparent;
+}
+
+.comment p {
+  margin-top: 0px;
+  border-left: 3px solid #908d89;
+  padding-left: 7px;
+}
+
+.pic.right {
+  float: right; display: inline;
+  margin: 10px;
+  margin-right: 0px;
+}
+
+/* ------------------------------- Form Inputs ------------------------------- */
+input[type=text], input[type=password] {
+  border: 1px solid black;
+  background-color: white;
+  padding: 2px;
+  width: 17em;
+}
+
+textarea {
+  width: 440px;
+  width: 420px;
+}

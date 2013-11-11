@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+ <title>Prism magazine</title>
+ <link rel="stylesheet" href="../main.css" type="text/css">
+ <link rel="icon" href="../favicon.ico" type="image/x-icon">
+ <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body><div id="container">
+<div id="topRightCorner"></div>
+
+<div id="pageBox">
+ <div id="mainLogo">
+  <a href="http://prismmagazine.co.nz/index.php"><img src="../images/mainLogo.jpg" alt="Prism logo"></a>
+ </div>
+
+ <div id="topBar">
+  <div id="links">
+   <a href="http://prismmagazine.co.nz/index.php">home</a>
+   <a href="http://prismmagazine.co.nz/issues.php">back issues</a>
+   <a href="index.html@view=listPosts">blog</a>
+   <a href="http://prismmagazine.co.nz/contact.php">contact us</a>
+  </div>
+  <img src="../images/leapingMan.jpg" alt="">
+ </div>
+
+ <div id="sidebar">
+  <ul>
+   <li style="margin-right: 5px;" class="firstLink"><a href="http://prismmagazine.co.nz/index.php">Home</a></li>
+   <li style="margin-right: 25px;"><a href="index.html@view=listPosts">Blog</a></li>
+   <li style="margin-right: 39px;"><a href="index.html@view=displayBlogInfo">About</a></li>
+   <li style="margin-right: 50px;"><a href="index.html@view=viewSections">Sections</a></li>
+   <li style="margin-right: 59px;"><a href="index.html@view=displayAuthor">Authors</a></li>
+  </ul>
+ </div>
+
+ <div id="content">
+  <div id='minHeightHack'></div>
+<link rel='stylesheet' type='text/css' href='blog.css'><script language='javascript' src='javascript/include.js'></script><h3>Buddhism is easy</h3>
+<div class='postDate'>Wednesday, 3 May 2006</div>
+
+
+
+<p class='postBody'>
+ <img class='pic right' src='imageResources/buddha.jpg' width=80>Yesterday we had a new co-worker and his wife over for dinner. He's Kiwi and used to go to the <a href="http://www.agnz.org/">AoG church</a>; she's Thai and Buddhist. We got to talking about the <a href="http://en.wikipedia.org/wiki/Pancasila">five precepts</a> of Buddhism, which are (roughly): do not kill, do not steal, do not lie, do not misuse sex, do not consume alcohol or drugs. Interesting how four of these are almost exactly the same as four of the Ten Commandments.<br />
+<br />
+She also said that Buddhism was "<i>easy</i>, just living at peace with everyone". I replied that <a href="http://www.biblegateway.com/passage/?search=matthew%207:14&version=31">Christianity is hard</a>, because Jesus says that the commandment to not kill also means we can't hate, and the commandment about adultery means we can't lust. What do you think: is Christianity a <i>hard</i> religion? What does that mean?<br />
+<br />
+Another thing I've been wondering recently: if everyone believes stealing and lying are wrong, why is bribery so common in "developing" and non-Western countries? My co-worker and his wife said bribes were common in Thailand (for getting of scot-free for DVD piracy, etc.), and I know my dad's talked about how bad bribes were in <a href="http://en.wikipedia.org/wiki/Myanmar">Myanmar</a>.
+</p>
+
+<div class='postFooter'>
+ <hr>
+ <span class='item'>
+  Posted by <a href="index.html@view=displayAuthor&amp;authorNickname=benhoyt">Ben Hoyt</a> in
+  
+    <a href="index.html@view=searchResults&amp;sectionName=musings">musings</a>
+  
+ </span>
+</div>
+
+
+<a name='comments'></a>
+<div id='comments'>
+ <h3>Comments</h3>
+ <a name="comment8"></a>
+<div class='comment' style='margin-left: 0px'>
+ <h4></h4>
+ 
+ 
+
+ <p>
+  I guess there is a reason they need developing in the first place, ie bringing up to the economic and social standard of the 'developed' world in the first place.  In other words if they are outside the ruling elite then in some cases they are in excess of 100 years behind us.  The most successful ever'Great Leap Forward' that we are still enjoying is that of the Victorian Age which was fundamentally Christian and almost global. In otherwords if the Lord blesses us  by way of Christian society and we are 'more or less' true to him then it is reflected in a countries wealth, human rights justice etc etc.  Buddhists and such follow a small god, one that you can trick and one whom you can buy off with good works and one who doesn't see things done in secret and read our thoughts and intentions. The wholesale abandonment of Christianity in the West would suggest the tide will turn!  
+ </p>
+ 
+ <div class='commentFooter'>
+  <span class='item'>
+   Posted by <a href='mailto:dennisbartlett@gmail.com'>Dennis Bartlett</a>, 392 weeks, 3 days ago.
+  </span>
+ </div>
+</div>
+
+
+</div>
+
+  <div id="footer">
+   <a href='http://benhoyt.com/' title='Contact editor'>Contact editor</a>
+  </div>
+ </div>
+
+</div>
+
+<div id="shadowBottom"></div>
+
+</div></body>
+</html>

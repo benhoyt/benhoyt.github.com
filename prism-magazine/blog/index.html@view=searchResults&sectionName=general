@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+ <title>Prism magazine</title>
+ <link rel="stylesheet" href="../main.css" type="text/css">
+ <link rel="icon" href="../favicon.ico" type="image/x-icon">
+ <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body><div id="container">
+<div id="topRightCorner"></div>
+
+<div id="pageBox">
+ <div id="mainLogo">
+  <a href="http://prismmagazine.co.nz/index.php"><img src="../images/mainLogo.jpg" alt="Prism logo"></a>
+ </div>
+
+ <div id="topBar">
+  <div id="links">
+   <a href="http://prismmagazine.co.nz/index.php">home</a>
+   <a href="http://prismmagazine.co.nz/issues.php">back issues</a>
+   <a href="index.html@view=listPosts">blog</a>
+   <a href="http://prismmagazine.co.nz/contact.php">contact us</a>
+  </div>
+  <img src="../images/leapingMan.jpg" alt="">
+ </div>
+
+ <div id="sidebar">
+  <ul>
+   <li style="margin-right: 5px;" class="firstLink"><a href="http://prismmagazine.co.nz/index.php">Home</a></li>
+   <li style="margin-right: 25px;"><a href="index.html@view=listPosts">Blog</a></li>
+   <li style="margin-right: 39px;"><a href="index.html@view=displayBlogInfo">About</a></li>
+   <li style="margin-right: 50px;"><a href="index.html@view=viewSections">Sections</a></li>
+   <li style="margin-right: 59px;"><a href="index.html@view=displayAuthor">Authors</a></li>
+  </ul>
+ </div>
+
+ <div id="content">
+  <div id='minHeightHack'></div>
+<link rel='stylesheet' type='text/css' href='blog.css'><script language='javascript' src='javascript/include.js'></script><h3>general</h3>
+
+<p>
+ 7 posts
+</p>
+
+
+
+<a href='index.html@view=viewPost&amp;postId=19'>Urban or rural?</a> by
+<a href='index.html@view=displayAuthor&amp;authorNickname=benhoyt'>Ben Hoyt</a>
+
+<p>
+ [image:cometMcNaught.jpg]Issue 5 is out and looking beautiful. I've put a selection of the content online, so check it out. It's ...
+</p>
+
+<hr>
+
+
+
+<a href='index.html@view=viewPost&amp;postId=14'>Slavery</a> by
+<a href='index.html@view=displayAuthor&amp;authorNickname=benhoyt'>Ben Hoyt</a>
+
+<p>
+ [image:osama.jpg]We watched the film Osama yesterday. Apparently it was the first film made in Afghanistan after the end of the  ...
+</p>
+
+<hr>
+
+
+
+<a href='index.html@view=viewPost&amp;postId=13'>Fashion</a> by
+<a href='index.html@view=displayAuthor&amp;authorNickname=benhoyt'>Ben Hoyt</a>
+
+<p>
+ [image:fashion.jpg]We had a meeting of most of the Prismatics the other night, and Issue 4 is shaping up to be really good. The  ...
+</p>
+
+<hr>
+
+
+
+<a href='index.html@view=viewPost&amp;postId=12'>Walking south</a> by
+<a href='index.html@view=displayAuthor&amp;authorNickname=benhoyt'>Ben Hoyt</a>
+
+<p>
+ [image:Walk the Line.jpg]In just over a month I'm heading south (with my beautiful lady, of course). Hopefully we'll be able to  ...
+</p>
+
+<hr>
+
+
+
+<a href='index.html@view=viewPost&amp;postId=11'>Comment on Issue 3!</a> by
+<a href='index.html@view=displayAuthor&amp;authorNickname=benhoyt'>Ben Hoyt</a>
+
+<p>
+ [image:coverTiny.jpg]So Issue 3 is finally out. What do you think? Please have your say – comments and critique welcome.
+
+It's ...
+</p>
+
+<hr>
+
+
+
+<a href='index.html@view=viewPost&amp;postId=3'>Write your letters now!</a> by
+<a href='index.html@view=displayAuthor&amp;authorNickname=benhoyt'>Ben Hoyt</a>
+
+<p>
+ We've only got 1 (yes, that's one) letter to the editor for the upcoming Issue 3, so if you have feedback, whether positive or n ...
+</p>
+
+<hr>
+
+
+
+<a href='index.html@view=viewPost&amp;postId=2'>The dawn of time</a> by
+<a href='index.html@view=displayAuthor&amp;authorNickname=benhoyt'>Ben Hoyt</a>
+
+<p>
+ Well, not quite, but the dawn of the Prism blog, "In between issues". Here we'll try to keep you up to date with happenings, as  ...
+</p>
+
+<hr>
+
+
+
+  <div id="footer">
+   <a href='http://benhoyt.com/' title='Contact editor'>Contact editor</a>
+  </div>
+ </div>
+
+</div>
+
+<div id="shadowBottom"></div>
+
+</div></body>
+</html>

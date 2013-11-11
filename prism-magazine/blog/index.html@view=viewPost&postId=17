@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+ <title>Prism magazine</title>
+ <link rel="stylesheet" href="../main.css" type="text/css">
+ <link rel="icon" href="../favicon.ico" type="image/x-icon">
+ <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body><div id="container">
+<div id="topRightCorner"></div>
+
+<div id="pageBox">
+ <div id="mainLogo">
+  <a href="http://prismmagazine.co.nz/index.php"><img src="../images/mainLogo.jpg" alt="Prism logo"></a>
+ </div>
+
+ <div id="topBar">
+  <div id="links">
+   <a href="http://prismmagazine.co.nz/index.php">home</a>
+   <a href="http://prismmagazine.co.nz/issues.php">back issues</a>
+   <a href="index.html@view=listPosts">blog</a>
+   <a href="http://prismmagazine.co.nz/contact.php">contact us</a>
+  </div>
+  <img src="../images/leapingMan.jpg" alt="">
+ </div>
+
+ <div id="sidebar">
+  <ul>
+   <li style="margin-right: 5px;" class="firstLink"><a href="http://prismmagazine.co.nz/index.php">Home</a></li>
+   <li style="margin-right: 25px;"><a href="index.html@view=listPosts">Blog</a></li>
+   <li style="margin-right: 39px;"><a href="index.html@view=displayBlogInfo">About</a></li>
+   <li style="margin-right: 50px;"><a href="index.html@view=viewSections">Sections</a></li>
+   <li style="margin-right: 59px;"><a href="index.html@view=displayAuthor">Authors</a></li>
+  </ul>
+ </div>
+
+ <div id="content">
+  <div id='minHeightHack'></div>
+<link rel='stylesheet' type='text/css' href='blog.css'><script language='javascript' src='javascript/include.js'></script><h3>Prism 4, Fashion</h3>
+<div class='postDate'>Wednesday, 27 September 2006</div>
+
+
+
+<p class='postBody'>
+ <img class='pic right' src='imageResources/featureWomanSmall.jpg' width=80>It's out, and it should be in your hands soon &ndash; early reports say it's looking really nice. I'm itching to see it myself. Feel free to comment here once you've had a look.<br />
+<br />
+In the meantime, check out the <a href="http://prismmagazine.co.nz/issue4/index.php">table of contents</a> and the handful of articles we've already put online, or have a listen to the <a href="http://prismmagazine.co.nz/issue4/work.php">WORLD interview</a>.
+</p>
+
+<div class='postFooter'>
+ <hr>
+ <span class='item'>
+  Posted by <a href="index.html@view=displayAuthor&amp;authorNickname=benhoyt">Ben Hoyt</a> in
+  
+    <a href="index.html@view=searchResults&amp;sectionName=updates">updates</a>
+  
+ </span>
+</div>
+
+
+<a name='comments'></a>
+<div id='comments'>
+ <h3>Comments</h3>
+ <a name="comment76"></a>
+<div class='comment' style='margin-left: 0px'>
+ <h4></h4>
+ 
+ 
+
+ <p>
+  Hey Guys, <br />
+loved issue 4. was a really interesting take on fashion and it was fantastic to have the interview with the creators of the WORLD fashion label.<br />
+Keep up the good work.<br />
+Alexia
+ </p>
+ 
+ <div class='commentFooter'>
+  <span class='item'>
+   Posted by <a href='mailto:legendz@actrix.co.nz'>Alexia</a>, 367 weeks, 6 days ago.
+  </span>
+ </div>
+</div>
+<a name="comment77"></a>
+<div class='comment' style='margin-left: 0px'>
+ <h4></h4>
+ 
+ 
+
+ <p>
+  Cheers, Alexia, feedback appreciated!
+ </p>
+ 
+ <div class='commentFooter'>
+  <span class='item'>
+   Posted by <a href='http://benhoyt.com/'>Ben Hoyt</a>, 367 weeks, 5 days ago.
+  </span>
+ </div>
+</div>
+
+
+</div>
+
+  <div id="footer">
+   <a href='http://benhoyt.com/' title='Contact editor'>Contact editor</a>
+  </div>
+ </div>
+
+</div>
+
+<div id="shadowBottom"></div>
+
+</div></body>
+</html>
