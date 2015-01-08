@@ -42,3 +42,15 @@ td {
     color: white;
     font-weight: bold;
 }
+
+#buttons {
+    margin-top: 2em;
+    text-align: center;
+}
+
+#buttons button {
+    font-size: 200px;
+    font-weight: bold;
+    width: 200px;
+    height: 200px;
+}

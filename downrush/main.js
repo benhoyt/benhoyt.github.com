@@ -4,7 +4,7 @@
 
 TODO:
 - vertical checking: checkColumn()
-- game controls: play game, game over, restart
+- game controls: play game, game over, restart, left/right buttons for mouse/mobile
 - better display: title, score, better colours
 - optional: down arrow or spacebar makes letter fall all the way down
 - optional: show next letter coming up
@@ -208,6 +208,9 @@ $(document).ready(function() {
         }
         e.preventDefault();
     });
+
+    $('#left').click(moveLeft);
+    $('#right').click(moveRight);
 
     function update() {
         var gameOver = false;
