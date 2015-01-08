@@ -1,5 +1,18 @@
 /* Downrush JavaScript */
 
+/*
+
+TODO:
+- vertical checking: checkColumn()
+- game controls: play game, game over, restart
+- better display: title, score, better colours
+- optional: down arrow or spacebar makes letter fall all the way down
+- optional: show next letter coming up
+- optional: scrabble letter scoring (and show letter value on letter)
+- optional: bombs
+
+*/
+
 var PIECE_WIDTH = 50;
 var PIECE_HEIGHT = 50;
 var BOARD_WIDTH = 9;
@@ -10,11 +23,11 @@ var WORDS = null;
 
 // Scrabble letter distribution
 var LETTERS = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
-var TODOs = "WEARTHATAAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
+var TODOs = "TONRAEFAAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
 var TODOi = 0;
 
 var currentPiece = null;
-var board = [];
+var board = [];  // null when empty, uppercase letter when placed, lowercase letter when used in a word
 
 $(document).ready(function() {
     function initWords() {
@@ -115,14 +128,14 @@ $(document).ready(function() {
         var i;
 
         for (i = 0; i < word.length; i++) {
-            $('#' + makeId(x, y)).addClass('word-piece');
+            board[y][x] = board[y][x].toLowerCase();
+            $('#' + makeId(x, y)).addClass('used');
             x += xdir;
             y += ydir;
         }
     }
 
     function checkRow(y) {
-        var x;
         var i;
         var words;
         var start;
@@ -131,13 +144,11 @@ $(document).ready(function() {
         var hasUnused;
 
         words = [];
-        for (x = 0; x < BOARD_WIDTH - 1; x++) {
-            for (start = x; start < BOARD_WIDTH; start++) {
-                if (board[y][start]) {
-                    break;
-                }
+        for (start = 0; start < BOARD_WIDTH - 1; start++) {
+            if (!board[y][start]) {
+                continue;
             }
-            for (end = start; end < BOARD_WIDTH; end++) {
+            for (end = start + 1; end < BOARD_WIDTH; end++) {
                 if (!board[y][end]) {
                     break;
                 }
@@ -146,13 +157,18 @@ $(document).ready(function() {
             letters = '';
             hasUnused = false;
             for (i = start; i < end; i++) {
+                if (board[y][i] == board[y][i].toUpperCase()) {
+                    hasUnused = true;
+                }
                 letters += board[y][i].toLowerCase();
-                if (letters in WORDS) {
-                    words.push({
+                if (hasUnused && letters in WORDS) {
+                    var word = {
                         score: calculateScore(letters),
                         start: start,
                         word: letters
-                    });
+                    };
+                    console.log(word);  // TODO
+                    words.push(word);
                 }
             }
         }
