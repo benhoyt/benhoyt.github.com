@@ -209,8 +209,8 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $('#left').click(moveLeft);
-    $('#right').click(moveRight);
+    $('#left').on('touchstart click', moveLeft);
+    $('#right').on('touchstart click', moveRight);
 
     function update() {
         var gameOver = false;
