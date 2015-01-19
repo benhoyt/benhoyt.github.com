@@ -20,8 +20,6 @@ var WORDS = null;
 
 // Scrabble letter distribution
 var LETTERS = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
-var TODOs = "TONRAEFAAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
-var TODOi = 0;
 var SCORES = {
     'E': 1, 'A': 1, 'I': 1, 'O': 1, 'N': 1, 'R': 1, 'T': 1, 'L': 1, 'S': 1, 'U': 1,
     'D': 2, 'G': 2,
@@ -76,7 +74,6 @@ $(document).ready(function() {
             return false;
         }
         var letter = LETTERS.charAt(Math.floor(Math.random() * LETTERS.length));
-//        var letter = TODOs[TODOi]; TODOi++;
         currentPiece = $('<div class="piece">' + letter + '</div>');
         currentPiece.css('left', (x * PIECE_WIDTH).toString() + 'px');
         currentPiece.show();
@@ -254,15 +251,8 @@ $(document).ready(function() {
             case 37:
                 moveLeft();
                 break;
-            case 38:
-                // up
-                break;
             case 39:
                 moveRight();
-                break;
-            case 40:
-                // down
-                update();
                 break;
             default:
                 return;
