@@ -7,10 +7,31 @@
     <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
     <script type="text/javascript" src="wordlist.js"></script>
     <script type="text/javascript" src="main.js"></script>
-    <meta name="viewport" content="width=500">
+    <meta name="viewport" content="width=460">
 </head>
 <body>
 <div id="content">
+
+<div id="intro">
+    <h1>DOWNRUSH</h1>
+
+    <p>Downrush is a cross between Tetris and Scrabble. Use the left
+    and right arrow keys (or the buttons below) to play.</p>
+
+    <p>Make words either across or down. The letters are worth the
+    same points as in Scrabble, for example, E is 1, B is 3, and Z is 10.</p>
+
+    <p>This little game was made by <a href="http://benhoyt.com/" target="_blank">Ben Hoyt</a>
+    for his daughter's eighth birthday.</p>
+
+    <button id="start">Press here to play</button>
+</div>
+
+<div id="game-over" style="display: none;">
+    <h1>GAME OVER</h1>
+
+    <button id="play-again">Press here to play again</button>
+</div>
 
 <div class="piece" style="display: none"></div>
 
@@ -131,7 +152,7 @@
 
 <p id="score-text">Score: <span id="score">0</span></p>
 
-<p id="buttons"><button id="left">&lt;</button> <button id="right">&gt;</button></p>
+<p id="buttons"><button id="left">&#9664;</button> <button id="right">&#9654;</button></p>
 
 </div>
 </body>

@@ -3,12 +3,41 @@
 body {
     background-color: #222222;
     font-family: Helvetica, Arial, sans-serif;
+    line-height: 115%;
 }
 
 #content {
-    width: 460px;
+    width: 452px;
     margin: 0 auto;
     position: relative;
+    z-index: 1;
+}
+
+#intro, #game-over {
+    position: absolute;
+    margin: 1.5em;
+    padding: 1.5em 1em;
+    width: 372px;
+    top: 70px;
+    z-index: 2;
+    background-color: yellow;
+    text-align: center;
+}
+
+#intro h1, #game-over h1 {
+    font-size: 35px;
+    text-align: center;
+    margin-bottom: 0.7em;
+}
+
+#intro p, #game-over p {
+    margin: 1em 0;
+    text-align: left;
+}
+
+#intro button, #game-over button {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 td {
@@ -37,20 +66,23 @@ td {
 
 #score-text {
     font-size: 30px;
-    margin-top: 1em;
-    text-align: center;
+    margin-top: 0.5em;
     color: white;
     font-weight: bold;
 }
 
 #buttons {
-    margin-top: 2em;
+    margin-top: 1.5em;
     text-align: center;
 }
 
 #buttons button {
-    font-size: 200px;
+    font-size: 60px;
     font-weight: bold;
-    width: 200px;
-    height: 200px;
+    width: 110px;
+    height: 110px;
+}
+
+#buttons button:first-child {
+    margin-right: 20px;
 }

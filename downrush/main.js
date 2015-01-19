@@ -3,12 +3,9 @@
 /*
 
 TODO:
-- vertical checking: checkColumn()
-- game controls: play game, game over, restart, left/right buttons for mouse/mobile
-- better display: title, score, better colours
 - optional: down arrow or spacebar makes letter fall all the way down
 - optional: show next letter coming up
-- optional: scrabble letter scoring (and show letter value on letter)
+- optional: show letter value on letter
 - optional: bombs
 
 */
@@ -25,9 +22,18 @@ var WORDS = null;
 var LETTERS = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
 var TODOs = "TONRAEFAAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
 var TODOi = 0;
+var SCORES = {
+    'E': 1, 'A': 1, 'I': 1, 'O': 1, 'N': 1, 'R': 1, 'T': 1, 'L': 1, 'S': 1, 'U': 1,
+    'D': 2, 'G': 2,
+    'B': 3, 'C': 3, 'M': 3, 'P': 3,
+    'F': 4, 'H': 4, 'V': 4, 'W': 4, 'Y': 4,
+    'K': 5,
+    'J': 8, 'X': 8,
+    'Q': 10, 'Z': 10
+};
 
-var currentPiece = null;
-var board = [];  // null when empty, uppercase letter when placed, lowercase letter when used in a word
+var currentPiece;
+var board;  // null when empty, uppercase letter when placed, lowercase letter when used in a word
 
 $(document).ready(function() {
     function initWords() {
@@ -38,10 +44,13 @@ $(document).ready(function() {
     }
 
     function initBoard() {
+        currentPiece = null;
+        board = [];
         for (var y = 0; y < BOARD_HEIGHT; y++) {
             var row = [];
             for (var x = 0; x < BOARD_WIDTH; x++) {
                 row.push(null);
+                $('#' + makeId(x, y)).remove();
             }
             board.push(row);
         }
@@ -51,6 +60,10 @@ $(document).ready(function() {
         var scoreSpan = $('#score');
         var score = parseInt(scoreSpan.text(), 10);
         scoreSpan.text((score + n).toString());
+    }
+
+    function resetScore() {
+        $('#score').text('0');
     }
 
     function makeId(x, y) {
@@ -111,7 +124,11 @@ $(document).ready(function() {
     }
 
     function calculateScore(word) {
-        return word.length;
+        var score = 0;
+        for (var i = 0; i < word.length; i++) {
+            score += SCORES[word[i].toUpperCase()];
+        }
+        return score;
     }
 
     function compareWords(a, b) {
@@ -167,7 +184,6 @@ $(document).ready(function() {
                         start: start,
                         word: letters
                     };
-                    console.log(word);  // TODO
                     words.push(word);
                 }
             }
@@ -181,11 +197,56 @@ $(document).ready(function() {
         return true;
     }
 
+    function checkColumn(x) {
+        var i;
+        var words;
+        var start;
+        var end;
+        var letters;
+        var hasUnused;
+
+        words = [];
+        for (start = 0; start < BOARD_HEIGHT - 1; start++) {
+            if (!board[start][x]) {
+                continue;
+            }
+            for (end = start + 1; end < BOARD_HEIGHT; end++) {
+                if (!board[end][x]) {
+                    break;
+                }
+            }
+
+            letters = '';
+            hasUnused = false;
+            for (i = start; i < end; i++) {
+                if (board[i][x] == board[i][x].toUpperCase()) {
+                    hasUnused = true;
+                }
+                letters += board[i][x].toLowerCase();
+                if (hasUnused && letters in WORDS) {
+                    var word = {
+                        score: calculateScore(letters),
+                        start: start,
+                        word: letters
+                    };
+                    words.push(word);
+                }
+            }
+        }
+        if (words.length == 0) {
+            return false;
+        }
+        words.sort(compareWords);
+        colorWord(x, words[0].start, 0, 1, words[0].word);
+        addToScore(words[0].score);
+        return true;
+    }
+
     function placePiece(x, y) {
         currentPiece.attr('id', makeId(x, y));
         board[y][x] = getLetter();
-        addToScore(1);
         checkRow(y);
+        checkColumn(x);
     }
 
     $(document).keydown(function(e) {
@@ -209,8 +270,8 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $('#left').on('touchstart click', moveLeft);
-    $('#right').on('touchstart click', moveRight);
+    $('#left').on('click', moveLeft);
+    $('#right').on('click', moveRight);
 
     function update() {
         var gameOver = false;
@@ -232,14 +293,28 @@ $(document).ready(function() {
         }
 
         if (gameOver) {
-            alert('Game over!');
+            $('#game-over').show();
             return;
         }
         window.setTimeout(update, UPDATE_DELAY);
     }
 
+    function play() {
+        resetScore();
+        initBoard();
+        createNewPiece();
+        update();
+    }
+
+    $('#start').click(function() {
+        $('#intro').remove();
+        play();
+    });
+
+    $('#play-again').click(function() {
+        $('#game-over').remove();
+        play();
+    });
+
     initWords();
-    initBoard();
-    createNewPiece();
-    update();
 });
