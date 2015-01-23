@@ -17,7 +17,7 @@ var BOARD_HEIGHT = 10;
 var UPDATE_DELAY = 10;
 var DOWN_STEP = 2;
 var MIN_WORD_LENGTH = 3;
-var BUTTON_DELAY = 250;
+var BUTTON_DELAY = 400;
 var WORDS = null;
 
 // Scrabble letter distribution
