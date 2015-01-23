@@ -65,24 +65,32 @@ td {
 }
 
 #score-text {
-    font-size: 30px;
+    font-size: 40px;
     margin-top: 0.5em;
     color: white;
     font-weight: bold;
 }
 
 #buttons {
-    margin-top: 1.5em;
+    margin-top: -20px;
     text-align: center;
+    float: right;
 }
 
 #buttons button {
-    font-size: 60px;
+    font-size: 55px;
     font-weight: bold;
-    width: 110px;
-    height: 110px;
+    width: 80px;
+    height: 80px;
+    border: 0;
+    border-radius: 10px;
+    line-height: 0;
+}
+
+#buttons button:focus {
+    outline: 0;
 }
 
 #buttons button:first-child {
-    margin-right: 20px;
+    margin-right: 15px;
 }
