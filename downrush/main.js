@@ -3,10 +3,10 @@
 /*
 
 TODO:
-- optional: down arrow or spacebar makes letter fall all the way down
-- optional: show next letter coming up
-- optional: show letter value on letter
-- optional: bombs
+- down arrow or spacebar makes letter fall all the way down
+- show next letter coming up
+- show letter value on letter
+- bombs to explode a bunch of letters
 
 */
 
@@ -17,6 +17,7 @@ var BOARD_HEIGHT = 10;
 var UPDATE_DELAY = 10;
 var DOWN_STEP = 2;
 var MIN_WORD_LENGTH = 3;
+var BUTTON_DELAY = 100;
 var WORDS = null;
 
 // Scrabble letter distribution
@@ -33,6 +34,8 @@ var SCORES = {
 
 var currentPiece;
 var board;  // null when empty, uppercase letter when placed, lowercase letter when used in a word
+var leftPressed = false;
+var rightPressed = false;
 
 $(document).ready(function() {
     function initWords() {
@@ -261,8 +264,31 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $('#left').on('click', moveLeft);
-    $('#right').on('click', moveRight);
+    $('#left').on('touchstart click', function() {
+        if (leftPressed) {
+            // Don't do anything if left button just pressed
+            return;
+        }
+        leftPressed = true;
+        window.setTimeout(function() {
+            leftPressed = false;
+        }, BUTTON_DELAY);
+
+        moveLeft();
+    });
+
+    $('#right').on('touchstart click', function() {
+        if (rightPressed) {
+            // Don't do anything if right button just pressed
+            return;
+        }
+        rightPressed = true;
+        window.setTimeout(function() {
+            rightPressed = false;
+        }, BUTTON_DELAY);
+
+        moveRight();
+    });
 
     function update() {
         var gameOver = false;
