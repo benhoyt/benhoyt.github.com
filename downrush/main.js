@@ -264,7 +264,7 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $('#left').on('touchstart click', function() {
+    $('#left').on('touchstart', function() {
         if (leftPressed) {
             // Don't do anything if left button just pressed
             return;
@@ -277,7 +277,7 @@ $(document).ready(function() {
         moveLeft();
     });
 
-    $('#right').on('touchstart click', function() {
+    $('#right').on('touchstart', function() {
         if (rightPressed) {
             // Don't do anything if right button just pressed
             return;
