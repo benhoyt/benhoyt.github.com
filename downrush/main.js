@@ -17,7 +17,7 @@ var BOARD_HEIGHT = 10;
 var UPDATE_DELAY = 10;
 var DOWN_STEP = 2;
 var MIN_WORD_LENGTH = 3;
-var BUTTON_DELAY = 400;
+var BUTTON_DELAY = 500;
 var WORDS = null;
 
 // Scrabble letter distribution
@@ -264,7 +264,7 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $('#left').on('touchstart', function() {
+    $('#left').on('touchstart click', function() {
         if (leftPressed) {
             // Don't do anything if left button just pressed
             return;
@@ -277,7 +277,7 @@ $(document).ready(function() {
         moveLeft();
     });
 
-    $('#right').on('touchstart', function() {
+    $('#right').on('touchstart click', function() {
         if (rightPressed) {
             // Don't do anything if right button just pressed
             return;
