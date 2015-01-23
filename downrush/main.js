@@ -16,6 +16,7 @@ var BOARD_WIDTH = 9;
 var BOARD_HEIGHT = 10;
 var UPDATE_DELAY = 10;
 var DOWN_STEP = 2;
+var MIN_WORD_LENGTH = 3;
 var WORDS = null;
 
 // Scrabble letter distribution
@@ -175,7 +176,7 @@ $(document).ready(function() {
                     hasUnused = true;
                 }
                 letters += board[y][i].toLowerCase();
-                if (hasUnused && letters in WORDS) {
+                if (hasUnused && letters.length >= MIN_WORD_LENGTH && letters in WORDS) {
                     var word = {
                         score: calculateScore(letters),
                         start: start,
@@ -220,7 +221,7 @@ $(document).ready(function() {
                     hasUnused = true;
                 }
                 letters += board[i][x].toLowerCase();
-                if (hasUnused && letters in WORDS) {
+                if (hasUnused && letters.length >= MIN_WORD_LENGTH && letters in WORDS) {
                     var word = {
                         score: calculateScore(letters),
                         start: start,
