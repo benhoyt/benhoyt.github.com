@@ -14,7 +14,6 @@ var PIECE_WIDTH = 50;
 var PIECE_HEIGHT = 50;
 var BOARD_WIDTH = 9;
 var BOARD_HEIGHT = 10;
-var UPDATE_DELAY = 10;
 var DOWN_STEP = 2;
 var MIN_WORD_LENGTH = 3;
 var BUTTON_DELAY = 150;
@@ -290,7 +289,7 @@ $(document).ready(function() {
         moveRight();
     });
 
-    function update() {
+    function update(timestamp) {
         var gameOver = false;
 
         moveDown();
@@ -313,14 +312,14 @@ $(document).ready(function() {
             $('#game-over').show();
             return;
         }
-        window.setTimeout(update, UPDATE_DELAY);
+        window.requestAnimationFrame(update);
     }
 
     function play() {
         resetScore();
         initBoard();
         createNewPiece();
-        update();
+        window.requestAnimationFrame(update);
     }
 
     $('#start').click(function() {
