@@ -1,1 +1,12 @@
-safe: true
+title: Ben Hoyt
+description: "Ben Hoyt's personal website"
+url: http://benhoyt.com/
+
+# Defaults set by GitHub, only need for local serving
+# https://help.github.com/articles/configuring-jekyll/
+kramdown:
+  input: GFM
+  hard_wrap: false
+gems:
+  - jekyll-coffeescript
+  - jekyll-paginate
