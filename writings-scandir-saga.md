@@ -7,7 +7,6 @@ permalink: /writings/scandir-saga/index.html
 <p class="subtitle">Subtitle</p>
 
 
-
 Scandir Saga: contributing a feature to Python
 ==============================================
 
@@ -29,7 +28,7 @@ Once upon a time in 2012 I was trying to figure out why walking directory trees 
 
 The reason is that Python's os.walk() function uses os.listdir(), which calls operating system functions to get the names of the files in a directory, and then separately makes further OS calls via os.stat() to determine whether each entry is a file or directory. And if you want to get file sizes as well, you're not done ... you have to make another OS call via os.path.getsize() or os.stat() to get the sizes of the files. That's a lot of operating system API thrashing, and calling the OS is pretty slow.
 
-As it turns out, both Windows and Linux/Mac return the file type information in the initial OS call when getting the file names (FindFirstFile/FindNextFile on Windows, opendir/readdir on Linux/Mac). And on Windows, FindFirst/FindNext also return the file size and a few other things. Python's os.listdir() function fetches a whole bunch of juicy info from the OS, only to throw it away.
+As it turns out, both Windows and Linux/Mac return the file type information in the initial OS call when getting the file names ([FindFirstFile/FindNextFile](https://msdn.microsoft.com/en-us/library/windows/desktop/aa364418(v=vs.85).aspx) on Windows, [opendir/readdir](http://pubs.opengroup.org/onlinepubs/009695399/functions/readdir_r.html) on Linux/Mac). And on Windows, FindFirst/FindNext also return the file size and a few other things. Python's os.listdir() function fetches a whole bunch of juicy info from the OS, only to throw it away.
 
 So I started thinking: hmmm, it should be quite easy to fix that. "Just" create a version of os.walk() which doesn't throw away the extra info. And then I thought, if this StackOverflow answer is so prominent, maybe this functionality could be added to Python itself?
 
@@ -108,9 +107,12 @@ Writing the PEP was actually a fair bit of work in itself. There are good guidel
 
 I wrote the [first draft](https://mail.python.org/pipermail/python-dev/2014-June/135215.html) in June 2014, and [refined it](https://mail.python.org/pipermail/python-dev/2014-July/135377.html) in July based on python-dev feedback. Once it was done, I needed approval. Guido van Rossum approved Victor Stinner as the "BDFL-delegate" for this PEP, and Victor [approved the PEP itself](https://mail.python.org/pipermail//python-dev/2014-July/135561.html) -- I don't think it was particularly controversial at this point. However, perhaps slightly unique was that it was after approval that we went back and added the inode() method and follow_symlinks parameters later.
 
+Note that for PEPs that describe features intended for the standard library, you need a [Support](***) section proving that you have a decent amount of support for your use case or library in the wild.
+
 Obviously I'm a bit of a Python nerd, but reading some of the PEPs is a really good way to get into the why's and wherefore's of how Python features got to be the way they are. Some examples:
 
-* PEP *** on ***
+* [PEP 8, Style Guide for Python Code]: well, this isn't really a Python "Enhancement" Proposal, but everyone should read and heed this one
+* PEP 202*** list comprehensions
 * ***
 
 
@@ -125,11 +127,11 @@ I'd only ever written trivial C extension code for Python before, so writing a n
 
 I began by implementing just the OS calls in C, and the DirEntry object creation in Python, but even that was slower than I wanted, so ended up writing the whole thing in C before too long. Speed is good!
 
-After I'd finished writing and testing the code for CPython 3.5, I went back and updated my standalone scandir project to use the same code. I extracted the relevant portions out of the too-large Modules/posixmodule.c, moved it to _scandir.c, and made a few tweaks so it could compile against Python 2.x.
+After I'd finished writing and testing the code for CPython 3.5 (October 2014 to March 2015), I went back and updated my standalone scandir project to use the same code. I extracted the relevant portions out of the too-large Modules/posixmodule.c, moved it to _scandir.c, and made a few tweaks so it could compile against Python 2.x.
 
 From pretty early on (right from "betterwalk" days) I had a simple [benchmark script](***) that me and other folks could use to test the performance of os.walk() with and without scandir on various systems. This was invaluable stress test the code and ensure we didn't introduce major performance regressions.
 
-*** Little saga with V Stinner rewriting it at the last minute.
+There was a little frustrating moment late in the implementation where Victor Stinner (and I'm sure he wouldn't mind me relating this, as it's all [on the bug tracker](http://bugs.python.org/issue22524#msg235873)) reimplemented much of scandir using a different approach (as little C code as possible), without prior discussion. Victor had been helpful and involved throughout, but I was a bit frustrated at this (and said as much), and he admitted being a bit overzealous and could see how much faster the pure C implementation was.
 
 From there it was just a matter of updating os.walk() to use scandir() instead of listdir(), and I was done.
 
@@ -137,13 +139,9 @@ Well, not quite. At the last minute, *** [pointed out](***) that the os.walk() A
 
 Thankfully, *** and Victor Stinner came up with a fix that, although it was slower than the buggy version, was still a lot faster than os.walk() without scandir. Phew ... for a bit I was thinking scandir wouldn't speed up os.walk() at all.
 
+The other piece of course was documentation and tests. Writing good documentation is hard: you want it to be concise but thorough, and ideally provide an example or two. I think we (Victor Stinner and I) got to a reasonably good place with the documentation for [os.scandir() and DirEntry](https://docs.python.org/3/library/os.html#os.scandir) after a couple of iterations. The slight verbosity of the DirEntry docs shows how the follow_symlinks parameter adds complexity, but I'm pretty happy with how the docs turned out. Have a read and let me know if you have any feedback.
 
-Documentation and tests
------------------------
-
-Writing good documentation is hard: you want it to be concise but thorough, and ideally provide an example or two. I think we (Victor Stinner and I) got to a reasonably good place with the documentation for [os.scandir() and DirEntry](***) after a couple of iterations. The slight verbosity of the DirEntry docs shows how the follow_symlinks parameter adds complexity, but I'm pretty happy with how the docs turned out. Have a read and let me know if you have any feedback (or open a documentation issue on the [Python bug tracker](***)).
-
-I had some unit tests in place for scandir already, but Victor Stinner and I moved them into the CPython source tree and added a few more. Apart from testing all the obvious things, there's the unicode vs bytes thing, and a regression test for the os.walk() issue *** had found earlier.
+I had some unit tests in place for scandir already, but Victor Stinner and I moved them into the CPython source tree and added a few more. Apart from testing all the obvious things, there's the unicode vs bytes issue, and a regression test for the os.walk() issue that had found earlier.
 
 
 In summary
@@ -159,6 +157,8 @@ My main takeaways from the experience:
 
 So going right back to [the StackOverflow answer](http://stackoverflow.com/questions/2485719/very-quickly-getting-total-size-of-folder/2485843#2485843) that started all this, after Python 3.5 was shipped, I edited the answer and added a note about this being fixed in Python 3.5 with the new os.scandir() function. It took a few years, but Python is no longer "at a disadvantage" or "not your friend".
 
-So please, go ahead and share the scandir love and use it in a Python project near you! Obviously it's ideal if you're able to use Python 3.5 and use the standard library version directly, but if not, just "pip install scandir" -- the standalone module works on Python 2.6 *** and above.
+I'll sign off with another "testimonial" that developer Bill A sent me a while back:
 
-I'll sign off with another "testimonial" *** sent me a while back: ***
+> I just wanted to let you know that I think scandir.walk() is *vastly* superior to the standard os.walk() function ... I scanned one directory that had over 200K files located in 5944 directories with os.walk() and it took 12 minutes to run.   The same operation by scandir.walk() took 30 seconds. It was great!
+
+So please, go ahead and share the scandir love and use it in a Python project near you! Obviously it's ideal if you're able to use Python 3.5 and use the standard library version directly, but if not, the standalone [scandir module on PyPI](https://pypi.python.org/pypi/scandir) works on Python 2.6 and above, so just `pip install scandir`!
