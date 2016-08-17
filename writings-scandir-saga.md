@@ -7,12 +7,13 @@ permalink: /writings/scandir-saga/index.html
 <p class="subtitle">Subtitle</p>
 
 
+
 Scandir Saga: contributing a feature to Python
 ==============================================
 
-This article describes my experience contributing a medium-sized feature to Python. In short: I wrote [PEP 471](https://www.python.org/dev/peps/pep-0471/) and contributed [os.scandir()](***) to the Python standard library and the CPython codebase. It was a lot more work than I expected, but it was a fun journey, and as a result the end product has a better API than my initial one.
+This article describes my experience contributing a medium-sized feature to Python. In short: I wrote [PEP 471](https://www.python.org/dev/peps/pep-0471/) and contributed [os.scandir()](https://docs.python.org/3/library/os.html#os.scandir) to the Python standard library and the CPython codebase. It was a lot more work than I expected, but it was a fun journey, and as a result the end product has a better API than my initial one.
 
-What scandir does is provide a lowish-level API that provides the names of entries in a directory like [os.listdir()](***), but additionally returns file type and other information without extra calls to the operating system. It's now used inside the popular [os.walk()](***) function to speed up walking directory trees by a significant amount.
+What scandir does is provide a lowish-level API that provides the names of entries in a directory like [os.listdir()](https://docs.python.org/3/library/os.html#os.listdir), but additionally returns file type and other information without extra calls to the operating system. It's now used inside the popular [os.walk()](https://docs.python.org/3/library/os.html#os.walk) function to speed up walking directory trees by a significant amount.
 
 To whet your appetite, here's an email a developer sent me the other day:
 
@@ -24,7 +25,7 @@ To be fair, that's on a network file system which is where you see crazy gains l
 Why is scandir needed?
 ----------------------
 
-Once upon a time in 200*** I was trying to figure out why walking directory trees in Python was relatively slow. I'm a Windows user, and it seemed that summing the total size of a directory using Python was a lot slower than either `dir /s` or Windows Explorer. Then I found [this very informative StackOverflow answer](http://stackoverflow.com/questions/2485719/very-quickly-getting-total-size-of-folder/2485843#2485843), including the ominous phrases "You are at a disadvantage ... Python is unfortunately not your friend in this case".
+Once upon a time in 2012 I was trying to figure out why walking directory trees in Python was relatively slow. I'm a Windows user, and it seemed that summing the total size of a directory using Python was a lot slower than either `dir /s` or Windows Explorer. Then I found [this very informative StackOverflow answer](http://stackoverflow.com/questions/2485719/very-quickly-getting-total-size-of-folder/2485843#2485843), including the ominous phrases "You are at a disadvantage ... Python is unfortunately not your friend in this case".
 
 The reason is that Python's os.walk() function uses os.listdir(), which calls operating system functions to get the names of the files in a directory, and then separately makes further OS calls via os.stat() to determine whether each entry is a file or directory. And if you want to get file sizes as well, you're not done ... you have to make another OS call via os.path.getsize() or os.stat() to get the sizes of the files. That's a lot of operating system API thrashing, and calling the OS is pretty slow.
 
@@ -68,9 +69,9 @@ def iterdir_stat(path='.', pattern='*', fields=None):
 
 If I remember correctly, this was pretty much the first API I came up with. It does have the virtue of "type simplicity", in that it just uses built-in types: tuples, strings, and the existing stat_result data structure.
 
-However, it's overly complicated. The "pattern" parameter was Windows-only (and not trivial to simulate on Linux/Mac), and the "fields" parameter was a bit of a pain. Plus, when using functions that return tuples, one always has to remember how the fields are ordered. [***SOMEONE*** suggested](***) using a new data type that had the name and other info accessible as attributes, so pretty soon we ended up with the concept of a rich object.
+However, it's overly complicated. The "pattern" parameter was Windows-only (and not trivial to simulate on Linux/Mac), and the "fields" parameter was a bit of a pain. Plus, when using functions that return tuples, one always has to remember how the fields are ordered. [Nick Coghlan suggested](https://mail.python.org/pipermail/python-dev/2013-May/126148.html) using a new data type that had the name and other info accessible as attributes, so pretty soon we ended up with the concept of a rich object.
 
-It was also pretty clear that having the function generate (yield) DirEntry objects instead of returning them as a list was better for large directories. (This feature closed Python issue ***.)
+It was also pretty clear that having the function generate (yield) DirEntry objects instead of returning them as a list was better for large directories. (This feature closed Python [issue 114066](https://bugs.python.org/issue11406).)
 
 A lot of mailing list bits were spilled over exactly what the DirEntry objects should look like:
 
@@ -79,33 +80,33 @@ A lot of mailing list bits were spilled over exactly what the DirEntry objects s
 * Should it be a str subclass with some other attributes? No, probably a bad idea.
 * Or what about a stat_result subclass with a "name" attribute? Nope.
 * Making it a pathlib.Path instance looks attractive! No, wait, pathlib isn't heavily used, and more importantly, all pathlib methods like Path.stat() are guaranteed to get up-to-date data by calling the OS, which is exactly what we want to avoid...
-* Okay, let's make a lightweight DirEntry class. We'll make the attributes and methods have the same names as the pathlib.Path one where possible.
+* Okay, let's make a [lightweight DirEntry class](https://mail.python.org/pipermail/python-dev/2013-May/126148.html). We'll make the attributes and methods have the same names as the pathlib.Path one where possible.
 
 ***MONTH YEAR***. So we've settled on DirEntry, but should the items be attributes or methods? I [argued](***) in favour of plain attributes for constant data (just "name" and "path"), but methods for things that have the potential to call the OS, such as is_file() when the entry is a symlink, or when the dirent.d_type is DT_UNKNOWN on Linux. I think overloading attribute access with functions that can call the OS, especially for a low-level API like scandir, is a bad idea for code clarity and error handling (why would you need to do a try/except around an innocent "entry.is_file" attribute access?).
 
 There was quite a bit of discussion (***DATE) about whether and how DirEntry objects should cache their values, and how error handling should be done. A
 
-Pretty late in the game (***DATE) the inode() method was added, as was the follow_symlinks argument (defaulting to True) to the is_dir, is_file, and stat methods. I'm not the biggest fan of the complication introduced by the follow_symlinks argument for this low-level API, but it does mean consistency with similar os.path and pathlib.Path functions.
+Pretty late in the game (**February 2015**) the [inode() method was added](https://mail.python.org/pipermail/python-dev/2015-February/138204.html), and the follow_symlinks argument was added to the is_dir, is_file, and stat methods (defaulting to True). I'm [not the biggest fan](https://mail.python.org/pipermail/python-dev/2014-July/135448.html) of the complication introduced by the follow_symlinks argument for this low-level API, but it does mean consistency with similar os.path and [pathlib.Path](https://docs.python.org/3/library/pathlib.html) functions.
 
 
 Bonus feature (a smaller contribution)
 --------------------------------------
 
-Along the way, I noticed that the stat_result structure returned quite a few Linux (or POSIX) specific fields, like ***. However, I saw a Windows user noting (issue ***) that it didn't provide access to the Win32 file attributes, which can be quite useful for ***. As a Windows user myself, I wanted to fix this, and ended up providing a patch to CPython to make it happen.
+Along the way, I noticed that the stat_result structure returned quite a few Linux or Mac OS specific fields, like `st_blocks` and `st_rsize`. However, I saw several folks asking on StackOverflow about the Win32 file attributes ([for example](http://stackoverflow.com/questions/284115/cross-platform-hidden-file-detection/6365265#6365265), which can be quite useful for detecting whether files are "hidden". As a Windows user myself, I wanted to fix this, and ended up providing a small patch to CPython to make it happen: on Windows, stat_result objects now have an `st_file_attributes` member.
 
-The code change was pretty trivial (see the few lines of C code in [commit ***](***)), but for a real project like CPython there's also tests and documentation, which took at least as long to get right.
+The code change was pretty trivial (see the few lines of C code in [this commit](https://hg.python.org/cpython/rev/706fab0213db/#l10.1)), but for a real project like CPython there's also tests and documentation, which account for well over half of the effort and of the changeset.
 
-In any case, I would say if anyone wants to get started with open source contributions, a relatively tiny feature like ***win_file_attributes is a good place to start.
+In any case, I would say if anyone wants to get started with open source contributions, a relatively tiny feature like `st_file_attributes` is a good place to start. See [issue 21719](http://bugs.python.org/issue21719) for more info.
 
 
 Python Enhancement Proposal (PEP) 471
 -------------------------------------
 
-After we'd pretty much settled on a good API, I was asked to write a PEP (Python Enhancement Proposal) with all the details. This clarifies the proposed API and summarizes the mailing list discussions for an official record. Each PEP gets a number (some of them a bit humorous, like PEP ***), and scandir was [PEP 471](https://www.python.org/dev/peps/pep-0471/).
+After we'd pretty much settled on a good API, I was asked to write a PEP (Python Enhancement Proposal) with all the details. This clarifies the proposed API and summarizes the mailing list discussions for an official record. Each PEP gets a number (some of them a bit geek-humorous, like [PEP 404](https://www.python.org/dev/peps/pep-0404/) and [PEP 3141](https://www.python.org/dev/peps/pep-3141/)), and scandir was [PEP 471](https://www.python.org/dev/peps/pep-0471/).
 
 Writing the PEP was actually a fair bit of work in itself. There are good guidelines, but because it's an official record for the proposal you want it to be right. And it has to summarize all the "rejected ideas" discussed on the mailing lists, which in scandir's case were quite a few.
 
-I wrote the first draft in ***DATE, and refined it based on python-dev feedback in ***DATE. Once it was done, I needed approval. Guido van Rossum [approved Victor Stinner](***) as the "BDFL-delegate" for this PEP, and Victor [approved the PEP](***) -- I don't think it was particularly controversial at this point. However, perhaps slightly unique was that it was after approval that we went back and added the inode() method and follow_symlinks parameters (***DATE).
+I wrote the [first draft](https://mail.python.org/pipermail/python-dev/2014-June/135215.html) in June 2014, and [refined it](https://mail.python.org/pipermail/python-dev/2014-July/135377.html) in July based on python-dev feedback. Once it was done, I needed approval. Guido van Rossum approved Victor Stinner as the "BDFL-delegate" for this PEP, and Victor [approved the PEP itself](https://mail.python.org/pipermail//python-dev/2014-July/135561.html) -- I don't think it was particularly controversial at this point. However, perhaps slightly unique was that it was after approval that we went back and added the inode() method and follow_symlinks parameters later.
 
 Obviously I'm a bit of a Python nerd, but reading some of the PEPs is a really good way to get into the why's and wherefore's of how Python features got to be the way they are. Some examples:
 
