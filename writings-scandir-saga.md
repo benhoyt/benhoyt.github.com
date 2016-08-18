@@ -70,7 +70,7 @@ If I remember correctly, this was pretty much the first API I came up with. It d
 
 However, it's overly complicated. The "pattern" parameter was Windows-only (and not trivial to simulate on Linux/Mac), and the "fields" parameter was a bit of a pain. Plus, when using functions that return tuples, one always has to remember how the fields are ordered. [Nick Coghlan suggested](https://mail.python.org/pipermail/python-dev/2013-May/126148.html) using a new data type that had the name and other info accessible as attributes, so pretty soon we ended up with the concept of a rich object.
 
-It was also pretty clear that having the function generate (yield) DirEntry objects instead of returning them as a list was better for large directories. (This feature closed Python [issue 114066](https://bugs.python.org/issue11406).)
+It was also pretty clear that having the function generate (yield) DirEntry objects instead of returning them as a list was better for large directories. This feature closed the separate Python [issue 114066](https://bugs.python.org/issue11406).
 
 A lot of mailing list bits were spilled over exactly what the DirEntry objects should look like:
 
@@ -88,32 +88,35 @@ There was quite a bit of discussion (***DATE) about whether and how DirEntry obj
 Pretty late in the game (**February 2015**) the [inode() method was added](https://mail.python.org/pipermail/python-dev/2015-February/138204.html), and the follow_symlinks argument was added to the is_dir, is_file, and stat methods (defaulting to True). I'm [not the biggest fan](https://mail.python.org/pipermail/python-dev/2014-July/135448.html) of the complication introduced by the follow_symlinks argument for this low-level API, but it does mean consistency with similar os.path and [pathlib.Path](https://docs.python.org/3/library/pathlib.html) functions.
 
 
-Bonus feature (a smaller contribution)
---------------------------------------
+A bonus contribution
+--------------------
 
-Along the way, I noticed that the stat_result structure returned quite a few Linux or Mac OS specific fields, like `st_blocks` and `st_rsize`. However, I saw several folks asking on StackOverflow about the Win32 file attributes ([for example](http://stackoverflow.com/questions/284115/cross-platform-hidden-file-detection/6365265#6365265), which can be quite useful for detecting whether files are "hidden". As a Windows user myself, I wanted to fix this, and ended up providing a small patch to CPython to make it happen: on Windows, stat_result objects now have an `st_file_attributes` member.
+Along the way, I noticed that the stat_result structure returned quite a few Linux or Mac OS specific fields, like `st_blocks` and `st_rsize`. However, I saw several folks asking on StackOverflow about the Win32 file attributes ([for example](http://stackoverflow.com/questions/284115/cross-platform-hidden-file-detection/6365265#6365265), which can be quite useful for things like detecting whether files are "hidden". As a Windows user myself, I wanted to fix this, and ended up providing a small patch to CPython to make it happen: on Windows, stat_result objects now have an `st_file_attributes` member.
 
-The code change was pretty trivial (see the few lines of C code in [this commit](https://hg.python.org/cpython/rev/706fab0213db/#l10.1)), but for a real project like CPython there's also tests and documentation, which account for well over half of the effort and of the changeset.
+The code change was pretty trivial (see the few lines of C code in [this commit](https://hg.python.org/cpython/rev/706fab0213db/#l10.1)), but for a real project like CPython there's also tests and documentation, which account for well over half of the effort (and lines in the changeset). See [issue 21719](http://bugs.python.org/issue21719) for more details.
 
-In any case, I would say if anyone wants to get started with open source contributions, a relatively tiny feature like `st_file_attributes` is a good place to start. See [issue 21719](http://bugs.python.org/issue21719) for more info.
+In any case, I would say if anyone wants to get started with open source contributions, a relatively tiny feature like `st_file_attributes` is a good place to start.
 
 
-Python Enhancement Proposal (PEP) 471
--------------------------------------
+Enter PEP 471
+-------------
 
-After we'd pretty much settled on a good API, I was asked to write a PEP (Python Enhancement Proposal) with all the details. This clarifies the proposed API and summarizes the mailing list discussions for an official record. Each PEP gets a number (some of them a bit geek-humorous, like [PEP 404](https://www.python.org/dev/peps/pep-0404/) and [PEP 3141](https://www.python.org/dev/peps/pep-3141/)), and scandir was [PEP 471](https://www.python.org/dev/peps/pep-0471/).
+After we'd pretty much settled on a good API, I was asked to write a PEP (Python Enhancement Proposal) with all the details. This clarifies the proposed API and summarizes the mailing list discussions for an official record. Each PEP gets a number (some of them a bit geek-humorous, like [PEP 404](https://www.python.org/dev/peps/pep-0404/) and [PEP 3141](https://www.python.org/dev/peps/pep-3141/)), and the scandir PEP became [number 471](https://www.python.org/dev/peps/pep-0471/).
 
-Writing the PEP was actually a fair bit of work in itself. There are good guidelines, but because it's an official record for the proposal you want it to be right. And it has to summarize all the "rejected ideas" discussed on the mailing lists, which in scandir's case were quite a few.
+Writing the PEP was actually a fair bit of work in itself. There are good guidelines, but because it's an official record for the proposal you want it to be right. And it should summarize all the "rejected ideas" discussed on the mailing lists, which in scandir's case were quite a few.
 
-I wrote the [first draft](https://mail.python.org/pipermail/python-dev/2014-June/135215.html) in June 2014, and [refined it](https://mail.python.org/pipermail/python-dev/2014-July/135377.html) in July based on python-dev feedback. Once it was done, I needed approval. Guido van Rossum approved Victor Stinner as the "BDFL-delegate" for this PEP, and Victor [approved the PEP itself](https://mail.python.org/pipermail//python-dev/2014-July/135561.html) -- I don't think it was particularly controversial at this point. However, perhaps slightly unique was that it was after approval that we went back and added the inode() method and follow_symlinks parameters later.
+I wrote the [first draft](https://mail.python.org/pipermail/python-dev/2014-June/135215.html) in June 2014, and [refined it](https://mail.python.org/pipermail/python-dev/2014-July/135377.html) in July based on python-dev feedback. Once it was done, it needed to be approved or rejected. Guido van Rossum appointed Victor Stinner as the "BDFL-delegate" for this PEP, and Victor [approved the PEP itself](https://mail.python.org/pipermail//python-dev/2014-July/135561.html) -- I don't think it was particularly controversial at this point. However, perhaps slightly unique was that it was after approval that we went back and added the inode() method and follow_symlinks parameters later.
 
-Note that for PEPs that describe features intended for the standard library, you need a [Support](***) section proving that you have a decent amount of support for your use case or library in the wild.
+Note that for PEPs that describe features intended for the standard library, you need a [support section](https://www.python.org/dev/peps/pep-0471/#support) proving that you have a decent amount of support for your use case or library in the wild.
 
-Obviously I'm a bit of a Python nerd, but reading some of the PEPs is a really good way to get into the why's and wherefore's of how Python features got to be the way they are. Some examples:
+Obviously I'm a bit of a Python nerd, but reading a few PEPs is a really good way to get into the why's and wherefore's of how Python features came to be. Some examples:
 
-* [PEP 8, Style Guide for Python Code]: well, this isn't really a Python "Enhancement" Proposal, but everyone should read and heed this one
-* PEP 202*** list comprehensions
-* ***
+* [PEP 8, Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/): well, this isn't really a Python "Enhancement" Proposal, but everyone should read and heed this one
+* [PEP 202, List Comprehensions](https://www.python.org/dev/peps/pep-0202/)
+* [PEP 237, Unifying Long Integers and Integers](https://www.python.org/dev/peps/pep-0237/)
+* [PEP 343, The "with" Statement](https://www.python.org/dev/peps/pep-0343/)
+* [PEP 405, Python Virtual Environments](https://www.python.org/dev/peps/pep-0405/)
+* [PEP 492, Coroutines with async and await syntax](https://www.python.org/dev/peps/pep-0492/)
 
 
 Implementation
@@ -121,27 +124,27 @@ Implementation
 
 A mentioned above, I started with a proof-of-concept implementation called [betterwalk](https://github.com/benhoyt/betterwalk) that used ctypes to call the operating system functions.
 
-After the scandir name and API were more or less settled, I moved things to the [scandir](https://github.com/benhoyt/scandir) repo and implemented the updated API, still in ctypes. ctypes is great to get a proof of concept working without breaking out C compilers and all of that (even less fun on Windows), but it's pretty slow -- os.walk() via scandir using ctypes was already a lot faster than regular os.walk(), especially on Windows, but writing it in C gave a much better improvement.
+After the scandir name and API were more or less settled, I moved things to the [scandir](https://github.com/benhoyt/scandir) repo and implemented the updated API, still using ctypes. This was a great way to get a proof of concept working without breaking out the C compiler (even less fun on Windows). But it's pretty slow: os.walk() via scandir using ctypes was already a lot faster than regular os.walk(), especially on Windows, but writing it in C gave a much bigger increase.
 
-I'd only ever written trivial C extension code for Python before, so writing a non-trivial function required a bit of learning. Getting ***DecREF and ***IncRef reference counting right takes a bit of getting used to, for a start.
+I'd only ever written trivial C extension code for Python before, so writing a non-trivial function required a bit of learning. For example, getting ***DecREF and ***IncRef reference counting right takes a bit of getting used to.
 
-I began by implementing just the OS calls in C, and the DirEntry object creation in Python, but even that was slower than I wanted, so ended up writing the whole thing in C before too long. Speed is good!
+I began by implementing just the OS calls in C, and the DirEntry object creation in Python, but even that was slower than I wanted, so ended up writing the whole thing in C before too long. Fast is good!
 
-After I'd finished writing and testing the code for CPython 3.5 (October 2014 to March 2015), I went back and updated my standalone scandir project to use the same code. I extracted the relevant portions out of the too-large Modules/posixmodule.c, moved it to _scandir.c, and made a few tweaks so it could compile against Python 2.x.
+After I'd finished writing and testing the code for CPython 3.5 (October 2014 to March 2015), I went back and updated my standalone scandir project to use the same code. I extracted the relevant portions out of the too-large [Modules/posixmodule.c](***), moved it to [_scandir.c](***), and made a few tweaks so it could compile against Python 2.x.
 
-From pretty early on (right from "betterwalk" days) I had a simple [benchmark script](***) that me and other folks could use to test the performance of os.walk() with and without scandir on various systems. This was invaluable stress test the code and ensure we didn't introduce major performance regressions.
+From pretty early on (right from "betterwalk" days) I had a simple [benchmark script](***) that I and others could use to test the performance of os.walk() with and without scandir on various systems. This was invaluable to stress test the code and ensure I didn't introduce major performance regressions.
 
-There was a little frustrating moment late in the implementation where Victor Stinner (and I'm sure he wouldn't mind me relating this, as it's all [on the bug tracker](http://bugs.python.org/issue22524#msg235873)) reimplemented much of scandir using a different approach (as little C code as possible), without prior discussion. Victor had been helpful and involved throughout, but I was a bit frustrated at this (and said as much), and he admitted being a bit overzealous and could see how much faster the pure C implementation was.
+There was a little frustrating moment late in the implementation when Victor Stinner reimplemented much of scandir using a different approach (as little C code as possible), without prior discussion. And I'm sure he wouldn't mind me relating this, as it's all [on the bug tracker](http://bugs.python.org/issue22524#msg235873) and was resolved well. Victor had been helpful and involved throughout, but I was a bit frustrated at this (and said as much), and he admitted being a bit overzealous and could see how much faster the pure C implementation was.
 
 From there it was just a matter of updating os.walk() to use scandir() instead of listdir(), and I was done.
 
-Well, not quite. At the last minute, *** [pointed out](***) that the os.walk() API allows the caller to modify "dirnames" in place, to prune or add to the tree it's walking. My scandir-based version of os.walk() had a couple of bugs when used in this way, and *** wrote a test case to reproduce it. The problem was, to fix it this fairly fringe scenario reintroduced os.stat() calls into the code, which defeated the purpose of using scandir() in the first place.
+Well, not quite. At the last minute, *** [pointed out](***) that the os.walk() API allows the caller to modify the yielded "dirnames" lists in place, to prune or add to the tree it's walking. My scandir-based version of os.walk() had a couple of bugs when used in this way, and *** wrote a test case to reproduce it. The problem was, fixing this fairly fringe scenario reintroduced os.stat() calls into the code, which defeated the purpose of using scandir() in the first place.
 
-Thankfully, *** and Victor Stinner came up with a fix that, although it was slower than the buggy version, was still a lot faster than os.walk() without scandir. Phew ... for a bit I was thinking scandir wouldn't speed up os.walk() at all.
+Thankfully, *** and Victor Stinner came up with a fix that, although it was slower than the incorrect version, was still a lot faster than os.walk() without scandir. Phew ... for a bit I was thinking scandir wouldn't speed up os.walk() at all.
 
-The other piece of course was documentation and tests. Writing good documentation is hard: you want it to be concise but thorough, and ideally provide an example or two. I think we (Victor Stinner and I) got to a reasonably good place with the documentation for [os.scandir() and DirEntry](https://docs.python.org/3/library/os.html#os.scandir) after a couple of iterations. The slight verbosity of the DirEntry docs shows how the follow_symlinks parameter adds complexity, but I'm pretty happy with how the docs turned out. Have a read and let me know if you have any feedback.
+The other piece was documentation and testing. Writing good documentation is hard: you want it to be concise but thorough, and ideally provide an example or two. I think we (Victor Stinner and I) got to a reasonably good place with the documentation for [os.scandir() and DirEntry](https://docs.python.org/3/library/os.html#os.scandir) after a couple of iterations. The slight verbosity of the DirEntry docs shows how the follow_symlinks parameter adds complexity, but I'm reasonably happy with how the docs turned out. Have a read and let me know if you have any feedback.
 
-I had some unit tests in place for scandir already, but Victor Stinner and I moved them into the CPython source tree and added a few more. Apart from testing all the obvious things, there's the unicode vs bytes issue, and a regression test for the os.walk() issue that had found earlier.
+I had some unit tests in place for scandir already, but Victor Stinner and I moved them into the CPython source tree and added a few more. Apart from testing all the obvious things, there's the unicode vs bytes issue, and a regression test for the os.walk() issue that we'd found earlier.
 
 
 In summary
