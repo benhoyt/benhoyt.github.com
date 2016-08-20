@@ -23,7 +23,7 @@
   <li>{% if page.url == '/' %}<b>Home</b>{% else %}<a href="/" title="Go to the home page">Home</a>{% endif %}</li>
   <li>{% if page.url == '/cv/index.html' %}<b>Resume/CV</b>{% else %}<a href="/cv/" title="Go to my Resume/CV">Resume/CV</a>{% endif %}</li>
   <li>{% if page.url == '/projects/index.html' %}<b>Projects</b>{% else %}<a href="/projects/" title="Projects I&#39;ve authored">Projects</a>{% endif %}</li>
-  <li>{% if page.url == '/projects/index.html' %}<b>Projects</b>{% else %}<a href="/writings/" title="Stuff I&#39;ve written">Writings</a>{% endif %}</li>
+  <li>{% if page.url == '/writings/index.html' %}<b>Writings</b>{% else %}<a href="/writings/" title="Stuff I&#39;ve written">Writings</a>{% endif %}</li>
   <li><a href="mailto:benh...@gmail.com" title="Email me" onmouseover="e=&quot;benhoyt&quot;+String.fromCharCode(64)+&quot;gmail.com&quot;; this.href=&quot;mai&quot;+&quot;lto:&quot;+e;">Contact</a></li>
  </ul>
 
@@ -32,7 +32,9 @@
   <li><a href="mailto:benhoyt@gmail.com">benhoyt@gmail.com</a></li>
  </ul>
 
+<!-- TODO
  {{ page.sidebar_extra }}
+-->
 </div>
 
 <div id="content">
