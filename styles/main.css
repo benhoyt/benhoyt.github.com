@@ -1,24 +1,34 @@
-body { background: white; color: #603000; font-family: Tahoma, Geneva, sans-serif; font-size: 17px; line-height: 1.6; word-spacing: 0.15em; margin: 0 auto; width: 48em; }
-#container { padding: 2.5em 0; float: left; }
-#sidebar { width: 10em; float: left; font-size: 80%; padding-right: 1.5em; }
-#sidebar img, a.logo, a.logo:hover { border: none; }
-#sidebar p { margin: 1.7em 0; }
-#sidebar p.contact { margin: 0.3em 0; }
-#content { width: 35em; float: right; border-left: 1px solid #603000; padding-left: 2em; }
-h1, h2, p, ul { margin: 0.8em 0; }
+body { background: white; color: #603000; font-family: Georgia, serif; font-size: 17px; line-height: 1.6; word-spacing: 0.1em; margin: 0 auto; max-width: 1000px; }
+#menu { margin: 0 34px; height: 95px; border-bottom: 1px solid #d0c8c0; }
+#menu .site-title { font-size: 225%; color: #d0c8c0; float: left; letter-spacing: 0.15em; padding-top: 17px; text-transform: uppercase; }
+#menu ul.links { float: right; margin: 0; padding: 36px 0 0 0; list-style-type: none; font-size: 90%; }
+#menu ul.links li { display: inline; margin: 0 0 0 1em; padding: 0; }
+#menu a { border: none; color: #c04000; }
+#menu a:hover { border-bottom: 1px solid; }
+#content { margin: 35px auto; padding: 0 34px; width: 700px; }
+h1, h2, p, ul { margin: 1em 0; }
 p.gap { margin-top: 1.8em; }
 p.subtitle { margin-top: 0; font-style: italic; }
 a { text-decoration: none; border-bottom: 1px dotted; }
 a:hover { border-bottom: 1px solid; }
 a:link { color: #e87000; }
 a:visited { color: #c04000; }
-h1 a, h2 a { color: #603000 !important; border-bottom: none; }
-h1, h2 { font-family: Georgia; font-weight: normal; letter-spacing: 0.15em; font-variant: small-caps; }
-h1 { margin: 0 0 0 -0.07em; font-size: 190%; }
-h2 { margin: 1.8em 0 -0.2em 0; font-size: 140%; }
+h1 a, h2 a { border-bottom: none; }
+h1 a:hover, h1 a:link, h1 a:visited, h2 a:hover, h2 a:link, h2 a:visited { color: #603000; }
+h1, h2 { font-weight: normal; letter-spacing: 0.02em; }
+h2 { font-variant: small-caps; }
+h1 { margin: 0 0 0 -0.05em; font-size: 200%; }
+h2 { margin: 1.8em 0 -0.2em 0; font-size: 150%; }
 ul { padding: 0; list-style-type: disc; }
-li { padding: 0; margin-left: 1.4em; margin-bottom: 0.5em; }
-blockquote { font-size: 80%; margin: 2em; }
-#sidebar p.hofstadter { margin-top: 230em; font-size: 87%; width: 11.8em; font-style: italic; font-family: Georgia, serif; }
+li { padding: 0; margin-left: 1.2em; margin-bottom: 0.5em; }
+blockquote { font-size: 90%; margin: 2em 0; padding: 0 1.5em; border-left: 1px dotted #603000; }
 .sc { font-variant: small-caps; }
+pre { overflow-x: auto; }
+code { font-size: 92.5%; }
 .print-only { display: none; }
+
+/*
+TODO
+*/
+#sidebar { display: none; }
+#sidebar p.hofstadter { margin-top: 230em; font-size: 87%; width: 11.8em; font-style: italic; font-family: Georgia, serif; }

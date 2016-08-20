@@ -1,2 +1,3 @@
 .no-print { display: none; }
 .print-only { display: block; }
+a:link, a:visited { color: #603000; }
