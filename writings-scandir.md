@@ -1,24 +1,20 @@
 ---
 layout: default
-title: Scandir Saga
-permalink: /writings/scandir-saga/index.html
+title: Contributing os.scandir() to Python
+permalink: /writings/scandir/index.html
 ---
-<h1><a href="/writings/scandir-saga/">{{ page.title }}</a></h1>
-<p class="subtitle">Subtitle</p>
-
-
-Scandir Saga: contributing a feature to Python
-==============================================
+<h1><a href="/writings/scandir/">{{ page.title }}</a></h1>
+<p class="subtitle">August 2016</p>
 
 This article describes my experience contributing a medium-sized feature to Python. In short: I wrote [PEP 471](https://www.python.org/dev/peps/pep-0471/) and contributed [os.scandir()](https://docs.python.org/3/library/os.html#os.scandir) to the Python standard library and the CPython codebase. It was a lot more work than I expected, but it was a fun journey, and as a result the end product has a better API than my initial one.
 
-What scandir does is provide a lowish-level API that provides the names of entries in a directory like [os.listdir()](https://docs.python.org/3/library/os.html#os.listdir), but additionally returns file type and other information without extra calls to the operating system. It's now used inside the popular [os.walk()](https://docs.python.org/3/library/os.html#os.walk) function to speed up walking directory trees by a significant amount.
+What scandir does is provide a lowish-level API that gives the names of entries in a directory like [os.listdir()](https://docs.python.org/3/library/os.html#os.listdir), but additionally returns file type and other information without extra calls to the operating system. It's now used inside the popular [os.walk()](https://docs.python.org/3/library/os.html#os.walk) function to speed up walking directory trees by a significant amount.
 
 To whet your appetite, here's an email a developer sent me the other day:
 
 > "Replacing os.walk with scandir.walk sped up my recursive file search function on a Windows network in Python 2.7 from 90 seconds to 1.78 seconds. Thank you." ---Adam F
 
-To be fair, that's on a network file system which is where you see crazy gains like 50x. However, on ordinary file systems you commonly see speedups of 5-10x, depending on OS and file system.
+To be fair, that's on a network file system which is where you see crazy gains like 50x. However, on ordinary file systems you commonly see speedups of 5-10x, depending on OS and file system. scandir is cross-platform, so it works and gets good speed gains on Windows, Linux (actually any POSIX system), and Mac OS.
 
 
 Why is scandir needed?
@@ -83,7 +79,7 @@ A lot of mailing list bits were spilled over exactly what the DirEntry objects s
 
 ***MONTH YEAR***. So we've settled on DirEntry, but should the items be attributes or methods? I [argued](***) in favour of plain attributes for constant data (just "name" and "path"), but methods for things that have the potential to call the OS, such as is_file() when the entry is a symlink, or when the dirent.d_type is DT_UNKNOWN on Linux. I think overloading attribute access with functions that can call the OS, especially for a low-level API like scandir, is a bad idea for code clarity and error handling (why would you need to do a try/except around an innocent "entry.is_file" attribute access?).
 
-There was quite a bit of discussion (***DATE) about whether and how DirEntry objects should cache their values, and how error handling should be done. A
+There was quite a bit of discussion (***DATE) about whether and how DirEntry objects should cache their values, and how error handling should be done.
 
 Pretty late in the game (**February 2015**) the [inode() method was added](https://mail.python.org/pipermail/python-dev/2015-February/138204.html), and the follow_symlinks argument was added to the is_dir, is_file, and stat methods (defaulting to True). I'm [not the biggest fan](https://mail.python.org/pipermail/python-dev/2014-July/135448.html) of the complication introduced by the follow_symlinks argument for this low-level API, but it does mean consistency with similar os.path and [pathlib.Path](https://docs.python.org/3/library/pathlib.html) functions.
 
@@ -101,7 +97,7 @@ In any case, I would say if anyone wants to get started with open source contrib
 Enter PEP 471
 -------------
 
-After we'd pretty much settled on a good API, I was asked to write a PEP (Python Enhancement Proposal) with all the details. This clarifies the proposed API and summarizes the mailing list discussions for an official record. Each PEP gets a number (some of them a bit geek-humorous, like [PEP 404](https://www.python.org/dev/peps/pep-0404/) and [PEP 3141](https://www.python.org/dev/peps/pep-3141/)), and the scandir PEP became [number 471](https://www.python.org/dev/peps/pep-0471/).
+After we'd pretty much settled on a good API, I was asked to write a PEP (Python Enhancement Proposal) with all the details. This clarifies the proposed API and summarizes the mailing list discussions for an official record. Each PEP gets a number (some of the numbers are a bit geek-humorous, like [PEP 404](https://www.python.org/dev/peps/pep-0404/) and [PEP 3.141](https://www.python.org/dev/peps/pep-3141/)), and the scandir PEP became [number 471](https://www.python.org/dev/peps/pep-0471/).
 
 Writing the PEP was actually a fair bit of work in itself. There are good guidelines, but because it's an official record for the proposal you want it to be right. And it should summarize all the "rejected ideas" discussed on the mailing lists, which in scandir's case were quite a few.
 
@@ -162,6 +158,6 @@ So going right back to [the StackOverflow answer](http://stackoverflow.com/quest
 
 I'll sign off with another "testimonial" that developer Bill A sent me a while back:
 
-> I just wanted to let you know that I think scandir.walk() is *vastly* superior to the standard os.walk() function ... I scanned one directory that had over 200K files located in 5944 directories with os.walk() and it took 12 minutes to run.   The same operation by scandir.walk() took 30 seconds. It was great!
+> I just wanted to let you know that I think scandir.walk() is *vastly* superior to the standard os.walk() function ... I scanned one directory that had over 200K files located in 5944 directories with os.walk() and it took 12 minutes to run. The same operation by scandir.walk() took 30 seconds. It was great!
 
 So please, go ahead and share the scandir love and use it in a Python project near you! Obviously it's ideal if you're able to use Python 3.5 and use the standard library version directly, but if not, the standalone [scandir module on PyPI](https://pypi.python.org/pypi/scandir) works on Python 2.6 and above, so just `pip install scandir`!
