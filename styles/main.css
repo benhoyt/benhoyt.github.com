@@ -1,11 +1,11 @@
 body { background: white; color: #603000; font-family: Georgia, serif; font-size: 17px; line-height: 1.6; word-spacing: 0.1em; margin: 0 auto; max-width: 1000px; }
-#menu { margin: 0 34px; height: 95px; border-bottom: 1px solid #d0c8c0; }
-#menu .site-title { font-size: 225%; color: #d0c8c0; float: left; letter-spacing: 0.15em; padding-top: 17px; text-transform: uppercase; }
-#menu ul.links { float: right; margin: 0; padding: 36px 0 0 0; list-style-type: none; font-size: 90%; }
-#menu ul.links li { display: inline; margin: 0 0 0 1em; padding: 0; }
+#menu { margin: 0 auto; width: 92.5%; height: 5.5em; border-bottom: 1px solid #d0c8c0; }
+#menu .site-title { float: left; font-size: 225%; color: #d0c8c0; letter-spacing: 0.15em; padding: 0.45em 0; text-transform: uppercase; margin-left: -0.05em; }
+#menu ul.links { float: right; list-style-type: none; font-size: 85%; margin-top: 2.5em; }
+#menu ul.links li { display: inline; margin: 0 0 0 0.8em; padding: 0; }
 #menu a { border: none; color: #c04000; }
 #menu a:hover { border-bottom: 1px solid; }
-#content { margin: 35px auto; padding: 0 34px; width: 700px; }
+#content { margin: 2em auto; width: 92.5%; max-width: 700px; }
 h1, h2, p, ul { margin: 1em 0; }
 p.gap { margin-top: 1.8em; }
 p.subtitle { margin-top: 0; font-style: italic; }
@@ -26,6 +26,18 @@ blockquote { font-size: 90%; margin: 2em 0; padding: 0 1.5em; border-left: 1px d
 pre { overflow-x: auto; }
 code { font-size: 92.5%; }
 .print-only { display: none; }
+
+@media (max-width: 750px) {
+body { font-size: 15px; }
+}
+
+@media (max-width: 615px) {
+body { font-size: 13px; }
+#menu { height: 7.5em; }
+#menu .site-title { float: none; }
+#menu ul.links { float: none; margin: -0.5em 0 0 -0.8em; }
+h1 { margin-top: 0.5em 0; }
+}
 
 /*
 TODO
