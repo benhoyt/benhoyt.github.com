@@ -26,6 +26,7 @@ blockquote { font-size: 90%; margin: 2em 0; padding: 0 1.5em; border-left: 1px d
 pre { overflow-x: auto; }
 code { font-size: 92.5%; }
 .print-only { display: none; }
+img.right { float: right; width: 40%; margin: 1.5em 0 1.5em 2em; }
 
 @media (max-width: 750px) {
 body { font-size: 15px; }
