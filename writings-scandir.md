@@ -43,7 +43,7 @@ def subdirs(path):
 The development timeline
 ------------------------
 
-(Note that this timeline includes long breaks. Scandir was very much a part time project, and I only worked on it when I had the time and felt like it. The years-long timeline wasn't really years long.)
+*Note: scandir was very much a part time project, and I only worked on it when I had the time and felt like it. The years-long timeline wasn't really years long.*
 
 Most of the real action in Python development still goes on in good old mailing lists. I first posted about the idea [on python-dev](https://mail.python.org/pipermail/python-ideas/2012-November/017770.html) in November 2012 with a proof-of-concept.
 
