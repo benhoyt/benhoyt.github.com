@@ -45,13 +45,13 @@ The development timeline
 
 (Note that this timeline includes long breaks. Scandir was very much a part time project, and I only worked on it when I had the time and felt like it. The years-long timeline wasn't really years long.)
 
-Most of the real action in Python development still goes on in good old mailing lists. I first posted about the idea [on python-dev](https://mail.python.org/pipermail/python-ideas/2012-November/017770.html) in **November 2012** with a proof-of-concept.
+Most of the real action in Python development still goes on in good old mailing lists. I first posted about the idea [on python-dev](https://mail.python.org/pipermail/python-ideas/2012-November/017770.html) in November 2012 with a proof-of-concept.
 
 Core developer Nick Coghlan [noted](https://mail.python.org/pipermail/python-ideas/2012-November/017771.html) that "It's a complex enough idea that it definitely needs some iteration outside the stdlib before it could be added ... The issue with patching the stdlib directly rather than releasing something on PyPI is that you likely won't get any design or usability feedback until the first 3.4 alpha, unless it happens to catch the interest of someone willing to tinker with a patched version earlier than that."
 
 At this stage I was still thinking of scandir (well, it wasn't called *scandir* then) as a tiny little function added to the "os" module, so my initial thought was "why go through all that work just for a small function". But his advice was good, and there was a lot more to it than met the eye...
 
-My first take was [betterwalk](https://github.com/benhoyt/betterwalk) in **MONTH YEAR**, a stand-alone module that reimplented os.walk() using a new iterdir_stat() function with a signature like this:
+My first take was [betterwalk](https://github.com/benhoyt/betterwalk) in November 2012, a stand-alone module that reimplented os.walk() using a new iterdir_stat() function with a signature like this:
 
 ```python
 def iterdir_stat(path='.', pattern='*', fields=None):
@@ -68,20 +68,18 @@ However, it's overly complicated. The "pattern" parameter was Windows-only (and 
 
 It was also pretty clear that having the function generate (yield) DirEntry objects instead of returning them as a list was better for large directories. This feature closed the separate Python [issue 114066](https://bugs.python.org/issue11406).
 
-A lot of mailing list bits were spilled over exactly what the DirEntry objects should look like:
-
-***LINKS***
+A lot of python-dev mailing list bits were spilled over exactly what the DirEntry objects should look like:
 
 * Should it be a str subclass with some other attributes? No, probably a bad idea.
 * Or what about a stat_result subclass with a "name" attribute? Nope.
 * Making it a pathlib.Path instance looks attractive! No, wait, pathlib isn't heavily used, and more importantly, all pathlib methods like Path.stat() are guaranteed to get up-to-date data by calling the OS, which is exactly what we want to avoid...
 * Okay, let's make a [lightweight DirEntry class](https://mail.python.org/pipermail/python-dev/2013-May/126148.html). We'll make the attributes and methods have the same names as the pathlib.Path one where possible.
 
-***MONTH YEAR***. So we've settled on DirEntry, but should the items be attributes or methods? I [argued](***) in favour of plain attributes for constant data (just "name" and "path"), but methods for things that have the potential to call the OS, such as is_file() when the entry is a symlink, or when the dirent.d_type is DT_UNKNOWN on Linux. I think overloading attribute access with functions that can call the OS, especially for a low-level API like scandir, is a bad idea for code clarity and error handling (why would you need to do a try/except around an innocent "entry.is_file" attribute access?).
+So we've settled on DirEntry, but should the items be attributes or methods? I argued in favour of plain attributes for constant data (just "name" and "path"), but methods for things that have the potential to call the OS, such as is_file() when the entry is a symlink, or when the dirent.d_type is DT_UNKNOWN on Linux. I think overloading attribute access with functions that can call the OS, especially for a low-level API like scandir, is a bad idea for code clarity and error handling (why would you need to do a try/except around an innocent "entry.is_file" attribute access?).
 
-There was quite a bit of discussion (***DATE) about whether and how DirEntry objects should cache their values, and how error handling should be done.
+There was quite a bit of discussion (in [June](https://mail.python.org/pipermail//python-dev/2014-June/thread.html) and [July](https://mail.python.org/pipermail//python-dev/2014-July/thread.html) 2014) about whether and how DirEntry objects should cache their values, and how error handling should be done.
 
-Pretty late in the game (**February 2015**) the [inode() method was added](https://mail.python.org/pipermail/python-dev/2015-February/138204.html), and the follow_symlinks argument was added to the is_dir, is_file, and stat methods (defaulting to True). I'm [not the biggest fan](https://mail.python.org/pipermail/python-dev/2014-July/135448.html) of the complication introduced by the follow_symlinks argument for this low-level API, but it does mean consistency with similar os.path and [pathlib.Path](https://docs.python.org/3/library/pathlib.html) functions.
+Pretty late in the game (February 2015) the [inode() method was added](https://mail.python.org/pipermail/python-dev/2015-February/138204.html), and the follow_symlinks argument was added to the is_dir, is_file, and stat methods (defaulting to True). I'm [not the biggest fan](https://mail.python.org/pipermail/python-dev/2014-July/135448.html) of the complication introduced by the follow_symlinks argument for this low-level API, but it does mean consistency with similar os.path and [pathlib.Path](https://docs.python.org/3/library/pathlib.html) functions.
 
 
 A bonus contribution
@@ -108,8 +106,8 @@ Note that for PEPs that describe features intended for the standard library, you
 Obviously I'm a bit of a Python nerd, but reading a few PEPs is a really good way to get into the why's and wherefore's of how Python features came to be. Some examples:
 
 * [PEP 8, Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/): well, this isn't really a Python "Enhancement" Proposal, but everyone should read and heed this one
-* [PEP 202, List Comprehensions](https://www.python.org/dev/peps/pep-0202/)
 * [PEP 237, Unifying Long Integers and Integers](https://www.python.org/dev/peps/pep-0237/)
+* [PEP 238, Changing the Division Operator](https://www.python.org/dev/peps/pep-0238/)
 * [PEP 343, The "with" Statement](https://www.python.org/dev/peps/pep-0343/)
 * [PEP 405, Python Virtual Environments](https://www.python.org/dev/peps/pep-0405/)
 * [PEP 492, Coroutines with async and await syntax](https://www.python.org/dev/peps/pep-0492/)
@@ -122,21 +120,21 @@ A mentioned above, I started with a proof-of-concept implementation called [bett
 
 After the scandir name and API were more or less settled, I moved things to the [scandir](https://github.com/benhoyt/scandir) repo and implemented the updated API, still using ctypes. This was a great way to get a proof of concept working without breaking out the C compiler (even less fun on Windows). But it's pretty slow: os.walk() via scandir using ctypes was already a lot faster than regular os.walk(), especially on Windows, but writing it in C gave a much bigger increase.
 
-I'd only ever written trivial C extension code for Python before, so writing a non-trivial function required a bit of learning. For example, getting ***DecREF and ***IncRef reference counting right takes a bit of getting used to.
+I'd only ever written trivial C extension code for Python before, so writing a non-trivial function required a bit of learning. For example, getting [Py_INCREF and Py_DECREF](https://docs.python.org/3/c-api/refcounting.html) reference counting right takes a bit of getting used to.
 
 I began by implementing just the OS calls in C, and the DirEntry object creation in Python, but even that was slower than I wanted, so ended up writing the whole thing in C before too long. Fast is good!
 
-After I'd finished writing and testing the code for CPython 3.5 (October 2014 to March 2015), I went back and updated my standalone scandir project to use the same code. I extracted the relevant portions out of the too-large [Modules/posixmodule.c](***), moved it to [_scandir.c](***), and made a few tweaks so it could compile against Python 2.x.
+After I'd finished writing and testing the code for CPython 3.5 (October 2014 to March 2015), I went back and updated my standalone scandir project to use the same code. I extracted the relevant portions out of the too-large [Modules/posixmodule.c](https://github.com/python/cpython/blob/master/Modules/posixmodule.c), moved it to [_scandir.c](https://github.com/benhoyt/scandir/blob/master/_scandir.c), and made a few tweaks so it could compile against Python 2.x.
 
-From pretty early on (right from "betterwalk" days) I had a simple [benchmark script](***) that I and others could use to test the performance of os.walk() with and without scandir on various systems. This was invaluable to stress test the code and ensure I didn't introduce major performance regressions.
+From pretty early on (right from "betterwalk" days) I had a simple [benchmark script](https://github.com/benhoyt/scandir/blob/master/benchmark.py) that I and others could use to test the performance of os.walk() with and without scandir on various systems. This was invaluable to stress test the code and ensure I didn't introduce major performance regressions.
 
 There was a little frustrating moment late in the implementation when Victor Stinner reimplemented much of scandir using a different approach (as little C code as possible), without prior discussion. And I'm sure he wouldn't mind me relating this, as it's all [on the bug tracker](http://bugs.python.org/issue22524#msg235873) and was resolved well. Victor had been helpful and involved throughout, but I was a bit frustrated at this (and said as much), and he admitted being a bit overzealous and could see how much faster the pure C implementation was.
 
 From there it was just a matter of updating os.walk() to use scandir() instead of listdir(), and I was done.
 
-Well, not quite. At the last minute, *** [pointed out](***) that the os.walk() API allows the caller to modify the yielded "dirnames" lists in place, to prune or add to the tree it's walking. My scandir-based version of os.walk() had a couple of bugs when used in this way, and *** wrote a test case to reproduce it. The problem was, fixing this fairly fringe scenario reintroduced os.stat() calls into the code, which defeated the purpose of using scandir() in the first place.
+Well, not quite. At the last minute, Serhiy Storchaka [pointed out](https://bugs.python.org/issue23605#msg237779) that the os.walk() API allows the caller to modify the yielded "dirnames" lists in place, to prune or add to the tree it's walking. My scandir-based version of os.walk() had a bug when used in this way, and Serhiy wrote a test case to reproduce it. The problem was, fixing this fairly fringe scenario reintroduced os.stat() calls into the code, which defeated the purpose of using scandir() in the first place.
 
-Thankfully, *** and Victor Stinner came up with a fix that, although it was slower than the incorrect version, was still a lot faster than os.walk() without scandir. Phew ... for a bit I was thinking scandir wouldn't speed up os.walk() at all.
+Thankfully, Serhiy Storchaka and Victor Stinner came up with a fix that, although it was sometimmes slower than the incorrect version, was still a lot faster than os.walk() without scandir. Phew ... for a bit I was thinking scandir wouldn't speed up os.walk() at all.
 
 The other piece was documentation and testing. Writing good documentation is hard: you want it to be concise but thorough, and ideally provide an example or two. I think we (Victor Stinner and I) got to a reasonably good place with the documentation for [os.scandir() and DirEntry](https://docs.python.org/3/library/os.html#os.scandir) after a couple of iterations. The slight verbosity of the DirEntry docs shows how the follow_symlinks parameter adds complexity, but I'm reasonably happy with how the docs turned out. Have a read and let me know if you have any feedback.
 
@@ -151,7 +149,7 @@ My main takeaways from the experience:
 * It was a lot of work for a spare time project, but very rewarding for a first-time Python contributor. I've contributed a few small libraries and fixes to open source, but this is definitely the contribution I'm most proud of.
 * Good APIs are important, but take a long time and a lot of bikeshedding to agree on. Bikeshedding is usually seen as a bad thing, but when something's being baked into the Python standard library, you want to get it right.
 * Related to the above: naming is hard.
-* Having folks like Victor Stinner and *** help out with implementation, documentation, and bug finding was invaluable.
+* Having folks like Victor Stinner and Serhiy Storchaka help out with implementation, documentation, and bug finding was invaluable.
 * Python is a great language with an excellent community. The python-ideas and python-dev mailing lists, despite being very technical, are friendly and helpful places.
 
 So going right back to [the StackOverflow answer](http://stackoverflow.com/questions/2485719/very-quickly-getting-total-size-of-folder/2485843#2485843) that started all this, after Python 3.5 was shipped, I edited the answer and added a note about this being fixed in Python 3.5 with the new os.scandir() function. It took a few years, but Python is no longer "at a disadvantage" or "not your friend".
