@@ -1,4 +1,4 @@
-finstru---
+---
 layout: default
 title: "Session 1: Introduction and History"
 permalink: /programming-class/01-introduction/
