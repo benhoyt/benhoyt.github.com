@@ -85,4 +85,4 @@ Monitor
 Keyboard and mouse
 ------------------
 
-Your homework for next week is to make a one-page explanation of how a keyboard or mouse works. You can choose to do either keyboard or mouse, but pick one and research how it works online, and make a one-page explanation using your own diagrams and words. Just sketches and hard-written notes are fine, but it needs to be legible.
+Your homework for next week is to make a one-page explanation of how a keyboard or mouse works. You can choose to do either keyboard or mouse, but pick one and research how it works online, and make a one-page explanation using your own diagrams and words. Just sketches and hand-written notes are fine, but it needs to be legible.
