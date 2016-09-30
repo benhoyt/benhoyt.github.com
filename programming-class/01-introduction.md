@@ -1,9 +1,9 @@
-finstru---
+---
 layout: default
 title: "Session 1: Introduction and History"
 permalink: /programming-class/01-introduction/
 ---
-<h1><a href="/programming-class/01-introduction/">{{ page.title }}</a></h1>
+<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">September 2016</p>
 
 > These are my "teaching notes" for the first session of my [Computers and Programming Class](/programming-class/).

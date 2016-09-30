@@ -3,7 +3,7 @@ layout: default
 title: Computers and Programming Class
 permalink: /programming-class/
 ---
-<h1><a href="/programming-class/">{{ page.title }}</a></h1>
+<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">September 2016</p>
 
 Our three girls are homeschooled (mostly by my [lovely wife](https://aliensintheapple.com/)), and we're part of a Christian homeschooling co-op that meets every second Friday. After the first year in the co-op, one of the parents is required to help with or teach a class. So for the 2016-2017 school year, I offered to teach a computers and programming class to a group of ten high school age students.
