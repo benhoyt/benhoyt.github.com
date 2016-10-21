@@ -10,14 +10,11 @@ Our three girls are homeschooled (mostly by my [lovely wife](https://aliensinthe
 
 Below is the course outline, with links to my "teaching notes" for each session:
 
-TODO markdown
+1. [Introduction and History](01-introduction/): introduction to the course, expectations, what computers are, a very brief history of computing
+2. [Computer Components](02-components/): break a computer apart to show them the components, explain briefly what each part does
+3. [Numbers, Binary, and Computer Math](03-numbers/)
+4. [Networks and the Internet](04-networks/)
+5. [Software and Programs](05-software/)
+6. [Programming Languages](06-languages/): assembler, C, and Python
 
-<ol>
- <li><a href="01-introduction/">Introduction and History</a>: introduction to the course, expectations, what computers are, a very brief history of computing</li>
- <li><a href="02-components/">Computer Components</a>: break a computer apart to show them the components, explain briefly what each part does</li>
- <li><a href="03-numbers/">Numbers, Binary, and Computer Math</a></li>
- <li><a href="04-networks/">Networks and the Internet</a></li>
- <li><a href="05-software/">Software and Programs</a></li>
- <li><a href="06-languages/">Programming Languages, Python</a></li>
- <li><a href="">TODO rest of course in-depth learning Python, programming a game or webiste</a></li>
-</ol>
+TODO: rest of course in-depth learning Python, programming a game or webiste
