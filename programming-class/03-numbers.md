@@ -86,8 +86,32 @@ Easy, right? One more, 1111 and 0001:
 
 Woohoo, we carried so much we went from 4-bit numbers to a 5-bit number! Now we have the smallest 5-bit number, which is 16 decimal. What's the largest 5-bit number?
 
-Computers do this same thing but with SIGNALS and TRANSITORS: TODO****
+Computers do this same thing but with electronic signals and transistors. Draw an example CPU diagram: arithmetic logic unit (ALU), registers, control unit. Then expand a bit on the ALU.
+
+
+Hexadecimal
+-----------
+
+TODO
 
 
 Binary multiplication
 ---------------------
+
+TODO
+
+
+Homework
+--------
+
+Your homework for next week is to write your first name in binary, using the ASCII encoding for the letters. If you go to [www.asciitable.com](http://www.asciitable.com/) you'll see a table of the punctuation, numbers, and letters, along with the number that represents them in the ASCII code. For example, big `A` is 65, big `B` is 66, little `a` is 97, etc. Each letter will be encoded as eight bits (a *byte*).
+
+Bonus points if you then convert the binary to hexadecimal.
+
+So for example, with my name being "Benjamin", I'd get something like this:
+
+    B - 0100 0010 - 42 hex
+    e - 0110 0101 - 65 hex
+    ...
+
+See you next time!
