@@ -97,12 +97,12 @@ What's a very simple example of JavaScript on a web page? Here's one: it's a pag
 Or what about this one?
 
 ```
-<p onmouseover="this.innerHTML = this.innerHTML + 1;">
+<h1 onmouseover="this.innerHTML = parseInt(this.innerHTML) + 1;">
   0
-</p>
+</h1>
 
 <script>
-  setTimeout(function() { alert('GAME OVER!'); }, 60000);
+  setTimeout(function() { alert('GAME OVER!'); }, 10000);
 </script>
 ```
 
