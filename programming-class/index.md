@@ -14,7 +14,7 @@ Below is the course outline, with links to my "teaching notes" for each session:
 2. [Computer Components](02-components/): break a computer apart to show them the components, explain briefly what each part does
 3. [Numbers, Binary, and Computer Math](03-numbers/)
 4. [Networks and the Internet](04-networks/)
-5. [Software and Programs](05-software/)
+5. [More About the Web](05-more-web/)
 6. [Programming Languages](06-languages/): assembler, C, and Python
 
 TODO: rest of course in-depth learning Python, programming a game or webiste
