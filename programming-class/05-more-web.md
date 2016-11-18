@@ -69,7 +69,8 @@ Here's an example of a dynamic web template:
 <ul>
 $ for movie in recommended_movies
   <li>
-    <a href="/play-movie/${movie.id}">${movie.name}</a>, directed by ${movie.director.name}
+    <a href="/play-movie/${movie.id}">${movie.name}</a>,
+    directed by ${movie.director.name}
   </li>
 $ end for
 </ul>
