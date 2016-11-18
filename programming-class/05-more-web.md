@@ -16,9 +16,9 @@ At the end of last week I kind of rushed you through a few things about HTML for
 
 "HTML" stands for HyperText Markup Language, and "hypertext" basically means you can link from one document to another. I think most of you had links from your page to other pages in your homework, which is great -- *linking* is probably the oldest and most important feature of the web.
 
+Let's break apart an HTML tag:
 
     <a href="http://example.com/" title="Click here!">
-Let's break apart an HTML tag:
         Link to Example Page
     </a>
 
@@ -64,15 +64,17 @@ Here's an example of a dynamic web template:
 ```
 <h1>Netflix: Recommend movies</h1>
 
-<p>Hi {{ user.name }}, here are some movies we think you'll love:</p>
+<p>Hi ${user.name}, here are some movies we think you'll love:</p>
 
 <ul>
-{% for movie in recommended_movies %}
- <li><a href="/play-movie/{{ movie.id }}">{{ movie.name }}</a>, directed by {{ movie.director.name }}</li>
-{% end for %}
+$ for movie in recommended_movies
+  <li>
+    <a href="/play-movie/${movie.id}">${movie.name}</a>, directed by ${movie.director.name}
+  </li>
+$ end for
 </ul>
 
-<footer>It's {{ current_time }} o'clock.</footer>
+<footer>It's ${current_time} o'clock.</footer>
 ```
 
 
@@ -99,6 +101,10 @@ Or what about this one?
 <h1 onmouseover="this.innerHTML = parseInt(this.innerHTML) + 1;">
   0
 </h1>
+
+<script>
+  setTimeout(function() { alert('GAME OVER!'); }, 10000);
+</script>
 ```
 
 What do you think is happening here? Let's break it apart -- what's going on?
