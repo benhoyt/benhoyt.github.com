@@ -1,6 +1,5 @@
 ---
 layout: default
-
 title: "Session 5: More About the Web"
 permalink: /programming-class/05-more-web/
 ---
