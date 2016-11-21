@@ -110,7 +110,7 @@ Or what about this one?
 
 What do you think is happening here? Let's break it apart -- what's going on?
 
-(It might be the world's simplest web page: see how high you can get it to count in one minute.)
+(It might be the world's simplest web game: see how high you can get it to count in one minute.)
 
 
 Homework
