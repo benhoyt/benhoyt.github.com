@@ -1,121 +1,118 @@
 ---
 layout: default
-title: "Session 5: More About the Web"
-permalink: /programming-class/05-more-web/
+title: "Session 6: Introduction to Python"
+permalink: /programming-class/06-intro-to-python/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
-<p class="subtitle">November 2016</p>
+<p class="subtitle">December 2016</p>
 
-> These are my "teaching notes" for the fifth session of my [Computers and Programming Class](/programming-class/).
-
-
-More on HTML
-------------
-
-At the end of last week I kind of rushed you through a few things about HTML for your homework assignment. I was going to use this lesson to talk about *software*, but I think the web is important enough that I want to flesh out HTML a bit more. We'll get to software next time.
-
-"HTML" stands for HyperText Markup Language, and "hypertext" basically means you can link from one document to another. I think most of you had links from your page to other pages in your homework, which is great -- *linking* is probably the oldest and most important feature of the web.
-
-Let's break apart an HTML tag:
-
-    <a href="http://example.com/" title="Click here!">
-        Link to Example Page
-    </a>
-
-* `<a...>`: opening tag for the "anchor tag"
-* `href="..."` and `title="value"` are attributes (name="value"); these tell the tag how to behave
-  - the `href` value (required) tells the browser where to go if you click on this link
-  - the `title` value (optional) makes the browser show that text when you hover over the tag with your mouse
-* `</a>` is the closing tag
-* "Link to Example Page" is the text between the opening tag and the closing tag, and it's what the link actually says
-
-Even if HTML only had text and links (`<a>` tags), the web would still be an amazing resource. Just think, Wikipedia is actually quite a simple website -- mostly just text and links (and some images). It's the *content* that's really important and valuable. A programmer could make a really basic version of the Wikipedia software in a week or two -- but adding all that information, that's what's unique about a website like Wikipedia.
-
-In fact, back in the early days the web was basically just text and links. The `<img>` tag (for images) was only added later. And then came fancier things like fonts, colors, styles, margins, mobile phone layouts, and all of that great stuff.
-
-However, I would argue that the content and links are the most important part of a web page. If a web page looks elegant and amazing, but doesn't say anything of interest, no one's going to read it.
-
-A few other common tags:
-
-* `<h1>Main heading</h1>`
-* `<h2>Smaller heading</h2>` and `<h3>Even smaller heading</h3>`
-* `<p>This is a paragraph.</p>`
-* `<b>bold</b>`
-* `<i>italic</i>`
+> These are my "teaching notes" for the sixth session of my [Computers and Programming Class](/programming-class/).
 
 
-Dynamic content
----------------
+What is a program?
+------------------
 
-"Static content" is when you have a website that doesn't really change. It's just a bunch of web pages that sit in a folder on the server's hard drive, and the web server serve them up again and again when people browse to the website.
+A program (at least for our purposes) is a sequence of instructions that tell the computer what to do. One kind of program is basically like a recipe: it takes some input, executes some commands using that input, and gives you some output. When you're cooking or baking with a recipe, what are the inputs? What are the commands? What are the outputs?
 
-"Dynamic content" is when the web server changes the content it serves you based on various inputs -- for example, it might serve a different page on weekends or if it's a web store and there's a sale on. Or it might serve a "please sign up" page if you're not signed in, and a "dashboard just for you" if you are signed in.
+(Example: baking a cake. Inputs are the ingredients, you're the computer that executes the recipe's instructions, and the output is the cake! There might also be some outputs you don't care much about, like the egg shells, or the dirty dishes -- it's the same with computer programs.)
 
-Was the homework you guys did a static web page or a dynamic one? What are some other examples of static web pages and dynamic web page?
+When programmers work with programs, we're dealing with the *source code*, and that's what we're going to focus on in the rest of this course. We'll be using a programming language called "Python", so the source code is simply text -- the Python commands that the computer executes when you run.
 
-Dynamic content is where the web really gets powerful. Just think of when you're browsing Netflix -- it shows different videos to different people, depending on what they've watched and enjoyed in the past. Or Facebook -- it's very dynamic -- it changes all the time as people post.
-
-With a dynamic server, the web server is still serving you HTML at the end of the day, but instead of just *files* behind that HTML, there's a computer program that is working off HTML *templates*, and it grabs the dynamic data and inserts it into the correct places in the template.
-
-Where do you think the data for a dynamic website comes from? (Database. What is a database?)
-
-Here's an example of a dynamic web template:
-
-```
-<h1>Netflix: Recommend movies</h1>
-
-<p>Hi ${user.name}, here are some movies we think you'll love:</p>
-
-<ul>
-$ for movie in recommended_movies
-  <li>
-    <a href="/play-movie/${movie.id}">${movie.name}</a>,
-    directed by ${movie.director.name}
-  </li>
-$ end for
-</ul>
-
-<footer>It's ${current_time} o'clock.</footer>
-```
+When we write a program, we'll type the text (the source code) into a file and save it out as a `.py` file, for example `my_program.py`. Then we can run the program, or execute the Python instructions, using the Python interpreter. The Python interpreter turns the Python source code into instructions the computer can understand, and then executes them.
 
 
-JavaScript
-----------
+Some elements of a Python program
+---------------------------------
 
-A very important tool that makes web pages even more dynamic ("interactive") is JavaScript. Anyone heard of JavaScript? What is it?
+Here's a few lines of source code -- a complete Python program:
 
-Yeah, it's a full-blown programming language that sits inside your web browser and can interact with the user and the web page. The original web didn't have JavaScript, and to interact with a dynamic website, you'd have to click a link on the page. That would again talk to the web server, and serve you up some new HTML, and you could read that page and click more links. It was powerful, but a bit too simplistic for a lot of interactive "web applications".
+    print('A cool picture:')
+    for i in range(20):
+        double = i * 2
+        print('.' * double)
+    print('All done!')
 
-Think of Facebook, when you're messaging someone from within Facebook: you're not clicking links and getting brand new HTML pages from the server all the time -- you type, press enter, and your message is immediately sent, using JavaScript, to the other person. As soon as they send a reply, JavaScript is constantly waiting for messages for you and it'll show them on your screen. All up, Facebook is a very complex web application with a lot of JavaScript.
+(What do you think this program does?)
 
-What's a very simple example of JavaScript on a web page? Here's one: it's a page with just a heading, but when you hover over the heading with your mouse, it'll change the heading text to "You can't catch me!"
+Explain the different elements of the program:
 
-```
-<h1 onmouseover="this.innerHTML = 'You can\'t catch me!'">
-  Gingerbread Man
-</h1>
-```
+* keywords: `for`, `in` -- these are special words that affect the structure of the program in some way; above we have a "for loop"
+* operators: `=`, `*` -- special symbols
+* expressions: `i * 2`
+* names: `i`, `double` -- often called *variables*, these are words you make up to name things
+* functions: `print(...)` -- functions are names with parentheses around them; functions take some inputs, do something with those inputs, and produce output or give you back a value
 
-Or what about this one?
+Note that this program doesn't take any inputs, it just runs the commands which print something out on the screen (output).
 
-```
-<h1 onmouseover="this.innerHTML = parseInt(this.innerHTML) + 1;">
-  0
-</h1>
 
-<script>
-  setTimeout(function() { alert('GAME OVER!'); }, 10000);
-</script>
-```
+Python value and data types
+---------------------------
 
-What do you think is happening here? Let's break it apart -- what's going on?
+The computer itself can only deal with one kind of data: numbers. However, as we saw in previous lessons, pretty much anything can be represented as numbers: letters, text, photos, lists of things, etc. Python has several *data types* it lets you use, some of the important ones are:
 
-(It might be the world's simplest web page: see how high you can get it to count in one minute.)
+    1234            # number (integer)
+    12.34           # number (floating point, what often call "decimals")
+    'abc'           # string of characters
+    "Hello world!"  # another string (single or double quotes are the same)
+    [1, 2, 3]       # list (of numbers)
+    ['the', 'end']  # list (of strings)
+    [0.5, 'abc', 7] # list (of different types)
+
+There are other data types too, but we'll cover those another time.
+
+
+Names ("variables")
+-------------------
+
+If you want to remember some value or calculation later, you can give it a name, or "assign" the value to a name as it's called. For example, say you want to multiply two numbers:
+
+    256 * 256
+
+But then you want to keep that result and use it later, maybe use it a few times. You'd assign it to a name, like so:
+
+    big_number = 256 * 256
+
+Note that names can't have spaces in them (this is the case in almost all programming languages). In Python, people usually make these names lowercase, and use `_` (underscore) to separate words. Names can be as long or short as you want:
+
+    n = 16 * 16
+    this_is_a_very_long_name_for_a_small_number = 1 + 1
+
+When you're writing code, use names that make sense to you, and that will make sense to someone looking at the code later.
+
+How do we use these names, or "variables" as they're often called? Well, simply type the name where you would otherwise type the number or value:
+
+    bigger_number = big_number * 10
+    biggest_number = (big_number + big_number) * 1000
+
+You can also "re-assign" a name:
+
+    n = 1
+    n = n + 5
+    n = n * 10
+
+What's `n` now?
+
+
+A simple program
+----------------
+
+Putting it all together, here is a simple program which lets the user type in a temperature in degrees Fahrenheit, then it converts it to Celcius and prints out the result:
+
+    temp = input('Enter a temperature in degrees Fahrenheit: ')
+    f = float(temp)
+    c = (f - 32) * 5 / 9
+    print('The equivalent in degrees Celcius is:', c)
+
+(Show them some more stuff in the Python REPL, IDLE, and turtle graphics.)
 
 
 Homework
 --------
 
-Find real examples of three static websites and three dynamic websites. For each static website, write one sentence why you believe the website is purely static, unchanging HTML. For the dynamic websites, write one sentence on why the website is dynamic and where you think the data is coming from.
+For next week's homework, I'd like you to do two things:
 
-This is a best-guess kind of thing: there's actually no 100% fool-proof way to determine whether a website is static or dynamic just from looking at it -- you have to know what the web server is doing. But you can make some good guesses.
+1) Download Python (version 3.5) from [https://www.python.org/](www.python.org) and install it on your computer. Python runs on Windows, macOS, and Linux.
+2) Run "IDLE", the Python interpreter and editor.
+3) Write a small program using IDLE to print something cool on the screen, using what you've learned today (or other stuff on the web if you like).
+
+Once you've written the program and saved it to a file on your hard drive, please email me and include the file ("source code") as an attachment.

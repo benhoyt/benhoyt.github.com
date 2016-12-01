@@ -15,6 +15,6 @@ Below is the course outline, with links to my "teaching notes" for each session:
 3. [Numbers, Binary, and Computer Math](03-numbers/)
 4. [Networks and the Internet](04-networks/)
 5. [More About the Web](05-more-web/)
-6. [Programming Languages](06-languages/): assembler, C, and Python
+6. [Introduction to Python](06-intro-to-python/)
 
 TODO: rest of course in-depth learning Python, programming a game or webiste
