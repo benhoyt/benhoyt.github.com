@@ -111,7 +111,7 @@ Homework
 
 For next week's homework, I'd like you to do two things:
 
-1) Download Python (version 3.5) from [https://www.python.org/](www.python.org) and install it on your computer. Python runs on Windows, macOS, and Linux.
+1) Download Python (version 3.5) from [www.python.org](https://www.python.org/) and install it on your computer. Python runs on Windows, macOS, and Linux.
 2) Run "IDLE", the Python interpreter and editor.
 3) Write a small program using IDLE to print something cool on the screen, using what you've learned today (or other stuff on the web if you like).
 
