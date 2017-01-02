@@ -10,10 +10,12 @@ permalink: /writings/gifty/index.html
 I run a small wedding gift registry website over at [GiftyWeddings.com](https://giftyweddings.com/). This article explains how I got started with Gifty and also describes the recent revamp I gave the site. I'm a programmer first, so this is primarily from my perspective as a developer, but I might also include a few juicy details about the business side of things (if you can call a tiny side project a "business").
 
 
-Version One
+Version one
 -----------
 
-I made Gifty initially for my younger brother and his wife when they were getting married, 8+ years ago. But it wasn't that much harder to open it up as a little side business and make it available for other couples to use. If I remember correctly, I had a very basic first version done in a long weekend, but then spent many more evenings and weekends polishing it up to make it more useable.
+First, a brief explanation: Gifty Weddings is a low-cost wedding gift registry website that about 500 couples have now used. Not that I'm biased or anything, but Gifty is better than typical store-based registries for a lot of couples, because you can add any products from any stores (or even products from no store at all, like "donation toward our honeymoon fund").
+
+I made Gifty initially for my younger brother and his wife when they were getting married, 8+ years ago. And it wasn't that much harder to open it up as a little side business and make it available for other couples to use. If I remember correctly, I had a very basic first version done in a long weekend, but then spent many more evenings and weekends polishing it up to make it more useable.
 
 This first version of the site was a fairly simple website written in Python (2.6). It used the [web.py](http://webpy.org/) web framework, Cheetah and later my [Symplate](https://github.com/benhoyt/symplate) for templating, and PostgreSQL with my little [row-object mapper](http://blog.brush.co.nz/2010/01/mro/) for database handling.
 
@@ -30,7 +32,7 @@ The original site looked like this:
 Being designed by the less-than-world-class-designer yours truly, it was kinda dated even when it first launched, but after a few years it felt quite ugly. But it was 2016 before I got around to a revamp.
 
 
-The Revamp
+The revamp
 ----------
 
 Close to eight years after version one, I started working on a revamp. Party because I wanted to learn some new tools, and partly because it really needed a from-the-ground-up fresh look, I decided to do a complete rewrite.
@@ -41,6 +43,43 @@ So I ended up using React (version 0.14) along with Babel and webpack to get som
 
 I'm not a fan of large CSS frameworks, but wanted some kind of starting point, so I ended up using [Skeleton](http://getskeleton.com/). It has a responsive grid layout and good typography defaults that worked well for Gifty. The site's CSS is 17KB, of which 7KB is Normalize and Skeleton. I didn't feel the need for a CSS preprocessor for a small, single-file chunk of CSS.
 
-So I did the new design myself, with a bunch of help from the Skeleton CSS and custom font. Here's what the new site looks like:
+So I did the new design myself, with a bunch of help from Skeleton. Here's what the top of the new site looks like:
 
 ![Screenshot of the new Gifty Weddings website](/images/gifty-new.jpg)
+
+(Yep, that hero image really is a picture of my wife going down a flying fox (zip-line) in her wedding dress.)
+
+For the backend I chose Python again, as I'm very familiar with it and like it a lot. I settled on Python 3.4 -- I definitely wanted to use 3.x, but the Amazon EC2 image I chose only shipped with Python 3.4 at the time, but that was no big deal.
+
+I went with the Flask web framework, and I'm very happy with it (I don't like the size or my-way-or-the-highway approach of Django). For an ORM, I chose [peewee](http://docs.peewee-orm.com/en/latest/) for its nice API and simplicity over the heavyweight (but powerful) SQLAlchemy -- I have only good things to say about peewee for a site of this size. And although I think PostgreSQL is amazing for medium to larger projects, I ended up using SQLite for this project; Gifty is a small, low-traffic website that will fit on a single server for the forseeable future, so the no-install, zero-configuration nature of SQLite was pretty attractive.
+
+I'm living in the U.S. now, so I was able to use [Stripe](https://stripe.com/) for payments in the revamp -- good riddance PayPal! Can't say enough good things about Stripe: easy signup, superb developer documentation and experience, the extremely easy-to-use [Stripe Checkout](https://stripe.com/checkout) product.
+
+A few comments on the infrastructure, what little there is of it. I use a small Amazon EC2 instance to host everything (I believe it comes under their free tier for 12 months, and then it's about $15/mo). It's running one of the standard Amazon Linux images. I'm using Amazon SES to send (a very few) emails. Although I prefer nginx, I'm using Apache with mod_python just because it seemed to be the supported option and was easier to set up in this case.
+
+I wanted the revamped site to use HTTPS, so I got a free [StartSSL](https://www.startssl.com/) certificate and installed it in Apache without any trouble.
+
+I don't have hard numbers, but it felt like the revamp took me longer than the initial version. I did it over the span of a couple of months, mostly on my daily bus commute from our house in New Jersey to New York City. In terms of number of hours, my guess would be between 40 and 80 hours for the revamp.
+
+
+Some numbers
+------------
+
+I love patio11's (Patrick McKenzie's) yearly reviews, for example his [2016 one](http://www.kalzumeus.com/2016/12/30/kalzumeus-software-year-in-review-2016/). I'm not going to be quite as detailed or as open, but in something of that spirit, here are a few numbers:
+
+* Number of couples who paid for Gifty in 2016: 63 (told you it was a tiny side business)
+* Signups by country: New Zealand - 48, United States - 10, Australia - 5
+* Signups by how they found out about Gifty: Google - 32, friend / word of mouth - 28, other - 3
+* Because Gifty is primarily used in New Zealand, I get a lot more signups toward the end of the year / in the warm months
+* Average number of items per registry: 43
+* Cost of running Gifty in 2016: less than $30 (domain registration and a few other AWS fees; EC2 hosting in 2016 was free)
+
+In related news, my lovely wife's offered to help out on the marketing and social media side of things (our currently-lackluster [Facebook page lives here](https://www.facebook.com/GiftyWeddings/)). Anyway, I'm very interested to see what 2017 will bring!
+
+
+Final word
+----------
+
+One final (but important) thing: as you can tell, Gifty Weddings is a tiny, family-run side business. If you know anyone who's getting married, or if you can help spread the word, I'll be very thankful -- just point them to [GiftyWeddings.com](https://giftyweddings.com/).
+
+And don't hesitate to reach out if you'd like any more info about the above, or if you have a similar story to share!
