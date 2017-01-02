@@ -11,7 +11,7 @@ I run a small wedding gift registry website over at [GiftyWeddings.com](https://
 
 
 Version One
-===========
+-----------
 
 I made Gifty initially for my younger brother and his wife when they were getting married, 8+ years ago. But it wasn't that much harder to open it up as a little side business and make it available for other couples to use. If I remember correctly, I had a very basic first version done in a long weekend, but then spent many more evenings and weekends polishing it up to make it more useable.
 
@@ -31,7 +31,7 @@ Being designed by the less-than-world-class-designer yours truly, it was kinda d
 
 
 The Revamp
-==========
+----------
 
 Close to eight years after version one, I started working on a revamp. Party because I wanted to learn some new tools, and partly because it really needed a from-the-ground-up fresh look, I decided to do a complete rewrite.
 
