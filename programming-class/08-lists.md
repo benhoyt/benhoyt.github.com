@@ -85,10 +85,10 @@ Next week's homework
 
 Write a program the lets you input five numbers, appending them to a list, and then prints out the list of numbers, followed by the biggest number you type. For example:
 
-   Type a number: 123
-   Type a number: 5
-   Type a number: 400
-   Type a number: 5
-   Type a number: 10
-   [123, 5, 400, 5, 10]
-   400
+    Type a number: 123
+    Type a number: 5
+    Type a number: 400
+    Type a number: 5
+    Type a number: 10
+    [123, 5, 400, 5, 10]
+    400
