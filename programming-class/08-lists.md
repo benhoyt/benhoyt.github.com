@@ -66,7 +66,7 @@ First let's think of some subjects (nouns) for our sentence:
     import random
 
     nouns = ['EACHE', 'the cat', 'an elephant', 'Brandon', 'Mrs Hoyt',
-             'his homework',t 'he fence', 'a huge tiger']
+             'his homework', 'the fence', 'a huge tiger']
     verbs = ['sat on', 'consumed', 'forgot about', 'wrote to', 'programmed',
              'looked at', 'grumbled about']
 
@@ -77,3 +77,18 @@ First let's think of some subjects (nouns) for our sentence:
 
 And now let's add a `for i in range(10): ...` to print 10 random sentences. [Run the code] Cool huh!
 
+You can do a lot of cool stuff with lists. Index into them [go over this], find things in them, etc. [If there's time, with sum_of_squares function.]
+
+
+Next week's homework
+--------------------
+
+Write a program the lets you input five numbers, appending them to a list, and then prints out the list of numbers, followed by the biggest number you type. For example:
+
+   Type a number: 123
+   Type a number: 5
+   Type a number: 400
+   Type a number: 5
+   Type a number: 10
+   [123, 5, 400, 5, 10]
+   400
