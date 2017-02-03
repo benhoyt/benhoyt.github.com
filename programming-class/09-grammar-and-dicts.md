@@ -104,15 +104,18 @@ To put something new in a dictionary, how do you think we do that?
     >>> ages['Very New Guy'] = 10
 
 
-file = open('file.txt')
-contents = file.read()
-words = contents.split()
+Homework
+--------
 
-counts = {}
-for word in words:
-    if word in counts:
-        counts[word] = counts[word] + 1
-    else:
-        counts[word] = 1
+Your homework for next time is two things:
 
-print(counts)
+1) Do part of an online Python tutorial that I'll send you next week.
+
+2) Write a program that uses a dictionary to get the counts of unique words in some input that you type. You can use the `string.split()` function to split a string into a list of words. For example:
+
+    Type some text: the box the fox the camel on the fox
+    the 4
+    fox 2
+    box 1
+    camel 1
+    on 1
