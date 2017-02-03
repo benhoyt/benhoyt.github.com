@@ -54,6 +54,10 @@ What are the parts of the grammar here?
   - number >= 10 and number <= 100
   - word.endswith('s') and word != 'sheep'
 
+
+Variable names vs functions
+---------------------------
+
 I noticed some of you wrote things like this in your homework:
 
     numbers = []
