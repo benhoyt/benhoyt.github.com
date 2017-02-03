@@ -17,6 +17,7 @@ Below is the course outline, with links to my "teaching notes" for each session:
 5. [More About the Web](05-more-web/)
 6. [Introduction to Python](06-intro-to-python/)
 7. [Control Structures](07-control-structures/)
-8. [Lists](08-lists): a look at the "list" container data type
+8. [Lists](08-lists/): a look at the "list" container data type
+9. [Grammar and Dictionaries](09-grammar-and-dicts/)
 
 TODO: rest of course in-depth learning Python, programming a game or webiste
