@@ -19,5 +19,7 @@ Below is the course outline, with links to my "teaching notes" for each session:
 7. [Control Structures](07-control-structures/)
 8. [Lists](08-lists/): a look at the "list" container data type
 9. [Grammar and Dictionaries](09-grammar-and-dicts/)
+10. Going over the homework
+11. [Programming Careers](11-careers/)
 
 TODO: rest of course in-depth learning Python, programming a game or webiste
