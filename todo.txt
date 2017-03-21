@@ -1,0 +1,36 @@
+TODO
+
+* split up /writings into technical writing and other
+* copy tech writing linked below from Jetsetter/Oyster/Brush blogs
+* add cdnupload.com to "Other websites I run" section
+* update CV
+
+
+Jetsetter tech blog:
+* http://tech.jetsetter.com/2017/03/21/duplicate-image-detection/
+* http://tech.jetsetter.com/2016/08/29/graphyte/
+
+Oyster tech blog:
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2011-07-15-how-our-photo-search-engine-really-works.md
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2011-10-31-cherrypy-ctypes-and-being-explicit.md
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2012-05-10-a-few-little-libraries-were-making-open-source.md
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2013-01-13-pythons-garbage-collector.md
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2013-04-25-openssl-python-windows.md
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2013-11-17-save-ram-with-python-slots.md
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2015-07-08-using-ansible-to-restore-developer-sanity.md
+* https://github.com/oysterhotels/oysterhotels.github.io/blob/master/_posts/2016-03-07-rundeck-vs-crontab-why-rundeck-won.md
+
+Brush blog:
+http://blog.brush.co.nz/2007/09/nobraces/
+http://blog.brush.co.nz/2007/10/ten-things-about-c/
+http://blog.brush.co.nz/2008/01/soft404s/
+http://blog.brush.co.nz/2008/06/snappy-software/
+http://blog.brush.co.nz/2008/07/adobe-reader-9/
+http://blog.brush.co.nz/2008/07/protothreads/
+http://blog.brush.co.nz/2009/08/xmacros/
+http://blog.brush.co.nz/2010/05/cpp-1/
+http://blog.brush.co.nz/2010/08/cpp-2/
+http://blog.brush.co.nz/2011/01/cpp-embedded/
+http://blog.brush.co.nz/2012/11/async-await-protothreads-cpp/
+http://blog.brush.co.nz/2013/01/masterminds-of-programming/
+http://blog.brush.co.nz/2013/07/card-number/
