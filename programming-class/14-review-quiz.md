@@ -115,8 +115,8 @@ Answer: (b). HTML has many "tags", and the one to make text bold is &lt;b&gt;. O
 
 11. What does the following Python program do? [Write the two lines of code on the whiteboard]
 
-    for i in range(5):
-        print(i)
+        for i in range(5):
+            print(i)
 
     1. Print the letter "i" on the screen five times
     2. Print "SyntaxError"
