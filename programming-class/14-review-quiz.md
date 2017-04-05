@@ -13,7 +13,9 @@ ol { list-style-type: lower-alpha; }
 
 > These are my "teaching notes" for the fourteenth session of my [Computers and Programming Class](/programming-class/), which was a programming quiz based on the material I had already taught.
 
-**Notes for the instructor:**
+
+Notes for the instructor
+------------------------
 
 * Please split the class up into two teams so they can compete with each other
 * Give the first question to the first team, the second question to the second team, etc
@@ -24,8 +26,8 @@ ol { list-style-type: lower-alpha; }
 * Sometimes more than one answer kind of works -- in these cases, give the best answer; there's only one best answer
 
 
-Programming quiz
-================
+The quiz
+--------
 
 **1. What is a "computer"?**
 
