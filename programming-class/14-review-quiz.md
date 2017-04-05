@@ -17,7 +17,7 @@ ol { list-style-type: lower-alpha; }
 Programming quiz
 ================
 
-<p class="question">1. What is a "computer"?</p>
+**1. What is a "computer"?**
 
 1. Someone who computes
 2. A device that adds and multiplies numbers really fast
@@ -27,7 +27,7 @@ Programming quiz
 Answer: (d). The word originally meant a person who computes with numbers, but now we use it to mean a machine that follows instructions (a program), and most of the instructions are simply adding and multiplying numbers.
 
 
-<p class="question">2. What does RAM stand for?</p>
+**2. What does RAM stand for?**
 
 1. Readily Available Memory
 2. Rare Art Module
@@ -37,7 +37,7 @@ Answer: (d). The word originally meant a person who computes with numbers, but n
 Answer: (c). Random Access Memory. It's called that because unlike a hard drive, the computer can access any random memory location instantly -- there's no waiting for moving parts to get into the right place to read it.
 
 
-<p class="question">3. Why is the programming language Python called "Python"?</p>
+**3. Why is the programming language Python called "Python"?**
 
 1. Because it's as slippery as a snake
 2. After the British comedy show "Monty Python"
@@ -47,7 +47,7 @@ Answer: (c). Random Access Memory. It's called that because unlike a hard drive,
 Answer: (b). After the British comedy show "Monty Python". The original designer has quite a sense of humour, and many of the examples in the documentation are funny words or lines taken from the comedy show.
 
 
-<p class="question">4. How many instructions per second can modern computers execute?</p>
+**4. How many instructions per second can modern computers execute?**
 
 1. 50 thousand
 2. 4 million
@@ -57,7 +57,7 @@ Answer: (b). After the British comedy show "Monty Python". The original designer
 Answer: (c). About two billion. When you see that a computer is so many gigahertz, the "giga" means billion ("mega" is million). And the "hertz" is not about pain -- it's a scientific term that means "number of times per second".
 
 
-<p class="question">5. What part of the computer computes and executes the instructions?</p>
+**5. What part of the computer computes and executes the instructions?**
 
 1. The CPU (central processing unit)
 2. The power supply
@@ -67,7 +67,7 @@ Answer: (c). About two billion. When you see that a computer is so many gigahert
 Answer: (a). The CPU (central processing unit). This is the little black "chip" that does the adding and multiplying, and executes the instructions in each program. It's the main control unit. The RAM could also be considered part of the "brain" of the computer -- but it's the computer's memory, not the computation part.
 
 
-<p class="question">6. What are the place values in a 4-bit binary number, from right to left?</p>
+**6. What are the place values in a 4-bit binary number, from right to left?**
 
 1. 2, 4, 6, 8
 2. 1, 2, 4, 8
@@ -77,7 +77,7 @@ Answer: (a). The CPU (central processing unit). This is the little black "chip" 
 Answer: (b). Just like decimal, the right-most place is the "one's place". Then each place to the left multiplies the value by two, so 1, 2, 4, and 8.
 
 
-<p class="question">7. What is the decimal value of the binary number 1101?</p>
+**7. What is the decimal value of the binary number 1101?**
 
 1. 15
 2. 7
@@ -87,7 +87,7 @@ Answer: (b). Just like decimal, the right-most place is the "one's place". Then 
 Answer: (d). There's 1 in the one's place, four's place, and eight's place, so 1+4+8, which is 13.
 
 
-<p class="question">8. What is the binary value of the decimal number 9?</p>
+**8. What is the binary value of the decimal number 9?**
 
 1. 1001
 2. 0111
@@ -97,7 +97,7 @@ Answer: (d). There's 1 in the one's place, four's place, and eight's place, so 1
 Answer: (a). 9 is an 8 plus a 1, so there's 1 in the eight's place and in the one's place.
 
 
-<p class="question">9. What is "caching"?</p>
+**9. What is "caching"?**
 
 1. A programmer taking money to the bank
 2. Storing a result in memory so it's quick to access next time
@@ -108,7 +108,7 @@ Answer: (a). 9 is an 8 plus a 1, so there's 1 in the eight's place and in the on
 Answer: (b). Storing the result of a calculation or operation in memory so it's much quicker to access next time you need it. For example, some web page files are "cached" so that the website is faster to access the second time around.
 
 
-<p class="question">10. How do you make text bold in an HTML web page?</p>
+**10. How do you make text bold in an HTML web page?**
 
 1. &lt;a&gt;
 2. &lt;b&gt;
@@ -118,7 +118,7 @@ Answer: (b). Storing the result of a calculation or operation in memory so it's 
 Answer: (b). HTML has many "tags", and the one to make text bold is &lt;b&gt;. Other tags are: &lt;a&gt; to make a link (anchor), &lt;p&gt; to make a paragraph, and &lt;i&gt; to make italics.
 
 
-<p class="question">11. What does the following Python program do? [Write the two lines of code on the whiteboard]</p>
+**11. What does the following Python program do? [Write the two lines of code on the whiteboard]**
 
     for i in range(5):
         print(i)
@@ -131,7 +131,7 @@ Answer: (b). HTML has many "tags", and the one to make text bold is &lt;b&gt;. O
 Answer: (c). The "for i in range(5)" part makes the variable "i" count from 0 through 4. Then the "print(i)" prints the variable "i" each time around the loop. So the code prints the numbers from 0 through 4.
 
 
-<p class="question">12. What is a variable in Python?</p>
+**12. What is a variable in Python?**
 
 1. A name for a number, string, or other object
 2. A list of words
@@ -141,7 +141,7 @@ Answer: (c). The "for i in range(5)" part makes the variable "i" count from 0 th
 Answer: (a). A variable is a name the programmer gives to an object, usually a number, string, list, or dictionary. You can set the same to refer to another object, hence it's "vary-able".
 
 
-<p class="question">13. What does the "input" function do?</p>
+**13. What does the "input" function do?**
 
 1. Reads a Python program from disk and executes it
 2. Gets input from a keyboard or mouse
@@ -151,7 +151,7 @@ Answer: (a). A variable is a name the programmer gives to an object, usually a n
 Answer: (d). The input function prints a "prompt" on the screen and then waits for the user to type something. It returns what the person typed as a string that you can use in your program.
 
 
-<p class="question">14. What does the following line of code do? [Write it on the whiteboard]</p>
+**14. What does the following line of code do? [Write it on the whiteboard]**
 
     print(31 % 3)
 
@@ -163,10 +163,10 @@ Answer: (d). The input function prints a "prompt" on the screen and then waits f
 Answer: (d). The "%" symbol means "divide and give me the remainder". 31 divided by 3 is 10 remainder 1, so the remainder of "1" is printed on the screen.
 
 
-<p class="question">15. What does</p>
+**15. What does**
 
 
-<p class="question">16. What does the following "turtle" program draw?</p>
+**16. What does the following "turtle" program draw?**
 
     left(180)
     for i in range(5):
@@ -181,7 +181,7 @@ Answer: (d). The "%" symbol means "divide and give me the remainder". 31 divided
 Answer: (a). First the turtle turns 180 degrees so it's facing left. Then it repeats this five times: go forward 100 pixels and turn left by 45 degrees. This will draw the shape of the letter "C".
 
 
-<p class="question">20. Which one of the following is NOT a famous computer scientist?</p>
+**20. Which one of the following is NOT a famous computer scientist?**
 
 1. Ada Lovelace
 2. Charles Babbage
