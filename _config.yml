@@ -7,6 +7,8 @@ url: http://benhoyt.com/
 kramdown:
   input: GFM
   hard_wrap: false
-gems:
-  - jekyll-coffeescript
-  - jekyll-paginate
+
+# These are GitHub defaults too, but we don't need them
+#gems:
+#  - jekyll-coffeescript
+#  - jekyll-paginate
