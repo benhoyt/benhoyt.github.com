@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Contributing os.scandir() to Python
-permalink: /writings/scandir/index.html
+permalink: /writings/scandir/
 ---
 <h1><a href="/writings/scandir/">{{ page.title }}</a></h1>
 <p class="subtitle">August 2016</p>
