@@ -9,7 +9,7 @@ permalink: /writings/language-speed/
 
 I've seen a lot of dislike for dynamically typed languages on Hacker News and programming reddit recently. I'm an avid user of Python, and I'm going to make some arguments for it based on two kinds of speed: that compile speed matters a lot, and that execution speed doesn't matter as much as you think.
 
-Don't get me wrong -- I've worked on large, dynamically typed codebases, and I understand the tradeoff. The main problem with languages like Python is refactoring: when you make changes, you have to re-test pretty much every part of code you've changed, either manually or via unit tests. If you don't, there's a good chance it will throw some kind of runtime error because you spelled an attribute name wrong (or similar).
+Don't get me wrong -- I've worked on large, dynamically typed codebases, and I understand the trade-off. The main problem with languages like Python is refactoring: when you make changes, you have to re-test pretty much every part of code you've changed, either manually or via unit tests. If you don't, there's a good chance it will throw some kind of runtime error because you spelled an attribute name wrong (or similar).
 
 But, as I'm going to argue, I believe that *in many cases* the developer-productivity pros outweigh the refactoring cons.
 
@@ -49,7 +49,7 @@ Why does compile speed matter? Because as a developer I never have to wait. Occa
 
 One statically-typed language I've used takes 20 minutes to compile a medium-sized project, and 15-30 seconds even for an incremental compile. (Yep, it's Scala. Scala's author has a [good StackOverflow answer](http://stackoverflow.com/questions/3490383/java-compile-speed-vs-scala-compile-speed/3612212#3612212) on why the compiler is so slow.)
 
-The fact that "scalac manages about 500 to 1000 lines per second" on modern gigahertz-clocked CPUs boggles my mind. Back in the 1990's, when CPU speeds were measured in the tens of *mega*hertz, Borland's Turbo Pascal was already compiling at [thousands](http://prog21.dadgum.com/47.html) of lines per second.
+The fact that "`scalac` manages about 500 to 1000 lines per second" on modern gigahertz-clocked CPUs boggles my mind. Back in the 1990's, when CPU speeds were measured in the tens of *mega*hertz, Borland's Turbo Pascal was already compiling at [thousands](http://prog21.dadgum.com/47.html) of lines per second.
 
 I think the Go language has the right idea. The language is relatively simple partly *because* they wanted to keep compile times down -- this was a design goal of the language from day one. It's statically typed (but doesn't have a complex type system), compiles to machine code and does pretty decent optimizations, but the compiler is still pretty fast.
 
@@ -99,6 +99,7 @@ Of course, there are cases where you shouldn't use a compile-fast, execute-more-
 * When you're writing that low-level, performance critical code for math libraries, graphics engines, or similar. Nobody wants a 100x slower libjpeg written in Python.
 * In safety-critical code, for example, code that powers airliner control systems. Use Ada or MISRA C or something saner for that.
 * In systems or operating system code. You don't want to write your next file system driver or memory allocator in a fast-compile, slow-execute language. Use Rust or C or C++ for that.
+* In embedded programming -- you don't want the overhead of a dynamic language running on a micro with 8KB of RAM (though there is [MicroPython](https://micropython.org/)!).
 * Where responsiveness and resource usage are important (*cf* those lovely [Electron apps](https://josephg.com/blog/electron-is-flash-for-the-desktop/), Visual Studio Code's [blinking cursor issue](https://www.reddit.com/r/programming/comments/612v99/vs_code_uses_13_cpu_when_idle_due_to_blinking/), or [Atom vs Sublime Text](https://blog.xinhong.me/post/sublime-text-vs-vscode-vs-atom-performance-dec-2016/) performance).
 
 But do use Python (or Ruby, or JavaScript) for your next startup, for web apps, for deployment tools, and for scientific and numerical processing. Developer productivity for the win!
