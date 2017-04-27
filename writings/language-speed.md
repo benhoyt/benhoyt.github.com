@@ -23,10 +23,12 @@ Why does Python compile so fast? Because the compiler is very simple and doesn't
 
 The compiler turns Python source code like this:
 
-    def count_words(string):
-        words = string.split()
-        counts = Counter(words)
-        return counts
+```python
+def count_words(string):
+    words = string.split()
+    counts = Counter(words)
+    return counts
+```
 
 Into bytecode like this (use [dis](https://docs.python.org/3/library/dis.html) module):
 
