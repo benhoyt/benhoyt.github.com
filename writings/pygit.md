@@ -6,7 +6,7 @@ permalink: /writings/pygit/
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">April 2017</p>
 
-<!-- TODO: address TODOs, proof, reduce size of h3 (search for other instances), git or Git, pygit spelt with or without backticks -->
+<!-- TODO: address TODOs -->
 
 > Summary: Recently I wrote approximately 500 lines of Python code that implements just enough of `git` to create a repository, add files to the index, commit, and push to GitHub. This article gives a bit of background on my hack and walks through the code.
 
@@ -155,7 +155,7 @@ The function `write_tree`, strangely enough, is used to write tree objects. One 
             tree_entries.append(tree_entry)
         return hash_object(b''.join(tree_entries), 'tree')
 
-Second, a **commit** object. This records the tree hash, parent commit, author and timestamp, and the commit message. Merging is of course one of the fine things about Git, but `pygit` only supports a single linear branch, so there's only ever one parent (or no parents in the case of the first commit!).
+Second, a **commit** object. This records the tree hash, parent commit, author and timestamp, and the commit message. Merging is of course one of the fine things about Git, but pygit only supports a single linear branch, so there's only ever one parent (or no parents in the case of the first commit!).
 
 Here's an example of a commit object, again printed using `cat-file pretty aa8d`:
 
@@ -177,10 +177,8 @@ And here's our `commit` function -- again, thanks to Git's object model, almost 
         timestamp = int(time.mktime(time.localtime()))
         utc_offset = -time.timezone
         author_time = '{} {}{:02}{:02}'.format(
-                timestamp,
-                '+' if utc_offset > 0 else '-',
-                abs(utc_offset) // 3600,
-                (abs(utc_offset) // 60) % 60)
+                timestamp, '+' if utc_offset > 0 else '-',
+                abs(utc_offset) // 3600, (abs(utc_offset) // 60) % 60)
         lines = ['tree ' + tree]
         if parent:
             lines.append('parent ' + parent)
@@ -200,19 +198,19 @@ And here's our `commit` function -- again, thanks to Git's object model, almost 
 Talking to a server
 -------------------
 
-Next comes the slightly harder part, wherein we make `pygit` talk to a real, live Git server (I pushed `pygit` to GitHub, but it works against Bitbucket as well).
+Next comes the slightly harder part, wherein we make pygit talk to a real, live Git server (I pushed pygit to GitHub, but it works against Bitbucket and other servers too).
 
-The basic idea is to query the server's master branch for what commit it's on, then determine which set of objects it needs to catch up to the current local commit, and finally update the remote's commit hash and send a "pack file" of all the missing objects.
+The basic idea is to query the server's master branch for what commit it's on, then determine which set of objects it needs to catch up to the current local commit. And finally, update the remote's commit hash and send a "pack file" of all the missing objects.
 
-This is called the "smart protocol" -- as of 2011, GitHub [no longer supports](https://github.com/blog/809-git-dumb-http-transport-to-be-turned-off-in-90-days) the "dumb" transfer protocol, which would have been somewhat easier to implement. You have to use the "smart" protocol and pack objects into a pack file.
+This is called the "smart protocol" -- as of 2011, GitHub [stopped support](https://github.com/blog/809-git-dumb-http-transport-to-be-turned-off-in-90-days) for the "dumb" transfer protocol, which just tranfers `.git` files straight and would have been somewhat easier to implement. So we have to use the "smart" protocol and pack objects into a pack file.
 
-Unfortunately I was pretty dumb when I implemented the smart protocol, and didn't find the main technical documentation on the [HTTP protocol](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt) and [pack protocol](https://github.com/git/git/blob/master/Documentation/technical/pack-protocol.txt) until after I'd finished the implementation. I was going on the fairly hand-wavey [Transfer Protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols) section of the Git Book as well as the git codebase for the packfile format.
+Unfortunately I made a dumb mistake when I implemented the smart protocol -- I didn't find the main technical documentation on the [HTTP protocol](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt) and [pack protocol](https://github.com/git/git/blob/master/Documentation/technical/pack-protocol.txt) until after I'd finished it. I was going on the fairly hand-wavey [Transfer Protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols) section of the Git Book as well as the Git codebase for the packfile format.
 
-In the final stages of getting it working, I also implemented a tiny HTTP server using Python's `http.server` module so I could run the regular git client against it and see some real requests. A bit of reverse engineering is worth a thousand lines of code.
+In the final stages of getting it working, I also implemented a tiny HTTP server using Python's [`http.server`](TODO) module so I could run the regular `git` client against it and see some real requests. A bit of reverse engineering is worth a thousand lines of code.
 
 ### The pkt-line format
 
-One of the key parts of the transfer protocol is what's called the "pkt-line" format, which is length-prefixed "line" format for sending metadata like commit hashes. Each "line" has a 4-digit hex length (plus 4 to include the length of the length) and then length-4 bytes of data. Each line also generally has a `LF` byte at the end. The special length `0000` is used as a section marker and at the end of the data.
+One of the key parts of the transfer protocol is what's called the "pkt-line" format, which is a length-prefixed packet format for sending metadata like commit hashes. Each "line" has a 4-digit hex length (plus 4 to include the length of the length) and then length less 4 bytes of data. Each line also generally has an `LF` byte at the end. The special length `0000` is used as a section marker and at the end of the data.
 
 For example, here's the response GitHub gives to a `git-receive-pack` GET request. Note that the additional line breaks and indentation are not part of the real data:
 
@@ -253,7 +251,7 @@ So we need two functions, one to convert pkt-line data to a list of lines, and o
 
 ### Making an HTTPS request
 
-The next trick -- because I wanted to only used standard libraries -- is making an authenticated HTTPS request without the [`requests`](TODO) library. Here's the code for that:
+The next trick -- because I wanted to only use standard libraries -- is making an authenticated HTTPS request without the [`requests`](TODO) library. Here's the code for that:
 
     def http_request(url, username, password, data=None):
         """Make an authenticated HTTP request to given URL (GET by default,
@@ -273,7 +271,7 @@ The above is an example of exactly why `requests` exists. You *can* do everythin
         response.raise_for_status()
         return response.content
 
-We can use the above to ask the server what commit *its* master branch is up to, like so (as is this function is rather brittle, but could be generalized fairly easily):
+We can use the above to ask the server what commit *its* master branch is up to, like so (this function is rather brittle, but could be generalized fairly easily):
 
     def get_remote_master_hash(git_url, username, password):
         """Get commit hash of remote master branch, return SHA-1 hex string or
@@ -293,7 +291,7 @@ We can use the above to ask the server what commit *its* master branch is up to,
 
 ### Determining missing objects
 
-Next we need to determine what objects the server needs that it doesn't already have. `pygit` assumes it has everything locally (it doesn't support "pulling"), so I have a `read_tree` function (the opposite of `write_tree`) and then the following two functions to (recursively) find the set of object hashes in a given tree and a given commit:
+Next we need to determine what objects the server needs that it doesn't already have. pygit assumes it has everything locally (it doesn't support "pulling"), so I have a `read_tree` function (the opposite of `write_tree`) and then the following two functions to recursively find the set of object hashes in a given tree and a given commit:
 
     def find_tree_objects(tree_sha1):
         """Return set of SHA-1 hashes of all objects in this tree
@@ -306,7 +304,6 @@ Next we need to determine what objects the server needs that it doesn't already 
             else:
                 objects.add(sha1)
         return objects
-
 
     def find_commit_objects(commit_sha1):
         """Return set of SHA-1 hashes of all objects in this commit
@@ -324,7 +321,7 @@ Next we need to determine what objects the server needs that it doesn't already 
             objects.update(find_commit_objects(parent))
         return objects
 
-Then all we need to do is get the set of objects referenced by the local commit and subtract the set of objects referenced in the remote commit. This set difference is the objects missing at the remote end. I'm sure there are more efficient ways to generate this set, but this is plenty good enough for `pygit`:
+Then all we need to do is get the set of objects referenced by the local commit and subtract the set of objects referenced in the remote commit. This set difference is the objects missing at the remote end. I'm sure there are more efficient ways to generate this set, but this is plenty good enough for pygit:
 
     def find_missing_objects(local_sha1, remote_sha1):
         """Return set of SHA-1 hashes of objects in local commit that are
@@ -336,15 +333,15 @@ Then all we need to do is get the set of objects referenced by the local commit 
         remote_objects = find_commit_objects(remote_sha1)
         return local_objects - remote_objects
 
-### Finally: the push itself
+### The push itself
 
 To do the push, we need to send a pkt-line request to say "update the master branch to this commit hash", followed by a pack file containing the concatenated content of all the missing objects found above.
 
-The pack file has a 12-byte header (starting with `PACK`), then each object encoded with a size and compressed using zlib, and finally the 20-byte hash of the entire pack file. We're using the "undeltified" representation for object to keep things simple -- there are more complex ways to shrink the pack file based on deltas between objects, but that's overkill for us:
+The pack file has a 12-byte header (starting with `PACK`), then each object encoded with a variable-length size and compressed using zlib, and finally the 20-byte hash of the entire pack file. We're using the "undeltified" representation of objects to keep things simple -- there are more complex ways to shrink the pack file based on deltas between objects, but that's overkill for us:
 
     def encode_pack_object(obj):
         """Encode a single object for a pack file and return bytes
-        (variable- length header followed by compressed data bytes).
+        (variable-length header followed by compressed data bytes).
         """
         obj_type, data = read_object(obj)
         type_num = ObjectType[obj_type].value
@@ -359,7 +356,6 @@ The pack file has a 12-byte header (starting with `PACK`), then each object enco
         header.append(byte)
         return bytes(header) + zlib.compress(data)
 
-
     def create_pack(objects):
         """Create pack file containing all objects in given given set of
         SHA-1 hashes, return data bytes of full pack file.
@@ -371,7 +367,7 @@ The pack file has a 12-byte header (starting with `PACK`), then each object enco
         data = contents + sha1
         return data
 
-And then, the final step in all of this, the `push()` itself (with a little bit of peripheral code removed for brevity):
+And then, the final step in all of this, the `push()` itself -- with a little bit of peripheral code removed for brevity:
 
     def push(git_url, username, password):
         """Push master branch to given git repo URL."""
@@ -389,13 +385,13 @@ And then, the final step in all of this, the `push()` itself (with a little bit 
 
 ### Command line parsing
 
-`pygit` is also a pretty decent example of using the standard library [`argparse`](TODO) module, including sub-commands (`pygit init`, `pygit commit`, etc). I won't copy the code here, but take a look at the [argparse code in the source](TODO).
+pygit is also a pretty decent example of using the standard library [`argparse`](TODO) module, including sub-commands (`pygit init`, `pygit commit`, etc). I won't copy the code here, but take a look at the [argparse code in the source](TODO).
 
 
 Using pygit
 -----------
 
-In most places I tried to make `pygit` command line syntax be identical to or pretty similar to `git` syntax. Here's what committing `pygit` to GitHub looked like:
+In most places I tried to make `pygit` command line syntax be identical to or pretty similar to `git` syntax. Here's what committing pygit to GitHub looked like:
 
     $ python3 misc/pygit.py init pygit
     initialized empty repository: pygit
@@ -456,4 +452,6 @@ In most places I tried to make `pygit` command line syntax be identical to or pr
 That's all, folks
 -----------------
 
-That's it! If you got to here, you just walked through about 500 lines of Python with no value -- oh wait, it was educational, and has artisan hack value. :-) And hopefully you learned something about the internals of Git too.
+That's it! If you got to here, you just walked through about 500 lines of Python with no value -- oh wait, apart from educational and artisan hack value. :-) And hopefully you learned something about the internals of Git too.
+
+<!-- TODO: Please write your comments on Hacker News and programming reddit. -->
