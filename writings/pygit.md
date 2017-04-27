@@ -454,4 +454,4 @@ That's all, folks
 
 That's it! If you got to here, you just walked through about 500 lines of Python with no value -- oh wait, apart from educational and artisan hack value. :-) And hopefully you learned something about the internals of Git too.
 
-<!-- Please write your comments on [Hacker News](TODO) and [programming reddit](TODO). -->
+Please write your comments on [Hacker News](https://news.ycombinator.com/item?id=14210877) or [programming reddit](https://www.reddit.com/r/programming/comments/67v7qy/pygit_just_enough_git_to_commit_and_push_itself/).
