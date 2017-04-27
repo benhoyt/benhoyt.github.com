@@ -1,14 +1,12 @@
 ---
 layout: default
-title: "pygit: Just enough git (written in Python) to create a repo and push to GitHub"
+title: "pygit: Just enough git to create a repo, commit, and push itself to GitHub"
 permalink: /writings/pygit/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">April 2017</p>
 
-<!-- TODO: address TODOs -->
-
-> Summary: Recently I wrote approximately 500 lines of Python code that implements just enough of `git` to create a repository, add files to the index, commit, and push to GitHub. This article gives a bit of background on my hack and walks through the code.
+> Summary: Recently I wrote approximately 500 lines of Python code that implements just enough of `git` to create a repository, add files to the index, commit, and push itself to GitHub. This article gives a bit of background on my hack and walks through the code.
 
 Git is known (among other things) for its very simple object model -- and for good reason. When learning `git` I discovered that the local object database is just a bunch of plain files in the `.git` directory. With the exception of the index (`.git/index`) and pack files (which are kind of optional), the layout and format of these files is very straight-forward.
 
@@ -208,7 +206,7 @@ This is called the "smart protocol" -- as of 2011, GitHub [stopped support](http
 
 Unfortunately I made a dumb mistake when I implemented the smart protocol -- I didn't find the main technical documentation on the [HTTP protocol](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt) and [pack protocol](https://github.com/git/git/blob/master/Documentation/technical/pack-protocol.txt) until after I'd finished it. I was going on the fairly hand-wavey [Transfer Protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols) section of the Git Book as well as the Git codebase for the packfile format.
 
-In the final stages of getting it working, I also implemented a tiny HTTP server using Python's [`http.server`](TODO) module so I could run the regular `git` client against it and see some real requests. A bit of reverse engineering is worth a thousand lines of code.
+In the final stages of getting it working, I also implemented a tiny HTTP server using Python's [`http.server`](https://docs.python.org/3/library/http.server.html) module so I could run the regular `git` client against it and see some real requests. A bit of reverse engineering is worth a thousand lines of code.
 
 ### The pkt-line format
 
@@ -253,7 +251,7 @@ So we need two functions, one to convert pkt-line data to a list of lines, and o
 
 ### Making an HTTPS request
 
-The next trick -- because I wanted to only use standard libraries -- is making an authenticated HTTPS request without the [`requests`](TODO) library. Here's the code for that:
+The next trick -- because I wanted to only use standard libraries -- is making an authenticated HTTPS request without the [`requests`](http://docs.python-requests.org/en/master/) library. Here's the code for that:
 
     def http_request(url, username, password, data=None):
         """Make an authenticated HTTP request to given URL (GET by default,
@@ -387,7 +385,7 @@ And then, the final step in all of this, the `push()` itself -- with a little bi
 
 ### Command line parsing
 
-pygit is also a pretty decent example of using the standard library [`argparse`](TODO) module, including sub-commands (`pygit init`, `pygit commit`, etc). I won't copy the code here, but take a look at the [argparse code in the source](TODO).
+pygit is also a pretty decent example of using the standard library [`argparse`](https://docs.python.org/3/library/argparse.html) module, including sub-commands (`pygit init`, `pygit commit`, etc). I won't copy the code here, but take a look at the [argparse code in the source](https://github.com/benhoyt/pygit/blob/aa8d8bb62ae273ae2f4f167e36f24f40a11634b9/pygit.py#L499).
 
 
 Using pygit
@@ -456,4 +454,4 @@ That's all, folks
 
 That's it! If you got to here, you just walked through about 500 lines of Python with no value -- oh wait, apart from educational and artisan hack value. :-) And hopefully you learned something about the internals of Git too.
 
-<!-- TODO: Please write your comments on Hacker News and programming reddit. -->
+<!-- Please write your comments on [Hacker News](TODO) and [programming reddit](TODO). -->
