@@ -177,8 +177,10 @@ And here's our `commit` function -- again, thanks to Git's object model, almost 
         timestamp = int(time.mktime(time.localtime()))
         utc_offset = -time.timezone
         author_time = '{} {}{:02}{:02}'.format(
-                timestamp, '+' if utc_offset > 0 else '-',
-                abs(utc_offset) // 3600, (abs(utc_offset) // 60) % 60)
+                timestamp,
+                '+' if utc_offset > 0 else '-',
+                abs(utc_offset) // 3600,
+                (abs(utc_offset) // 60) % 60)
         lines = ['tree ' + tree]
         if parent:
             lines.append('parent ' + parent)
