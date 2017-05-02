@@ -1,12 +1,12 @@
 ---
 layout: default
-title: "pygit: Just enough git to create a repo, commit, and push itself to GitHub"
+title: "pygit: Just enough of a Git client to create a repo, commit, and push itself to GitHub"
 permalink: /writings/pygit/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">April 2017</p>
 
-> Summary: Recently I wrote approximately 500 lines of Python code that implements just enough of `git` to create a repository, add files to the index, commit, and push itself to GitHub. This article gives a bit of background on my hack and walks through the code.
+> Summary: Recently I wrote approximately 500 lines of Python code that implements just enough of a Git client to create a repository, add files to the index, commit, and push itself to GitHub. This article gives a bit of background on my hack and walks through the code.
 
 Git is known (among other things) for its very simple object model -- and for good reason. When learning `git` I discovered that the local object database is just a bunch of plain files in the `.git` directory. With the exception of the index (`.git/index`) and pack files (which are kind of optional), the layout and format of these files is very straight-forward.
 
