@@ -24,5 +24,5 @@ Below is the course outline, with links to my "teaching notes" for each session:
 12. Turtle Graphics
 13. More Turtle Graphics
 14. [Review Quiz](14-review-quiz/)
-
-TODO: rest of course in-depth learning Python, programming a game or webiste
+15. Sine Wave Roads
+16. [Recursion](16-recursion/)
