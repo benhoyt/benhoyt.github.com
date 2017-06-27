@@ -260,7 +260,7 @@ def main():
         sum += i
 ```
 
-I also compared a slightly more idiomatic version that only works in actual Python using `sum(range(100000000))`. On my Mac, here are the results:
+I also compared to a slightly more idiomatic version that only works in actual Python using `sum(range(100000000))`, as well as a [C version](https://github.com/benhoyt/pyast64/blob/master/benchmark_for.c) of the same loop for reference. On my MacBook Pro 2.5GHz i7, here are the results:
 
 <table>
     <thead>
@@ -271,10 +271,11 @@ I also compared a slightly more idiomatic version that only works in actual Pyth
         <tr><td>python 3.5 with sum()</td><td>2.2</td><td>3.2</td></tr>
         <tr><td>pyast64 without peephole</td><td>0.55</td><td>12.7</td></tr>
         <tr><td>pyast64 with peephole</td><td>0.24</td><td>29.7</td></tr>
+        <tr><td>C version (<code>gcc -O0</code>)</td><td>0.22</td><td>31.8</td></tr>
     </tbody>
 </table>
 
-So there you go: my 500-line toy compiler executes an integer-summing loop 30x as fast as Python.
+So there you go: my 500-line toy compiler executes an integer-summing loop 30x as fast as Python, and on a par with `gcc` with optimizations disabled (`gcc -O2` optimizes the entire loop away to a constant).
 
 Enjoy! Just don't try to use it for real projects anytime soon. :-)
 
