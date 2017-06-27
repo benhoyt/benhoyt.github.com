@@ -14,6 +14,20 @@ I got onto this recently when I was doing some performance work on Python byteco
 
 I still think that's an interesting idea, but I decided to try my hand at a much smaller and more fun problem: using the Python [`ast`](https://docs.python.org/3/library/ast.html) (abstract syntax tree) module to parse Python syntax, then recursively visit the AST nodes to turn them into another language. I thought it'd be easiest to generate C, but then I decided that going straight to (very unoptimized) assembly would be more fun.
 
+For example, we'll be turning this:
+
+```python
+        65 + i
+```
+
+Into something like this:
+
+```
+        movq    8(%rbp), %rdx
+        movq    $65, %rax
+        addq    %rdx, %rax
+```
+
 
 Enter pyast64
 -------------
