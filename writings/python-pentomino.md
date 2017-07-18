@@ -37,16 +37,13 @@ His first solution to the puzzle was so slow it didn't finish overnight. The alg
 
 For example, if you place the X piece near the beginning, all the rest of your placing and backtracking is useless, because that one-square hole at the top-left is never going to be filled:
 
-TODO: use ASCII art lines
-
-```
-+------+
-| x    |
-|xxx   |
-| x    |
-|      |
-|      |
-```
+<pre style="line-height: 0.8;"><code>┌──────┐
+│ x    │
+│xxx   │
+│ x    │
+│      │
+│      │
+</code></pre>
 
 Over time, Dad came up with a different approach: create a 63-leaf binary tree (one leaf for each shape) that you traverse starting at the next empty square, place a piece based on the traversal branch, and recursively solve the remaining puzzle. If you create your tree correctly, and always move right and down, you'll never create wasted holes.
 
@@ -166,9 +163,11 @@ A quick benchmark
 
 It turns out GForth's virtual machine is pretty fast! On Python 3.5, my Python solver takes 5 seconds to find all 2339 solutions (in quiet mode) on my 2.5 GHz macOS i7. Whereas the Forth version, using Gforth, only takes one second -- almost 5x as fast. I think this is mostly due to Python's dynamic nature: everything's overrideable, and almost everything is a hash table lookup (for example, an innocent `board[pos]` access will look up `__getitem__` in `board.__dict__` and call the result).
 
-Interestingly, on Python 2.7 my solver takes 11.6 seconds -- less than half the speed when running under Python 3.5. The generated code is mostly a test of the CPython bytecode interpeter, so it seems like the Python core developers have done some great optimization work on the bytecode interpreter between 2.7 and 3.5 (and it looks like they've done a [bunch more in 3.6](TODO)). I'm unsure what the main gains are there, but I'd love to know -- contact me if have ideas!
+Interestingly, on Python 2.7 my solver takes 11.6 seconds -- less than half the speed when running under Python 3.5. The generated code is mostly a test of the CPython bytecode interpeter, so it seems like the Python core developers have done some great optimization work on the bytecode interpreter between 2.7 and 3.5 (and it looks like they've done a [bunch more in 3.6](https://docs.python.org/3/whatsnew/3.6.html#optimizations)). I'm unsure what the main gains are there, but I'd love to know -- contact me if have ideas!
 
-And of course PyPy, with its JIT-compiled approach, is a lot faster, at TODO seconds. Here are the full results in a table:
+Perhaps even more oddly, PyPy, even with its JIT compiler, is slower than plain old CPython 3.5, at 10.7 seconds. Again, I'm not sure why that is, but I'm guessing it's because the pre-unrolled, recursive `solve()` function doesn't appear to be a "hot loop".
+
+Here are all the benchmark results in a table:
 
 <table>
     <thead>
@@ -176,8 +175,8 @@ And of course PyPy, with its JIT-compiled approach, is a lot faster, at TODO sec
     </thead>
     <tbody>
         <tr><td>Gforth 0.7.3</td><td>1.1</td><td>1.0</td></tr>
-        <tr><td>PyPy</td><td>TODO</td><td>TODO</td></tr>
         <tr><td>CPython 3.5.2</td><td>5.1</td><td>4.6</td></tr>
+        <tr><td>PyPy 5.8.0 (2.7.13)</td><td>10.7</td><td>9.7</td></tr>
         <tr><td>CPython 2.7.13</td><td>11.7</td><td>10.6</td></tr>
     </tbody>
 </table>
@@ -186,6 +185,6 @@ And of course PyPy, with its JIT-compiled approach, is a lot faster, at TODO sec
 May the Forth be with you
 -------------------------
 
-All in all, it was a fun exercise learning about pentominoes, solving the puzzle, and reimplementing my dad's Forth solution Python. I was going to say "the two languages are very different", but then again, Forth is different from pretty much everything else. Even if you're never going to use it professionally, it's worth learning about! It's rather dated, but I recommend reading [Thinking Forth](TODO) to get into the zen.
+All in all, it was a fun exercise learning about pentominoes, solving the puzzle, and reimplementing my dad's Forth solution Python. I was going to say "the two languages are very different", but then again, Forth is different from pretty much everything else. Even if you're never going to use it professionally, it's worth learning about! It's rather dated, but I recommend reading [Thinking Forth](http://thinking-forth.sourceforge.net/) to get into the zen.
 
 <!-- Please write your comments on [Hacker News](TODO) or [programming reddit](TODO). -->
