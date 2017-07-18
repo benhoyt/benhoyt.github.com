@@ -175,6 +175,7 @@ Here are all the benchmark results in a table:
     </thead>
     <tbody>
         <tr><td>Gforth 0.7.3</td><td>1.1</td><td>1.0</td></tr>
+        <tr><td>CPython 3.7.0a0 (e613e6add5)</td><td>4.6</td><td>4.2</td></tr>
         <tr><td>CPython 3.5.2</td><td>5.1</td><td>4.6</td></tr>
         <tr><td>PyPy 5.8.0 (2.7.13)</td><td>10.7</td><td>9.7</td></tr>
         <tr><td>CPython 2.7.13</td><td>11.7</td><td>10.6</td></tr>
