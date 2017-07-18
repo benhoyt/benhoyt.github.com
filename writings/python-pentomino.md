@@ -31,9 +31,9 @@ Spoiler alert -- here's an example solution on a 6x10 board:
 Dad's solver
 ------------
 
-Dad started programming back in the punch card days, when you punched out your code on a stack of cards, and then submitted them and waited for your batch to run and produce results overnight on the university computer.
+Dad started programming back in the punch card days, when you punched out your code on a stack of cards, and then submitted them and waited for your batch to run and produce results overnight on the university mainframe.
 
-His first solution to the puzzle was so slow it didn't finish overnight. The algorithm was pretty much what you'd expect for a first pass: start with the first of the 12 pieces, place it, and then recursively try to solve the puzzle with the remaining pieces. The problem is, you search a ton more than you need to.
+His first solution to the puzzle was slow, and didn't finish in his 20-minute overnight timeslot. The algorithm was pretty much what you'd expect for a first pass: start with the first of the 12 pieces, place it, and then recursively try to solve the puzzle with the remaining pieces. The problem is, you search a ton more than you need to.
 
 For example, if you place the X piece near the beginning, all the rest of your placing and backtracking is useless, because that one-square hole at the top-left is never going to be filled:
 
