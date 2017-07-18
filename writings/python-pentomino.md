@@ -52,7 +52,7 @@ Over time, Dad came up with a different approach: create a 63-leaf binary tree (
 
 There's still backtracking and you still try a lot of pieces (2,455,939 for the 6x10 puzzle), but a lot less, and you can solve it in a reasonable amount of time -- a couple of seconds on modern hardware, though it was a couple of hours in the 70's when Dad first solved it.
 
-Dad was into Forth, so pretty soon he wrote a version in Forth. One clever optimization was, instead of generating the tree directly, use the tree to generate code which in turn solves the puzzle. The generated code is just a whole bunch of nested `if` statements. In Forth, you can do this kind of meta-compiling using `POSTPONE`. If you're interested in learning a bit of Forth, his [Forth pentomino code is here](TODO) (it runs under Gforth).
+Dad was into Forth, so pretty soon he wrote a version in Forth. One clever optimization was, instead of generating the tree directly, use the tree to generate code which in turn solves the puzzle. The generated code is just a whole bunch of nested `if` statements. In Forth, you can do this kind of meta-compiling using `POSTPONE`. If you're interested in learning a bit of Forth, his [Forth pentomino code is here](https://github.com/benhoyt/python-pentomino/blob/master/pentom.fs) (it runs under Gforth).
 
 To give you a little taste of some of the Forth code-generation functions:
 
@@ -96,7 +96,7 @@ To give you a little taste of some of the Forth code-generation functions:
 My Python version
 -----------------
 
-[My solution](TODO) follows Dad's, but instead of compiling Forth using `POSTPONE`, it generates Python source code for a recursive `solve()` function, and then evaluates the entire string using `exec()`. This means that for each empty square, we're using the Python bytecode interpreter to walk the 63-leaf binary tree to find a piece that fits. 
+[My solution](https://github.com/benhoyt/python-pentomino/blob/master/pentomino.py) follows Dad's, but instead of compiling Forth using `POSTPONE`, it generates Python source code for a recursive `solve()` function, and then evaluates the entire string using `exec()`. This means that for each empty square, we're using the Python bytecode interpreter to walk the 63-leaf binary tree to find a piece that fits. 
 
 The `ORIENTATIONS` string in my Python version is a mini DSL -- stolen from my dad's program -- that describes all 63 piece orientations. The letters `A-Z` and `a` in the string represent positions in the 8x5 rectangle below:
 
@@ -158,7 +158,7 @@ def solve(board, pos, used):
 
 You can run my Python solver with the `-s` argument to print the `solve()` source code instead of actually finding all the solutions. And `-q` puts it in quiet mode, finding all the solutions but not printing them.
 
-See the [Python source code](TODO) or the [full generated code](TODO).
+See the [Python source code](https://github.com/benhoyt/python-pentomino/blob/master/pentomino.py) or the [full generated code](https://github.com/benhoyt/python-pentomino/blob/master/generated_solve.py).
 
 
 A quick benchmark
