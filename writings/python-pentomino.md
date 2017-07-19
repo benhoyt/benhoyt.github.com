@@ -188,5 +188,4 @@ May the Forth be with you
 
 All in all, it was a fun exercise learning about pentominoes, solving the puzzle, and reimplementing my dad's Forth solution Python. I was going to say "the two languages are very different", but then again, Forth is different from pretty much everything else. Even if you're never going to use it professionally, it's worth learning about! It's rather dated, but I recommend reading [Thinking Forth](http://thinking-forth.sourceforge.net/) to get into the zen.
 
-
-<!-- Please write your comments on [Hacker News](TODO) or [programming reddit](TODO). -->
+Please write your comments on [Hacker News](https://news.ycombinator.com/item?id=14803731) or [programming reddit](https://www.reddit.com/r/programming/comments/6o82wb/fast_pentomino_puzzle_solver_i_ported_from_forth/).
