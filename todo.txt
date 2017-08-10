@@ -1,8 +1,7 @@
+
 TODO
 
-* split up /writings into technical writing and other
 * copy tech writing linked below from Jetsetter/Oyster/Brush blogs
-* add cdnupload.com to "Other websites I run" section
 * update CV
 
 
