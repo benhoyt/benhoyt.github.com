@@ -36,13 +36,11 @@ I’m fluent in Python, C, SQL, JavaScript, HTML, and English. I’ve also writt
 
 ### Management and leadership
 
-* Provide technical management for small teams of software engineers.
-* Work with engineers to design and architect complex systems.
+* Work with engineers to design and architect complex systems. Work with product managers to plan and prioritize features.
 * Manage hiring of new engineers. Review and interview candidates.
-* Provide mentoring and help review the team’s code. Ensure that developers use engineering best practices.
-* Give internal training and technical talks.
+* Mentor developers, review code, and help establish engineering best practices.
 * Communicate and document effectively, and relate well to people.
-* Provide Python expertise from many years of experience with the language.
+* Give internal training and technical talks. Provide Python expertise from many years of experience with the language.
 
 
 ## Experience
