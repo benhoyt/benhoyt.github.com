@@ -12,6 +12,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ## Technical writing
 
+* [Littlelang](/writings/littlelang/) is a dynamically-typed programming language I designed and wrote an interpreter for in Go (and in littlelang itself!). (December&nbsp;2017)
 * [Learning Go](/writings/learning-go/) describes how I learnt the basics of Go (its good parts as well as a few quirks) by porting a medium-sized web backend from Python. (November&nbsp;2017)
 * [Pentomino puzzle solver](/writings/python-pentomino/) uses Python code generation to find all 2339 tilings of the 12 free pentominoes on a 6x10 board. Based on my dad&rsquo;s Forth version. (July&nbsp;2017)
 * [pyast64](/writings/pyast64/) is a toy (but working) compiler that turns Python syntax into x86-64 assembly using Python&rsquo;s built-in AST module. (June&nbsp;2017)

@@ -65,7 +65,7 @@ print(p.str())
 // Bob, aged 42
 ```
 
-The full grammar for littlelang is shown in the [README](https://github.com/benhoyt/littlelang), but in short, it has the following features:
+You can read the [full spec](https://github.com/benhoyt/littlelang#language-spec) and [grammar](https://github.com/benhoyt/littlelang#grammar) for littlelang on GitHub, but in short, it has the following features:
 
 * **Go-like syntax,** with braces required around blocks, and no semicolons in sight. Trailing commas are allowed!
 * **Dynamic typing,** with all the usual suspects: nil, bool, int, str, list, map, func.
@@ -80,7 +80,8 @@ The full grammar for littlelang is shown in the [README](https://github.com/benh
 * **Unary operators:** `- not`
 * **Deep equality:** `==` and comparisons perform "deep equality", like Python.
 * **Literal syntax** for integers and strings, as well as JSON-like list and map expressions.
-* **Builtin functions** for a few basic needs: `split()` and `join()` strings, `append()` to a list, `sort()` a list, etc.
+* **Handy overloads** like `str + str`, `str * repeat`, `list + list`, `elem in list`, etc.
+* **Builtin functions** for a few basic needs: `split()`, `join()`, and `slice()` strings, `append()` to or `sort()` a list, `print()`, `range()`, etc.
 
 It's 100% dynamically typed. However, I consider it *strongly* typed, because it never automatically coerces things like `int + str`. It's even stronger than Python: `if` requires a boolean condition, `and` and `or` require booleans, and you can't compare different types using `<` and other inequality operators.
 
