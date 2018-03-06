@@ -45,7 +45,11 @@ I’m fluent in Python, C, SQL, JavaScript, HTML, and English. I’ve also writt
 
 ## Experience
 
-### [Jetsetter](https://www.jetsetter.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Principal Software Engineer &ndash; July 2016 to now:
+### [Compass](https://www.compass.com/) &ndash; Software Engineer &ndash; March 2018 to now:
+
+* Backend software engineer.
+
+### [Jetsetter](https://www.jetsetter.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Principal Software Engineer &ndash; July 2016 to February 2018:
 
 * Helped architect a structured content management system and search API using Contentful and Elasticsearch, simplifying and unifying several internal systems.
 * Designed and developed a real-time image scaling service using Python and ImageMagick. It’s able to serve hundreds of image scaling requests per second.
