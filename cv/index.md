@@ -47,7 +47,7 @@ I’m fluent in Python, C, SQL, JavaScript, HTML, and English. I’ve also writt
 
 ### [Compass](https://www.compass.com/) &ndash; Software Engineer &ndash; March 2018 to now:
 
-* Backend software engineer.
+* Backend software engineer. More to come soon!
 
 ### [Jetsetter](https://www.jetsetter.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Principal Software Engineer &ndash; July 2016 to February 2018:
 
