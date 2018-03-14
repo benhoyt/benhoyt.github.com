@@ -1,6 +1,5 @@
 
 TODO
-
 * copy tech writing linked below from Jetsetter/Oyster/Brush blogs
 * update CV
 
