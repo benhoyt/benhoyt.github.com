@@ -21,7 +21,7 @@ permalink: /cv/
 
 I’m a software engineer with fifteen years of experience developing web applications and embedded firmware, as well as providing technical management for small teams of software developers.
 
-I’m fluent in Python, C, SQL, JavaScript, HTML, and English. I’ve also written a good amount of Go, C++, Objective-C, and x86 assembly. I learn quickly, care about detail, and love computer science and mathematics.
+I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a good amount of JavaScript, C++, Objective-C, and x86 assembly. I learn quickly, care about detail, and love computer science and mathematics.
 
 
 ## Skills: what I do...
@@ -45,9 +45,10 @@ I’m fluent in Python, C, SQL, JavaScript, HTML, and English. I’ve also writt
 
 ## Experience
 
-### [Compass](https://www.compass.com/) &ndash; Software Engineer &ndash; March 2018 to now:
+### [Compass](https://www.compass.com/) &ndash; Engineering Manager &ndash; March 2018 to now:
 
-* Backend software engineer. More to come soon!
+* Helped build an API integration to a third party CRM using Go and PostgreSQL. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
+* Managed a team of backend and frontend engineers, doing people management as well as remaining very technically involved in system design, architecture discussions, and code reviews.
 
 ### [Jetsetter](https://www.jetsetter.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Principal Software Engineer &ndash; July 2016 to February 2018:
 
