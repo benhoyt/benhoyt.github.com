@@ -12,6 +12,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ## Technical writing
 
+* [LoxLox](/writings/loxlox/) is an interpreter for *Crafting Interpreters'* Lox programming language written in Lox! (October&nbsp;2018)
 * [Littlelang](/writings/littlelang/) is a dynamically-typed programming language I designed and wrote an interpreter for in Go (and in littlelang itself!). (December&nbsp;2017)
 * [Learning Go](/writings/learning-go/) describes how I learnt the basics of Go (its good parts as well as a few quirks) by porting a medium-sized web backend from Python. (November&nbsp;2017)
 * [Pentomino puzzle solver](/writings/python-pentomino/) uses Python code generation to find all 2339 tilings of the 12 free pentominoes on a 6x10 board. Based on my dad&rsquo;s Forth version. (July&nbsp;2017)
