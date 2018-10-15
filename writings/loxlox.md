@@ -67,7 +67,7 @@ print add5(100);
 ```
 
 
-Liabilities
+Constraints
 -----------
 
 So **Lox doesn't have array or map types**, but that actually wasn't too bad. It has classes, so I wrote List and Map classes using linked lists (doubly-linked lists to allow append and pop operations so we can use List as a stack). Simple enough -- though of course slow, as fetching item N requires an O(N) traversal.
