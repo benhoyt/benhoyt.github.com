@@ -12,11 +12,11 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ## Technical writing
 
-* [LoxLox](/writings/loxlox/) is an interpreter for *Crafting Interpreters'* Lox programming language written in Lox! (October&nbsp;2018)
-* [Littlelang](/writings/littlelang/) is a dynamically-typed programming language I designed and wrote an interpreter for in Go (and in littlelang itself!). (December&nbsp;2017)
-* [Learning Go](/writings/learning-go/) describes how I learnt the basics of Go (its good parts as well as a few quirks) by porting a medium-sized web backend from Python. (November&nbsp;2017)
-* [Pentomino puzzle solver](/writings/python-pentomino/) uses Python code generation to find all 2339 tilings of the 12 free pentominoes on a 6x10 board. Based on my dad&rsquo;s Forth version. (July&nbsp;2017)
-* [pyast64](/writings/pyast64/) is a toy (but working) compiler that turns Python syntax into x86-64 assembly using Python&rsquo;s built-in AST module. (June&nbsp;2017)
+* [LoxLox](/writings/loxlox/) is an interpreter for *Crafting Interpreters'* Lox programming language written in Lox! (Oct&nbsp;2018)
+* [Littlelang](/writings/littlelang/) is a dynamically-typed programming language I designed and wrote an interpreter for in Go (and in littlelang itself!). (Dec&nbsp;2017)
+* [Learning Go](/writings/learning-go/) describes how I learnt the basics of Go (its good parts as well as a few quirks) by porting a medium-sized web backend from Python. (Nov&nbsp;2017)
+* [Pentomino puzzle solver](/writings/python-pentomino/) uses Python code generation to find all 2339 tilings of the 12 free pentominoes on a 6x10 board. Based on my dad&rsquo;s Forth version. (Jul&nbsp;2017)
+* [pyast64](/writings/pyast64/) is a toy (but working) compiler that turns Python syntax into x86-64 assembly using Python&rsquo;s built-in AST module. (Jun&nbsp;2017)
 * [pygit](/writings/pygit/) implements just enough of a Git client (in 500 lines of Python) to create a repo, commit, and push itself to GitHub. (Apr&nbsp;2017)
 * [Two kinds of speed](/writings/language-speed/) responds to dynamic-typing dislike with some reasons I think dynamically typed languages like Python are still a good idea. (Apr&nbsp;2017)
 * [Developing GiftyWeddings.com](/writings/gifty/) explains how I got started with my wedding gift registry website and also describes the 2016 revamp I gave the site. (Jan&nbsp;2017)
@@ -41,6 +41,10 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 
 ## Tech blog articles
+
+### Compass.com
+
+* [Writing Good Commit Messages](https://medium.com/compass-true-north/writing-good-commit-messages-fc33af9d6321) looks at why quality commit messages are important and how to write them. (Sep&nbsp;2018)
 
 ### Jetsetter.com
 
