@@ -371,11 +371,9 @@ There's nothing special about `goawk`: it just calls the `parser` and `interp` p
 How I tested it
 ---------------
 
-TODO: Up to here in proof-reading
-
 ### Lexer tests
 
-The [lexer tests](https://github.com/benhoyt/goawk/blob/master/lexer/lexer_test.go) use Go-style "table-driven tests", comparing source input to lexed output. This includes checking the token position (line:column) as well as the token's string value (used for `NAME`, `NUMBER`, `STRING`, and `REGEX` tokens):
+The [lexer tests](https://github.com/benhoyt/goawk/blob/master/lexer/lexer_test.go) use [table-driven tests](https://dave.cheney.net/2013/06/09/writing-table-driven-tests-in-go), comparing source input to a stringified version of the lexer output. This includes checking the token position (line:column) as well as the token's string value (used for `NAME`, `NUMBER`, `STRING`, and `REGEX` tokens):
 
 ```go
 func TestLexer(t *testing.T) {
@@ -400,13 +398,13 @@ func TestLexer(t *testing.T) {
 
 ### Parser tests
 
-The parser doesn't really have explicit unit tests, except [`TestParseAndString`](https://github.com/benhoyt/goawk/blob/master/parser/parser_test.go#L17) which tests one big program with all of the syntax constructs in it -- the test is simply that it parses and can be serialized again via pretty-printing. The intention is to test most of the parsing logic in the interpreter tests.
+The parser doesn't really have explicit unit tests, except [`TestParseAndString`](https://github.com/benhoyt/goawk/blob/master/parser/parser_test.go#L17) which tests one big program with all of the syntax constructs in it -- the test is simply that it parses and can be serialized again via pretty-printing. My intention here is to test the parsing logic in the interpreter tests.
 
 ### Interpreter tests
 
 The [interpreter unit tests](https://github.com/benhoyt/goawk/blob/master/interp/interp_test.go) are another long list of table-driven tests. They're a little more complicated than the lexer tests -- they take the AWK source, expected input and expected output, and also an expected error string and AWK error string if the test is supposed to cause an error.
 
-You can optionally run the interpreter tests against an external AWK intepreter by specifying a command-line like `go test ./interp -awk=gawk`. I've ensured it works against both `awk` and `gawk` -- the error messages are quite different between the two, and I've tried to account for that testing against just a substring of the error message.
+You can optionally run the interpreter tests against an external AWK intepreter by specifying a command-line like `go test ./interp -awk=gawk`. I've ensured it works against both `awk` and `gawk` -- the error messages are quite different between the two, and I've tried to account for that by testing against just a substring of the error message.
 
 Sometimes `awk` and `gawk` have known different behaviour, or don't catch quite the same errors as GoAWK, so in a few of the tests I have to exclude an interpreter by name -- this is done using a special `!awk` ("not awk") comment in the source string.
 
@@ -487,10 +485,10 @@ Fuzz testing found a number of bugs and edge cases I hadn't caught with the othe
 * [c59731f](https://github.com/benhoyt/goawk/commit/c59731f5543bf9b48cf92a981b66696a5ab0ceae): Fix panic with using built-in (scalar) in array context
 * [59c931f](https://github.com/benhoyt/goawk/commit/59c931fa42e6bd436c64391fd743f6e259beabef): Fix crashes when trying to read from output stream (and vice versa)
 * [168d965](https://github.com/benhoyt/goawk/commit/168d96563e488e0ea49352b13476e774e1d2b6a7): Add redirected I/O tests
-* [b09e51f](https://github.com/benhoyt/goawk/commit/b09e51f64689e12c466e951ed1b8add17742be9f): Disallow setting NF and  past 1,000,000 (fuzzer found this)
+* [b09e51f](https://github.com/benhoyt/goawk/commit/b09e51f64689e12c466e951ed1b8add17742be9f): Disallow setting NF and $n past 1,000,000 (fuzzer found this)
 * [6d99151](https://github.com/benhoyt/goawk/commit/6d99151bc918fc602bc0274221b8ca93f80c7095): Fix 'value out of range' panic when converting to float (go-fuzz found this)
 
-See [fuzz/README.txt](https://github.com/benhoyt/goawk/blob/master/fuzz/README.txt) for how to run the fuzzer.
+See [fuzz/README.txt](https://github.com/benhoyt/goawk/blob/master/fuzz/README.txt) for details on how to run the fuzzer.
 
 
 Improving performance
@@ -504,20 +502,67 @@ Performance issues tend to be caused by bottlenecks in the following areas, in o
 2. Memory allocations
 3. CPU cycles
 
-If you're doing something wrong with I/O or system calls, that's going to be a huge hit. Memory allocations are next: they're costly, and one of the key things Go gives a good amount of control over is memory allocation (for example, the "cap" argument to `make()`).
+If you're doing too many I/O or system calls, that's going to be a huge hit. Memory allocations are next: they're costly, and one of the key things Go gives a good amount of control over is memory allocation (for example, the "cap" argument to `make()`).
 
 Finally comes CPU cycles -- this is often the least impactful, though it's sometimes the only thing people think of when we talk about "performance".
 
-TODO: talk about how to profile, include graph
+So how do you measure what's going on in your code?
 
-And sure enough, GoAWK had I/O issues -- specifically I wasn't buffering writes to stdout. So microbenchmarks worked fine, but real AWK programs ran many times slower than necessary. 
+### How I profiled
+
+It's fairly easy to instrument Go code for profiling using the standard library [`runtime/pprof` package](https://golang.org/pkg/runtime/pprof/). (You can read more about [profiling Go programs](https://blog.golang.org/profiling-go-programs) on the golang.org blog.)
+
+First I added a `-cpuprofile` command line flag, and if that's set, enable CPU profiling. Here's what that looks like in code:
+
+```go
+if *cpuprofile != "" {
+    f, err := os.Create(*cpuprofile)
+    if err != nil {
+        errorExit("could not create CPU profile: %v", err)
+    }
+    if err := pprof.StartCPUProfile(f); err != nil {
+        errorExit("could not start CPU profile: %v", err)
+    }
+}
+// ... run interp.Exec ...
+if *cpuprofile != "" {
+    pprof.StopCPUProfile()
+}
+```
+
+Then you can run the AWK program you want to profile:
+
+```
+$ ./goawk -cpuprofile=prof 'BEGIN { for (i=0; i<100000000; i++) s++ }'
+```
+
+And finally use the `pprof` tool to view the output (the `-http` flag fires up a tab in your web browser with a couple of nice ways to view the data):
+
+```
+$ go tool pprof -http=:4001 prof
+```
+
+Here's a screenshot of the "top" view, which I found most helpful:
+
+![pprof's "top" view](/images/goawk-pprof.png)
+
+From this screenshot you can see a couple of things immediately:
+
+* Variable access via maps is slowing us down (`getVar`, `mapassign`, `mapaccess`)
+* The `panic`-based error handling is rather slow (all the `defer` lines)
+
+Both of these I've addressed as described below. I ran the profiler many more times on different kinds of AWK programs, and found a number of issues, starting with I/O.
+
+### The performance improvements
+
+Yes, sure enough, GoAWK had I/O issues -- I wasn't buffering writes to stdout. So microbenchmarks looked okay, but real AWK programs ran many times slower than necessary. 
 
 **Speeding up output** was one of the first optimizations I made, and then I also forgot to buffer output when redirecting output, so I added that later too:
 
 * [60745c3](https://github.com/benhoyt/goawk/commit/60745c3503ba3d99297816f5c7b5364a08ec47ab): Buffer stdout (and stderr) for 10x speedup
 * [6ba004f](https://github.com/benhoyt/goawk/commit/6ba004f5fbf9b84bc6196d50c2a0dd496ed1771b): Buffer redirected output for performance
 
-Next I changed to **use switch/case for binary operations** instead of looking up the function in a map and calling it. It's not obvious this will be faster, particularly as `switch` in Go jumps down through the list of `case`s and doesn't use a "computed goto". But I guess the constant factors involved in calling a function outweigh that in many cases:
+Next I changed to using **switch/case for binary operations** instead of looking up the function in a map and calling it. It's not obvious this will be faster, particularly as `switch` in Go jumps down through the list of `case`s and doesn't use "computed gotos". But I guess the constant factors involved in calling a function outweigh that in many cases:
 
 * [ad8ff0e](https://github.com/benhoyt/goawk/commit/ad8ff0e5f6cc89fdd480099614187ee23b20a8c9): Speed up binary ops by moving from map to switch/case
 
@@ -533,9 +578,9 @@ BenchmarkForInLoop-8                3886          4092          +5.30%
 ...
 ```
 
-Interestingly some of these changes slowed down *completely unrelated* code paths. I still don't really know why. Is it measurement noise? I don't think so, because it seems quite consistent. My guess is that it's the fact that the machine code has been rearranged and somehow causes cache misses or branch prediction changes in other parts of the code.
+Interestingly, some of my improvements slowed down *completely unrelated* code paths. I still don't really know why. Is it measurement noise? I don't think so, because it seems quite consistent. My guess is that it's the fact that the machine code has been rearranged and somehow causes cache misses or branch prediction changes in other parts of the code.
 
-The next big change was to **resolve variables to indexes at parse time.** Previously I was doing all variable lookups in a `map[string]value` at runtime, but variable references in AWK can be resolved at parse time, and then the interpreter can look them up in a `[]value` instead. It also avoids allocations in some cases as variables are assigned and the map grows:
+The next big change was to **resolve variable names to indexes at parse time.** Previously I was doing all variable lookups in a `map[string]value` at runtime, but variable references in AWK can be resolved at parse time, and then the interpreter can look them up in a `[]value` instead. It also avoids allocations in some cases as variables are assigned as the map grows:
 
 * [e0d7287](https://github.com/benhoyt/goawk/commit/e0d7287ac1580bd0f144c763b222b9db8a858c54): Big perf improvements: resolve variables at parse time
 
@@ -594,7 +639,7 @@ BuiltinSprintf-8        14.3µs ± 4%  12.6µs ± 0%  -12.50%
 ...
 ```
 
-The next optimization was **avoiding the heavyweight `text/scanner` package** for simply converting strings to numbers. I was using `Scanner` because it allows you to parse things like `1.23foo` (AWK allows this when the string isn't coming from user input), and `strconv.ParseFloat` doesn't handle that.
+The next optimization was **avoiding a heavyweight tool** (`text/scanner`) for simply converting strings to numbers. I was using `Scanner` because it allows you to parse things like `1.23foo` (AWK allows this when the string isn't coming from user input), and `strconv.ParseFloat` doesn't handle that.
 
 I simply wrote my own lexing function to find the end of the actual floating-point number in the string, and call `ParseFloat` on that. This speeds up explicit string to number
 conversions by more than 10x!
@@ -631,7 +676,7 @@ So how does GoAWK compare to the other AWK implementations? Pretty well! In the 
 * `gawk` is GNU Awk version 4.2.1
 * `mawk` is mawk version 1.3.4 (20171017)
 
-The numbers here represent the average time taken to run the given test over 3 runs, normalized to the `goawk` running time -- *lower is better*. As you can see, GoAWK is significantly faster than `awk` in most cases and not too bad compared to `gawk`!
+The numbers below represent the average time taken to run the given test over 3 runs, normalized to the `goawk` running time -- *lower is better*. As you can see, GoAWK is significantly faster than `awk` in most cases and not too bad compared to `gawk`!
 
 Test      | goawk |  orig |   awk |  gawk |  mawk 
 --------- | ----- | ----- | ----- | ----- | -----
@@ -654,6 +699,6 @@ tt.x2     | 1.000 | 2.348 | 0.511 | 0.411 | 0.296
 Where to from here?
 -------------------
 
-TODO: tweak this section
+I'd love to know if you use [GoAWK](https://github.com/benhoyt/goawk), and please send bug reports and code feedback my way. If you don't have a need for GoAWK, at least you've learned about AWK in general, and how useful a tool it is.
 
-Well, thanks for reading! Please use GoAWK, and send bug reports and code feedback my way. Or, if you don't use GoAWK, at least you've learned about `awk` and how historically-important and useful a tool it is.
+Thanks for reading!
