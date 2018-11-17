@@ -12,6 +12,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ## Technical writing
 
+* [GoAWK](/writings/goawk/) is an AWK interpreter written in Go, and this article describes how I wrote it, tested it, and measured and improved its performance. (Nov&nbsp;2018)
 * [LoxLox](/writings/loxlox/) is an interpreter for *Crafting Interpreters'* Lox programming language written in Lox! (Oct&nbsp;2018)
 * [Littlelang](/writings/littlelang/) is a dynamically-typed programming language I designed and wrote an interpreter for in Go (and in littlelang itself!). (Dec&nbsp;2017)
 * [Learning Go](/writings/learning-go/) describes how I learnt the basics of Go (its good parts as well as a few quirks) by porting a medium-sized web backend from Python. (Nov&nbsp;2017)
