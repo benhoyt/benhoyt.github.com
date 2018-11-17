@@ -238,7 +238,7 @@ The complexity comes from the fact that when calling functions, you don't know w
     function f(a, x) { return a[x] }
     BEGIN { c[1]=2; print f(c, 1); print g(c, 1) }
 
-The program simply print `2` twice. But when we're calling `f` inside `g` we don't know the types of the arguments yet. It's part of the resolver's job to figure this out in an iterative fashion. (See [`resolveVars`](https://github.com/benhoyt/goawk/blob/master/parser/resolve.go#L223) in `resolve.go`.)
+The program simply print `2` twice. But when we're calling `f` inside `g` we don't know the types of the arguments yet. It's part of the resolver's job to figure this out in an iterative fashion. (See [`resolveVars`](https://github.com/benhoyt/goawk/blob/a75cecd04d8aa8829c04b97bf370c8afaf53a68e/parser/resolve.go#L223) in `resolve.go`.)
 
 After figuring out the unknown arguments types, the resolver assign integer indexes to all variable references, global and local.
 
@@ -398,7 +398,7 @@ func TestLexer(t *testing.T) {
 
 ### Parser tests
 
-The parser doesn't really have explicit unit tests, except [`TestParseAndString`](https://github.com/benhoyt/goawk/blob/master/parser/parser_test.go#L17) which tests one big program with all of the syntax constructs in it -- the test is simply that it parses and can be serialized again via pretty-printing. My intention here is to test the parsing logic in the interpreter tests.
+The parser doesn't really have explicit unit tests, except [`TestParseAndString`](https://github.com/benhoyt/goawk/blob/a75cecd04d8aa8829c04b97bf370c8afaf53a68e/parser/parser_test.go#L17) which tests one big program with all of the syntax constructs in it -- the test is simply that it parses and can be serialized again via pretty-printing. My intention here is to test the parsing logic in the interpreter tests.
 
 ### Interpreter tests
 
@@ -484,7 +484,6 @@ Fuzz testing found a number of bugs and edge cases I hadn't caught with the othe
 
 * [c59731f](https://github.com/benhoyt/goawk/commit/c59731f5543bf9b48cf92a981b66696a5ab0ceae): Fix panic with using built-in (scalar) in array context
 * [59c931f](https://github.com/benhoyt/goawk/commit/59c931fa42e6bd436c64391fd743f6e259beabef): Fix crashes when trying to read from output stream (and vice versa)
-* [168d965](https://github.com/benhoyt/goawk/commit/168d96563e488e0ea49352b13476e774e1d2b6a7): Add redirected I/O tests
 * [b09e51f](https://github.com/benhoyt/goawk/commit/b09e51f64689e12c466e951ed1b8add17742be9f): Disallow setting NF and $n past 1,000,000 (fuzzer found this)
 * [6d99151](https://github.com/benhoyt/goawk/commit/6d99151bc918fc602bc0274221b8ca93f80c7095): Fix 'value out of range' panic when converting to float (go-fuzz found this)
 
