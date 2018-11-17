@@ -506,11 +506,13 @@ If you're doing too many I/O or system calls, that's going to be a huge hit. Mem
 
 Finally comes CPU cycles -- this is often the least impactful, though it's sometimes the only thing people think of when we talk about "performance".
 
-So how do you measure what's going on in your code?
+In GoAWK, I've done some optimization in all three areas. The biggest wins to be had for typical AWK programs were related to I/O -- as expected, because AWK programs normally read input, process it a bit, and write output. But there were some important gains to be had in the allocation and CPU departments too.
 
 ### How I profiled
 
-It's fairly easy to instrument Go code for profiling using the standard library [`runtime/pprof` package](https://golang.org/pkg/runtime/pprof/). (You can read more about [profiling Go programs](https://blog.golang.org/profiling-go-programs) on the golang.org blog.)
+Where the bottlenecks are is often unintuitive, so *measurement* is key. Let's look at how you measure what's going on in your Go code.
+
+It's fairly easy to instrument code for profiling using the standard library [`runtime/pprof` package](https://golang.org/pkg/runtime/pprof/). (You can read more about [profiling Go programs here](https://blog.golang.org/profiling-go-programs).)
 
 First I added a `-cpuprofile` command line flag, and if that's set, enable CPU profiling. Here's what that looks like in code:
 
