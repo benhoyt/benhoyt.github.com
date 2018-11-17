@@ -226,13 +226,13 @@ func ParseProgram(src []byte, config *ParserConfig) (
 
 ### Resolver
 
-The [resolver](https://github.com/benhoyt/goawk/blob/master/parser/resolve.go) is actually part of the parser package. It does basic type checking of arrays versus scalars, and assigns integer indexes to all variable references (to avoid slower string lookups at execution time).
+The [resolver](https://github.com/benhoyt/goawk/blob/master/parser/resolve.go) is actually part of the parser package. It does basic type checking of arrays versus scalars, and assigns integer indexes to all variable references (to avoid slower map lookups at execution time).
 
 I think the way I've done the resolver is non-traditional: instead of making a full pass over the AST, the parser records just what's necessary for the resolver to figure out the types (a list of function calls and variable references). This is probably faster than walking the whole tree, but it probably makes the code a bit less straight-forward.
 
-In fact, the resolver was one of the harder pieces of code I've written for a while. It's the one piece of GoAWK I'm not particularly happy with how it turned out. It works, but it's messy, and I'm still not sure I've covered all the edge cases.
+In fact, the resolver was one of the harder pieces of code I've written for a while. It's the one piece of the GoAWK source I'm not particularly happy with. It works, but it's messy, and I'm still not sure I've covered all the edge cases.
 
-The complexity comes from the fact that when calling functions, you don't whether an argument is a scalar or an array at the call site. You have to peruse the types in the called function (and maybe in the functions it calls) to determine that. Consider this AWK program:
+The complexity comes from the fact that when calling functions, you don't know whether an argument is a scalar or an array at the call site. You have to peruse the types in the called function (and maybe in the functions it calls) to determine that. Consider this AWK program:
 
     function g(b, y) { return f(b, y) }
     function f(a, x) { return a[x] }
@@ -459,9 +459,9 @@ These are tested against the `goawk` binary as well as an external AWK program (
 
 ### AWK test suite
 
-I also test GoAWK against Brian Kernighan's "one true awk" test suite, which lives in the `testdata` directory. The `TestAWK` function in [`goawk_test.go`](https://github.com/benhoyt/goawk/blob/master/goawk_test.go) drives these tests. The output from the test programs is compared against the output from an external AWK program (again defaulting to `gawk`) to ensure it matches.
+I also test GoAWK against Brian Kernighan's "one true awk" test suite, which are the `p.*` and `t.*` files in the `testdata` directory. The `TestAWK` function in [`goawk_test.go`](https://github.com/benhoyt/goawk/blob/master/goawk_test.go) drives these tests. The output from the test programs is compared against the output from an external AWK program (again defaulting to `gawk`) to ensure it matches.
 
-A few test programs, for example those that call `rand()` can't really be diff'd against AWK, so I exclude those. And for other programs, for example those that loop through an array (where iteration order is undefined), I sort the lines in the output before doing the diff.
+A few test programs, for example those that call `rand()` can't really be diff'd against AWK, so I exclude those. And for other programs, for example those that loop through an array (where iteration order is undefined), I sort the lines in the output before the diff.
 
 ### Fuzz testing
 
@@ -496,13 +496,15 @@ Improving performance
 
 [Skip the discussion, jump to the numbers!](#performance-numbers)
 
-Performance issues tend to be caused by bottlenecks in the following areas, in order of most to least impactful (thanks to Alan Donovan for this succinct way of thinking about it):
+Performance issues tend to be caused by bottlenecks in the following areas, from most to least impactful (thanks to Alan Donovan for this succinct way of thinking about it):
 
 1. Input/output
 2. Memory allocations
 3. CPU cycles
 
-If you're doing too many I/O or system calls, that's going to be a huge hit. Memory allocations are next: they're costly, and one of the key things Go gives a good amount of control over is memory allocation (for example, the "cap" argument to `make()`).
+If you're doing too many I/O or system calls, that's going to be a huge hit.
+
+Memory allocations are next: they're costly, and one of the key things Go gives a good amount of control over is memory allocation (for example, the "cap" argument to `make()`).
 
 Finally comes CPU cycles -- this is often the least impactful, though it's sometimes the only thing people think of when we talk about "performance".
 
@@ -557,9 +559,7 @@ Both of these I've addressed as described below. I ran the profiler many more ti
 
 ### The performance improvements
 
-Yes, sure enough, GoAWK had I/O issues -- I wasn't buffering writes to stdout. So microbenchmarks looked okay, but real AWK programs ran many times slower than necessary. 
-
-**Speeding up output** was one of the first optimizations I made, and then I also forgot to buffer output when redirecting output, so I added that later too:
+Sure enough, GoAWK had I/O issues -- I wasn't buffering writes to stdout. So microbenchmarks looked okay, but real AWK programs ran many times slower than necessary. So **speeding up output** was one of the first optimizations I made (and later I realized I'd forgotten to do this for redirected output too):
 
 * [60745c3](https://github.com/benhoyt/goawk/commit/60745c3503ba3d99297816f5c7b5364a08ec47ab): Buffer stdout (and stderr) for 10x speedup
 * [6ba004f](https://github.com/benhoyt/goawk/commit/6ba004f5fbf9b84bc6196d50c2a0dd496ed1771b): Buffer redirected output for performance
