@@ -238,7 +238,7 @@ The complexity comes from the fact that when calling functions, you don't know w
     function f(a, x) { return a[x] }
     BEGIN { c[1]=2; print f(c, 1); print g(c, 1) }
 
-The program simply print `2` twice. But when we're calling `f` inside `g` we don't know the types of the arguments yet. It's part of the resolver's job to figure this out in an iterative fashion. (See [`resolveVars`](https://github.com/benhoyt/goawk/blob/a75cecd04d8aa8829c04b97bf370c8afaf53a68e/parser/resolve.go#L223) in `resolve.go`.)
+The program simply prints `2` twice. But when we're calling `f` inside `g` we don't know the types of the arguments yet. It's part of the resolver's job to figure this out in an iterative fashion. (See [`resolveVars`](https://github.com/benhoyt/goawk/blob/a75cecd04d8aa8829c04b97bf370c8afaf53a68e/parser/resolve.go#L223) in `resolve.go`.)
 
 After figuring out the unknown arguments types, the resolver assign integer indexes to all variable references, global and local.
 
