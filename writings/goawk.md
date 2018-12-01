@@ -307,7 +307,7 @@ func (s byteSplitter) scan(data []byte, atEOF bool)
 
 Output from `print` or `printf` can be redirected to a file, appended to a file, or piped to a command: this is handled in `getOutputStream`. Input can come from stdin, a file, or be pipe from a command.
 
-*Functions* are implemented in [functions.go](https://github.com/benhoyt/goawk/blob/master/interp/functions.go), including both builtin and user-defined functions.
+*Functions* are implemented in [functions.go](https://github.com/benhoyt/goawk/blob/master/interp/functions.go), including builtin, user-defined, and native (Go-defined) functions.
 
 The `callBuiltin` method again uses a large switch statement to determine the AWK function we're calling, for example `split()` or `sqrt()`. The builtin `split` requires special handling because it takes a non-evaluated array parameter. Similarly `sub` and `gsub` actually take an "lvalue" parameter that's assigned to. For the rest of the functions, we evaluate the arguments first and perform the operation.
 
@@ -338,6 +338,8 @@ I also cheat with AWK's `printf` statement, converting the AWK format string and
 User-defined calls use `callUser`, which evaluates the function's arguments and pushes them onto the locals stack. This is somewhat more complicated than you'd think for two reasons: first, you can pass arrays as arguments (by reference), and second, you can call a function with fewer arguments than it has parameters.
 
 It also checks the call depth (currently maximum 1000), to avoid a panic in case of unbounded recursion.
+
+In GoAWK v1.1.0, I added support for calling native Go functions via the `Funcs` field in the parser and interpreter config structs. If you're using GoAWK in your Go programs you can make use of Go-defined functions to do fancy things like make an HTTP request. This is done via [`callNative`](https://github.com/benhoyt/goawk/blob/f60c278feda7f503814ca96ce10ffaf25996b44d/interp/functions.go#L310), which uses the Go `reflect` package to convert the arguments and return value (only scalar types are supported).
 
 *Values* are implemented in [value.go](https://github.com/benhoyt/goawk/blob/master/interp/value.go). GoAWK values are strings or numbers (or "numeric strings") and use the `value` struct, which is passed by value, and is defined as follows:
 
