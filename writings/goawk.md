@@ -675,30 +675,30 @@ One other thing I did was speed up the lexer by **avoiding UTF-8 decoding** duri
 
 So how does GoAWK compare to the other AWK implementations? Pretty well! In the following chart:
 
-* `goawk` refers to the current version of GoAWK ([commit 109e8a9](https://github.com/benhoyt/goawk/commit/109e8a9d645cb454e13582ab34f0f9d6d3fbdcfd))
+* `goawk` refers to the current version of GoAWK ([v1.1.1](https://github.com/benhoyt/goawk/releases/tag/v1.1.1))
 * `orig` refers to the first "properly working" version of GoAWK, without optimizations ([commit 8ab5446](https://github.com/benhoyt/goawk/commit/8ab54463f01a7d7d018be26a2f618cbd3c82538d))
-* `awk` is "one true awk" version 20121220
+* `awk` is "one true awk" version 20121220 -- the baseline
 * `gawk` is GNU Awk version 4.2.1
 * `mawk` is mawk version 1.3.4 (20171017)
 
-The numbers below represent the average time taken to run the given test over 3 runs, normalized to the `goawk` running time -- *lower is better*. As you can see, GoAWK is significantly faster than `awk` in most cases and not too bad compared to `gawk`!
+The numbers below represent the speed of running the given test over 3 runs, relative to the speed of `awk`. So 6.12 means it was about 6x as fast as `awk` -- *higher is better*. As you can see, GoAWK is significantly faster than `awk` in most cases and not too bad compared to `gawk`!
 
 Test      | goawk |  orig |   awk |  gawk |  mawk 
 --------- | ----- | ----- | ----- | ----- | -----
-tt.01     | 1.000 | 1.123 | 5.818 | 0.455 | 0.465
-tt.02     | 1.000 | 1.107 | 5.015 | 1.331 | 0.963
-tt.02a    | 1.000 | 1.149 | 4.115 | 1.356 | 0.892
-tt.03     | 1.000 | 1.183 | 5.574 | 0.467 | 0.738
-tt.03a    | 1.000 | 2.013 | 5.965 | 0.362 | 0.794
-tt.04     | 1.000 | 1.386 | 1.222 | 0.800 | 0.434
-tt.05     | 1.000 | 1.450 | 1.425 | 0.545 | 0.430
-tt.06     | 1.000 | 1.360 | 5.175 | 0.628 | 0.756
-tt.07     | 1.000 | 1.177 | 6.160 | 1.140 | 0.961
-tt.big    | 1.000 | 1.540 | 1.314 | 0.757 | 0.447
-tt.x1     | 1.000 | 2.591 | 0.866 | 0.575 | 0.427
-tt.x2     | 1.000 | 2.348 | 0.511 | 0.411 | 0.296
+tt.01     |  5.74 |  5.08 |  1.00 | 12.95 | 12.29
+tt.02     |  5.28 |  4.39 |  1.00 |  3.75 |  5.23
+tt.02a    |  4.28 |  3.62 |  1.00 |  3.01 |  4.42
+tt.03     |  6.12 |  4.75 |  1.00 | 12.83 |  7.69
+tt.03a    |  6.37 |  3.00 |  1.00 | 17.06 |  7.37
+tt.04     |  1.31 |  0.87 |  1.00 |  1.50 |  2.76
+tt.05     |  1.61 |  0.97 |  1.00 |  2.64 |  3.33
+tt.06     |  5.51 |  3.86 |  1.00 |  8.20 |  6.91
+tt.07     |  6.17 |  5.28 |  1.00 |  5.38 |  6.37
+tt.big    |  1.43 |  0.88 |  1.00 |  1.75 |  2.89
+tt.x1     |  0.95 |  0.33 |  1.00 |  1.52 |  2.04
+tt.x2     |  0.56 |  0.21 |  1.00 |  1.21 |  1.72
 --------- | ----- | ----- | ----- | ----- | -----
-**Mean**  | **1.000** | **1.486** | **3.074** | **0.708** | **0.521**
+**Geo mean**  | **2.84** | **1.81** | **1.00** | **4.02** | **4.48**
 
 
 Where to from here?
