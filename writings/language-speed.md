@@ -2,6 +2,7 @@
 layout: default
 title: "Two kinds of speed (or why I still like dynamically typed languages)"
 permalink: /writings/language-speed/
+description: Responds to dynamic-typing dislike with some reasons I think dynamically typed languages like Python are still a good idea.
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">April 2017</p>

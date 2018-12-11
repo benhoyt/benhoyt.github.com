@@ -2,6 +2,7 @@
 layout: default
 title: Developing GiftyWeddings.com
 permalink: /writings/gifty/
+description: How I got started with my wedding gift registry website and also describes the 2016 revamp I gave the site.
 ---
 <h1><a href="/writings/gifty/">{{ page.title }}</a></h1>
 <p class="subtitle">January 2017</p>

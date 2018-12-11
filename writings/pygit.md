@@ -2,6 +2,7 @@
 layout: default
 title: "pygit: Just enough of a Git client to create a repo, commit, and push itself to GitHub"
 permalink: /writings/pygit/
+description: pygit implements just enough of a Git client (in 500 lines of Python) to create a repo, commit, and push itself to GitHub.
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">April 2017</p>

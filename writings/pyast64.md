@@ -2,6 +2,7 @@
 layout: default
 title: "Compiling Python syntax to x86-64 assembly for fun and (zero) profit"
 permalink: /writings/pyast64/
+description: A toy (but working) compiler that turns Python syntax into x86-64 assembly using Python's built-in AST module.
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">June 2017</p>

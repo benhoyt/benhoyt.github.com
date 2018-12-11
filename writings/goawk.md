@@ -2,6 +2,7 @@
 layout: default
 title: GoAWK, an AWK interpreter written in Go
 permalink: /writings/goawk/
+description: How I wrote GoAWK, how I tested it, and how I measured and improved its performance.
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">November 2018</p>

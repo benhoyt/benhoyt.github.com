@@ -2,6 +2,7 @@
 layout: default
 title: Contributing os.scandir() to Python
 permalink: /writings/scandir/
+description: My experience contributing a medium-sized feature (os.scandir) to the Python 3.5 standard library.
 ---
 <h1><a href="/writings/scandir/">{{ page.title }}</a></h1>
 <p class="subtitle">August 2016</p>
