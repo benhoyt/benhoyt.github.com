@@ -672,9 +672,9 @@ One other thing I did was speed up the lexer by **avoiding UTF-8 decoding** duri
 * [43af0cb](https://github.com/benhoyt/goawk/commit/43af0cbd2f7b19273b58a75bf0fab20f91a755bf): Speed up lexer more by changing from rune to byte type
 * [c5a32eb](https://github.com/benhoyt/goawk/commit/c5a32eb08f817b4622ce11e7ad858ed131e3cad7): Speed up lexer by reducing allocations
 
-There are a few additional improvements I've made since then, most notably:
+There are a few **additional improvements** I've made since then, most notably:
 
-* [5cc26a7](https://github.com/benhoyt/goawk/commit/5cc26a70a6111a769f5dd14541bd45d75eed7dd4): Using a faster version of TrimSpace], which I hope is [included in Go 1.13](https://go-review.googlesource.com/c/go/+/152917)
+* [5cc26a7](https://github.com/benhoyt/goawk/commit/5cc26a70a6111a769f5dd14541bd45d75eed7dd4): Using a faster version of TrimSpace, which I hope is [included in Go 1.13](https://go-review.googlesource.com/c/go/+/152917)
 * [2fe4d6a](https://github.com/benhoyt/goawk/commit/2fe4d6aac47f88411076d5e0c79569f152e91dd9): Lazily splitting the line into fields only when a field or `NF` is accessed (this is what makes the `tt.01` benchmark 20x that of awk)
 
 ### Performance numbers
