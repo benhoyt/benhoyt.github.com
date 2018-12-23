@@ -672,47 +672,52 @@ One other thing I did was speed up the lexer by **avoiding UTF-8 decoding** duri
 * [43af0cb](https://github.com/benhoyt/goawk/commit/43af0cbd2f7b19273b58a75bf0fab20f91a755bf): Speed up lexer more by changing from rune to byte type
 * [c5a32eb](https://github.com/benhoyt/goawk/commit/c5a32eb08f817b4622ce11e7ad858ed131e3cad7): Speed up lexer by reducing allocations
 
+There are a few additional improvements I've made since then, most notably:
+
+* [5cc26a7](https://github.com/benhoyt/goawk/commit/5cc26a70a6111a769f5dd14541bd45d75eed7dd4): Using a faster version of TrimSpace], which I hope is [included in Go 1.13](https://go-review.googlesource.com/c/go/+/152917)
+* [2fe4d6a](https://github.com/benhoyt/goawk/commit/2fe4d6aac47f88411076d5e0c79569f152e91dd9): Lazily splitting the line into fields only when a field or `NF` is accessed (this is what makes the `tt.01` benchmark 20x that of awk)
+
 ### Performance numbers
 
 So how does GoAWK compare to the other AWK implementations? Pretty well! In the following chart:
 
-* `goawk` refers to the current version of GoAWK ([v1.1.1](https://github.com/benhoyt/goawk/releases/tag/v1.1.1))
+* `goawk` refers to GoAWK ([v1.1.4](https://github.com/benhoyt/goawk/releases/tag/v1.1.4))
 * `orig` refers to the first "properly working" version of GoAWK, without optimizations ([commit 8ab5446](https://github.com/benhoyt/goawk/commit/8ab54463f01a7d7d018be26a2f618cbd3c82538d))
 * `awk` is "one true awk" version 20121220 -- the baseline
 * `gawk` is GNU Awk version 4.2.1
 * `mawk` is mawk version 1.3.4 (20171017)
 
-The numbers below represent the speed of running the given test over 3 runs, relative to the speed of `awk`. So 6.12 means it was about 6x as fast as `awk` -- *higher is better*. As you can see, GoAWK is significantly faster than `awk` in most cases and not too bad compared to `gawk`!
+The numbers below represent the speed of running the given test over 3 runs, relative to the speed of `awk`. So 6.27 means it was about 6x as fast as `awk` -- *higher is better*. As you can see, GoAWK is significantly faster than `awk` in most cases and not too bad compared to `gawk`!
 
 Test      | goawk |  orig |   awk |  gawk |  mawk 
 --------- | ----- | ----- | ----- | ----- | -----
-tt.01     |  5.91 |  5.34 |  1.00 | 13.66 | 13.37
-tt.02     |  5.26 |  4.51 |  1.00 |  3.74 |  5.22
-tt.02a    |  4.31 |  3.61 |  1.00 |  3.02 |  4.55
-tt.03     |  6.19 |  4.68 |  1.00 | 13.05 |  7.72
-tt.03a    |  6.45 |  3.00 |  1.00 | 17.17 |  7.44
-tt.04     |  1.31 |  0.87 |  1.00 |  1.48 |  2.78
-tt.05     |  1.63 |  0.98 |  1.00 |  2.57 |  3.37
-tt.06     |  5.41 |  3.79 |  1.00 |  8.34 |  7.01
-tt.07     |  6.21 |  5.30 |  1.00 |  5.49 |  6.38
-tt.big    |  1.44 |  0.89 |  1.00 |  1.75 |  2.94
-tt.x1     |  1.06 |  0.34 |  1.00 |  1.51 |  2.04
-tt.x2     |  0.61 |  0.21 |  1.00 |  1.21 |  1.67
+tt.01     | 20.59 |  5.73 |  1.00 | 10.88 | 11.55
+tt.02     |  5.46 |  4.69 |  1.00 |  3.63 |  4.98
+tt.02a    |  4.39 |  3.81 |  1.00 |  2.98 |  4.49
+tt.03     |  6.27 |  4.88 |  1.00 | 12.29 |  7.93
+tt.03a    |  6.57 |  3.06 |  1.00 | 16.07 |  7.75
+tt.04     |  1.34 |  0.88 |  1.00 |  1.53 |  2.82
+tt.05     |  1.68 |  1.00 |  1.00 |  2.50 |  3.37
+tt.06     |  5.66 |  3.99 |  1.00 |  8.21 |  7.45
+tt.07     |  6.46 |  5.48 |  1.00 |  5.27 |  6.31
+tt.big    |  1.48 |  0.90 |  1.00 |  1.71 |  2.88
+tt.x1     |  1.05 |  0.33 |  1.00 |  1.52 |  2.03
+tt.x2     |  0.60 |  0.22 |  1.00 |  1.22 |  1.74
 --------- | ----- | ----- | ----- | ----- | -----
-**Geo mean**  | **2.90** | **1.82** | **1.00** | **4.05** | **4.54**
+**Geo mean**  | **3.28** | **1.88** | **1.00** | **3.90** | **4.52**
 
 <!--
-tt.08     |  5.35 |  4.59 |  1.00 |  7.47 | 14.63
-tt.09     |  5.59 |  4.75 |  1.00 | 21.21 | 23.93
-tt.10     |  1.19 |  1.14 |  1.00 |  6.58 | 10.33
-tt.10a    |  1.17 |  1.13 |  1.00 |  6.52 |  8.85
-tt.11     |  4.75 |  3.92 |  1.00 |  6.68 | 12.28
-tt.12     |  3.04 |  1.98 |  1.00 |  2.96 |  3.71
-tt.13     |  2.46 |  1.27 |  1.00 |  2.74 |  4.26
-tt.13a    |  1.94 |  1.15 |  1.00 |  1.86 |  3.54
-tt.14     |  1.03 |  0.49 |  1.00 |  0.90 |  1.82
-tt.15     |  0.96 |  0.52 |  1.00 |  1.07 |  3.24
-tt.16     |  1.04 |  0.63 |  1.00 |  1.47 |  2.00
+tt.08     | 15.96 |  4.75 |  1.00 |  6.64 | 13.11
+tt.09     | 19.77 |  5.07 |  1.00 | 21.35 | 26.87
+tt.10     |  1.46 |  1.26 |  1.00 |  6.02 | 10.35
+tt.10a    |  1.43 |  1.20 |  1.00 |  5.99 |  9.42
+tt.11     | 13.30 |  4.25 |  1.00 |  6.81 | 14.85
+tt.12     |  3.18 |  2.12 |  1.00 |  2.93 |  3.71
+tt.13     |  2.51 |  1.30 |  1.00 |  2.79 |  4.30
+tt.13a    |  1.96 |  1.16 |  1.00 |  1.86 |  3.54
+tt.14     |  1.28 |  0.53 |  1.00 |  0.84 |  1.51
+tt.15     |  0.98 |  0.53 |  1.00 |  1.06 |  3.33
+tt.16     |  1.04 |  0.62 |  1.00 |  1.52 |  2.16
 -->
 
 
