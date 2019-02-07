@@ -468,6 +468,8 @@ I also test GoAWK against Brian Kernighan's "one true awk" test suite, which are
 
 A few test programs, for example those that call `rand()` can't really be diff'd against AWK, so I exclude those. And for other programs, for example those that loop through an array (where iteration order is undefined), I sort the lines in the output before the diff.
 
+More recently I added much of the GNU Awk test suite as well. This is tested via `TestGAWK`, with the test files in `testdata/gawk`. I've included all the tests that test POSIX functionality (not `gawk` extensions). There are a handful of failing tests that are currently skipped, but these are things that shouldn't crop up in real code (for example, GoAWK doesn't parse `$$a++++` correctly).
+
 ### Fuzz testing
 
 One last type of testing I used is "fuzz testing". This is a method of sending randomized inputs to the interpreter until it breaks. I caught several crashes (panics) this way, and even [one bug](https://github.com/benhoyt/goawk/commit/89cf2a2c3958f2e602d553a9abc418aa0031a0f0) in the Go compiler which caused an out-of-bounds slice access to segfault (though I found that had already been fixed in Go 1.11).
