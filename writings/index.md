@@ -49,7 +49,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ### Jetsetter.com
 
-* [Duplicate image detection with perceptual hashing in Python](http://tech.jetsetter.com/2017/03/21/duplicate-image-detection/) describes a simple algorithm to detect duplicate or very similar images. (Mar&nbsp;2017)
+* [Duplicate image detection with perceptual hashing in Python](/writings/duplicate-image-detection/) describes a simple algorithm to detect duplicate or very similar images. (Mar&nbsp;2017)
 
 ### Oyster.com
 
