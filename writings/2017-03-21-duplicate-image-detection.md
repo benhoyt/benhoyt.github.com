@@ -2,7 +2,7 @@
 title: "Duplicate image detection with perceptual hashing in Python"
 layout: default
 permalink: /writings/duplicate-image-detection/
-description: Duplicate image detection with perceptual hashing in Python (using the dHash perceptual hash algorithm and a BK-tree data structure)
+description: Describes a simple algorithm to detect duplicate or very similar images
 canonical_url: http://tech.jetsetter.com/2017/03/21/duplicate-image-detection/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
