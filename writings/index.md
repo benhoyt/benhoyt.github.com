@@ -53,7 +53,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ### Oyster.com
 
-* [Using Ansible to restore developer sanity](http://tech.oyster.com/using-ansible-to-restore-developer-sanity/) talks about how we went from a deployment including 28 manual steps to a single Ansible command. (Jul&nbsp;2015)
+* [Using Ansible to restore developer sanity](/writings/using-ansible-to-restore-developer-sanity/) talks about how we went from a deployment including 28 manual steps to a single Ansible command. (Jul&nbsp;2015)
 * [Saving 9 GB of RAM with Python’s \_\_slots\_\_](http://tech.oyster.com/save-ram-with-python-slots/) describes the huge memory savings we got using `__slots__` on a single class. (Nov&nbsp;2013)
 * [OpenSSL hangs CPU with Python <= 2.7.3 on Windows](http://tech.oyster.com/openssl-python-windows/) details a serious bug in an older version of OpenSSL that causes O(N<sup>2</sup>) behaviour. (Apr&nbsp;2013)
 * [An arm wrestle with Python’s garbage collector](http://tech.oyster.com/pythons-garbage-collector/) describes how we eliminated 4.5 second stop-the-world GC pauses. (Jan&nbsp;2013)
