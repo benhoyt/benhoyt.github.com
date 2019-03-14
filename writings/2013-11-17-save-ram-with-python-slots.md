@@ -14,7 +14,7 @@ We&#8217;ve [mentioned before][1] how Oyster.com&#8217;s Python-based web server
 
 Here&#8217;s a screenshot of RAM usage before and after deploying this change on one of our servers:
 
-![Chef Diagram](/images/physical-memory-usage-history.png)
+![Screenshot of RAM usage before and after](/images/physical-memory-usage-history.png)
 
 We allocate about a million instances of a class like the following:
 
