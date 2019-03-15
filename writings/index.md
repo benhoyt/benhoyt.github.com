@@ -57,7 +57,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 * [Saving 9 GB of RAM with Python’s \_\_slots\_\_](/writings/save-ram-with-python-slots/) describes the huge memory savings we got using `__slots__` on a single class. (Nov&nbsp;2013)
 * [OpenSSL hangs CPU with Python <= 2.7.3 on Windows](/writings/openssl-python-windows/) details a serious bug in an older version of OpenSSL that causes O(N<sup>2</sup>) behaviour. (Apr&nbsp;2013)
 * [An arm wrestle with Python’s garbage collector](/writings/pythons-garbage-collector/) describes how we eliminated 4.5 second stop-the-world GC pauses. (Jan&nbsp;2013)
-* [CherryPy, ctypes, and being explicit](http://tech.oyster.com/cherrypy-ctypes-and-being-explicit/) details a bug in CherryPy on Windows due to lack of `ctypes` argument types. (Oct&nbsp;2011)
+* [CherryPy, ctypes, and being explicit](/writings/cherrypy-ctypes-and-being-explicit/) details a bug in CherryPy on Windows due to lack of `ctypes` argument types. (Oct&nbsp;2011)
 * [How our photo search engine really works](http://tech.oyster.com/how-our-photo-search-engine-really-works/) describes how I wrote Oyster's photo search engine. (Jul&nbsp;2011)
 
 ### Brush Technology
