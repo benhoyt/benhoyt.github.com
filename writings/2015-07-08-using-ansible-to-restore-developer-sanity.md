@@ -12,11 +12,13 @@ canonical_url: http://tech.oyster.com/using-ansible-to-restore-developer-sanity/
 
 This time a year ago we were deploying new code to [Oyster.com][1] using a completely custom deployment system written in C++. And I don&#8217;t mean real C++; it was more like C with classes, where the original developers decided that `std::string` was &#8220;not fast enough&#8221; and wrote their own string <del>class</del> struct:
 
-<pre>struct SIZED_STRING
+```c++
+struct SIZED_STRING
 {
-    const uint8_t *pbData;
-    size_t cbData;
-};</pre>
+    const uint8_t *pbData;
+    size_t cbData;
+};
+```
 
 It&#8217;s not our idea of fun to worry about buffer sizes and string lengths when writing high-level deployment scripts.
 

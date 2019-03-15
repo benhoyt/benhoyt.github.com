@@ -18,20 +18,23 @@ Here&#8217;s a screenshot of RAM usage before and after deploying this change on
 
 We allocate about a million instances of a class like the following:
 
-<pre>class Image(object):
+```python
+class Image(object):
     def __init__(self, id, caption, url):
         self.id = id
         self.caption = caption
         self.url = url
         self._setup()
 
-    # ... other methods ...</pre>
+    # ... other methods ...
+```
 
 By default Python uses a dict to store an object&#8217;s instance attributes. Which is usually fine, and it allows fully dynamic things like setting arbitrary new attributes at runtime.
 
 However, for small classes that have a few fixed attributes known at &#8220;compile time&#8221;, the dict is a waste of RAM, and this makes a real difference when you&#8217;re creating a million of them. You can tell Python not to use a dict, and only allocate space for a fixed set of attributes, by settings `__slots__` on the class to a fixed list of attribute names:
 
-<pre>class Image(object):
+```python
+class Image(object):
     __slots__ = ['id', 'caption', 'url']
 
     def __init__(self, id, caption, url):
@@ -40,7 +43,8 @@ However, for small classes that have a few fixed attributes known at &#8220;comp
         self.url = url
         self._setup()
 
-    # ... other methods ...</pre>
+    # ... other methods ...
+```
 
 Note that you can also use [collections.namedtuple][3], which allows attribute access, but only takes the space of a tuple, so it&#8217;s similar to using `__slots__` on a class. However, to me it always [feels weird][4] to inherit from a namedtuple class. Also, if you want a custom initializer you have to override `__new__` rather than `__init__`.
 
