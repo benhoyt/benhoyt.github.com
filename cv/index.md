@@ -47,14 +47,17 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 
 ### [Compass](https://www.compass.com/) &ndash; Engineering Manager &ndash; March 2018 to now:
 
-* Helped build an API integration to a third party CRM using Go and PostgreSQL. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
 * Managed a team of backend and frontend engineers, doing people management as well as remaining very technically involved in system design, architecture discussions, and code reviews.
+* Oversaw development and launch of the Compass CRM, a high-profile project that was heavily promoted to our 5000+ agents.
+* Helped build an API integration to a third party CRM using Go and PostgreSQL. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
+
+<!-- Drove internal effort to switch 150 engineers from using Gerrit to GitHub PRs for code review. -->
 
 ### [Jetsetter](https://www.jetsetter.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Principal Software Engineer &ndash; July 2016 to February 2018:
 
 * Helped architect a structured content management system and search API using Contentful and Elasticsearch, simplifying and unifying several internal systems.
 * Designed and developed a real-time image scaling service using Python and ImageMagick. It’s able to serve hundreds of image scaling requests per second.
-* Implemented a [duplicate image detector](http://tech.jetsetter.com/2017/03/21/duplicate-image-detection/) using the dHash perceptual hash algorithm and BK-Tree data structures.
+* Implemented a [duplicate image detector](/writings/duplicate-image-detection/) using the dHash perceptual hash algorithm and BK-Tree data structures.
 * Wrote a type-safe image metadata injection service using Scala and Elasticsearch.
 * Managed a small team of engineers. Performed architecture and code reviews. Implemented database best practices on the team.
 
@@ -65,9 +68,9 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 * Helped design and implement a [custom content management system](http://tech.oyster.com/when-building-your-own-cms-is-the-right-choice/) that enabled us to do all publishing in realtime. The approach to structured content made integrations easy and gave us opportunities to boost revenue.
 * Co-developed two mobile apps: a cross-platform [iOS](https://itunes.apple.com/us/app/oyster.com-hotel-reviews-photos/id499564162) and [Android](https://play.google.com/store/apps/details?id=com.oyster.app) app using React Native, and Oyster’s older iPad app written in Objective-C.
 * Wrote Python and JavaScript libraries to display real-time pricing via TripAdvisor’s hotel pricing API, resulting in a large revenue increase.
-* Implemented the backend for various website features, including a tag-based [photo search engine](http://tech.oyster.com/how-our-photo-search-engine-really-works/) and a hotel booking system.
+* Implemented the backend for various website features, including a tag-based [photo search engine](/writings/how-our-photo-search-engine-really-works/) and a hotel booking system.
 * Implemented internal tools such as a photo album editor and a workflow system to help salespeople schedule photoshoots at about 1000 hotels per month.
-* Wrote tools for our web infrastructure: a new [code deployment system](http://tech.oyster.com/using-ansible-to-restore-developer-sanity/) using Ansible, tools to translate and localize the entire website, a data analytics pipeline using Snowplow Analytics and Amazon Redshift, and a system to send personalized emails.
+* Wrote tools for our web infrastructure: a new [code deployment system](/writings/using-ansible-to-restore-developer-sanity/) using Ansible, tools to translate and localize the entire website, a data analytics pipeline using Snowplow Analytics and Amazon Redshift, and a system to send personalized emails.
 * Managed the transition of our 12 points of sale from plain HTTP to secure HTTPS while closely monitoring SEO performance.
 * Co-wrote heavily parallelized software to resize and watermark millions of images in many different sizes using Amazon EC2.
 * Managed a team of engineers. Oversaw architecture decisions and performed code reviews for most of Oyster’s software projects. Helped the team switch from Subversion to Git. Led the hiring of new software engineers.
