@@ -3,7 +3,7 @@ layout: default
 title: Ben Hoyt’s Resume/CV
 permalink: /cv/
 ---
-# {{ page.title }}
+<h1 id="ben-hoyts-resumecv" class="no-print">{{ page.title }}</h1>
 
 <blockquote>
  <p class="no-print"><b>Go to:</b>
