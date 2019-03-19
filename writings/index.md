@@ -45,7 +45,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ### Compass.com
 
-* [Writing Good Commit Messages](https://medium.com/compass-true-north/writing-good-commit-messages-fc33af9d6321) looks at why quality commit messages are important and how to write them. (Sep&nbsp;2018)
+* [Writing Good Commit Messages](/writings/writing-good-commit-messages/) looks at why quality commit messages are important and how to write them. (Sep&nbsp;2018)
 
 ### Jetsetter.com
 
