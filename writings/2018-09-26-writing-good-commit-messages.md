@@ -13,6 +13,7 @@ canonical_url: https://medium.com/compass-true-north/writing-good-commit-message
     background: #f4f4f4;
     padding: 1.2em;
     margin: 1.2em 0;
+    word-spacing: 0;
 }
 </style>
 
@@ -62,21 +63,21 @@ I’m going to use real examples here, but I’ve tried to pull a good selection
 
 ### Just copying the Jira issue summary
 
-<div class="commit-msg">[CNC-988] Cannot delete agent profile in incorrect geo</div>
+<pre class="commit-msg">[CNC-988] Cannot delete agent profile in incorrect geo</pre>
 
 This is something we’ve all done, but it’s a bad habit. This message just lists the Jira ticket and copy-n-pastes the Jira issue summary. Instead, it should be a summary of the fix, with a paragraph explaining more details and motivation. Maybe something like this:
 
-<div class="commit-msg">Only show profile pages for current geo in editor
+<pre class="commit-msg">Only show profile pages for current geo in editor
 
 Previously we were loading profiles for all geos, which confused the user and made it so they couldn’t delete profile pages on other geos.
 
 Additionally, when the geo dropdown at the top-right is changed, re-fetch the profile pages so the list is up to date. This required a Backbone hack because of X, Y, and Z.
 
-Fixes CNC-988</div>
+Fixes CNC-988</pre>
 
 ### No motivation or context
 
-<div class="commit-msg">Remove versioning from deploy-assets scripts</div>
+<pre class="commit-msg">Remove versioning from deploy-assets scripts</pre>
 
 This is a fine summary, but gives no motivation for why the change was necessary. That’s especially important for a small code change like this one was; the code change itself doesn’t provide any motivation.
 
@@ -84,11 +85,11 @@ So the reviewer is left wondering: “Why did Bob do this?” or “Will this me
 
 ### No-op messages
 
-<div class="commit-msg">Update README.md</div>
+<pre class="commit-msg">Update README.md</pre>
 
 Unfortunately GitHub’s UI makes this kind of thing easy to do, making you think it’s an okay practice. It’s not. Even if a change is “only” a README update, you can at least describe it in a one-liner:
 
-<div class="commit-msg">Add notes about how to build on Linux</div>
+<pre class="commit-msg">Add notes about how to build on Linux</pre>
 
 Again, the change probably took 30 minutes, so spending 30 seconds on a decent commit message makes other people’s lives easier.
 
@@ -96,30 +97,30 @@ Again, the change probably took 30 minutes, so spending 30 seconds on a decent c
 
 This commit message has an accurate summary line, as well as details of why the change was needed, and a link to memory graphs:
 
-<div class="commit-msg">Re-enable React server-side rendering
+<pre class="commit-msg">Re-enable React server-side rendering
 
 Move render string output directly into template creation portion of the template render call.
 
 By moving the render string out of Koa state, we no longer have memory allocation issues:
 
-Results: https://cl.ly/abcdef123456</div>
+Results: https://cl.ly/abcdef123456</pre>
 
 Here’s one for a performance improvement that includes both a good summary and context, as well as benchmark results:
 
-<div class="commit-msg">Make calls faster by resolving function names at parse time
+<pre class="commit-msg">Make calls faster by resolving function names at parse time
 
 This avoids a map lookup by string name at runtime when calling a user-defined function, speeding up function calls by at least 10%. Not a huge gain but a fairly simple win, and matches how we’re doing locals and globals.
 
                    before         after          delta
 RecursiveFunc-8    18.4µs ± 1%    16.5µs ± 1%    -10.24%
-FuncCall-8         3.42µs ± 1%    3.00µs ± 0%    -12.46%</div>
+FuncCall-8         3.42µs ± 1%    3.00µs ± 0%    -12.46%</pre>
 
 Sometimes a short message with a couple of screenshots is enough:
 
-<div class="commit-msg">Adding loading states for contact bulk operations
+<pre class="commit-msg">Adding loading states for contact bulk operations
 
 Before: https://cl.ly/before12345
-After: https://cl.ly/after54321</div>
+After: https://cl.ly/after54321</pre>
 
 One minor point about the message above: it’s considered good git practice to use the imperative mood (yep, I had to look up the term) when writing the summary line. So “Add loading states” rather than “Adding…”. The commit message then describes what this commit will do when applied — following this means a consistent style in your commit messages, and it’s also shorter.
 
