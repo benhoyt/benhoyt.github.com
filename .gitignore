@@ -1,3 +1,4 @@
 _site
 *.bat
 .jekyll-metadata
+_logs/
