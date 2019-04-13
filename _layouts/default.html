@@ -172,5 +172,15 @@ a:link, a:visited { color: #603000; }
   ga('send', 'pageview');
 </script>
 
+<script>
+  if (window.location.hostname == 'benhoyt.com') {
+    var _pixel = new Image(1, 1);
+    _pixel.src = "https://d2gfjl6508a86k.cloudfront.net/pixel.png?u=" + encodeURIComponent(window.location.pathname) + (document.referrer ? "&r=" + encodeURIComponent(document.referrer) : "");
+  }
+</script>
+<noscript>
+  <img src="https://d2gfjl6508a86k.cloudfront.net/pixel.png?u={{ page.url | url_encode }}" />
+</noscript>
+
 </body>
 </html>
