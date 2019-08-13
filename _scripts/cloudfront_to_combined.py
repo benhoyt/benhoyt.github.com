@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Convert Cloudfront pixel logs from benhoyt.com to combined log format for GoAccess."""
 
+import argparse
 import collections
 import csv
 import datetime
 import fileinput
+import os
 import sys
 import urllib.parse
 
@@ -132,5 +134,29 @@ def log_error(finput, message):
 
 
 if __name__ == '__main__':
-    finput = fileinput.input(openhook=fileinput.hook_compressed)
+    parser = argparse.ArgumentParser(usage='cloudfront_to_combined.py [-h] [dir | files ...]')
+    parser.add_argument('dir_or_files', nargs='*',
+                        help='directory of .gz files or list of files')
+    parser.add_argument('--days', type=int, default=60,
+                        help='number of days to go back (default %(default)s)')
+    args = parser.parse_args()
+
+    files = args.dir_or_files
+    if len(files) == 1 and os.path.isdir(files[0]):
+        dirname = files[0]
+        start = datetime.datetime.now() - datetime.timedelta(days=args.days)
+        files = []
+        for name in os.listdir(dirname):
+            if not name.endswith('.gz'):
+                continue
+            parts = name.split('.')
+            try:
+                date = datetime.datetime.strptime(parts[1][:10], '%Y-%m-%d')
+            except (ValueError, IndexError):
+                continue
+            if date < start:
+                continue
+            files.append(os.path.join(dirname, name))
+
+    finput = fileinput.input(files=files, openhook=fileinput.hook_compressed)
     sys.exit(0 if process_input(finput) else 1)
