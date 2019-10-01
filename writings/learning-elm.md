@@ -382,7 +382,7 @@ There are a number of reasons for my Elm code being more verbose:
 * Me simply wrapping lines more: in the React codebase I often used very long lines for a `<Component>` with a bunch of props. In Elm, I tended to wrap this onto multiple lines for readability.
 * elm-format: I used [elm-format](https://github.com/avh4/elm-format) on all my source code. I like the go-fmt style promise of the tool, but it's particularly verbose and seems to love vertical space (more on this [below](#elm-format)).
 
-TODO: note that the trade-off is worth it
+But I think the trade-off is worth it! I was happy to let go of conciseness and gain reliability.
 
 ### Performance
 
@@ -420,7 +420,7 @@ similar:
 So maybe eMail should be email?
 ```
 
-Part of tooling is super-simple deployments: just use `elm make` to build, [`uglifyjs`](https://www.npmjs.com/package/uglify-js) to minify, and upload the resulting `.js` file to your CDN. No figuring out Babel presets or fighting webpack configs.
+One aspect of tooling is super-simple deployments: just use `elm make` to build, [`uglifyjs`](https://www.npmjs.com/package/uglify-js) to minify, and upload the resulting `.js` file to your CDN. No figuring out Babel presets or fighting webpack configs.
 
 **Packages:** To install packages, you just type `elm install elm/time`, and it downloads the latest version of the package (and any dependencies), locks the versions, and adds them to your `elm.json` dependencies list.
 
