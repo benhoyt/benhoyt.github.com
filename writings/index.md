@@ -12,6 +12,10 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ## Technical writing
 
+<!--
+* [Learning Elm](/writings/learning-elm/) describes how I ported a medium-sized web frontend from React to Elm and had fun with a pure functional language in the process. (Oct&nbsp;2019)
+-->
+
 * [Replacing Google Analytics with GoAccess](/writings/replacing-google-analytics/) describes how I replaced Google tracking with simple log-based analytics on my personal website. (Apr&nbsp;2019)
 * [GoAWK](/writings/goawk/) is an AWK interpreter written in Go, and this article describes how I wrote it, tested it, and measured and improved its performance. (Nov&nbsp;2018)
 * [LoxLox](/writings/loxlox/) is an interpreter for *Crafting Interpreters'* Lox programming language written in Lox! (Oct&nbsp;2018)
