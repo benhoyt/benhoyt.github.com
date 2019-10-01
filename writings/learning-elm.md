@@ -247,7 +247,7 @@ viewModal modal =
 
 You can do the same with commands, using `Cmd.map` to translate a modal command to a top-level command to pass to the Elm runtime.
 
-What was less obvious was how to pass other data or actions back from the modal to the top level, for example "modal should be closed". After looking around the web and browing forums, I decided to use an "effect", an additional type that the modal's `update` function returns, telling the top level app what to do. So a modal's `update` looks like this:
+What was less obvious was how to pass other data or actions back from the modal to the top level, for example "modal should be closed". After looking around the web and browsing forums, I decided to use an "effect", an additional type that the modal's `update` function returns, telling the top level app what to do. So a modal's `update` looks like this:
 
 ```elm
 update : Msg -> Model -> ( Model, Cmd Msg, Effect )
