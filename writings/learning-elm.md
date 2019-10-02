@@ -361,21 +361,25 @@ First is the great news -- the Elm bundle size is much smaller than the React on
 
 That's a huge reduction, less than a third of the size! Faster to download, faster to parse, and will drain less battery doing so. Elm's small [asset sizes](https://elm-lang.org/news/small-assets-without-the-headache) are a real selling point.
 
-Comparison point: the [`elm-spa-example`](https://github.com/rtfeldman/elm-spa-example) bundle size is 97KB minified and 30KB minified+gzipped, and the equivalent [`react-redux-realworld-example-app`](https://github.com/gothinkster/react-redux-realworld-example-app) is 578KB minified and 116KB minifed+gzipped.
+Comparison point: the [React real-world example app](https://github.com/gothinkster/react-redux-realworld-example-app) bundle size is 578KB minified and 116KB minifed+gzipped, and the [Elm equivalent](https://github.com/rtfeldman/elm-spa-example) is 97KB minified and 30KB minified+gzipped.
 
 ### Lines of code
 
-Unfortunately the source code is significantly bigger:
+In contrast, the source code is significantly bigger:
 
 * React: 1815 non-blank lines of code
 * Elm: 3970 non-blank lines of code
 
-That's more than twice as many lines of code. I'm not too surprised it's more, though I was surprised it was that much more. Again, for comparison, `elm-spa-example` is 3753 non-blank lines of code and `react-redux-realworld-example-app` is 2056 non-blank lines.
+I'm not surprised it's more, though I was surprised it was that much more. For comparison with the "real-world example apps" again:
 
-There are a number of reasons for my Elm code being more verbose:
+* [React](https://github.com/gothinkster/react-redux-realworld-example-app): 2056 non-blank lines
+* [Elm](https://github.com/rtfeldman/elm-spa-example): 3753 non-blank lines
+* [ReasonML](https://github.com/jihchi/reason-react-realworld-example-app): 3659 non-blank lines (note the similarity in size; Reason is another statically typed language)
 
-* `module` and `import` lines: elm-format often puts each `exposing` name on a separate line; also, my React version was in a single file, so didn't have any imports. Together these account for 10% of the total lines.
+There are a number of reasons for the Elm code being more verbose:
+
 * Type definitions: each type of a union and each field of a record definition are on separate lines (10% of total).
+* `module` and `import` lines: elm-format often puts each `exposing` name on a separate line; also, my React version was in a single file, so didn't have any imports. Together these account for 10% of the total lines.
 * JSON encoding and decoding: in JavaScript you don't have to write code for this. Accounts for an estimated 7% of the total lines.
 * `let` ... `in` lines: each of these keywords takes a line by itself (3.5% of total).
 * Modal message passing boilerplate (described above): probably another couple of hundred lines.
