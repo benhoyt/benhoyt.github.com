@@ -7,7 +7,7 @@ description: How I got started with my wedding gift registry website and also de
 <h1><a href="/writings/gifty/">{{ page.title }}</a></h1>
 <p class="subtitle">January 2017</p>
 
-> Update: In November 2017, I [rewrote the backend in Go](http://benhoyt.com/writings/learning-go/) (it was Python). The frontend is still as described below.
+> Update: In November 2017, I [rewrote the backend in Go](/writings/learning-go/) (it was Python). The frontend is still as described below.
 
 I run a small wedding gift registry website over at [GiftyWeddings.com](https://giftyweddings.com/). This article explains how I got started with Gifty and also describes the recent revamp I gave the site. I'm a programmer first, so this is primarily from my perspective as a developer, but I might also include a few numbers about the business side of things. Hopefully you'll glean some good insights about what it's like to develop and maintain a small online business as a side project.
 

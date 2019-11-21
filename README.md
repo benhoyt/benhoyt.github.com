@@ -1,1 +1,1 @@
-Source code for my website, [benhoyt.com](http://benhoyt.com/)
+Source code for my website, [benhoyt.com](https://benhoyt.com/)

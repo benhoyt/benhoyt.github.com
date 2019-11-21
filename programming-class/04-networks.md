@@ -88,7 +88,7 @@ Content-Type: text/html; charset=utf-8
   <body>
     <h1>My Web Page</h1>
     <p>First paragraph.</p>
-    <p>Second paragraph. <a href="http://benhoyt.com/">A web link.</a></p>
+    <p>Second paragraph. <a href="https://benhoyt.com/">A web link.</a></p>
   </body>
 </html>
 ```

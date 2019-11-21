@@ -94,4 +94,4 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ## Copyright
 
-Unless it says otherwise in the individual document, the works above are &copy;&nbsp;Ben&nbsp;Hoyt under a [Creative Commons BY-NC-ND](http://creativecommons.org/licenses/by-nc-nd/3.0/) license, which basically means you can copy and share them freely, as long as you link back to [benhoyt.com](http://benhoyt.com/), don&rsquo;t make money with them, and don&rsquo;t alter the content. Enjoy!
+Unless it says otherwise in the individual document, the works above are &copy;&nbsp;Ben&nbsp;Hoyt under a [Creative Commons BY-NC-ND](http://creativecommons.org/licenses/by-nc-nd/3.0/) license, which basically means you can copy and share them freely, as long as you link back to [benhoyt.com](https://benhoyt.com/), don&rsquo;t make money with them, and don&rsquo;t alter the content. Enjoy!
