@@ -66,7 +66,7 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 
 * Ported a legacy C++ web backend to Python. The change of language and tooling let us develop and release business-level features much more quickly.
 * Helped design and implement a [custom content management system](http://tech.oyster.com/when-building-your-own-cms-is-the-right-choice/) that enabled us to do all publishing in realtime. The approach to structured content made integrations easy and gave us opportunities to boost revenue.
-* Co-developed two mobile apps: a cross-platform [iOS](https://itunes.apple.com/us/app/oyster.com-hotel-reviews-photos/id499564162) and [Android](https://play.google.com/store/apps/details?id=com.oyster.app) app using React Native, and Oyster’s older iPad app written in Objective-C.
+* Co-developed two mobile apps: a cross-platform iOS and Android app using React Native, and Oyster’s older iPad app written in Objective-C.
 * Wrote Python and JavaScript libraries to display real-time pricing via TripAdvisor’s hotel pricing API, resulting in a large revenue increase.
 * Implemented the backend for various website features, including a tag-based [photo search engine](/writings/how-our-photo-search-engine-really-works/) and a hotel booking system.
 * Implemented internal tools such as a photo album editor and a workflow system to help salespeople schedule photoshoots at about 1000 hotels per month.
@@ -76,11 +76,11 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 * Managed a team of engineers. Oversaw architecture decisions and performed code reviews for most of Oyster’s software projects. Helped the team switch from Subversion to Git. Led the hiring of new software engineers.
 
 
-### [Brush Technology](http://brush.co.nz/) &ndash; Software Engineer and Co-director &ndash; August 2006 to May 2010:
+### [Brush Technology](https://brush.co.nz/) &ndash; Software Engineer and Co-director &ndash; August 2006 to May 2010:
 
 * Co-founded and co-developed the [microPledge](http://micropledge.brush.co.nz/) crowd funding platform. Implemented secure financial transactions, Ajax-based voting, and S3 file uploads.
 * Designed, implemented, and promoted [Gifty Weddings](https://giftyweddings.com/), a website that helps couples make great wedding gift registries.
-* Wrote embedded firmware in C++ for [Hamilton Jet’s](https://www.hamjet.co.nz/) large-scale jetboat control systems. Wrote testing and GUI tools in Python and C#.
+* Wrote embedded firmware in C++ for [Hamilton Jet’s](https://www.hamiltonjet.com/) large-scale jetboat control systems. Wrote testing and GUI tools in Python and C#.
 * Worked on cellular telemetry firmware and GPS interfaces using Atmel AVR and ARM7 micros for various clients.
 * Developed low-latency IP networking software in C and Python for a client in the high-frequency trading industry.
 * Managed projects and staff. As a cofounder, I was also heavily involved with the company’s business planning and decisions.
@@ -88,7 +88,7 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 
 ### [Harvest Electronics](http://www.harvest.com/) &ndash; Software Engineer &ndash; October 2002 to July 2006:
 
-* Designed and developed the [web and admin interface](http://www.harvestnz.com/) for their solar-powered weather stations. The clean UI and weather graphs really made Harvest’s product stand out.
+* Designed and developed the [web and admin interface](https://live.harvest.com/) for their solar-powered weather stations. The clean UI and weather graphs really made Harvest’s product stand out.
 * Wrote software to interface to GPRS modems. Administered associated databases and web servers.
 * Wrote embedded firmware in C and assembler for MSP430 and ARM7 micros, including low-level boot loaders, serial communications, and I/O control logic.
 * Developed various network tools in C and C++. Worked with the Win32 API.
@@ -96,7 +96,7 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 
 ## Education
 
-I have a B.E. in Electrical and Computer Engineering, and graduated from the [University of Canterbury](http://www.canterbury.ac.nz/) in 2002 with first class honors, [GPA](http://www.canterbury.ac.nz/courses/glossary.shtml#g "Scale: A+ is 9, D is 0")&nbsp;7.9/9. For my final-year project I designed a small stack-based CPU in VHDL.
+I have a B.E. in Electrical and Computer Engineering, and graduated from the [University of Canterbury](http://www.canterbury.ac.nz/) in 2002 with first class honors, [GPA](https://www.canterbury.ac.nz/study/qualifications-and-courses/glossary-of-terms/#g "Scale: A+ is 9, D is 0")&nbsp;7.9/9. For my final-year project I designed a small stack-based CPU in VHDL.
 
 
 ## About me
