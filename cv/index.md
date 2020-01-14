@@ -21,14 +21,14 @@ permalink: /cv/
 
 I’m a software engineer with fifteen years of experience developing web applications and embedded firmware, as well as providing technical management for small teams of software developers.
 
-I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a good amount of JavaScript, C++, Objective-C, and x86 assembly. I learn quickly, care about detail, and love computer science and mathematics.
+I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a good amount of JavaScript, C++, and x86 assembly. I learn quickly, care about detail, and love computer science and mathematics.
 
 
 ## Skills: what I do...
 
 ### Software development
 
-* Develop websites that perform well and are easy to use. I’ve used various languages and databases, and I’m experienced with the scaling and caching required for large sites.
+* Develop web systems and services that perform well and are easy to use. I’ve used various languages and databases, and I’m experienced with microservices as well as the scaling and caching required for large sites.
 * Administer servers and automate complex code deployments on Linux and Windows.
 * Contribute to open source projects, for example Python ([more here](/projects/)).
 * Create native apps for iOS and Android devices. I’m familiar with all aspects of app development from design to code to app store submission.
@@ -45,13 +45,13 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 
 ## Experience
 
-### [Compass](https://www.compass.com/) &ndash; Engineering Manager &ndash; March 2018 to now:
+### [Compass](https://www.compass.com/) &ndash; Senior Software Engineer &ndash; March 2018 to now:
 
+* Wrote code and provided technical leadership for the SEO team, including Python services and Athena log data processing. Our team significantly improved indexation and search ranking for our key pages.
+* Wrote an internal proposal to migrate 200 engineers from using Gerrit to GitHub for code review. The proposal saw fruition and increased developer velocity.
 * Managed a team of backend and frontend engineers, doing people management as well as remaining very technically involved in system design, architecture discussions, and code reviews.
 * Oversaw development and launch of the Compass CRM, a high-profile project that was heavily promoted to our 5000+ agents.
 * Helped build an API integration to a third party CRM using Go and PostgreSQL. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
-
-<!-- Drove internal effort to switch 150 engineers from using Gerrit to GitHub PRs for code review. -->
 
 ### [Jetsetter](https://www.jetsetter.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Principal Software Engineer &ndash; July 2016 to February 2018:
 
