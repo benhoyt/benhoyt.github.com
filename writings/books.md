@@ -17,6 +17,10 @@ These are some of the books I've read over the years. I only started keeping tra
 
 *Come Back, Barbara* by C. John Miller and Barbara Miller Juliana. Compelling true story about the prodigal daughter of minister-missionary "Jack" Miller, and how Jack and his wife learn to let go and stop trying to be the Holy Spirit in the life of their wayward daughter. The amount they had to learn to let go is humbling. Franci and I read this separately and both found it very thought-provoking.
 
+*Nate Saint: On a Wing and a Prayer* by Janet & Geoff Benge. Excellent kid-friendly biography of Nate Saint, one of the five missionaries who was killed at the hands of Auca spears in 1956. Such a powerful story.
+
+*The Man who was Thursday* by G. K. Chesterton. A wild romp of a book about a group of conspirators who end up all being undercover cops. As much as I love Chesterton, this book was weird. Is it just a crazy story, or does it have some deeper meaning?
+
 *Outlaws of Time: The Legend of Sam Miracle* by N. D. Wilson. A wild, Wilsonian romp complete with time travel, a native American healer, and a boy with snake arms. Read this out loud with Franci.
 
 
