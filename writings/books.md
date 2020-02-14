@@ -15,7 +15,7 @@ These are some of the books I've read over the years. I only started keeping tra
 
 *Surprised by Hope* by N. T. Wright. TODO
 
-*Come Back Barbara* by C. John Miller and Barbara Miller Juliana. Very compelling true story about the prodigal daughter of minister-missionary "Jack" Miller, and how Jack and his wife learn to let go and stop trying to be the Holy Spirit in the life of their wayward daughter. The amount they had to learn to let go, and how they showed great love even while disagreeing with her choices, is humbling. Franci and I read this separately and both found it very thought-provoking.
+*Come Back, Barbara* by C. John Miller and Barbara Miller Juliana. Compelling true story about the prodigal daughter of minister-missionary "Jack" Miller, and how Jack and his wife learn to let go and stop trying to be the Holy Spirit in the life of their wayward daughter. The amount they had to learn to let go is humbling. Franci and I read this separately and both found it very thought-provoking.
 
 *Outlaws of Time: The Legend of Sam Miracle* by N. D. Wilson. A wild, Wilsonian romp complete with time travel, a native American healer, and a boy with snake arms. Read this out loud with Franci.
 
