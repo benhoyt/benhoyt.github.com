@@ -47,6 +47,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 
 ### Compass.com
 
+* [SEO for Software Engineers](/writings/seo-for-software-engineers/) goes over the basics of Search Engine Optimization, written for software developers. (Feb&nbsp;2020)
 * [Writing good commit messages](/writings/writing-good-commit-messages/) looks at why quality commit messages are important and how to write them. (Sep&nbsp;2018)
 
 ### Jetsetter.com
