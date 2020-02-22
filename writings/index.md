@@ -48,6 +48,7 @@ I’ve also written [tech blog articles](#tech-blog-articles) for several of the
 ### Compass.com
 
 * [SEO for Software Engineers](/writings/seo-for-software-engineers/) goes over the basics of Search Engine Optimization, written for software developers. (Feb&nbsp;2020)
+* [Fast Cloudfront log queries](https://medium.com/compass-true-north/fast-cloudfront-log-queries-using-aws-athena-and-serverless-ef117393c5a6) shows how to use AWS Lambda to partition your Cloudfront logs for faster querying via Athena. (Dec&nbsp;2019)
 * [Writing good commit messages](/writings/writing-good-commit-messages/) looks at why quality commit messages are important and how to write them. (Sep&nbsp;2018)
 
 ### Jetsetter.com
