@@ -55,6 +55,8 @@ $query = "SELECT * FROM users WHERE name = '{$name}';"
 
 When a boy named [`Robert'); DROP TABLE users;`](https://xkcd.com/327/) comes along, NaiveSite's entire user database is deleted. Oops!
 
+Incidentally, the mother in the xkcd comic says, "I hope you've learned to sanitize your database inputs." Which is somewhat confusing, but I'll give Randall the benefit of the doubt and assume he meant "escape your database parameters".
+
 In short, it's no good to strip out "dangerous characters", because some characters are dangerous in some contexts and perfectly safe in others.
 
 
@@ -67,7 +69,7 @@ So the better approach is to store whatever name the user enters verbatim, and t
 This is sometimes called “contextual escaping”. If you happen to use Go's [`html/template`](https://golang.org/pkg/html/template/) package, you get automatic contextual escaping for HTML, CSS, and JavaScript. Most other templating systems at least give you automatic HTML escaping, for example React, Jinja2, and Rails templates.
 
 
-## What about when you *want* raw input?
+## But what if you *want* raw input?
 
 One tricky situation is when your app's purpose is allowing a user to enter HTML or Markdown for display. In this case you can't escape when rendering output, because the whole purpose is to allow users to add links, images, headings, etc.
 
@@ -76,17 +78,30 @@ So you have to take a different approach. If you're using Markdown, you can eith
 1. Allow them to only enter pure Markdown (that is, no raw HTML), and convert that to HTML on render. This is the most secure option, but also more restrictive.
 2. Allow them to use HTML in the Markdown, but only a whitelist of allowed tags and attributes, such as `<a href="...">` and `<img src="...">`. Both [Stack Exchange](https://meta.stackexchange.com/a/135909/160696) and [GitHub](https://github.github.com/gfm/#disallowed-raw-html-extension-) take this second approach.
 
-If you're not using Markdown but want to let your users enter HTML directly, you only have the second option&nbsp;&ndash; you must filter using a whitelist of tags.
+If you're not using Markdown but want to let your users enter HTML directly, you only have the second option -- you must filter using a whitelist of tags.
 
 So in cases where you do need to "echo" raw user input, carefully filter input based on a restrictive whitelist, and store the result in the database. When you come to output it, output it as stored without escaping.
 
 The parallel for SQL injection might be if you're building a data charting tool that allows users to enter arbitrary SQL queries. You might want to allow them to enter `SELECT` queries but not data-modification queries. In these cases you're best off using a proper SQL parser ([like this one](https://github.com/xwb1989/sqlparser)) to ensure it's a well-formed `SELECT` query.
 
 
+## What about validation?
+
+Input sanitization is usually a bad idea, but input *validation* is a good thing.
+
+For example, when you're parsing form fields, and you have a number field that's not a number, or an email address without an `@`, or a "post status" drop-down that can only be one of `draft`, `published`, or `archived` -- then by all means validate it and return an error if it's invalid.
+
+Good web form validation shows errors inline so the user knows exactly what to fix:
+
+![Web form validation](/images/form-validation.png)
+
+You must do validation at least on the backend, otherwise an attacker could bypass the frontend validation and `POST` bogus data to your endpoint directly. In addition, you can also validate early on the frontend to show errors more real-time, without a round trip to the server.
+
+
 ## Further reading
 
 OWASP has two cheat sheets on [Cross Site Scripting Prevention](https://owasp.org/www-project-cheat-sheets/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet) and [SQL Injection Prevention](https://owasp.org/www-project-cheat-sheets/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html) that contain a lot of further information on escaping.
 
-There's also a StackOverflow [answer to "How can I sanitize user input with PHP?"](https://stackoverflow.com/questions/129677/how-can-i-sanitize-user-input-with-php/130323#130323) that is somewhat PHP-specific, but I found it succinct and helpful. It links to a page on PHP [magic quotes](https://www.php.net/manual/en/security.magicquotes.php), which were a bad idea and actually removed in PHP 5.4&nbsp;&ndash; the discussion there is very much in line with what I've written above.
+There's also a StackOverflow [answer to "How can I sanitize user input with PHP?"](https://stackoverflow.com/questions/129677/how-can-i-sanitize-user-input-with-php/130323#130323) that is somewhat PHP-specific, but I found it succinct and helpful. It links to a page on PHP [magic quotes](https://www.php.net/manual/en/security.magicquotes.php), which were a bad idea and actually removed in PHP 5.4 -- the discussion there is very much in line with what I've written above.
 
 If you have any feedback on this article, please get in touch!
