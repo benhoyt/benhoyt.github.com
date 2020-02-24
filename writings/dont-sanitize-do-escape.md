@@ -35,7 +35,7 @@ Or if the filter is a bit more zealous and also strips `'` and `"`, someone like
 
 Perhaps more importantly, it gives a false sense of security. What does "unsafe" mean? In what context? Sure, `<>&` are unsafe characters for HTML, but what about CSS, JSON, SQL, or even shell scripts? Those have a completely different set of unsafe characters.
 
-For example, NaiveSite might have an HTML template that looks like this:
+For example, NaiveSite might have a PHP template that looks like this:
 
 ```html
 <html>
@@ -75,14 +75,14 @@ One tricky situation is when your app's purpose is allowing a user to enter HTML
 
 So you have to take a different approach. If you're using Markdown, you can either:
 
-1. Allow them to only enter pure Markdown (that is, no raw HTML), and convert that to HTML on render. This is the most secure option, but also more restrictive.
+1. Allow them to only enter pure Markdown, and convert that to HTML on render (many Markdown libraries allow raw HTML by default; be sure to disable that). This is the most secure option, but also more restrictive.
 2. Allow them to use HTML in the Markdown, but only a whitelist of allowed tags and attributes, such as `<a href="...">` and `<img src="...">`. Both [Stack Exchange](https://meta.stackexchange.com/a/135909/160696) and [GitHub](https://github.github.com/gfm/#disallowed-raw-html-extension-) take this second approach.
 
-If you're not using Markdown but want to let your users enter HTML directly, you only have the second option -- you must filter using a whitelist of tags.
+If you're not using Markdown but want to let your users enter HTML directly, you only have the second option -- you must filter using a whitelist. This is harder to get right than you'd think (for example, `<img src="x" onerror="badFunc()">`), so be sure to use a mature, security-vetted library like [DOMPurify](https://github.com/cure53/DOMPurify).
 
 So in cases where you do need to "echo" raw user input, carefully filter input based on a restrictive whitelist, and store the result in the database. When you come to output it, output it as stored without escaping.
 
-The parallel for SQL injection might be if you're building a data charting tool that allows users to enter arbitrary SQL queries. You might want to allow them to enter `SELECT` queries but not data-modification queries. In these cases you're best off using a proper SQL parser ([like this one](https://github.com/xwb1989/sqlparser)) to ensure it's a well-formed `SELECT` query.
+The parallel for SQL injection might be if you're building a data charting tool that allows users to enter arbitrary SQL queries. You might want to allow them to enter `SELECT` queries but not data-modification queries. In these cases you're best off using a proper SQL parser ([like this one](https://github.com/xwb1989/sqlparser)) to ensure it's a well-formed `SELECT` query -- but doing this correctly is not trivial, so be sure to get security review.
 
 
 ## What about validation?
