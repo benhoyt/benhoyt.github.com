@@ -50,7 +50,7 @@ If an attacker sets their name to include double quotes, like `"; badFunc(); "`,
 Another example of this kind of thing is SQL injection, an attack that's closely related to cross-site scripting. NaiveSite is powered by MySQL, and it finds users like so:
 
 ```php
-$query = "SELECT * FROM users WHERE name = '{$name}';"
+$query = "SELECT * FROM users WHERE name = '{$name}'"
 ```
 
 When a boy named [`Robert'); DROP TABLE users;`](https://xkcd.com/327/) comes along, NaiveSite's entire user database is deleted. Oops!
@@ -64,7 +64,14 @@ In short, it's no good to strip out "dangerous characters", because some charact
 
 The only code that knows what characters are dangerous is the code that's outputting in a given context.
 
-So the better approach is to store whatever name the user enters verbatim, and then have the template language HTML-escape when outputting HTML, or properly escape JSON when outputting JSON and JavaScript. And of course use your SQL engine's parameterized query features so it properly escapes variables when building SQL.
+So the better approach is to store whatever name the user enters verbatim, and then have the template system HTML-escape when outputting HTML, or properly escape JSON when outputting JSON and JavaScript.
+
+And of course use your SQL engine's parameterized query features so it properly escapes variables when building SQL:
+
+```php
+$stmt = $db->prepare('SELECT * FROM users WHERE name = ?');
+$stmt->bind_param('s', $name);
+```
 
 This is sometimes called “contextual escaping”. If you happen to use Go's [`html/template`](https://golang.org/pkg/html/template/) package, you get automatic contextual escaping for HTML, CSS, and JavaScript. Most other templating systems at least give you automatic HTML escaping, for example React, Jinja2, and Rails templates.
 
