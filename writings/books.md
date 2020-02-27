@@ -13,6 +13,8 @@ These are some of the books I've read over the years. I only started keeping tra
 2020
 ----
 
+*A Different Shade of Green* by Gordon Wilson. TODO
+
 *Surprised by Hope* by N. T. Wright. TODO
 
 *Come Back, Barbara* by C. John Miller and Barbara Miller Juliana. Compelling true story about the prodigal daughter of minister-missionary "Jack" Miller, and how Jack and his wife learn to let go and stop trying to be the Holy Spirit in the life of their wayward daughter. The amount they had to learn to let go is humbling. Franci and I read this separately and both found it very thought-provoking.
