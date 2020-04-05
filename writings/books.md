@@ -7,13 +7,13 @@ description: (Some of the) books I’ve read
 <h1><a href="/writings/learning-go/">{{ page.title }}</a></h1>
 
 
-These are some of the books I've read over the years. I only started keeping track recently, so there are some pretty big gaps!
+These are some of the books I've read over the years. I've only kept track intermittently, so there are some pretty big gaps!
 
 
 2020
 ----
 
-*A Different Shade of Green* by Gordon Wilson. TODO
+*A Different Shade of Green* by Gordon Wilson. I really enjoyed Wilson's obvious love of creation and little creatures and the like, simply because they're beautiful and God made them. And a book on this subject by a conservative Christian is a much-needed thing. However, I found it a bit simplistic overall, and I found his constant use of the terms "dominion" and "Biblical dominion" a bit tiresome. Could have been more thoughtful and in-depth, and could definitely have used better editing.
 
 *Surprised by Hope* by N. T. Wright. TODO
 
@@ -24,6 +24,14 @@ These are some of the books I've read over the years. I only started keeping tra
 *The Man who was Thursday* by G. K. Chesterton. A wild romp of a book about a group of conspirators who end up all being undercover cops. As much as I love Chesterton, this book was weird. Is it just a crazy story, or does it have some deeper meaning?
 
 *Outlaws of Time: The Legend of Sam Miracle* by N. D. Wilson. A wild, Wilsonian romp complete with time travel, a native American healer, and a boy with snake arms. Read this out loud with Franci.
+
+
+2019
+----
+
+*The Household and the War for the Cosmos* by C. R. Wiley. Another very good book by the same author. In some ways this is a prequel to *Man of the House* and gives the underlying philosophy for his approach.
+
+*Man of the House* by C. R. Wiley. Dumb cover, but amazing book, unlike any other I've read. Paints an incredible picture of what the household is for and could look like.
 
 
 2012
