@@ -19,28 +19,34 @@ permalink: /cv/
 
 ## Summary
 
-I’m a software engineer with fifteen years of experience developing web applications and embedded firmware, as well as providing technical management for small teams of software developers.
+I’m a software engineer with fifteen years of experience developing web applications and services, as well as providing technical leadership for small teams of software developers.
 
 I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a good amount of JavaScript, C++, and x86 assembly. I learn quickly, care about detail, and love computer science and mathematics.
+
+I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked in New York City from 2010 to 2019, and I’m open to remote work and some travel.
 
 
 ## Skills: what I do...
 
 ### Software development
 
-* Develop web systems and services that perform well and are easy to use. I’ve used various languages and databases, and I’m experienced with microservices as well as the scaling and caching required for large sites.
-* Administer servers and automate complex code deployments on Linux and Windows.
+* Develop backend web systems and services that perform well and are easy to use. I’ve used various languages and databases, and I’m experienced with microservices as well as the scaling and caching required for large sites.
+* Contribute to frontend development: I'm familiar with vanilla JavaScript, React, Elm, CSS, and other frontend technologies.
+* Devops and scripting: create Docker images, develop infrastructure as code, administer servers, and automate complex code deployments on Linux and Windows.
 * Contribute to open source projects, for example Python ([more here](/projects/)).
+
+<!--
 * Create native apps for iOS and Android devices. I’m familiar with all aspects of app development from design to code to app store submission.
 * Develop embedded firmware for data loggers, control systems, and other electronic devices. Write code for 16-bit and 32-bit microcontrollers.
+-->
 
-### Management and leadership
+### Technical leadership
 
 * Work with engineers to design and architect complex systems. Work with product managers to plan and prioritize features.
 * Manage hiring of new engineers. Review and interview candidates.
 * Mentor developers, review code, and help establish engineering best practices.
 * Communicate and document effectively, and relate well to people.
-* Give internal training and technical talks. Provide Python expertise from many years of experience with the language.
+* Give internal technical talks and training. Provide Python expertise from many years of experience with the language.
 
 
 ## Experience
@@ -49,7 +55,7 @@ I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a goo
 
 * Wrote code and provided technical leadership for the SEO team, including Python services and Athena log data processing. Our team significantly improved indexation and search ranking for our key pages.
 * Wrote an internal proposal to migrate 200 engineers from using Gerrit to GitHub for code review. The proposal saw fruition and increased developer velocity.
-* Managed a team of backend and frontend engineers, doing people management as well as remaining very technically involved in system design, architecture discussions, and code reviews.
+* Managed a team of backend and frontend engineers. Did people management as well as remaining very technically involved in system design, architecture discussions, and code reviews of the team's Go codebase.
 * Oversaw development and launch of the Compass CRM, a high-profile project that was heavily promoted to our 5000+ agents.
 * Helped build an API integration to a third party CRM using Go and PostgreSQL. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
 
