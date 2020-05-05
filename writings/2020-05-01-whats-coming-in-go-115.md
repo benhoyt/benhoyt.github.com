@@ -57,6 +57,18 @@ Go 1.15 is going to be a smaller release than usual, and that's okay.
 The original linker was also simpler than it is now and its implementation fit in one Turing award winner’s head, so there’s little abstraction or modularity. Unfortunately, as the linker grew and evolved, it retained its lack of structure, and our sole Turing award winner retired.
 </div>
 
+Given the sweeping, long-term changes, this work is being done on a branch (<tt>dev.link</tt>), and merged into <tt>master</tt> only at stable points. Than McIntosh, working on the new linker, <a href="https://groups.google.com/d/msg/golang-dev/LxS7R7GDZwA/7AwZes0jAgAJ">summarizes</a> what's been done for 1.15 as follows:
+
+<div class="BigQuote">
+The 1.15 linker will have a lot of improvements (reduced memory usage, faster linking, better internal concurrency, new object file format, indexed symbol representation, etc), but there are still a number of things outlined in http://golang.org/s/better-linker that haven't been completed yet (for example, use of DWARF 5) and will be pushed out to 1.16.
+</div>
+
+Clements <a href="https://groups.google.com/d/msg/golang-dev/LxS7R7GDZwA/5xzw204pAgAJ">adds more detail</a> on the gradual way this is being phased in:
+
+<div class="BigQuote">
+We ... converted the linker over to a new object format that uses pre-resolved symbol indexes as described in better-linker and also made many other improvements along the way like parallelizing key phases and removing a lot of unnecessary I/O synchronization. In order to best build on all of the past work on the linker, we did this conversion as a "wavefront", with a phase that converted from the new representation to the old representation that we pushed further and further back in the linker. We're not done yet: that conversion phase is still there, though exactly when it happens and what it does depends on the platform. For amd64 ELF platforms, it's quite late and does relatively little. For other platforms, it's not quite as far back and does more, so the wins aren't as big yet. Either way, there's more to look forward to for 1.16.
+</div>
+
 
 <h4>Smaller binaries</h4>
 
