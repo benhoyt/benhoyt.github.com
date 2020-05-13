@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "What's Coming in Go 1.15"
+title: "What’s coming in Go 1.15"
 permalink: /writings/whats-coming-in-go-115/
 description: "A general look at what's coming for the Go 1.15 final release in August 2020."
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/820217/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">May 2020</p>
@@ -21,15 +21,15 @@ DIV.BigQuote {
 }
 </style>
 
-<p>Go 1.15, the  15th major version of <a href="https://golang.org/">Go
+<p>Go 1.15, the  15th major version of the <a href="https://golang.org/">Go
 programming language</a>, is due out on 
 August&nbsp;1. It will be a release with fewer changes than usual, but many of
 the major changes are behind-the-scenes or in the tooling: for example,
 there is a
 new linker, which will speed up build times and reduce the size of
 binaries.
-In addition, there are some other areas of improvement, including language
-runtime performance increases, changes to the architectures supported, and
+In addition, there are performance improvements to the language's runtime,
+changes to the architectures supported, and 
 some updates to the standard library.  Overall, it should be a solid
 upgrade for the language.
 </p>
@@ -59,17 +59,17 @@ the core developers are planning to be extra-conservative in 1.15 given the
 pandemic:</p>
 
 <div class="BigQuote">
-We don't know how difficult the next couple months will be, 
+<p>We don't know how difficult the next couple months will be, 
 so let's be conservative and not give ourselves unnecessary stress
 by checking in last-minute subtle changes that we'll need to debug.
-Leave them for the start of the next cycle, where they'll get proper soak time.
+Leave them for the start of the next cycle, where they'll get proper soak time.</p>
 <p>[...]
-Go 1.15 is going to be a smaller release than usual, and that's okay.
+Go 1.15 is going to be a smaller release than usual, and that's okay.</p>
 </div>
 
 <p>On May 1, Go 1.15 <a
 href="https://groups.google.com/d/msg/golang-dev/6mawPNuubJk/Q4rGsztAAQAJ">entered
-feature freeze</a>, and the Go team plans to make the final  on
+feature freeze</a>, and the Go team plans to make the final release  on
 August&nbsp;1, keeping to the regular sixth-month <a
 href="https://github.com/golang/go/wiki/Go-Release-Cycle">release
 cycle</a>.</p>
@@ -77,7 +77,7 @@ cycle</a>.</p>
 <p>The Go development model is rather different than that of most
 open-source languages. The language was designed at Google and most of
 the core developers work there (so ongoing development is effectively
-sponsored by Google). However, the language has a permissive, <a
+sponsored by Google). The language has a permissive, <a
 href="https://golang.org/LICENSE">BSD-style license</a>, and development is
 done in the open, with general discussion on the <a
 href="https://groups.google.com/forum/#!forum/golang-dev">golang-dev
@@ -93,8 +93,8 @@ href="https://go-review.googlesource.com/">Gerrit code changes</a> (called
 
 <p>One of the largest tooling changes in 1.15 is the completely rewritten
 linker. The <a
-href="https://docs.google.com/document/d/1D13QhciikbdLtaI67U6Ble5d_1nsI4befEd6_k1z91U/view">design
-of the new linker</a>, written by Go core contributor Austin Clements in
+href="https://docs.google.com/document/d/1D13QhciikbdLtaI67U6Ble5d_1nsI4befEd6_k1z91U/view">new
+linker design document</a>, authored by Go core contributor Austin Clements in
 September 2019, details the motivation for the rewrite and the improvements
 it will bring. There are three major structural changes in the new linker:</p>
 
@@ -156,7 +156,7 @@ platforms, it's not quite as far back and does more, so the wins aren't as
 big yet. Either way, there's more to look forward to for 1.16.
 </div>
 
-<p>For now, the linker still converts back to the old in-memory
+<p>For now, the linker still converts the output back to the old in-memory
 representation for the last part of the linking. Presumably in a future
 version of Go these last steps will be moved into the new linker and the
 conversion phase will be removed entirely, reducing link time and memory
@@ -177,7 +177,7 @@ much as&nbsp;22%</a>. A web server program that I run went down from 21.4MB to
 20.3MB, a reduction of&nbsp;4.9%.</p>
 
 <p>The biggest contributors to this are the unused code elimination in the
-new linker, along with several targeted improvements, such as Clements' <a
+new linker, along with several targeted improvements, such as Clements's <a
 href="https://go-review.googlesource.com/c/go/+/230544">CL&nbsp;230544</a>,
 which reduces the number of stack and register maps included in the
 executable. These maps are used by Go's garbage collector (GC) to determine what
@@ -196,7 +196,7 @@ program by&nbsp;7.2%.</p>
 
 <p>There are a few other minor improvements to binary size, such as Brad
 Fitzpatrick's <a href="https://go-review.googlesource.com/c/go/+/228111">CL
-228111</a>, which avoids including TLS client or server code in the output
+228111</a>, which avoids including both the TLS client and server code in the output
 if only one of them is used, reducing the size of a <a
 href="https://play.golang.org/p/3FNZONT7Wl8">TLS dial hello world</a>
 program by&nbsp;3.2%.</p>
@@ -211,14 +211,14 @@ Snyder. <a href="https://go-review.googlesource.com/c/go/+/216401/">CL
 interface value, giving a&nbsp;2% improvement in compile-to-assembly
 times. Converting to interface values is like "boxing" in other languages; the
 optimization is similar in spirit to Python's <a
-href="https://github.com/python/cpython/blob/c95e691c904bb5ebd91825efa81b93cb9e354a85/Objects/longobject.c#L35-L66">small
+href="https://codeyarns.com/2012/05/01/integer-caching-in-python/">small
 integer caching</a>, though it happens in Go far less often due to static
 typing.</p>
 
 <p>The second of Snyder's changes is <a
 href="https://go-review.googlesource.com/c/go/+/226367/">CL&nbsp;226367</a> in
 the internals of the compiler and runtime, which allows the compiler to use
-more x86 registers for the garbage collector's write barrier calls. Go uses
+more x86 registers for the garbage collector's write-barrier calls. Go uses
 a write barrier (kind of like a lock) to maintain data integrity on the
 heap when the GC is running concurrently with user code (this <a
 href="https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html">detailed
@@ -235,24 +235,19 @@ contention. The new allocation code is more than twice as fast for blocks of
 
 <h4>Tooling and ports</h4>
 
-<p>Go is known for its stable and fast tooling, notably <tt>go build</tt>,
-which is a single command that fetches a project's dependencies and
-compiles it (with automatic caching of compiled packages for incremental
-builds).</p>
-
 <p>The Go "modules" feature (Go's dependency management system) was first introduced in
 Go&nbsp;1.11, and support for a module mirror or "proxy" was added
 in&nbsp;1.13. Version&nbsp;1.15 adds support for a <a 
-href="https://go-review.googlesource.com/c/go/+/226460/">fall-back
+href="https://go-review.googlesource.com/c/go/+/226460/">fallback
 proxy</a>, allowing the <tt>go</tt> tool to fall back to a secondary host
-if the first one fails when downloading module source code. Fall backs are
+if the first one fails when downloading module source code. Fallbacks are
 specified using the <tt>GOMODCACHE</tt> environment variable's new
-<tt>|</tt> separator.</p>
+"<tt>|</tt>" separator.</p>
 
 <p>Go&nbsp;1.15 removes two older ports: <a
 href="https://github.com/golang/go/issues/37610">darwin/386</a> and <a
 href="https://github.com/golang/go/issues/37611">darwin/arm</a>, which
-provided 32-bit binaries on macOS and other Apple OSes. Fitzpatrick <a
+provided 32-bit binaries on macOS and other Apple operating systems. Fitzpatrick <a
 href="https://github.com/golang/go/issues/34749">notes</a> that macOS
 Catalina doesn't support running 32-bit apps, so removing those ports will
 help free up macOS build machines as well as shrinking the compiler
@@ -279,7 +274,7 @@ create memory-corruption exploits.</p>
 
 <h4>Standard library additions</h4>
 
-<p>The Go's standard library is large and fairly stable; in Go&nbsp;1.15
+<p>Go's standard library is large and fairly stable; in Go&nbsp;1.15
 only relatively minor features were added.</p>
 
 <p>The standard library's <tt>testing</tt> package is quite minimalist
