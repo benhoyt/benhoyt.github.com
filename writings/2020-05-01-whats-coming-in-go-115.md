@@ -21,7 +21,7 @@ DIV.BigQuote {
 }
 </style>
 
-<p>Go 1.15, the  15th major version of the <a href="https://golang.org/">Go
+<p>Go 1.15, the 16th major version of the <a href="https://golang.org/">Go
 programming language</a>, is due out on 
 August&nbsp;1. It will be a release with fewer changes than usual, but many of
 the major changes are behind-the-scenes or in the tooling: for example,
