@@ -8,6 +8,8 @@ canonical_url: TODO
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">May 2020</p>
 
+> [Original article on LWN.net]({{ page.canonical_url }})
+
 <style>
 DIV.BigQuote {
     font-style: normal;
@@ -23,9 +25,9 @@ pre {
 </style>
 
 
-<p>AWK is a small text processing language with a history spanning more than 40 years. It has a <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html">POSIX standard</a>, several conforming implementations (including the recently released GNU Awk 5.1.0), and it's still surprisingly relevant in 2020 &mdash; both for simple text processing tasks and for wrangling "big data".</p>
+<p>AWK is a text processing language with a history spanning more than 40 years. It has a <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html">POSIX standard</a>, several conforming implementations (including the recently released GNU Awk 5.1.0), and it's still surprisingly relevant in 2020 &mdash; both for simple text processing tasks and for wrangling "big data".</p>
 
-<p>AWK was created at Bell Labs and first came out in 1977. Its name comes from the initials of the original authors: Alfred Aho, Peter Weinberger, and Brian Kernighan. A Unix tool to the core, AWK is designed to do one thing well: to filter and transform lines of text. It's commonly used to parse fields from log files, transform output from other tools, or count occurrences of words and fields. Aho <a href="https://www.computerworld.com/article/2535126/the-a-z-of-programming-languages--awk.html">summarizes</a> AWK succinctly:</p>
+<p>The language was created at Bell Labs in 1977. Its name comes from the initials of the original authors: Alfred Aho, Peter Weinberger, and Brian Kernighan. A Unix tool to the core, AWK is designed to do one thing well: to filter and transform lines of text. It's commonly used to parse fields from log files, transform output from other tools, or count occurrences of words and fields. Aho <a href="https://www.computerworld.com/article/2535126/the-a-z-of-programming-languages--awk.html">summarized</a> AWK succinctly:</p>
 
 <div class="BigQuote">
 <p>AWK reads the input a line at a time. A line is scanned for each pattern in the program, and for each pattern that matches, the associated action is executed.</p>
@@ -39,6 +41,7 @@ pre {
 </pre>
 
 <p>This means: for all lines matching the regular expression <tt>/GET/</tt>, add up the response time (field number 6) and count the line; at the end, print out the mean.</p>
+
 
 <h4>Is AWK still relevant?</h4>
 
@@ -54,6 +57,7 @@ pre {
 
 <p>Between ad-hoc text munging, build tooling, "systems programming", and big data processing &mdash; not to mention <a href="https://github.com/TheMozg/awk-raycaster">text-mode first person shooters</a> &mdash; it seems AWK is alive and well in 2020.</p>
 
+
 <h4>The various AWK versions</h4>
 
 <p>There are three main versions of AWK in use today, and all of them conform to the POSIX spec. The first is Brian Kernighan's classic <tt>awk</tt>, the version of AWK described by Aho, Weinberger, and Kernighan in their book <a href="https://ia802309.us.archive.org/25/items/pdfy-MgN0H1joIoDVoIC7/The_AWK_Programming_Language.pdf"><i>The AWK Programming Language [PDF]</i></a>. It's sometimes called "new AWK" (<tt>nawk</tt>) or "one true AWK", and it's now hosted <a href="https://github.com/onetrueawk/awk">on GitHub</a>. This is the version pre-installed on macOS and many other BSD-based systems.</p>
@@ -65,6 +69,7 @@ pre {
 <p>If you want to use AWK for one-liners and basic text processing, any of the above are fine variants. If you're thinking of using it for a larger script or program, Gawk's features make it the sensible choice.</p>
 
 <p>There are also many other implementations of AWK, with varying levels of maturity and maintenance, notably the size-optimized <a href="https://git.busybox.net/busybox/tree/editors/awk.c">BusyBox version</a> used in embedded Linux environments, a <a href="http://jawk.sourceforge.net/">Java port</a> with runtime access to Java language features, and my own <a href="https://github.com/benhoyt/goawk">GoAWK</a>, a POSIX-compliant version written in Go.</p>
+
 
 <h4>GAWK changes since 4.0.0</h4>
 
@@ -101,10 +106,10 @@ pre {
     clear_array(array);
 
     /* fill in the array */
-    array_set(array, "name", make_const_string(name, strlen(name), &amp;tmp));
-    array_set_numeric(array, "dev", sbuf-&gt;st_dev);
-    array_set_numeric(array, "ino", sbuf-&gt;st_ino);
-    array_set_numeric(array, "mode", sbuf-&gt;st_mode);
+    array_set(array, "name", make_const_string(name, strlen(name), &tmp));
+    array_set_numeric(array, "dev", sbuf->st_dev);
+    array_set_numeric(array, "ino", sbuf->st_ino);
+    array_set_numeric(array, "mode", sbuf->st_mode);
 </pre>
 
 <p>Another change in the 4.2.0 release (and continued in 5.0.0) was an overhauled source code pretty-printer. Gawk's pretty-printer enables its use as a standardized AWK code formatter, similar to Go's <a href="https://golang.org/cmd/gofmt/"><tt>go fmt</tt></a> tool and Python's <a href="https://github.com/psf/black">Black</a> formatter. For example, <tt>gawk -f area.awk</tt> formats the above <tt>area.awk</tt> file as follows (you may or may not like, but at least it's standardized):</p>
