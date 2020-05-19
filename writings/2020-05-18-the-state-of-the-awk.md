@@ -25,11 +25,13 @@ pre {
 </style>
 
 
-<p>AWK is a text processing language with a history spanning more than&nbsp;40
+<p>AWK is a text-processing language with a history spanning more than&nbsp;40
 years. It has a <a
 href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html">POSIX
 standard</a>, several conforming implementations (including the recently
-released GNU Awk&nbsp;5.1), and it's still surprisingly relevant in 2020 &mdash;
+<a
+href="https://lists.gnu.org/archive/html/info-gnu/2020-04/msg00007.html">released</a>
+GNU Awk&nbsp;5.1), and it's still surprisingly relevant in 2020 &mdash; 
 both for simple text processing tasks and for wrangling "big data".</p>
 
 <p>The language was created at Bell Labs in 1977. Its name comes from the
@@ -58,7 +60,7 @@ from some hypothetical web server log, you might type:</p>
 
 <p>This means: for all lines matching the regular expression
 <tt>/GET/</tt>, add up the response time (the sixth field or&nbsp;<tt>$6</tt>) and count the
-line; at the end, print out the arithmetic mean.</p>
+line; at the end, print out the arithmetic mean of the response times.</p>
 
 
 <h4>The various AWK versions</h4>
@@ -83,7 +85,7 @@ Homebrew</a> and <a
 href="https://sourceforge.net/projects/ezwinports/">Windows binaries</a>
 are available as well. Arnold Robbins has been the primary maintainer of
 gawk since 1994, and continues to shepherd the language (he has also
-contributed many fixes to the <tt>awk</tt> version). Gawk has <a
+contributed many fixes to the classic <tt>awk</tt> version). Gawk has <a
 href="https://www.gnu.org/software/gawk/manual/html_node/Feature-History.html">many
 features</a> not present in <tt>awk</tt> or the POSIX standard, including
 new functions, networking facilities, a C extension API, a profiler and
@@ -121,8 +123,8 @@ the notable features since&nbsp;4.0 here, but for more details you can read the
 full <a
 href="http://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS.1">4.x</a> and <a
 href="http://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS">5.x</a>
-changelogs. The latest release of gawk is&nbsp;5.1.0, which came out just over a
-month ago (April 14, 2020).</p>
+changelogs. Gawk&nbsp;5.1.0 came out just over a
+month ago on April&nbsp;14.</p>
 
 <p>The biggest user-facing feature is the introduction of namespaces in
 5.0. Most modern languages have some concept of namespaces to make it
@@ -138,8 +140,8 @@ create libraries, such as this toy math library:</p>
         pi = 3.14159  # namespaced "constant"
     }
 
-    function circle(r) {
-        return pi*r*r
+    function circle_area(radius) {
+        return pi*radius*radius
     }
 </pre>
 
@@ -147,7 +149,7 @@ create libraries, such as this toy math library:</p>
 <tt>namespace::name</tt> syntax, similar to C++:</p>
 
 <pre>
-    $ gawk -f area.awk -e 'BEGIN { print area::pi, area::circle(10) }'
+    $ gawk -f area.awk -e 'BEGIN { print area::pi, area::circle_area(10) }'
     3.14159 314.159
 </pre>
 
@@ -164,9 +166,10 @@ defined API and allows wrapping
 existing C and C++ libraries so they can be  easily called from AWK.</p>
 
 <p>The following code snippet from the <a
-href="https://www.gnu.org/software/gawk/manual/html_node/Internal-File-Ops.html">example
+href="https://www.gnu.org/software/gawk/manual/html_node/Internal-File-Ops.html">example</a>
+C-code wrapper 
 in the user
-manual</a> populates an AWK array (a string-keyed hash table) with
+manual populates an AWK array (a string-keyed hash table) with
 a filename and values from a <tt>stat()</tt> system call:</p>
 
 <pre>
@@ -199,9 +202,9 @@ which results in the following output:
     }
 
 
-    function circle(r)
+    function circle_area(radius)
     {
-        return (pi * r * r)
+        return (pi * radius * radius)
     }
 </pre>
 
