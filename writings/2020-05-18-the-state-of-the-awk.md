@@ -25,11 +25,11 @@ pre {
 </style>
 
 
-<p>AWK is a text processing language with a history spanning more than 40
+<p>AWK is a text processing language with a history spanning more than&nbsp;40
 years. It has a <a
 href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html">POSIX
 standard</a>, several conforming implementations (including the recently
-released GNU Awk 5.1), and it's still surprisingly relevant in 2020 &mdash;
+released GNU Awk&nbsp;5.1), and it's still surprisingly relevant in 2020 &mdash;
 both for simple text processing tasks and for wrangling "big data".</p>
 
 <p>The language was created at Bell Labs in 1977. Its name comes from the
@@ -39,7 +39,7 @@ to filter and transform lines of text. It's commonly used to parse fields
 from log files, transform output from other tools, and count occurrences of
 words and fields. Aho <a
 href="https://www.computerworld.com/article/2535126/the-a-z-of-programming-languages--awk.html">summarized</a>
-AWK succinctly:</p>
+AWK's functionality succinctly:</p>
 
 <div class="BigQuote">
 <p>AWK reads the input a line at a time. A line is scanned for each pattern
@@ -49,7 +49,7 @@ executed.</p>
 
 <p>AWK programs are often one-liners executed directly from the command
 line. For example, to calculate the average response time of GET requests
-from a web server log, you might type:</p>
+from some hypothetical web server log, you might type:</p>
 
 <pre>
     $ awk '/GET/ { total += $6; n++ } END { print total/n }' server.log 
@@ -57,7 +57,7 @@ from a web server log, you might type:</p>
 </pre>
 
 <p>This means: for all lines matching the regular expression
-<tt>/GET/</tt>, add up the response time (field number 6) and count the
+<tt>/GET/</tt>, add up the response time (the sixth field or&nbsp;<tt>$6</tt>) and count the
 line; at the end, print out the arithmetic mean.</p>
 
 
@@ -75,14 +75,14 @@ pre-installed on many BSD-based systems, including macOS (though the
 version that comes with macOS is out of date, and worth upgrading).</p>
 
 <p>The second is <a href="https://www.gnu.org/software/gawk/">GNU Awk
-(Gawk)</a>, usually run as <tt>gawk</tt>, which is by far the most
+(gawk)</a>, usually run as <tt>gawk</tt>, which is by far the most
 featureful and actively maintained version. Gawk is usually pre-installed
 on Linux systems and is often the default <tt>awk</tt>. It is easy to
 install on macOS <a href="https://formulae.brew.sh/formula/gawk">using
-Homebrew</a>, and <a
+Homebrew</a> and <a
 href="https://sourceforge.net/projects/ezwinports/">Windows binaries</a>
 are available as well. Arnold Robbins has been the primary maintainer of
-Gawk since 1994, and continues to shepherd the language (he has also
+gawk since 1994, and continues to shepherd the language (he has also
 contributed many fixes to the <tt>awk</tt> version). Gawk has <a
 href="https://www.gnu.org/software/gawk/manual/html_node/Feature-History.html">many
 features</a> not present in <tt>awk</tt> or the POSIX standard, including
@@ -94,7 +94,7 @@ href="https://invisible-island.net/mawk/"><tt>mawk</tt></a>, written by
 Michael Brennan. It is the default <tt>awk</tt> on Ubuntu and Debian Linux,
 and is still the fastest version of AWK, with a bytecode compiler and a
 more memory-efficient value representation. (Gawk has also had a bytecode
-compiler since 4.0, so it's now much closer to mawk's speed.)</p>
+compiler since&nbsp;4.0, so it's now much closer to mawk's speed.)</p>
 
 <p>If you want to use AWK for one-liners and basic text processing, any of
 the above are fine variants. If you're thinking of using it for a larger
@@ -107,27 +107,27 @@ version</a> used in embedded Linux environments, a <a
 href="http://jawk.sourceforge.net/">Java rewrite</a> with runtime access to
 Java language features, and my own <a
 href="https://github.com/benhoyt/goawk">GoAWK</a>, a POSIX-compliant
-version written in Go. (The three main AWKs and the BusyBox version are
-written in C.)</p>
+version written in Go. The three main AWKs and the BusyBox version are
+all written in C.</p>
 
 
-<h4>GAWK changes since 4.0</h4>
+<h4>Gawk changes since 4.0</h4>
 
 <p>It's been almost 10 years since LWN <a
-href="https://lwn.net/Articles/450631/">covered</a> the release of Gawk
+href="https://lwn.net/Articles/450631/">covered</a> the release of gawk
 4.0. It would be tempting to say "much has changed since 2011", but the
 truth is that things move relatively slowly in the AWK world. I'll describe
-the notable features since 4.0 here, but for more details you can read the
+the notable features since&nbsp;4.0 here, but for more details you can read the
 full <a
 href="http://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS.1">4.x</a> and <a
 href="http://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS">5.x</a>
-changelogs. The latest release of Gawk is 5.1.0, which came out just over a
+changelogs. The latest release of gawk is&nbsp;5.1.0, which came out just over a
 month ago (April 14, 2020).</p>
 
 <p>The biggest user-facing feature is the introduction of namespaces in
 5.0. Most modern languages have some concept of namespaces to make it
-easier to ship large projects and libraries without name clashes. Gawk 5.0
-adds namespaces in a backwards-compatible way, allowing developers to
+easier to ship large projects and libraries without name clashes. Gawk&nbsp;5.0
+adds namespaces in a backward-compatible way, allowing developers to
 create libraries, such as this toy math library:</p>
 
 <pre>
@@ -154,18 +154,19 @@ create libraries, such as this toy math library:</p>
 <p>Robbins <a
 href="http://www.skeeve.com/awk-sys-prog.html#Key-Reasons-Why-Other-Languages-Have-Gained-Popularity">believes</a>
 that AWK's lack of namespaces is one of the key reasons it hasn't caught on
-as a larger-scale programming language, and that this feature in Gawk 5.0
-may help resolve that.</p>
-
-<p>The other major issue Robbins believes is holding AWK back is the lack
-of a good C extension interface. Completely revamped in 4.1 is Gawk's <a
+as a larger-scale programming language and that this feature in gawk&nbsp;5.0
+may help resolve that.
+The other major issue Robbins believes is holding AWK back is the lack
+of a good C extension interface.  Gawk's <a
 href="https://www.gnu.org/software/gawk/manual/html_node/Dynamic-Extensions.html">dynamic
-extension interface</a>, that now has a defined API and allows you to wrap
-existing C and C++ libraries and easily call them from AWK.</p>
+extension interface</a> was completely revamped in&nbsp;4.1; it now has a
+defined API and allows wrapping
+existing C and C++ libraries so they can be  easily called from AWK.</p>
 
-<p>For example, the following code snippet from the <a
-href="https://www.gnu.org/software/gawk/manual/html_node/Internal-File-Ops.html">user
-manual example</a> populates an AWK array (a string-keyed hash table) with
+<p>The following code snippet from the <a
+href="https://www.gnu.org/software/gawk/manual/html_node/Internal-File-Ops.html">example
+in the user
+manual</a> populates an AWK array (a string-keyed hash table) with
 a filename and values from a <tt>stat()</tt> system call:</p>
 
 <pre>
@@ -173,20 +174,23 @@ a filename and values from a <tt>stat()</tt> system call:</p>
     clear_array(array);
 
     /* fill in the array */
-    array_set(array, "name", make_const_string(name, strlen(name), &tmp));
-    array_set_numeric(array, "dev", sbuf->st_dev);
-    array_set_numeric(array, "ino", sbuf->st_ino);
-    array_set_numeric(array, "mode", sbuf->st_mode);
+    array_set(array, "name", make_const_string(name, strlen(name), &amp;tmp));
+    array_set_numeric(array, "dev", sbuf-&gt;st_dev);
+    array_set_numeric(array, "ino", sbuf-&gt;st_ino);
+    array_set_numeric(array, "mode", sbuf-&gt;st_mode);
 </pre>
 
-<p>Another change in the 4.2 release (and continued in 5.0) was an
+<p>Another change in the&nbsp;4.2 release (and continued in&nbsp;5.0) was an
 overhauled source code pretty-printer. Gawk's pretty-printer enables its
 use as a standardized AWK code formatter, similar to Go's <a
 href="https://golang.org/cmd/gofmt/"><tt>go fmt</tt></a> tool and Python's
 <a href="https://github.com/psf/black">Black</a> formatter. For example,
-<tt>gawk --pretty-print -f area.awk</tt> formats the above
-<tt>area.awk</tt> file as follows:</p>
-
+to pretty-print the 
+<tt>area.awk</tt> file from above:</p>
+<pre>
+    $ gawk --pretty-print -f area.awk
+</pre>
+which results in the following output:
 <pre>
     @namespace "area"
 
@@ -201,39 +205,38 @@ href="https://golang.org/cmd/gofmt/"><tt>go fmt</tt></a> tool and Python's
     }
 </pre>
 
-<p>You may question the tool's choices: why does <tt>BEGIN {</tt> not have
-a line break before the <tt>{</tt> when the <tt>function</tt> does? (It
+<p>You may question the tool's choices: why does "<tt>BEGIN {</tt>" not have
+a line break before the "<tt>{</tt>" when the <tt>function</tt> does? (It
 turns out AWK syntax doesn't allow that.) Why two blank lines before the
-function? Why did it add parentheses around the <tt>return</tt> expression?
-But at least it's consistent, and may help avoid code style debates.</p>
+function and parentheses around the <tt>return</tt> expression?
+But at least it's consistent and may help avoid code-style debates.</p>
 
 <p>Gawk allows a limited amount of <a
 href="https://www.gnu.org/software/gawk/manual/html_node/Type-Functions.html">runtime
 type inspection</a>, and extended that with the addition of the
-<tt>typeof()</tt> function in 4.2. <tt>typeof()</tt> returns a string
-constant like <tt>string</tt>, <tt>number</tt>, or <tt>array</tt> depending
+<tt>typeof()</tt> function in&nbsp;4.2. <tt>typeof()</tt> returns a string
+constant like "<tt>string</tt>", "<tt>number</tt>", or "<tt>array</tt>" depending
 on the input type. These functions are important for code that recursively
-walks every item of a nested array (something POSIX AWK can't do).</p>
+walks every item of a nested array, for example (which is something that POSIX AWK can't do).</p>
 
-<p>With 4.2, Gawk also supports <a
+<p>With&nbsp;4.2, gawk also supports <a
 href="https://www.gnu.org/software/gawk/manual/html_node/Strong-Regexp-Constants.html">regular
 expression constants</a> as a first-class data type using the syntax
-<tt>@/foo/</tt>. Previously you could not pass around a regex constant in a
-variable. <tt>typeof(@/foo/)</tt> returns the string <tt>regexp</tt>.</p>
-
-<p>In terms of performance, Gawk 4.2 brings a significant improvement on
+<tt>@/foo/</tt>. Previously you could not store a regular expression constant in a
+variable; <tt>typeof(@/foo/)</tt> returns the string "<tt>regexp</tt>". In
+terms of performance, gawk&nbsp;4.2 brings a significant improvement on 
 Linux systems by using <a
 href="http://man7.org/linux/man-pages/man3/unlocked_stdio.3.html"><tt>fwrite_unlocked()</tt></a>
-when it's available. As Gawk is single-threaded, it can use the non-locking
+when it's available. As gawk is single-threaded, it can use the non-locking
 stdio functions, giving a 7-18% increase in raw output speed &mdash; for
-example <tt>gawk '{ print }'</tt> on a large file.</p>
+example <tt>gawk&nbsp;'{&nbsp;print&nbsp;}'</tt> on a large file.</p>
 
 <p>The <a href="https://www.gnu.org/software/gawk/manual/gawk.html">GNU Awk
 User's Guide</a> has always been a thorough reference, but it was
-substantially updated in 4.1 and again in the 5.x releases, including new
-examples, summary sections, exercises, and heavy copy editing.</p>
+substantially updated in&nbsp;4.1 and again in the&nbsp;5.x releases, including new
+examples, summary sections, and exercises, along with some major copy editing.</p>
 
-<p>Last (and also least), a subtle change in 4.0 that I found amusing was
+<p>Last (and also least), a subtle change in&nbsp;4.0 that I found amusing was
 the reverted handling of backslash in <tt>sub()</tt> and
 <tt>gsub()</tt>. Robbins <a
 href="http://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS.1#n367">writes</a>:</p>
@@ -246,22 +249,22 @@ way, even for standards compliance.</p>
 
 <p>The <a
 href="https://www.gnu.org/software/gawk/manual/html_node/String-Functions.html#index-sub_0028_0029-function-1"><tt>sub</tt>
-and <tt>gsub</tt> functions</a> are core regex substitution functions, and
+and <tt>gsub</tt> functions</a> are core regular expression substitution functions, and
 even a small "fix" to the <a
-href="https://www.gnu.org/software/gawk/manual/html_node/Gory-Details.html">involved
+href="https://www.gnu.org/software/gawk/manual/html_node/Gory-Details.html">complicated
 handling of backslash</a> broke people's code:</p>
 
 <div class="BigQuote">
-<p>When version 4.0.0 was released, the gawk maintainer made the POSIX
+When version&nbsp;4.0.0 was released, the gawk maintainer made the POSIX
 rules the default, breaking well over a decade’s worth of backward
 compatibility. Needless to say, this was a bad idea, and as of version
 4.0.1, gawk resumed its historical behavior, and only follows the POSIX
-rules when <tt>--posix</tt> is given.</p> 
+rules when <tt>--posix</tt> is given.
 </div>
 
-<p>Robbins may have had a brief slip in judgement with the original change,
-but it's obvious he takes backwards compatibility seriously. Especially for
-a popular tool like Gawk, sometimes it's better to continue breaking the
+<p>Robbins may have had a small slip in judgment with the original change,
+but it's obvious he takes backward compatibility seriously. Especially for
+a popular tool like gawk, sometimes it is better to continue breaking the
 specification than change how something has always worked.</p>
 
 
@@ -271,9 +274,7 @@ specification than change how something has always worked.</p>
 relevant: you may not see it, but it's all around you. Many Linux
 administrators and DevOps engineers use it to transform data or diagnose
 issues via log files. A version of AWK is installed on almost all
-Unix-based machines, including macOS, Linux, and BSD variants.</p>
-
-<p>In addition to ad-hoc usage, many large open source projects use AWK
+Unix-based machines. In addition to ad-hoc usage, many large open-source projects use AWK
 somewhere in their build or documentation tooling. To name just a few
 examples: the Linux kernel uses it in the x86 tooling to <a
 href="https://github.com/torvalds/linux/blob/b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce/arch/x86/tools/chkobjdump.awk">check</a>
@@ -296,11 +297,14 @@ on</a>.</p>
 
 <p>Robbins argues in his <a
 href="http://www.skeeve.com/awk-sys-prog.html">2018 paper</a> for the use
-of AWK (specifically Gawk) as a "systems programming language", in this
-context meaning a language for writing larger tools and programs. Kernighan
+of AWK (specifically gawk) as a "systems programming language", in this
+context meaning a language for writing larger tools and programs. He
+outlines the reasons he thinks it has not caught on, but Kernighan
 is "<a href="http://www.skeeve.com/awk-sys-prog.html#Counterpoints">not
-100% convinced</a>" that the lack of an extension mechanism is the reason
-AWK isn't widely used for larger programs. But that doesn't stop several
+100% convinced</a>" that the lack of an extension mechanism is the main reason
+AWK isn't widely used for larger programs.  He suggested that it might be
+due to the lack built-in support for access to system calls and the like.
+But none of that has stopped several
 people from trying: Robbins' own <a
 href="https://github.com/arnoldrobbins/texiwebjr">TexiWeb Jr.</a> literate
 programming tool (1300 lines of AWK), Werner Stoop's <a
@@ -311,19 +315,20 @@ href="https://github.com/soimort/translate-shell">Translate Shell</a>, a
 to cloud-based translation APIs.</p>
 
 <p>Several developers in the last few years have written about using AWK in
-their "big data" toolkit, as a much simpler (and sometimes faster!) tool
+their "big data" toolkit as a much simpler (and sometimes faster) tool
 than heavy distributed computing systems such as Spark and Hadoop. Nick
-Strayer wrote about how he <a
-href="https://livefreeordichotomize.com/2019/06/04/using_awk_and_r_to_parse_25tb/">used
-AWK and R to parse 25 terabytes of data</a> across multiple cores. Other
-big data examples are the tantalizingly-titled article by Adam Drake, <a
-href="https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html">Command-line
-Tools can be 235x Faster than your Hadoop Cluster</a>, and Brendan
-O'Connor's <a
+Strayer <a
+href="https://livefreeordichotomize.com/2019/06/04/using_awk_and_r_to_parse_25tb/">wrote</a>
+about using 
+AWK and R to parse 25 terabytes of data across multiple cores. Other
+big data examples are the tantalizingly-titled <a
+href="https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html">article</a> by Adam Drake, "Command-line
+Tools can be 235x Faster than your Hadoop Cluster", and Brendan
+O'Connor's "<a
 href="https://brenocon.com/blog/2009/09/dont-mawk-awk-the-fastest-and-most-elegant-big-data-munging-language/">Don’t
-MAWK AWK – the fastest and most elegant big data munging language!</a></p>
+MAWK AWK – the fastest and most elegant big data munging language!</a>"</p>
 
 <p>Between ad-hoc text munging, build tooling, "systems programming", and
 big data processing &mdash; not to mention <a
 href="https://github.com/TheMozg/awk-raycaster">text-mode first person
-shooters</a> &mdash; it seems AWK is alive and well in 2020.</p>
+shooters</a> &mdash; it seems that AWK is alive and well in 2020.</p>
