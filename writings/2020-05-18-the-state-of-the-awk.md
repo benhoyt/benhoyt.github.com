@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "The State of the AWK, and What's New in Gawk"
+title: "The state of the AWK"
 permalink: /writings/the-state-of-the-awk/
 description: "A look at the state of AWK in 2020, as well as new features in Gawk 5.1 (since 4.0)."
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/820829/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">May 2020</p>
@@ -28,11 +28,14 @@ pre {
 <p>AWK is a text-processing language with a history spanning more than&nbsp;40
 years. It has a <a
 href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html">POSIX
-standard</a>, several conforming implementations (including the recently
+standard</a>, several conforming implementations, and is still surprisingly relevant in 2020 &mdash; 
+both for simple text processing tasks and for wrangling "big data".  The
+recent
 <a
-href="https://lists.gnu.org/archive/html/info-gnu/2020-04/msg00007.html">released</a>
-GNU Awk&nbsp;5.1), and it's still surprisingly relevant in 2020 &mdash; 
-both for simple text processing tasks and for wrangling "big data".</p>
+href="https://lists.gnu.org/archive/html/info-gnu/2020-04/msg00007.html">release</a>
+of 
+GNU Awk&nbsp;5.1 seems like a good reason to survey the AWK landscape, see
+what GNU Awk has been up to, and look at where AWK is being used these days.</p>
 
 <p>The language was created at Bell Labs in 1977. Its name comes from the
 initials of the original authors: Alfred Aho, Peter Weinberger, and Brian
@@ -77,7 +80,7 @@ pre-installed on many BSD-based systems, including macOS (though the
 version that comes with macOS is out of date, and worth upgrading).</p>
 
 <p>The second is <a href="https://www.gnu.org/software/gawk/">GNU Awk
-(gawk)</a>, usually run as <tt>gawk</tt>, which is by far the most
+(gawk)</a>, which is by far the most
 featureful and actively maintained version. Gawk is usually pre-installed
 on Linux systems and is often the default <tt>awk</tt>. It is easy to
 install on macOS <a href="https://formulae.brew.sh/formula/gawk">using
@@ -140,7 +143,7 @@ create libraries, such as this toy math library:</p>
         pi = 3.14159  # namespaced "constant"
     }
 
-    function circle_area(radius) {
+    function circle(radius) {
         return pi*radius*radius
     }
 </pre>
@@ -149,7 +152,7 @@ create libraries, such as this toy math library:</p>
 <tt>namespace::name</tt> syntax, similar to C++:</p>
 
 <pre>
-    $ gawk -f area.awk -e 'BEGIN { print area::pi, area::circle_area(10) }'
+    $ gawk -f area.awk -e 'BEGIN { print area::pi, area::circle(10) }'
     3.14159 314.159
 </pre>
 
@@ -202,7 +205,7 @@ which results in the following output:
     }
 
 
-    function circle_area(radius)
+    function circle(radius)
     {
         return (pi * radius * radius)
     }
@@ -306,9 +309,9 @@ outlines the reasons he thinks it has not caught on, but Kernighan
 is "<a href="http://www.skeeve.com/awk-sys-prog.html#Counterpoints">not
 100% convinced</a>" that the lack of an extension mechanism is the main reason
 AWK isn't widely used for larger programs.  He suggested that it might be
-due to the lack built-in support for access to system calls and the like.
+due to the lack of built-in support for access to system calls and the like.
 But none of that has stopped several
-people from trying: Robbins' own <a
+people from building larger tools: Robbins' own <a
 href="https://github.com/arnoldrobbins/texiwebjr">TexiWeb Jr.</a> literate
 programming tool (1300 lines of AWK), Werner Stoop's <a
 href="https://github.com/wernsey/d.awk">d.awk</a> tool that generates
@@ -335,3 +338,6 @@ MAWK AWK – the fastest and most elegant big data munging language!</a>"</p>
 big data processing &mdash; not to mention <a
 href="https://github.com/TheMozg/awk-raycaster">text-mode first person
 shooters</a> &mdash; it seems that AWK is alive and well in 2020.</p>
+
+<p>
+[Thanks to Arnold Robbins for reviewing a draft of this article.]
