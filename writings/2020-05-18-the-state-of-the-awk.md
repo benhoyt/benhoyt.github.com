@@ -40,12 +40,12 @@ pre {
     0.0186667
 </pre>
 
-<p>This means: for all lines matching the regular expression <tt>/GET/</tt>, add up the response time (field number 6) and count the line; at the end, print out the mean.</p>
+<p>This means: for all lines matching the regular expression <tt>/GET/</tt>, add up the response time (field number 6) and count the line; at the end, print out the arithmetic mean.</p>
 
 
 <h4>The various AWK versions</h4>
 
-<p>There are three main versions of AWK in use today, and all of them conform to the POSIX standard. The first is classic <tt>awk</tt>, the version of AWK described by Aho, Weinberger, and Kernighan in their book <a href="https://ia802309.us.archive.org/25/items/pdfy-MgN0H1joIoDVoIC7/The_AWK_Programming_Language.pdf"><i>The AWK Programming Language [PDF]</i></a>. It's sometimes called "new AWK" (<tt>nawk</tt>) or "one true AWK", and it's now hosted <a href="https://github.com/onetrueawk/awk">on GitHub</a>. This is the version pre-installed on macOS and many other BSD-based systems.</p>
+<p>There are three main versions of AWK in use today, and all of them conform to the POSIX standard (closely enough, at least, for the vast majority of use cases). The first is classic <tt>awk</tt>, the version of AWK described by Aho, Weinberger, and Kernighan in their book <a href="https://9p.io/cm/cs/awkbook/index.html"><i>The AWK Programming Language</i></a>. It's sometimes called "new AWK" (<tt>nawk</tt>) or "one true AWK", and it's now hosted <a href="https://github.com/onetrueawk/awk">on GitHub</a>. This is the version pre-installed on many BSD-based systems, including macOS (though the version that comes with macOS is out of date, and worth upgrading).</p>
 
 <p>The second is <a href="https://www.gnu.org/software/gawk/">GNU Awk (Gawk)</a>, usually run as <tt>gawk</tt>, which is by far the most featureful and actively maintained version. Gawk is usually pre-installed on Linux systems and is often the default <tt>awk</tt>. It is easy to install on macOS <a href="https://formulae.brew.sh/formula/gawk">using Homebrew</a>, and <a href="https://sourceforge.net/projects/ezwinports/">Windows binaries</a> are available as well. Arnold Robbins has been the primary maintainer of Gawk since 1994, and continues to shepherd the language (he has also contributed many fixes to the <tt>awk</tt> version). Gawk has <a href="https://www.gnu.org/software/gawk/manual/html_node/Feature-History.html">many features</a> not present in <tt>awk</tt> or the POSIX standard, including new functions, networking facilities, a C extension API, a profiler and debugger, and most recently, namespaces.</p>
 
@@ -84,7 +84,7 @@ pre {
 
 <p>Robbins <a href="http://www.skeeve.com/awk-sys-prog.html#Key-Reasons-Why-Other-Languages-Have-Gained-Popularity">believes</a> that AWK's lack of namespaces is one of the key reasons it hasn't caught on as a larger-scale programming language, and that this feature in Gawk 5.0 may help resolve that.</p>
 
-<p>The other major issue Robbins believes is holding AWK back is the lack of a good C extension interface. Completely revamped in 4.1 is Gawk's <a href="https://www.gnu.org/software/gawk/manual/html_node/Dynamic-Extensions.html">dynamic extension interface</a>, that now has a defined API and allows you to wrap existing C libraries and easily call them from AWK.</p>
+<p>The other major issue Robbins believes is holding AWK back is the lack of a good C extension interface. Completely revamped in 4.1 is Gawk's <a href="https://www.gnu.org/software/gawk/manual/html_node/Dynamic-Extensions.html">dynamic extension interface</a>, that now has a defined API and allows you to wrap existing C and C++ libraries and easily call them from AWK.</p>
 
 <p>For example, the following code snippet from the <a href="https://www.gnu.org/software/gawk/manual/html_node/Internal-File-Ops.html">user manual example</a> populates an AWK array (a string-keyed hash table) with a filename and values from a <tt>stat()</tt> system call:</p>
 
@@ -99,7 +99,7 @@ pre {
     array_set_numeric(array, "mode", sbuf->st_mode);
 </pre>
 
-<p>Another change in the 4.2 release (and continued in 5.0) was an overhauled source code pretty-printer. Gawk's pretty-printer enables its use as a standardized AWK code formatter, similar to Go's <a href="https://golang.org/cmd/gofmt/"><tt>go fmt</tt></a> tool and Python's <a href="https://github.com/psf/black">Black</a> formatter. For example, <tt>gawk -f area.awk</tt> formats the above <tt>area.awk</tt> file as follows:</p>
+<p>Another change in the 4.2 release (and continued in 5.0) was an overhauled source code pretty-printer. Gawk's pretty-printer enables its use as a standardized AWK code formatter, similar to Go's <a href="https://golang.org/cmd/gofmt/"><tt>go fmt</tt></a> tool and Python's <a href="https://github.com/psf/black">Black</a> formatter. For example, <tt>gawk --pretty-print -f area.awk</tt> formats the above <tt>area.awk</tt> file as follows:</p>
 
 <pre>
     @namespace "area"
@@ -115,7 +115,7 @@ pre {
     }
 </pre>
 
-<p>You may question the tool's choices: why does <tt>BEGIN {</tt> not have a line break before the <tt>{</tt> when the <tt>function</tt> does? why two blank lines before the function? why did it add parenentheses around the <tt>return</tt> expression? But at least it's consistent, and may help avoid code style debates.</p>
+<p>You may question the tool's choices: why does <tt>BEGIN {</tt> not have a line break before the <tt>{</tt> when the <tt>function</tt> does? (It turns out AWK syntax doesn't allow that.) Why two blank lines before the function? Why did it add parentheses around the <tt>return</tt> expression? But at least it's consistent, and may help avoid code style debates.</p>
 
 <p>Gawk allows a limited amount of <a href="https://www.gnu.org/software/gawk/manual/html_node/Type-Functions.html">runtime type inspection</a>, and extended that with the addition of the <tt>typeof()</tt> function in 4.2. <tt>typeof()</tt> returns a string constant like <tt>string</tt>, <tt>number</tt>, or <tt>array</tt> depending on the input type. These functions are important for code that recursively walks every item of a nested array (something POSIX AWK can't do).</p>
 
