@@ -255,68 +255,12 @@ connections. It also makes it much easier to test (probably using a <a
 href="https://golang.org/pkg/strings/#Reader"><tt>strings.Reader</tt></a>).</p>
 
 <p>If the tests only use a small part of a large interface, for example
-one method from a multi-method API server,  a new struct type
-that <a
+one method from a multi-method API server, a new struct type can be
+created that <a
 href="https://golang.org/doc/effective_go.html#embedding">embeds</a> the
-interface to fulfill the API contract can be created that only overrides the method
-being called. For example,to test this <tt>GetReadmeTitle()</tt>
-function that calls the <a
-href="https://developer.github.com/v3/repos/contents/">GitHub Contents
-API's</a> "GET readme" endpoint to fetch the data, and then returns the
-first non-empty line as the title:</p>
-
-<pre>
-    type ContentsAPI interface {
-        GetReadme(owner, repo string) (string, error)
-        GetContents(owner, repo, path string) (string, error)
-        PutContents(owner, repo, path, contents string) error
-        DeleteFile(owner, repo, path string) error
-        GetArchiveLink(owner, repo, ref string) (string, error)
-    }
-
-    func GetReadmeTitle(api ContentsAPI, owner, repo string) (string, error) {
-        readme, err := api.GetReadme(owner, repo)
-        if err != nil {
-            return "", err
-        }
-        for _, line := range strings.Split(readme, "\n") {
-            line = strings.TrimSpace(line)
-            if line != "" {
-                return line, nil
-            }
-        }
-        return "", nil
-    }
-</pre>
-
-<p>The function we want to test only uses <tt>ContentsAPI.GetReadme()</tt>,
-but it's written to take the <tt>ContentsAPI</tt> interface, so we create a
-<tt>fakeAPI</tt> type that embeds the entire <tt>ContentsAPI</tt> using an
-interface field, and overrides only the relevant method:</p>
-
-<pre>
-    type fakeAPI struct {
-        ContentsAPI // fulfills ContentsAPI with nil embedded interface
-        readmes map[string]string
-    }
-
-    func (a *fakeAPI) GetReadme(owner, repo string) (string, error) {
-        return a.readmes[owner+"/"+repo], nil
-    }
-
-    func TestGetReadmeTitle(t *testing.T) {
-        api := &amp;fakeAPI{readmes: map[string]string{
-            "my/project": "\nMy Project\n==========\n\nThis is a project.",
-        }}
-        title, err := GetReadmeTitle(api, "my", "project")
-        if err != nil {
-            t.Fatalf("error fetching readme: %v", err)
-        }
-        if title != "My Project" {
-            t.Errorf("got title %q, expected \"My Project\"", title)
-        }
-    }
-</pre>
+interface to fulfill the API contract, and only overrides the method
+being called. A full example of this technique is shown in <a
+href="https://play.golang.org/p/AXcNcTH4oNb">this Go Playground code</a>.</p>
 
 <p>There are various third party tools, such as <a
 href="https://github.com/golang/mock">GoMock</a> and <a
