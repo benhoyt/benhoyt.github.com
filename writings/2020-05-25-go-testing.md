@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Go's testing philosophy and tools"
+title: "Testing in Go: philosophy and tools"
 permalink: /writings/go-testing/
-description: "Go's philosophy of testing, and an overview of the built-in testing tools."
+description: "Go's philosophy of testing and an overview of the built-in testing tools."
 canonical_url: TODO
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
@@ -32,10 +32,10 @@ href="https://golang.org/pkg/testing/"><tt>testing</tt></a> package, and
 the <a href="https://golang.org/pkg/cmd/go/internal/test/"><tt>go
 test</tt></a> command to run test suites. Like the language itself, Go's
 philosophy for writing tests is minimalist: use the standard library's
-lightweight <tt>testing</tt> package along with your own helper functions
+lightweight <tt>testing</tt> package along with helper functions
 written in plain Go. The idea is that tests are just code, and since a Go
-developer already knows how to write Go with its abstractions and types,
-there's no need to learn a quirky domain-specific language when writing
+developer already knows how to write Go using its abstractions and types,
+there's no need to learn a quirky domain-specific language for writing
 tests.</p>
 
 <p><a href="https://www.gopl.io/"><i>The Go Programming Language</i></a> by
@@ -53,7 +53,8 @@ exceptions). Although these mechanisms can make tests very concise, the
 resulting tests often seem like they are written in a foreign language.</p>
 </div>
 
-<p>To see this in practice, here's how you would write a simple test using
+<p>To see this in practice, here's  a simple test of the
+absolute value function <tt>Abs()</tt> using
 the <tt>testing</tt> package and plain Go:</p>
 
 <pre>
@@ -67,8 +68,9 @@ the <tt>testing</tt> package and plain Go:</p>
 
 <p>Contrast that with the following version, written using the popular
 (though I would argue non-idiomatic) <a
-href="https://onsi.github.io/ginkgo/">Ginkgo</a> library that lets you
-write <a href="https://rspec.info/">RSpec</a>-style tests in Go:</p>
+href="https://onsi.github.io/ginkgo/">Ginkgo</a> library that provides a
+means to
+write <a href="https://rspec.info/">RSpec</a>-style tests for Go:</p>
 
 <pre>
     Describe("Abs", func() {
@@ -80,39 +82,37 @@ write <a href="https://rspec.info/">RSpec</a>-style tests in Go:</p>
 </pre>
 
 <p>The functions <tt>Describe</tt>, <tt>Expect</tt>, etc, make the test
-"read like English", but we suddenly have a whole new sub-language to
-learn. The thinking of Go contributors such as Donovan is that we already
-have tools like <tt>==</tt> and <tt>!=</tt> built into the language, so why
-do we need <tt>To(Equal(x))</tt>?</p>
+"read like English", but means that there is suddenly a whole new sub-language to
+learn. The thinking of Go contributors such as Donovan is that there are already
+tools like <tt>==</tt> and <tt>!=</tt> built into the language, so why
+is <tt>To(Equal(x))</tt> needed?</p>
 
-<p>That said, Go doesn't stop you using such libraries, so developers
+<p>That said, Go doesn't stop developers from using such libraries, so those
 coming from other languages often find using them more familiar than
 vanilla <tt>testing</tt>. One relatively lightweight library is <a
 href="https://github.com/stretchr/testify#assert-package">testify/assert</a>,
 which adds common assertion functions like <tt>assert.Equal()</tt>, and <a
 href="https://github.com/stretchr/testify#suite-package">testify/suite</a>,
-which adds test suite utilities like setup and teardown. The "Awesome Go"
+which adds test-suite utilities like setup and teardown. The "Awesome Go"
 website provides an <a href="https://awesome-go.com/#testing">extensive
 list</a> of such third-party packages.</p>
 
 <p>One useful testing tool that's not in the <tt>testing</tt> package is
 <tt>reflect.DeepEqual()</tt>, a standard library function that uses
 reflection to determine "deep equality", that is, equality after following
-pointers and recursing into maps, arrays, etc. This is helpful when your
-tests compare things like JSON objects, or structs with pointers in
-them.</p>
-
-<p>Two libraries that build on this are Google's <a
+pointers and recursing into maps, arrays, and so on. This is helpful when
+tests compare things like JSON objects or structs with pointers in
+them. Two libraries that build on this are Google's <a
 href="https://github.com/google/go-cmp">go-cmp</a> package and Daniel
 Nichter's <a href="https://github.com/go-test/deep">deep</a>, which are
 like <tt>DeepEqual</tt> but produce a human-readable diff of what's not
-equal rather just returning a boolean. For example, here's a (broken) test
-of a <tt>MakeUsers</tt> function using go-cmp:</p>
+equal rather just returning a boolean. For example, here's a (deliberately broken) test
+of a <tt>MakeUsers()</tt> function using go-cmp:</p>
 
 <pre>
     func TestMakeUser(t *testing.T) {
         got := MakeUser("Bob Smith", "bobby@example.com", 42)
-        want := &User{
+        want := &amp;User{
             Name:  "Bob Smith",
             Email: "bob@example.com",
             Age:   42,
@@ -127,7 +127,7 @@ of a <tt>MakeUsers</tt> function using go-cmp:</p>
 
 <pre>
     user_test.go:16: MakeUser() mismatch (-want +got):
-          &main.User{
+          &amp;main.User{
             Name:  "Bob Smith",
         -   Email: "bob@example.com",
         +   Email: "bobby@example.com",
@@ -138,14 +138,14 @@ of a <tt>MakeUsers</tt> function using go-cmp:</p>
 
 <h4>Builtin <tt>testing</tt> features</h4>
 
-<p>The built-in <tt>testing</tt> package also contains various functions to
+<p>The built-in <tt>testing</tt> package contains various functions to
 log information and report failures, skip tests at runtime, or only run
 tests in "short" mode. Short mode is enabled using the <tt>-test.short</tt>
 command line argument, which is useful to skip long-running tests during
 development.</p>
 
 <p>Go's test runner executes tests sequentially by default, but there's an
-opt-in function <tt>Parallel()</tt> to allow running explicitly-marked
+opt-in <tt>Parallel()</tt> function to allow running explicitly-marked
 tests at the same time across multiple cores.</p>
 
 <p>In Go 1.14, the <tt>testing</tt> package added a <a
@@ -169,7 +169,7 @@ delete database tables after a test finishes:</p>
         if err != nil {
             t.Fatalf("error fetching user: %v", err)
         }
-        expected := &User{"Bob Smith", "bob@example.com", 42}
+        expected := &amp;User{"Bob Smith", "bob@example.com", 42}
         if !reflect.DeepEqual(user, expected) {
             t.Fatalf("expected user %v, got %v", expected, user)
         }
@@ -184,15 +184,8 @@ test. There's a high bar for adding to the <tt>testing</tt> package, but
 Russ Cox on the core Go team <a
 href="https://github.com/golang/go/issues/35998#issuecomment-603983588">gave
 his approval</a> for this addition:</p>
-
-<div class="BigQuote">
-<p>It seems like temporary directories do come up in
-a large enough variety of tests to be part of <tt>testing</tt> proper.
-[...]  <tt>Setenv</tt> and <tt>Patch</tt> seem less generally necessary,
-and now they can be implemented easily using <tt>Cleanup</tt>. (So can
-<tt>TempDir</tt> but it seems more widely applicable.)</p>
-</div>
-
+"<span>It seems like temporary directories do come up in
+a large enough variety of tests to be part of <tt>testing</tt> proper.</span>"
 
 <h4>Table-driven tests</h4>
 
@@ -221,15 +214,13 @@ in a slice, reporting any failures for each iteration:</p>
     }
 </pre>
 
-<p>The <tt>t.Errorf()</tt> calls report a failure but don't stop the
+<p>The <tt>t.Errorf()</tt> calls report the failure but do not stop the
 execution of the test, so multiple failures can be reported. This style of
 table-driven test is common throughout the standard library tests (for
 example, the <a href="https://golang.org/src/fmt/fmt_test.go#L142">fmt
-tests</a>).</p>
-
-<p>You can also use <a
-href="https://blog.golang.org/subtests">subtests</a>, a feature introduced
-in Go 1.7 that gives the ability to run individual sub-tests from the
+tests</a>). <a
+href="https://blog.golang.org/subtests">Subtests</a>, a feature introduced
+in Go 1.7,  gives the ability to run individual sub-tests from the
 command line, as well as better control over failures and parallelism.</p>
 
 
@@ -238,19 +229,19 @@ command line, as well as better control over failures and parallelism.</p>
 <p>One of Go's well-known language features is its structurally-typed
 interfaces, sometimes referred to as "<a
 href="https://blog.carbonfive.com/structural-typing-compile-time-duck-typing/">compile-time
-duck typing</a>". Interfaces are important whenever you need to vary
+duck typing</a>". Interfaces are important whenever there is a need to vary
 behavior at runtime, which of course includes testing. For example, as Go
-core contributor Andrew Gerrand says in his 2014 talk <a
-href="https://talks.golang.org/2014/testing.slide#22">Testing
-Techniques</a>, if you're writing a file format parser, don't pass in a
-concrete file type like this:</p>
+core contributor Andrew Gerrand said in the <a
+href="https://talks.golang.org/2014/testing.slide#22">slides</a> for  his 2014  "Testing
+Techniques" talk, a file-format parser should not have a
+concrete file type passed in like this:</p>
 
 <pre>
     func Parse(f *os.File) error { ... }
 </pre>
 
-<p>Instead, make <tt>Parse</tt> take a small interface that only implements
-the functionality you need. In cases like this, the ubiquitous <a
+<p>Instead, <tt>Parse()</tt> should simply take a small interface that only implements
+the functionality needed. In cases like this, the ubiquitous <a
 href="https://golang.org/pkg/io/#Reader"><tt>io.Reader</tt></a> is a good
 choice:</p>
 
@@ -258,20 +249,20 @@ choice:</p>
     func Parse(r io.Reader) error { ... }
 </pre>
 
-<p>That way, your parser can be fed anything that implements
+<p>That way, the parser can be fed anything that implements
 <tt>io.Reader</tt>, which includes files, string buffers, and network
 connections. It also makes it much easier to test (probably using a <a
 href="https://golang.org/pkg/strings/#Reader"><tt>strings.Reader</tt></a>).</p>
 
-<p>If your tests only use a small part of a large interface, for example
-one method of a multi-method API server, you can create a new struct type
+<p>If the tests only use a small part of a large interface, for example
+one method from a multi-method API server,  a new struct type
 that <a
 href="https://golang.org/doc/effective_go.html#embedding">embeds</a> the
-interface to fulfill the API contract, and then override only the method
-being called. For example, we want to test this <tt>GetReadmeTitle</tt>
+interface to fulfill the API contract can be created that only overrides the method
+being called. For example,to test this <tt>GetReadmeTitle()</tt>
 function that calls the <a
 href="https://developer.github.com/v3/repos/contents/">GitHub Contents
-API's</a> "get readme" endpoint to fetch the data, and then returns the
+API's</a> "GET readme" endpoint to fetch the data, and then returns the
 first non-empty line as the title:</p>
 
 <pre>
@@ -314,7 +305,7 @@ interface field, and overrides only the relevant method:</p>
     }
 
     func TestGetReadmeTitle(t *testing.T) {
-        api := &fakeAPI{readmes: map[string]string{
+        api := &amp;fakeAPI{readmes: map[string]string{
             "my/project": "\nMy Project\n==========\n\nThis is a project.",
         }}
         title, err := GetReadmeTitle(api, "my", "project")
@@ -330,7 +321,7 @@ interface field, and overrides only the relevant method:</p>
 <p>There are various third party tools, such as <a
 href="https://github.com/golang/mock">GoMock</a> and <a
 href="https://github.com/vektra/mockery">mockery</a>, that autogenerate
-mock code from your interfaces. However, Gerrand <a
+mock code from interface definitions. However, Gerrand <a
 href="https://www.philosophicalhacker.com/2016/01/13/should-we-use-mocking-libraries-for-go-testing/">prefers</a>
 hand-written fakes:</p>
 
@@ -353,12 +344,12 @@ markup.</p>
 
 <p>It takes a similar approach with <a
 href="https://blog.golang.org/examples">documentation examples</a>: these
-are runnable code snippets that are automatically executed when you run
-your tests, and included in generated documentation. Much like Python's <a
+are runnable code snippets that are automatically executed when the tests
+are run,  and then included in the generated documentation. Much like Python's <a
 href="https://docs.python.org/3/library/doctest.html">doctests</a>,
-testable examples write to standard output, and when being tested this
+testable examples write to standard output, and the
 output is compared against the expected output, to avoid regressions in the
-documented examples. Here's a testable example of an <tt>Abs</tt>
+documented examples. Here's a testable example of an <tt>Abs()</tt>
 function:</p>
 
 <pre>
@@ -375,23 +366,24 @@ function:</p>
 with <tt>Example</tt>. When the test runner executes, the <tt>Output:</tt>
 comment is parsed and compared against the actual output, giving a test
 failure if they differ. These examples are included in the generated
-documentation as runnable "Go Playground" snippets, for example in the <a
-href="https://golang.org/pkg/strings/#Compare">strings</a> package.</p>
+documentation as runnable "Go Playground" snippets, as shown in the <a
+href="https://golang.org/pkg/strings/#Compare">strings</a> package, for example.</p>
 
 
 <h4>Benchmarking</h4>
 
 <p>In addition to tests, the <tt>testing</tt> package allows you to run
 timed benchmarks. These are used heavily throughout the standard library to
-ensure there are not regressions on execution speed. Benchmarks can be run
-automatically using <tt>go test -bench=.</tt> (where <tt>.</tt> is a regex
-used to match benchmark names). Dave Cheney, popular Go author, has a good
-summary in his article <a
+ensure there are not regressions in execution speed. Benchmarks can be run
+automatically using <tt>go&nbsp;test&nbsp;-bench=.</tt> (where "<tt>.</tt>"
+is a regular expression
+used to match benchmark names). Popular Go author Dave Cheney has a good
+summary in his article "<a
 href="https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go">How
-to write benchmarks in Go</a>.</p>
+to write benchmarks in Go</a>".</p>
 
 <p>As an example, here's the standard library's benchmark for the <a
-href="https://golang.org/pkg/strings/#TrimSpace"><tt>strings.TrimSpace</tt></a>
+href="https://golang.org/pkg/strings/#TrimSpace"><tt>strings.TrimSpace()</tt></a>
 function (note the table-driven approach and the use of
 sub-benchmarks):</p>
 
@@ -405,7 +397,7 @@ sub-benchmarks):</p>
         }
         for _, test := range tests {
             b.Run(test.name, func(b *testing.B) {
-                for i := 0; i < b.N; i++ {
+                for i := 0; i &lt; b.N; i++ {
                     TrimSpace(test.input)
                 }
             })
@@ -413,9 +405,10 @@ sub-benchmarks):</p>
     }
 </pre>
 
-<p>The <tt>go test</tt> tool will report the numbers, and then you can use
+<p>The <tt>go test</tt> tool will report the numbers; 
 a program like <a
 href="https://pkg.go.dev/golang.org/x/perf/cmd/benchstat?tab=doc">benchstat</a>
+can be used
 to compare the before and after timings. Output from benchstat is commonly
 included in Go's commit messages showing the performance improvement. For
 example, from <a
@@ -431,24 +424,25 @@ href="https://go-review.googlesource.com/c/go/+/152917">change
 </pre>
 
 <p>This shows that the ASCII fast path for <tt>TrimSpace</tt> made
-ASCII-only inputs about 5 times as fast, though the "SomeNonASCII" sub-test
+ASCII-only inputs about five times as fast, though the "SomeNonASCII" sub-test
 slowed down by about 9%.</p>
 
-<p>To diagnose where something is running slowly, you can use the built-in
-<a href="https://blog.golang.org/pprof">profiling tools</a>, such as the
-<tt>-cpuprofile</tt> option when running tests. The built-in <tt>go tool
-pprof</tt> displays profile output in a variety of formats, including <a
+<p>To diagnose where something is running slowly, the built-in <a
+href="https://blog.golang.org/pprof">profiling tools</a> can be used, such
+as the <tt>-cpuprofile</tt> option when running tests. The built-in
+<tt>go&nbsp;tool&nbsp;pprof</tt> displays profile output in a variety of
+formats, including <a
 href="http://www.brendangregg.com/flamegraphs.html">flame graphs</a>.</p>
 
 
 <h4>The <tt>go test</tt> command</h4>
 
-<p>Go is opinionated about where you put tests (in files named
-<tt>*_test.go</tt>) and how you name test functions (they must be prefixed
+<p>Go is opinionated about where tests should reside (in files named
+<tt>*_test.go</tt>) and how test functions are named (they must be prefixed
 with <tt>Test</tt>). The advantage of being opinionated, however, is that
-the <tt>go test</tt> tool knows exactly where to look and how to run your
-tests. There's no need for a Makefile or metadata describing where your
-tests live &mdash; if you name your files and functions the standard way,
+the <tt>go&nbsp;test</tt> tool knows exactly where to look and how to run the
+tests. There's no need for a Makefile or metadata describing where the
+tests live &mdash; if  files and functions are named in the standard way,
 Go already knows where to look.</p>
 
 <p>The <a href="https://golang.org/pkg/cmd/go/internal/test/"><tt>go
@@ -468,10 +462,10 @@ examples:</p>
 </pre>
 
 <p>Go test's <tt>-cover</tt> mode produces code coverage profiles that can
-be viewed as HTML using <tt>go tool cover -html=coverage.out</tt>.</p>
-
-<p>Discussing <a href="https://blog.golang.org/cover">how Go's code
-coverage tool works</a>, Go co-creator Rob Pike says:</p>
+be viewed as HTML using <tt>go tool cover
+-html=coverage.out</tt>. When explaining <a
+href="https://blog.golang.org/cover">how Go's code coverage tool works</a>,
+Go co-creator Rob Pike said:</p>
 
 <div class="BigQuote">
 <p>For the new test coverage tool for Go, we took a different approach
@@ -485,11 +479,11 @@ command controls the flow from source to test to execution.</p>
 
 <h4>Summing up</h4>
 
-<p>Go's <tt>testing</tt> library is simple but extendable, and the <tt>go
-test</tt> runner is a good complement with its test execution,
-benchmarking, profiling, and code coverage reporting. You can <i>go</i> a
+<p>Go's <tt>testing</tt> library is simple but extendable, and the
+<tt>go&nbsp;test</tt> runner is a good complement with its test execution,
+benchmarking, profiling, and code-coverage reporting. You can <i>go</i> a
 long way with the vanilla <tt>testing</tt> package &mdash; I find Go's
-minimalist approach is a forcing function to think differently about
+minimalist approach to be a forcing function to think differently about
 testing and to get the most out of native language features, such as
 interfaces and struct composition. But if you need to pull in third party
-libraries, they're only a <tt>go get</tt> away.</p>
+libraries, they're only a <tt>go&nbsp;get</tt> away.</p>
