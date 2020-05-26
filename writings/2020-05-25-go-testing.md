@@ -3,7 +3,7 @@ layout: default
 title: "Testing in Go: philosophy and tools"
 permalink: /writings/go-testing/
 description: "Go's philosophy of testing and an overview of the built-in testing tools."
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/821358/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">May 2020</p>
@@ -31,7 +31,7 @@ tools for writing and running tests: the standard library's <a
 href="https://golang.org/pkg/testing/"><tt>testing</tt></a> package, and
 the <a href="https://golang.org/pkg/cmd/go/internal/test/"><tt>go
 test</tt></a> command to run test suites. Like the language itself, Go's
-philosophy for writing tests is minimalist: use the standard library's
+philosophy for writing tests is minimalist: use the
 lightweight <tt>testing</tt> package along with helper functions
 written in plain Go. The idea is that tests are just code, and since a Go
 developer already knows how to write Go using its abstractions and types,
@@ -127,12 +127,12 @@ of a <tt>MakeUsers()</tt> function using go-cmp:</p>
 
 <pre>
     user_test.go:16: MakeUser() mismatch (-want +got):
-          &amp;main.User{
-            Name:  "Bob Smith",
-        -   Email: "bob@example.com",
-        +   Email: "bobby@example.com",
-            Age:   42,
-          }
+          &amp;main.User{
+            Name:  "Bob Smith",
+        -   Email: "bob@example.com",
+        +   Email: "bobby@example.com",
+            Age:   42,
+          }
 </pre>
 
 
@@ -140,9 +140,11 @@ of a <tt>MakeUsers()</tt> function using go-cmp:</p>
 
 <p>The built-in <tt>testing</tt> package contains various functions to
 log information and report failures, skip tests at runtime, or only run
-tests in "short" mode. Short mode is enabled using the <tt>-test.short</tt>
-command line argument, which is useful to skip long-running tests during
-development.</p>
+tests in "short" mode. Short mode provides a way to <a
+href="https://golang.org/pkg/testing/#hdr-Skipping">skip</a> tests that are
+long running or have a lot of setup, which can be helpful during
+development. It is enabled using the <tt>-test.short</tt>
+command line argument.</p>
 
 <p>Go's test runner executes tests sequentially by default, but there's an
 opt-in <tt>Parallel()</tt> function to allow running explicitly-marked
@@ -228,9 +230,13 @@ command line, as well as better control over failures and parallelism.</p>
 <h4>Mocks and interfaces</h4>
 
 <p>One of Go's well-known language features is its structurally-typed
-interfaces, sometimes referred to as "<a
+<a
+href="https://golang.org/doc/effective_go.html#interfaces">interfaces</a>,
+sometimes referred to as "<a 
 href="https://blog.carbonfive.com/structural-typing-compile-time-duck-typing/">compile-time
-duck typing</a>". Interfaces are important whenever there is a need to vary
+duck typing</a>". "<span>Interfaces in Go provide a way to specify the
+behavior of an object: if something can do <i>this</i>, then it can be used
+<i>here</i>.</span>" Interfaces are important whenever there is a need to vary
 behavior at runtime, which of course includes testing. For example, as Go
 core contributor Andrew Gerrand said in the <a
 href="https://talks.golang.org/2014/testing.slide#22">slides</a> for  his 2014  "Testing
