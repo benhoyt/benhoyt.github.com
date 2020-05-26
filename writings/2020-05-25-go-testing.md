@@ -87,7 +87,7 @@ learn. The thinking of Go contributors such as Donovan is that there are already
 tools like <tt>==</tt> and <tt>!=</tt> built into the language, so why
 is <tt>To(Equal(x))</tt> needed?</p>
 
-<p>That said, Go doesn't stop developers from using such libraries, so those
+<p>That said, Go doesn't stop developers from using such libraries, so developers
 coming from other languages often find using them more familiar than
 vanilla <tt>testing</tt>. One relatively lightweight library is <a
 href="https://github.com/stretchr/testify#assert-package">testify/assert</a>,
@@ -97,8 +97,8 @@ which adds test-suite utilities like setup and teardown. The "Awesome Go"
 website provides an <a href="https://awesome-go.com/#testing">extensive
 list</a> of such third-party packages.</p>
 
-<p>One useful testing tool that's not in the <tt>testing</tt> package is
-<tt>reflect.DeepEqual()</tt>, a standard library function that uses
+<p>One useful testing tool that's not part of the <tt>testing</tt> package is
+<tt>reflect.DeepEqual()</tt>, which is a standard library function that uses
 reflection to determine "deep equality", that is, equality after following
 pointers and recursing into maps, arrays, and so on. This is helpful when
 tests compare things like JSON objects or structs with pointers in
@@ -136,7 +136,7 @@ of a <tt>MakeUsers()</tt> function using go-cmp:</p>
 </pre>
 
 
-<h4>Builtin <tt>testing</tt> features</h4>
+<h4>Built-in <tt>testing</tt> features</h4>
 
 <p>The built-in <tt>testing</tt> package contains various functions to
 log information and report failures, skip tests at runtime, or only run
@@ -183,15 +183,16 @@ that creates (and cleans up) a temporary directory for the current
 test. There's a high bar for adding to the <tt>testing</tt> package, but
 Russ Cox on the core Go team <a
 href="https://github.com/golang/go/issues/35998#issuecomment-603983588">gave
-his approval</a> for this addition:</p>
+his approval</a> for this addition:
 "<span>It seems like temporary directories do come up in
-a large enough variety of tests to be part of <tt>testing</tt> proper.</span>"
+a large enough variety of tests to be part of <tt>testing</tt> proper.</span>"</p>
 
 <h4>Table-driven tests</h4>
 
 <p>A common idiom in Go to avoid repetition when testing various edge cases
 is called "table-driven tests". This technique iterates over the test cases
-in a slice, reporting any failures for each iteration:</p>
+in a "<a href="https://golang.org/doc/effective_go.html#slices">slice</a>"
+(Go's term for a view into a resizable array), reporting any failures for each iteration:</p>
 
 <pre>
     func TestAbs(t *testing.T) {
@@ -255,12 +256,12 @@ connections. It also makes it much easier to test (probably using a <a
 href="https://golang.org/pkg/strings/#Reader"><tt>strings.Reader</tt></a>).</p>
 
 <p>If the tests only use a small part of a large interface, for example
-one method from a multi-method API server, a new struct type can be
+one method from a multi-method API, a new struct type can be
 created that <a
-href="https://golang.org/doc/effective_go.html#embedding">embeds</a> the
+href="https://golang.org/doc/effective_go.html#embedding">embeds</a> the  
 interface to fulfill the API contract, and only overrides the method
 being called. A full example of this technique is shown in <a
-href="https://play.golang.org/p/AXcNcTH4oNb">this Go Playground code</a>.</p>
+href="https://play.golang.org/p/AXcNcTH4oNb">this Go Playground code</a>.</p>  
 
 <p>There are various third party tools, such as <a
 href="https://github.com/golang/mock">GoMock</a> and <a
@@ -310,7 +311,7 @@ function:</p>
 with <tt>Example</tt>. When the test runner executes, the <tt>Output:</tt>
 comment is parsed and compared against the actual output, giving a test
 failure if they differ. These examples are included in the generated
-documentation as runnable "Go Playground" snippets, as shown in the <a
+documentation as runnable Go Playground snippets, as shown in the <a
 href="https://golang.org/pkg/strings/#Compare">strings</a> package, for example.</p>
 
 
@@ -319,16 +320,15 @@ href="https://golang.org/pkg/strings/#Compare">strings</a> package, for example.
 <p>In addition to tests, the <tt>testing</tt> package allows you to run
 timed benchmarks. These are used heavily throughout the standard library to
 ensure there are not regressions in execution speed. Benchmarks can be run
-automatically using <tt>go&nbsp;test&nbsp;-bench=.</tt> (where "<tt>.</tt>"
-is a regular expression
-used to match benchmark names). Popular Go author Dave Cheney has a good
+automatically using <tt>go&nbsp;test</tt> with the <tt>-bench=</tt>
+option. Popular Go author Dave Cheney has a good 
 summary in his article "<a
 href="https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go">How
 to write benchmarks in Go</a>".</p>
 
 <p>As an example, here's the standard library's benchmark for the <a
 href="https://golang.org/pkg/strings/#TrimSpace"><tt>strings.TrimSpace()</tt></a>
-function (note the table-driven approach and the use of
+function (note the table-driven approach and the use of <tt>b.Run()</tt> to create
 sub-benchmarks):</p>
 
 <pre>
@@ -385,7 +385,7 @@ href="http://www.brendangregg.com/flamegraphs.html">flame graphs</a>.</p>
 <tt>*_test.go</tt>) and how test functions are named (they must be prefixed
 with <tt>Test</tt>). The advantage of being opinionated, however, is that
 the <tt>go&nbsp;test</tt> tool knows exactly where to look and how to run the
-tests. There's no need for a Makefile or metadata describing where the
+tests. There's no need for a makefile or metadata describing where the
 tests live &mdash; if  files and functions are named in the standard way,
 Go already knows where to look.</p>
 
