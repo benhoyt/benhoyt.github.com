@@ -2,16 +2,21 @@
 layout: default
 title: ZZT in Go (and a Pascal-to-Go converter)
 permalink: /writings/zzt-in-go/
-description: "A port of Adrian Siekierka's 'Reconstruction of ZZT' to Go, done in a semi-automated way using a Pascal-to-Go converter."
+description: "An (incomplete) port of Adrian Siekierka's 'Reconstruction of ZZT' to Go, done in a semi-automated way using a Pascal-to-Go converter."
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">May 2020</p>
 
-TODO: draft in progress
+> Summary: After seeing Adrian Siekierka's "Reconstruction of ZZT" I wrote a program to translate his Turbo Pascal code to Go. This article describes my Pascal-to-Go converter and my (not exactly complete) Go port of ZZT.
+
 
 I'm not "a gamer", but one of the games I enjoyed playing as a teenager was Epic MegaGames' [ZZT](https://museumofzzt.com/about-zzt) -- an old text-mode DOS game that came out in 1991. Even in its time the graphics were far from revolutionary ... but the reason ZZT did so well, and still has something of a cult following, was because of the "world editor" (that came even with the shareware version).
 
-And the world editor had a scripting language called ZZT-OOP, where the "O" in OOP referred to ZZT's "objects", which are programmable game characters or robots. So people created thousands of their own worlds and shared them -- hundreds of which are downloadable and even playable online at the [Museum of ZZT](https://museumofzzt.com/), a kind of archive.org for ZZT worlds.
+Here's what the original shareware "Town of ZZT" title screen looked like:
+
+![Town of ZZT title screen](/images/zzt-orig.png)
+
+The world editor had a scripting language called ZZT-OOP, where the "O" in OOP referred to ZZT's "objects", which are programmable game characters or robots. So people created thousands of their own worlds and shared them -- hundreds of which are downloadable and even playable online at the [Museum of ZZT](https://museumofzzt.com/), a kind of archive.org for ZZT worlds.
 
 
 ## The Reconstruction of ZZT
@@ -23,25 +28,121 @@ In March 2020, Adrian published his [Reconstruction of ZZT](https://github.com/a
 He has since gone further, and created [libzoo](https://github.com/asiekierka/libzoo), a portable C reimplementation of the ZZT game engine with a permissive license for use in other ZZT ports.
 
 
-## A Pascal-to-Go transpiler
+## A Pascal-to-Go converter
 
-A while back I started trying to write a version of ZZT in Go, but after making a tiny bit of progress, got lazy and gave up. However, when the Pascal reconstruction came out, I had another go.
+A while back I started trying to write a version of ZZT in Go, but after making a tiny bit of progress, I gave up -- it seemed like too big a job for a side project. However, when the Pascal reconstruction came out, I had another (ahem) *go*.
 
-I [enjoy](https://benhoyt.com/writings/goawk/) [tinkering](https://benhoyt.com/writings/loxlox/) [around](https://benhoyt.com/writings/littlelang/) with interpreters and compilers, so I wanted to see if I could write a program to convert Adrian's Pascal reconstruction to Go semi-automatically. So I wrote a not-very-complete Turbo Pascal parser and a converter that takes the Pascal syntax tree and tries to write it out with Go types and syntax.
+I [enjoy](https://benhoyt.com/writings/goawk/) [tinkering](https://benhoyt.com/writings/loxlox/) [around](https://benhoyt.com/writings/littlelang/) with interpreters and compilers, so I wanted to see if I could write a program to convert Adrian's Pascal reconstruction to Go semi-automatically. So I wrote a not-very-complete Turbo Pascal parser, and a converter that takes the Pascal syntax tree and tries to write it out with Go types and syntax.
 
-Go's structure and declaration syntax actually has quite a number of similarities to Pascal.
+Go's structure and declaration syntax actually has quite a number of similarities to Pascal, so this made the overall structure of the converter pretty straight-forward. For example, take a small Pascal function [in OOP.PAS](https://github.com/asiekierka/reconstruction-of-zzt/blob/4541b845e1433e63367591214a1b26dc840391b8/SRC/OOP.PAS#L303-L312):
 
+```pascal
+function WorldGetFlagPosition(name: TString50): integer;
+    var
+        i: integer;
+    begin
+        WorldGetFlagPosition := -1;
+        for i := 1 to 10 do begin
+            if World.Info.Flags[i] = name then
+                WorldGetFlagPosition := i;
+        end;
+    end;
+```
 
-Its type system, however, is quite different.
+Here's the converted Go code:
+
+```go
+func WorldGetFlagPosition(name string) (WorldGetFlagPosition int16) {
+    var i int16
+    WorldGetFlagPosition = -1
+    for i = 1; i <= 10; i++ {
+        if World.Info.Flags[i-1] == name {
+            WorldGetFlagPosition = i
+        }
+    }
+    return
+}
+```
+
+Almost identical. To keep the converter simple, I've opted for a more literal translation of the Pascal, rather than trying to produce idiomatic Go -- my thinking was that making it idiomatic Go is too hard to do programmatically, and I can always clean that up later.
+
+Note the use of Go named return values to match Pascal's use of the function name as the return value. I converted the integer sizes literally to avoid bugs, so this returns an `int16` rather than a plain `int`.
+
+Pascal allows you to declare arrays that start at at any index (not just 0), and in practice they often start at 1 -- hence `Flags[i]` in the Pascal version and `Flags[i-1]` in the Go version.
+
+The most difficult thing -- and something I barely automated -- was the differences between Turbo Pascal pointers and strings and their Go counterparts. I made the converter convert all string types to plain `string`, and then fixed up the breakages manually.
+
+Pascal's `var` parameters turn into pointers in Go, but of course in Go you need to explicitly dereference them when you assign their values. So this Pascal function:
+
+```pascal
+procedure ElementSpinningGunDraw(x, y: integer; var ch: byte);
+    begin
+        case CurrentTick mod 8 of
+            0, 1: ch := 24;
+            2, 3: ch := 26;
+            4, 5: ch := 25;
+        else ch := 27 end;
+    end;
+```
+
+Becomes this in Go:
+
+```go
+func ElementSpinningGunDraw(x, y int16, ch *byte) {
+    switch CurrentTick % 8 {
+    case 0, 1:
+        *ch = 24
+    case 2, 3:
+        *ch = 26
+    case 4, 5:
+        *ch = 25
+    default:
+        *ch = 27
+    }
+}
+```
+
+I used `go build -gcflags="-e"` to build the converted Go with "all errors" enabled, and outputted the results to an [errors.txt](https://github.com/benhoyt/pas2go/blob/c6a612380d3d4a8234f3f62776712d0f313e6a19/converted/errors.txt) file. Initially this file had over 800 errors in it. By the end of my automated journey, only 33 -- which I then fixed up manually.
+
+The source code for my Pascal to Go converter is at [**github.com/benhoyt/pas2go**](https://github.com/benhoyt/pas2go). I started by building the [lexer](https://github.com/benhoyt/pas2go/blob/master/lexer.go) and [parser](https://github.com/benhoyt/pas2go/blob/master/parser.go), and output the parsed original source (the [orig](https://github.com/benhoyt/pas2go/tree/master/orig) directory) as pretty-printed Pascal to the [parsed](https://github.com/benhoyt/pas2go/tree/master/parsed) directory. I did a diff between those two directories to determine whether my Turbo Pascal parser was correct.
+
+Once I'd finished the parser, I moved on to the [converter](https://github.com/benhoyt/pas2go/blob/master/converter.go). This is not the most elegant code I've ever written; I just wanted to get the job done. In particular, it mixes up trying to figure out types with outputting the Go source code -- if building a real transpiler, I would separate these into two phases and build the "types" data structures first.
+
+Pascal's handling of integer data types is quite different from Go's. Go is very strict and doesn't do any automatic number type conversion. I couldn't find a good reference for how Turbo Pascal 5.5 did things, but between the [Free Pascal](https://www.freepascal.org/) documentation and trying things in Turbo Pascal 5.5 running in DOSBox, I think I got most of the rules figured out.
+
+Pascal seems to promote to integer (`int16`) when you do math operations, and they're automatically promoted or truncated if needed on assignment. So there are a lot more explicit conversions in the Go version, such as this from [ELEMENTS.PAS](https://github.com/asiekierka/reconstruction-of-zzt/blob/4541b845e1433e63367591214a1b26dc840391b8/SRC/ELEMENTS.PAS#L435-L437):
+
+```pascal
+if Difference(Y, Board.Stats[0].Y) <= 2 then begin
+    shot := BoardShoot(element, X, Y,
+                       Signum(Board.Stats[0].X - X),
+                       0, SHOT_SOURCE_ENEMY);
+end;
+```
+
+And in Go:
+
+```go
+if Difference(int16(stat.Y), int16(Board.Stats[0].Y)) <= 2 {
+    shot = BoardShoot(element, int16(stat.X), int16(stat.Y),
+                      Signum(int16(Board.Stats[0].X)-int16(stat.X)),
+                      0, SHOT_SOURCE_ENEMY)
+}
+```
 
 
 ## The Go port
 
-Once the semi-automated conversion was done, it still had hundreds of Go compile errors. The first step was getting it to compile without errors. So I wrote a script to build it with (TODO args to show all errors) and output the result to `errors.txt`. I systematically worked through that file, fixing issues and removing less important source code (sound and video stuff).
+Once the semi-automated conversion was done, it still had dozens of Go compile errors. The first step was getting it to compile without errors. I moved the Go code to its own [**github.com/benhoyt/zztgo**](https://github.com/benhoyt/zztgo) repo and systematically worked through the `errors.txt` file, fixing issues as well as removing less important source code (sound functions).
 
-If I found a problem that was a result of the Pascal-to-Go conversion, I went back and fixed it there so 
+Once I got it to compile, I had to add in the video functionality. It currently uses terminal "graphics" via [tcell](https://github.com/gdamore/tcell). To get it to look anything like real ZZT, you have to adjust your font and terminal colors to match the old DOS ones (see below for how to do this). Here's what the `zztgo` version looks like (pretty close, right!):
+
+![zztgo title screen](/images/zztgo.png)
+
+I also had to write ZZT world [serialization routines](https://github.com/benhoyt/zztgo/blob/master/serialize.go) -- the Turbo Pascal version just loads the binary structures directly into memory (you just assumed little-endian and packed structures in the good old days).
+
+Once I had eliminated the major bugs, a surprising amount of the gameplay just worked. Things were really starting to fall into place. I remember two commits in particular: [this one](https://github.com/benhoyt/zztgo/commit/2b98366edc5f937a030925437321a8643f2eb1c8) which got the bulk of the gameplay working, and [this one](https://github.com/benhoyt/zztgo/commit/958b94192a0e048334a1a86b70764caf4a7910f9) which got the in-game world editor pretty much working. Yay for automated code conversion!
 
 
-Then I added terminal "graphics" using the Go [tcell](TODO) library.
+## Running zztgo yourself
 
-The next step was getting it to actually work.
