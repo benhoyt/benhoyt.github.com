@@ -32,7 +32,7 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 
 * Develop backend web systems and services that perform well and are easy to use. I’ve used various languages and databases, and I’m experienced with microservices as well as the scaling and caching required for large sites.
 * Contribute to frontend development: I'm familiar with vanilla JavaScript, React, Elm, CSS, and other frontend technologies.
-* Devops and scripting: create Docker images, develop infrastructure as code, administer servers, and automate complex code deployments on Linux and Windows.
+* DevOps and scripting: create Docker images, develop infrastructure as code, administer servers, and automate complex code deployments on Linux and Windows.
 * Contribute to open source projects, for example Python ([more here](/projects/)).
 
 <!--
