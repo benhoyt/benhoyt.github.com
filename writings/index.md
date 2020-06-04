@@ -13,6 +13,7 @@ I’ve also written [guest articles for LWN.net](https://lwn.net/Archives/GuestI
 ## Technical writing
 
 * [ZZT in Go](/writings/zzt-in-go/) describes my port of Adrian Siekierka's "Reconstruction of ZZT" to Go, done in a semi-automated way using a Pascal-to-Go converter. (May&nbsp;2020)
+* [Testing in Go: philosophy and tools](https://lwn.net/Articles/821358/) describes the minimalist philosophy of testing in Go and the built-in testing tools. (LWN.net, May&nbsp;2020)
 * [The state of the AWK](https://lwn.net/Articles/820829/) surveys the AWK landscape, looks at new features in GNU Awk, and discusses why AWK is still relevant in 2020. (LWN.net, May&nbsp;2020)
 * [What's coming in Go 1.15](https://lwn.net/Articles/820217/) is an overview of what's coming in the Go 1.15 final release in August 2020. (LWN.net, May&nbsp;2020)
 * [Don't sanitize input](/writings/dont-sanitize-do-escape/) shows why you shouldn't try to sanitize user input; instead, escape output correctly. (Feb&nbsp;2020)
