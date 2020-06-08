@@ -8,7 +8,7 @@ canonical_url: TODO
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">June 2020</p>
 
-> [Original article on LWN.net]({{ page.canonical_url }})
+> [Original article on LWN.net]({{ page.canonical_url }}) \| [My earlier article with a similar title](https://benhoyt.com/writings/replacing-google-analytics)
 
 <style>
 DIV.BigQuote {
