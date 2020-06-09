@@ -26,11 +26,11 @@ pre {
 </style>
 
 
-<p>More and more website owners and users are concerned about the all-seeing Google tracking them as they browse around the web. Google Analytics (GA) is a free and full-featured web analytics system and, despite the privacy concerns, has become the de-facto standard analytics tool for small and large websites alike. However, in recent years a growing number of alternatives are helping break Google's dominance &mdash; many of them open source.</p>
+<p>More and more web site owners and users are concerned about the all-seeing Google tracking them as they browse around the web. Google Analytics (GA) is a free and full-featured web analytics system and, despite the privacy concerns, has become the de-facto standard analytics tool for small and large web sites alike. However, in recent years a growing number of alternatives are helping break Google's dominance &mdash; many of them open source.</p>
 
-<p>GA is by far the biggest player here: BuiltWith <a href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a> that around 86% of the top 100,000 websites use GA. This figure goes down to 64% for the top one million websites. These figures have grown steadily for the past 15 years, since Google acquired Urchin and rebranded it as Google Analytics.</p>
+<p>GA is by far the biggest player here: BuiltWith <a href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a> that around 86% of the top 100,000 web sites use GA. This figure goes down to 64% for the top one million web sites. These figures have grown steadily for the past 15 years, since Google acquired Urchin and rebranded it as Google Analytics.</p>
 
-<p>In addition to privacy concerns, GA is more complex and feature-heavy than the majority of website owners need, many of whom just want to see how much traffic is going to the pages on their site, and from what sources the traffic is coming from. So it's not surprising that a plethora of simpler, more open tools have taken off in the past few years.</p>
+<p>In addition to privacy concerns, GA is more complex and feature-heavy than the majority of web site owners need, many of whom just want to see how much traffic is going to the pages on their site, and from what sources the traffic is coming from. So it's not surprising that a plethora of simpler, more open tools have taken off in the past few years.</p>
 
 
 <h4>Lightweight alternatives</h4>
@@ -81,7 +81,7 @@ pre {
 </p>
 </div>
 
-<p>Even though Matomo is the most popular open source analytics tool and has been around the longest, it's still only used <a href="https://trends.builtwith.com/analytics/Matomo">on 1.4%</a> of the top one million websites, roughly a fiftieth of GA's market share &mdash; it's hard for even well-known open source software to compete with the $600 billion gorilla.</p>
+<p>Even though Matomo is the most popular open source analytics tool and has been around the longest, it's still only used <a href="https://trends.builtwith.com/analytics/Matomo">on 1.4%</a> of the top one million web sites, roughly a fiftieth of GA's market share &mdash; it's hard for even well-known open source software to compete with the $600 billion gorilla.</p>
 
 <p>Matomo is written in PHP and uses MySQL as its data store. It's licensed under the GNU General Public License (GPL), and supports <a href="https://matomo.org/docs/installation/">installing it yourself</a> for free (standalone or as a Wordpress plugin), two relatively low cost cloud options, and enterprise pricing.</p>
 
@@ -91,7 +91,7 @@ pre {
 
 <p>Setting up an installation of Snowplow is definitely not for the faint of heart, and requires configuring the various components, as well as significant AWS setup. However, it does provide a comprehensive <a href="https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow">setup guide</a> on its GitHub wiki. Companies can set it up to insert events into PostgreSQL or AWS's columnar Redshift database, or leave the data in S3 for further processing. Typically a business intelligence tool like <a href="https://looker.com/">Looker</a> or <a href="https://chartio.com/">ChartIO</a> is used to view the data, but Snowplow doesn't prescribe that aspect.</p>
 
-<p>Snowplow is collection of tools written in a number of languages, notably Scala (via Spark) and Ruby. Used by <a href="https://trends.builtwith.com/analytics/Snowplow">almost 3%</a> of the top 10,000 websites, it's a compelling option for larger companies that want full control over the data pipeline.</p>
+<p>Snowplow is collection of tools written in a number of languages, notably Scala (via Spark) and Ruby. Used by <a href="https://trends.builtwith.com/analytics/Snowplow">almost 3%</a> of the top 10,000 web sites, it's a compelling option for larger companies that want full control over the data pipeline.</p>
 
 <p>Of course, there are also a number of fairly heavy-weight proprietary alternatives to Google Analytics, such as <a href="https://www.adobe.com/nz/analytics/adobe-analytics.html">Adobe Analytics</a>, <a href="https://mixpanel.com/">Mixpanel</a>, and <a href="https://www.quantcast.com/products/measure-audience-insights/">Quantcast Measure</a>. What's less clear is how much would be gained by using one of these tools &mdash; they're not open source, and none of them seem particularly interested in addressing privacy concerns.</p>
 
@@ -106,7 +106,7 @@ pre {
 
 <img src="/images/lwn-goaccess-html.png">
 
-<p>If web access logs are unavailable, developers can still use GoAccess if they're willing to put a CDN (such as AWS Cloudfront or Cloudflare) in front of their website. The CDN logs can then be downloaded and run through GoAccess. There are other approaches too, such as <a href="https://benhoyt.com/writings/replacing-google-analytics/">this article</a> describing how to use GoAccess on a website served by GitHub Pages &mdash; this method uses a "tracking pixel" with Cloudfront logging and a Python script that transforms logs before sending them to GoAccess.</p>
+<p>If web access logs are unavailable, developers can still use GoAccess if they're willing to put a CDN (such as AWS Cloudfront or Cloudflare) in front of their web site. The CDN logs can then be downloaded and run through GoAccess. There are other approaches too, such as <a href="https://benhoyt.com/writings/replacing-google-analytics/">this article</a> describing how to use GoAccess on a web site served by GitHub Pages &mdash; this method uses a "tracking pixel" with Cloudfront logging and a Python script that transforms logs before sending them to GoAccess.</p>
 
 
 <h4>Wrapping up</h4>
