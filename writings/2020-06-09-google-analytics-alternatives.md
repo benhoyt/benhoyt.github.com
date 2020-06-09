@@ -27,7 +27,7 @@ pre {
 
 <p>More and more web site owners are concerned about the all-seeing Google tracking their users as they browse around the web. Google Analytics (GA) is a full featured web-analytics system available for free and, despite the privacy concerns, has become the de facto standard analytics tool for small and large web sites alike. However, in recent years a growing number of alternatives are helping break Google's dominance &mdash; in this article we'll look at some of the open-source alternatives.</p>
 
-<p>GA is by far the biggest player here: BuiltWith <a href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a> that around 86% of the top 100,000 web sites use GA. This figure goes down to 64% for the top one million web sites. These figures have grown steadily for the past 15 years, since Google acquired Urchin and rebranded it as Google Analytics.</p>
+<p>GA is by far the biggest player here: BuiltWith <a href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a> that around 86% of the top 100,000 web sites use it. This figure goes down to 64% for the top one million web sites. These figures have grown steadily for the past 15 years, since Google acquired Urchin and rebranded it as Google Analytics.</p>
 
 <p>In addition to privacy concerns, GA is more complex and feature-heavy than the majority of web site owners need, many of whom just want to see how much traffic is going to the pages on their site, and from what sources the traffic is coming from. So it's not surprising that a plethora of simpler, more open tools have taken off in the past few years.</p>
 
@@ -73,7 +73,7 @@ pre {
 
 <h4>Heavier tools</h4>
 
-<p>On the heavier end of the spectrum, there is <a href="https://matomo.org/">Matomo</a>, formerly called "<a href="https://lwn.net/Articles/372594/">Piwik</a>", which was created in 2007. It's a full-featured alternative to Google Analytics, so companies that need the power of GA can transition to it, but still get the privacy and transparency benefits from using an open-source or self-hosted alternative. As an example, web agency Isotropic recently <a href="https://isotropic.co/moving-to-matomo-google-analytics-biggest-competition/">switched</a> to Matomo:</p>
+<p>On the heavier end of the spectrum, there is <a href="https://matomo.org/">Matomo</a>, formerly called "<a href="https://lwn.net/Articles/372594/">Piwik</a>", which was created in 2007. It's a full-featured alternative to Google Analytics, so companies that need the power of GA can transition to it, but still get the privacy and transparency benefits from using an open-source and self-hosted alternative. As an example, web agency Isotropic recently <a href="https://isotropic.co/moving-to-matomo-google-analytics-biggest-competition/">switched</a> to Matomo:</p>
 
 <div class="BigQuote">
 <p>We chose to do this as we wanted to respect our users privacy, and felt that hosting statistics on our own server was better for both us and them. [...] We needed something that rivaled the functionality of Google Analytics, or was even better than it. The solution needed to offer real-time analytics, geolocation, advertising campaign tracking, heat Maps, and be open source. 
@@ -90,14 +90,14 @@ pre {
 
 <p>A more generalized event analytics system is <a href="https://snowplowanalytics.com/">Snowplow Analytics</a>, founded in 2012 and marketed as "the enterprise-grade event data collection platform". Snowplow provides the data collection part of the equation, but it is up to the installer to determine how to model and display the data. It's useful for larger companies who want control over how they model sessions or "enrich" their data with business-specific fields.</p>
 
-<p>Setting up an installation of Snowplow is definitely not for the faint of heart, and requires configuring the various components, as well as significant AWS setup. However, it does provide a comprehensive <a href="https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow">setup guide</a> on its GitHub wiki. Companies can set it up to insert events into PostgreSQL or AWS's columnar Redshift database, or leave the data in S3 for further processing. Typically a business intelligence tool like <a href="https://looker.com/">Looker</a> or <a href="https://chartio.com/">ChartIO</a> is used to view the data, but Snowplow doesn't prescribe that aspect.</p>
+<p>Setting up an installation of Snowplow is definitely not for the faint of heart, and requires configuring the various components, as well as significant AWS setup. However, it does provide a comprehensive <a href="https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow">setup guide</a> on its GitHub wiki. Companies can set it up to insert events into PostgreSQL or AWS's columnar Redshift database, or leave the data in Amazon S3 for further processing. Typically a business intelligence tool like <a href="https://looker.com/">Looker</a> or <a href="https://chartio.com/">ChartIO</a> is used to view the data, but Snowplow doesn't prescribe that aspect.</p>
 
-<p>Snowplow is collection of tools written in a number of languages, notably Scala (via Spark) and Ruby. Used by <a href="https://trends.builtwith.com/analytics/Snowplow">almost 3%</a> of the top 10,000 web sites, it's a compelling option for larger companies that want full control over the data pipeline.</p>
+<p>Snowplow is a collection of tools written in a number of languages, notably Scala (via Spark) and Ruby. Used by <a href="https://trends.builtwith.com/analytics/Snowplow">almost 3%</a> of the top 10,000 web sites, it's a compelling option for larger companies that want full control over the data pipeline.</p>
 
 
 <h4>Web access log analytics</h4>
 
-<p>All of the systems described above used JavaScript-based analytics: the benefits of JavaScript approaches are that it provides richer information (for example, screen resolution) and doesn't require access to web logs.</p>
+<p>All of the systems described above use JavaScript-based tracking: the benefits of a JavaScript approach is that it provides richer information (for example, screen resolution) and doesn't require access to web logs.</p>
 
 <p>However, if server access logs are available, it may be better to feed those logs directly into analysis software. There are a number of open-source tools that do this: <a href="https://awstats.sourceforge.io/">AWStats</a>, <a href="https://analog.readthedocs.io/en/latest/">Analog</a>, and <a href="http://www.webalizer.org/">Webalizer</a> are three tools that have all been around for over 20 years. AWStats is written in Perl and is the most full-featured and actively maintained of the bunch; Analog and Webalizer are both written in C and are not actively maintained.</p>
 
@@ -105,11 +105,11 @@ pre {
 
 <img src="/images/lwn-goaccess-html.png" alt="GoAccess screenshot" title="Source: screenshot of rt.goaccess.io">
 
-<p>If web access logs are unavailable, developers can still use GoAccess if they're willing to put a Content Delivery Network (CDN) &mdash; such as AWS Cloudfront or Cloudflare &mdash; in front of their web site. The CDN logs can then be downloaded and run through GoAccess. There are other approaches too, such as <a href="https://benhoyt.com/writings/replacing-google-analytics/">this article</a> describing how to use GoAccess on a web site served by GitHub Pages &mdash; this method uses a "tracking pixel" with Cloudfront logging and a Python script that transforms logs before sending them to GoAccess.</p>
+<p>If web access logs are unavailable, developers can still use GoAccess if they're willing to put a Content Delivery Network (CDN) &mdash; such as AWS Cloudfront or Cloudflare &mdash; in front of their web site. The CDN logs can then be downloaded and run through GoAccess. There are other possibilities too, such as <a href="https://benhoyt.com/writings/replacing-google-analytics/">my own approach</a> of using GoAccess on a web site served by GitHub Pages &mdash; this method uses a "tracking pixel" served by Cloudfront with logging enabled, and a Python script that transforms logs before sending them to GoAccess.</p>
 
 
 <h4>Wrapping up</h4>
 
 <p>The last few years have seen a number of good alternatives to Google Analytics, particularly for those who only need a few basic features. Most of the recent alternatives are both open source and privacy-conscious, so there are now very few reasons for projects and businesses to use proprietary analytics systems.</p>
 
-<p>For site owners who just need basic traffic numbers, Plausible and GoatCounter seem like excellent options (those that like more visual polish and documentation might prefer Plausible). For those running e-commerce sites or in need of features like funnel analysis, Matomo seems like an excellent choice. And enterprises that need direct control over how their events are stored and modeled should consider a Snowplow installation.</p>
+<p>For site owners who just need basic traffic numbers, Plausible and GoatCounter seem like excellent options (those that like more visual polish and documentation might prefer Plausible). For those running e-commerce sites or in need of features like funnel analysis, Matomo seems like a good choice. And enterprises that need direct control over how their events are stored and modeled should consider a Snowplow installation.</p>
