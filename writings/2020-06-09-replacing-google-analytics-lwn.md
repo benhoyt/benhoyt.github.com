@@ -26,7 +26,7 @@ pre {
 </style>
 
 
-<p>More and more web site owners are concerned about the all-seeing Google tracking their users as they browse around the web. Google Analytics (GA) is a full featured web-analytics system available for free and, despite the privacy concerns, has become the de facto standard analytics tool for small and large web sites alike. However, in recent years a growing number of alternatives are helping break Google's dominance &mdash; in this article we'll look at some of the open-source alternatives.</p>
+<p>More and more web site owners are concerned about the all-seeing Google tracking their users as they browse around the web. Google Analytics (GA) is a full featured web-analytics system available for free and, despite the privacy concerns, has become the de facto standard analytics tool for small and large web sites alike. However, in recent years a growing number of alternatives are helping break Google's dominance &mdash; in this article we'll look at some of the open-source options.</p>
 
 <p>GA is by far the biggest player here: BuiltWith <a href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a> that around 86% of the top 100,000 web sites use it. This figure goes down to 64% for the top one million web sites. These figures have grown steadily for the past 15 years, since Google acquired Urchin and rebranded it as Google Analytics.</p>
 
