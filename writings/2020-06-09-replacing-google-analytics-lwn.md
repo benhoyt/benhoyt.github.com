@@ -3,7 +3,7 @@ layout: default
 title: "Replacing Google Analytics (LWN edition)"
 permalink: /writings/replacing-google-analytics-lwn/
 description: "Replacing Google Analytics with open source and privacy-conscious alternatives"
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/822568/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">June 2020</p>
@@ -26,13 +26,13 @@ pre {
 </style>
 
 
-<p>More and more web site owners are concerned about the all-seeing Google
+<p>More and more web site owners are concerned about the "all-seeing Google"
 tracking their users as they browse around the web. Google Analytics (GA)
-is a full featured web-analytics system available for free and, despite the
-privacy concerns, has become the de facto standard analytics tool for small
-and large web sites alike. However, in recent years a growing number of
+is a full-featured web-analytics system available for free and, despite the
+privacy concerns, has become the de facto analytics tool for small
+and large web sites alike. However, in recent years, a growing number of
 alternatives are helping break Google's dominance &mdash; in this article
-we'll look at some of the open-source options.</p>
+we'll look at some of these open-source options.</p>
 
 <p>GA is by far the biggest player here: BuiltWith <a
 href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a>
@@ -42,7 +42,7 @@ for the past 15 years, since Google acquired Urchin and rebranded it as
 Google Analytics.</p>
 
 <p>In addition to privacy concerns, GA is more complex and feature-heavy
-than the majority of web site owners need, many of whom just want to see
+than some web site owners need; many of them just want to see
 how much traffic is going to the pages on their site, and from what sources
 the traffic is coming from. So it's not surprising that a plethora of
 simpler, more open tools have taken off in the past few years.</p>
@@ -55,9 +55,9 @@ web-analytics tools, and since soon after launching in early 2019 it has
 been <a
 href="https://plausible.io/blog/plausible-is-going-open-source">fully open
 source</a>, with the code licensed under a permissive MIT license. Its
-business model is to charge for the hosting, with low pricing that should
+business model is to charge for the hosting, with low pricing aimed 
 work for a lot of small businesses. Self-hosting Plausible is possible
-(even <i>plausible</i>), though as founder Uku Taht notes in that
+(even <i>plausible</i>), though as founder Uku Taht points out in that
 announcement:</p>
 
 <div class="BigQuote">
@@ -68,21 +68,20 @@ considerably. I would love to offer a self-hosted solution in the future
 once the product and the business are more stable.</p>
 </div>
 
-<img src="/images/lwn-plausible.png" alt="Plausible screenshot"
-title="Source: plausible.io">
-
 <p>In addition to its source code being available, Plausible is one of an
 increasing number of companies that has a <a
 href="https://plausible.nolt.io/roadmap">publicly-visible roadmap</a>,
 presumably for better transparency and engagement with its customers. It
-seems that customer engagement is a big part of what it does, with a
-helpful blog featuring content like <a
+seems that customer engagement is a big part of what the company does, with a
+blog featuring content like "<a
 href="https://plausible.io/blog/remove-google-analytics">Why you should
-stop using Google Analytics on your website</a>, <a
+stop using Google Analytics on your website</a>", "<a
 href="https://plausible.io/blog/google-analytics-seo">Will removing Google
-Analytics from a site hurt search engine rankings?</a>, and a <a
+Analytics from a site hurt search engine rankings?</a>", and a <a
 href="https://plausible.io/vs-matomo">comparison</a> with the popular
-Matomo analytics tool.</p>
+Matomo open-source analytics tool (more about Matomo below).</p>
+
+<img src="/images/lwn-plausible.png" alt="[Plausible UI from plausible.io]" title="Plausible UI">
 
 <p>Plausible is also unique from a developer perspective, with its <a
 href="https://github.com/plausible-insights/plausible">server code</a>
@@ -98,14 +97,17 @@ Plausible's favicon). GA's <a
 href="https://www.google-analytics.com/analytics.js"><tt>analytics.js</tt></a>,
 in comparison, is almost 18KB.</p>
 
-<p><a href="https://www.goatcounter.com/">GoatCounter</a> is another
-open-source tool that launched shortly after Plausible, in <a
+<p>Another open-source analytics, <a
+href="https://www.goatcounter.com/">GoatCounter</a>, launched shortly after
+Plausible, in <a 
 href="https://www.arp242.net/goatcounter.html">August 2019</a>. Created by
 Martin Tournoij, it has more of a "made by a single developer" feel than
-other tools, and it's a little less slick-looking than Plausible, but that
+other tools; it's a little less slick-looking than Plausible, but that
 may well be a positive to some.</p>
 
-<p>GoatCounter has a slightly different model than Plausible, with its
+<img src="/images/lwn-goatcounter.png" alt="[GoatCounter UI from www.goatcounter.com]" title="GoatCounter UI">
+
+<p>GoatCounter has a slightly different model than Plausible does, with its
 source code licensed under the copyleft European Union Public License
 (EUPL). Companies can host the software themselves, or use GoatCounter's
 hosted version for a small fee (the hosted version doesn't cost anything
@@ -122,14 +124,11 @@ free, from their perspective), and them. They will always have an advantage
 over me.</p>
 </div>
 
-<img src="/images/lwn-goatcounter.png" alt="GoatCounter screenshot"
-title="Source: www.goatcounter.com">
-
 <p>GoatCounter is written in Go, and like Plausible, uses vanilla
 JavaScript for some lightweight interactivity. JavaScript frameworks often
 get in the way of web accessibility, and GoatCounter's prioritization of
-accessibility (mentioned on its homepage) struck a chord with
-<tt>ctoth</tt>, a blind developer who <a
+accessibility (mentioned on its home page) struck a chord with
+"ctoth", who <a
 href="https://news.ycombinator.com/item?id=22047556">thanked</a> Tournoij
 on Hacker News:</p>
 
@@ -144,13 +143,13 @@ you for making this.</p>
 founded in 2013. Countly is comparatively feature rich and has a large
 number of dashboard types. However, of the smaller analytics tools it feels
 the most like a "web startup", complete with a polished video on its
-homepage and <a href="https://count.lyhome/countly-overview.png">sleek
+home page and <a href="https://count.lyhome/countly-overview.png">sleek
 dashboards</a> in its UI. Countly seems to make less of a big deal about
 privacy, but it is "<a
 href="https://count.ly/your-data-your-rules">committed to giving you
 control of your analytics data</a>".</p>
 
-<img src="/images/lwn-countly.png" alt="Countly screenshot" title="Source: count.ly">
+<img src="/images/lwn-countly.png" alt="[Countly UI from count.ly]" title="Countly UI">
 
 <p>Countly has a <a href="https://count.ly/pricing">clear distinction</a>
 between its enterprise edition (relatively expensive at $5000 annually) and
@@ -160,10 +159,12 @@ is licensed under the GNU AGPL, with the server written in JavaScript, and
 SDKs for Android and iOS written in Java and Objective C.</p>
 
 <p>There are also a couple of lightweight proprietary tools with a focus on
-privacy: of note is the minimalist <a
-href="https://simpleanalytics.com/">Simple Analytics</a> product, as well
-as <a href="https://usefathom.com/">Fathom</a>, which was open source
-initially, but the current version is proprietary (although Fathom <a
+privacy worth mentioning. One is the minimalist <a
+href="https://simpleanalytics.com/">Simple Analytics</a> product, which is
+a cloud-based tool created by solo developer Adriaan van Rossum; it has a
+clean-looking interface with only the few key metrics.
+Another is <a href="https://usefathom.com/">Fathom</a>, which was open source
+initially, but the current version is proprietary (although the company <a
 href="https://github.com/usefathom/fathom/issues/268#issuecomment-522088146">hopes</a>
 to start maintaining the open-source code base again in the future).</p>
 
@@ -171,11 +172,11 @@ to start maintaining the open-source code base again in the future).</p>
 <h4>The heavies</h4>
 
 <p>On the heavier end of the spectrum, there is <a
-href="https://matomo.org/">Matomo</a>, formerly called "<a
-href="https://lwn.net/Articles/372594/">Piwik</a>", which was created in
-2007. It's a full-featured alternative to Google Analytics, so companies
-that need the power of GA can transition to it, but still get the privacy
-and transparency benefits from using an open-source and self-hosted
+href="https://matomo.org/">Matomo</a>, formerly called "Piwik", which was
+created in 2007 (LWN <a href="/Articles/372594/">looked at</a> Piwik way
+back in 2010). It's a full-featured alternative to Google Analytics, so
+companies that need the power of GA can transition to it, but still get the
+privacy and transparency benefits that come from using an open-source and self-hosted
 alternative. As an example, web agency Isotropic recently <a
 href="https://isotropic.co/moving-to-matomo-google-analytics-biggest-competition/">switched</a>
 to Matomo:</p>
@@ -193,20 +194,19 @@ and be open source.  </p>
 <p>Even though Matomo is the most popular open-source analytics tool and
 has been around the longest, it's still only used <a
 href="https://trends.builtwith.com/analytics/Matomo">on 1.4%</a> of the top
-one million web sites, roughly a fiftieth of GA's market share &mdash; it's
-hard for even well known open-source software to compete with the $600
-billion gorilla.</p>
+one million web sites, roughly one-fiftieth of GA's market share &mdash; it's
+hard for even well known open-source software to compete with the $600-billion gorilla.</p>
 
 <p>Matomo is written in PHP and uses MySQL as its data store. It's licensed
 under the GNU General Public License (GPL), and supports <a
-href="https://matomo.org/docs/installation/">installing it yourself</a> for
-free (standalone or as a WordPress plugin), two relatively low cost cloud
+href="https://matomo.org/docs/installation/">self-installation</a> for
+free (standalone or as a WordPress plugin), two relatively low-cost cloud
 options, and enterprise pricing.</p>
 
 <p>A similar but less popular tool is <a
 href="http://www.openwebanalytics.com/">Open Web Analytics (OWA)</a>, which
 is also written in PHP and licensed under the GPL. OWA uses a
-donations-based development model rather than having monthly pricing
+donation-based development model rather than having monthly pricing
 options for a hosted service. Of all the open-source tools, OWA is the one
 that feels most like a clone of Google Analytics; even <a
 href="http://demo.openwebanalytics.com/owa/index.php?owa_do=base.reportDashboard&owa_siteId=c9b7d12e322c7c360fb8f7c72ffe4c41">its
@@ -219,46 +219,44 @@ href="https://www.sanfranciscofogworks.com/posts/leaving-google-analytics-piwik-
 inactivity</a>. Recently, development seems to have picked up, with Adams
 shipping several <a
 href="https://github.com/Open-Web-Analytics/Open-Web-Analytics/releases">new
-releases</a> in early 2020. (Though it doesn't bode well that the latest
+releases</a> in early 2020. (Though it is somewhat worrisome that the latest
 point release, 1.6.9, has three large breaking-change warnings in the
-release description, such as "! IMPORTANT: The API endpoint has
-changed!")</p>
+release description, such as "<span>! IMPORTANT: The API endpoint has
+changed!</span>")</p>
 
-<p>A more generalized event analytics system is <a
+<p>A more generalized event-analytics system is <a
 href="https://snowplowanalytics.com/">Snowplow Analytics</a>, founded in
-2012 and marketed as "the enterprise-grade event data collection
-platform". Snowplow provides the data collection part of the equation, but
+2012 and marketed as "<span>the enterprise-grade event data collection
+platform</span>". Snowplow provides the data collection part of the equation, but
 it is up to the installer to determine how to model and display the
 data. It's useful for larger companies who want control over how they model
 sessions or "enrich" their data with business-specific fields.</p>
 
 <p>Setting up an installation of Snowplow is definitely not for the faint
-of heart, and requires configuring the various components, as well as
-significant AWS setup. However, it does provide a comprehensive <a
+of heart; it requires configuring the various components, along with
+significant AWS setup. However, there is a comprehensive <a
 href="https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow">setup
-guide</a> on its GitHub wiki. Companies can set it up to insert events into
-PostgreSQL or AWS's columnar Redshift database, or leave the data in Amazon
-S3 for further processing. Typically a business intelligence tool like <a
+guide</a> on the GitHub wiki. Companies can set it up to insert events into
+PostgreSQL, AWS's columnar Redshift database, or leave the data in Amazon
+S3 for further processing. Typically a business-intelligence tool like <a
 href="https://looker.com/">Looker</a> or <a
 href="https://chartio.com/">ChartIO</a> is used to view the data, but
-Snowplow doesn't prescribe that aspect.</p>
+Snowplow does not prescribe that aspect.</p>
 
 <p>Snowplow is a collection of tools written in a number of languages,
 notably Scala (via Spark) and Ruby. Used by <a
 href="https://trends.builtwith.com/analytics/Snowplow">almost 3%</a> of the
 top 10,000 web sites, it's a compelling option for larger companies that
-want full control over the data pipeline.</p>
+want full control over their data pipeline.</p>
 
 <h4>Web access log analytics</h4>
 
 <p>All of the systems described above use JavaScript-based tracking: the
-benefits of a JavaScript approach is that it provides richer information
+benefits of that approach is that it provides richer information
 (for example, screen resolution) and doesn't require access to web
-logs.</p>
-
-<p>However, if server access logs are available, it may be better to feed
+logs. However, if server access logs are available, it may be better to feed
 those logs directly into analysis software. There are a number of
-open-source tools that do this: <a
+open-source tools for this: <a
 href="https://awstats.sourceforge.io/">AWStats</a>, <a
 href="https://analog.readthedocs.io/en/latest/">Analog</a>, and <a
 href="http://www.webalizer.org/">Webalizer</a> are three tools that have
@@ -270,15 +268,14 @@ Webalizer are both written in C and are not actively maintained.</p>
 href="https://goaccess.io/">GoAccess</a>, which was designed as a
 terminal-based log analyzer, but also has a nice looking HTML
 view. GoAccess is written in C with only <tt>ncurses</tt> as a dependency,
-and supports all of the common access log formats, as well as log files
-from cloud services such as Amazon S3 and Cloudfront. GoAccess definitely
-seems like a good choice for web log analysis in 2020.</p>
+and supports all of the common access-log formats, as well as log files
+from cloud services such as Amazon S3 and Cloudfront. GoAccess 
+seems like a good choice for web-log analysis in 2020.</p>
 
-<img src="/images/lwn-goaccess-html.png" alt="GoAccess screenshot"
-title="Source: screenshot of rt.goaccess.io">
+<img src="/images/lwn-goaccess-html.png" alt="[GoAccess UI]" title="GoAccess UI">
 
-<p>If web access logs are unavailable, developers can still use GoAccess if
-they're willing to put a Content Delivery Network (CDN) &mdash; such as AWS
+<p>If web-access logs are unavailable, developers can still use GoAccess if
+they are willing to put a Content Delivery Network (CDN) &mdash; such as AWS
 Cloudfront or Cloudflare &mdash; in front of their web site. The CDN logs
 can then be downloaded and run through GoAccess. There are other
 possibilities too, such as <a
@@ -292,13 +289,13 @@ GoAccess.</p>
 
 <p>The last few years have seen a number of good alternatives to Google
 Analytics, particularly for those who only need a few basic features. Most
-of the recent alternatives are both open source and privacy-conscious, so
-there are now very few reasons for projects and businesses to use
+of the recent alternatives are both open source and privacy conscious, so now
+there are few reasons for projects and businesses to use
 proprietary analytics systems.</p>
 
 <p>For site owners who just need basic traffic numbers, Plausible and
 GoatCounter seem like excellent options (those that like more visual polish
 and documentation might prefer Plausible). For those running e-commerce
-sites or in need of features like funnel analysis, Matomo seems like a good
+sites, or in need of features like funnel analysis, Matomo seems like a good
 choice. And enterprises that need direct control over how their events are
-stored and modeled should consider a Snowplow installation.</p>
+stored and modeled should perhaps consider a Snowplow installation.</p>
