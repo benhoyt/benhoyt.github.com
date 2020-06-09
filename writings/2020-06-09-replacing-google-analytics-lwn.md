@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Open source Google Analytics alternatives"
-permalink: /writings/google-analytics-alternatives/
+title: "Replacing Google Analytics (LWN edition)"
+permalink: /writings/replacing-google-analytics-lwn/
 description: "Replacing Google Analytics with open source and privacy-conscious alternatives"
 canonical_url: TODO
 ---
@@ -24,6 +24,7 @@ pre {
     word-spacing: 0;
 }
 </style>
+
 
 <p>More and more web site owners are concerned about the all-seeing Google tracking their users as they browse around the web. Google Analytics (GA) is a full featured web-analytics system available for free and, despite the privacy concerns, has become the de facto standard analytics tool for small and large web sites alike. However, in recent years a growing number of alternatives are helping break Google's dominance &mdash; in this article we'll look at some of the open-source alternatives.</p>
 
