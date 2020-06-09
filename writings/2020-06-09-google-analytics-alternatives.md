@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Replacing Google Analytics with open source tools"
-permalink: /writings/replacing-google-analytics-lwn-edition/
-description: "Moving from Google Analytics to open source and privacy-conscious alternatives"
+title: "Open source Google Analytics alternatives"
+permalink: /writings/google-analytics-alternatives/
+description: "Replacing Google Analytics with open source and privacy-conscious alternatives"
 canonical_url: TODO
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
