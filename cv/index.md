@@ -53,11 +53,11 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 
 ### [Compass](https://www.compass.com/) &ndash; Senior Software Engineer &ndash; March 2018 to now:
 
+* Helped build Go microservices backed by PostgreSQL, including an API integration to a third party CRM. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
 * Wrote code and provided technical leadership for the SEO team, including Python services and Athena log data processing. Our team significantly improved indexation and search ranking for our key pages.
-* Wrote an internal proposal to migrate 200 engineers from using Gerrit to GitHub for code review. The proposal saw fruition and increased developer velocity.
 * Managed a team of backend and frontend engineers. Did people management as well as remaining very technically involved in system design, architecture discussions, and code reviews of the team's Go codebase.
 * Oversaw development and launch of the Compass CRM, a high-profile project that was heavily promoted to our 5000+ agents.
-* Helped build an API integration to a third party CRM using Go and PostgreSQL. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
+* Wrote an internal proposal to migrate 200 engineers from using Gerrit to GitHub for code review. The proposal saw fruition and increased developer velocity.
 
 ### [Jetsetter](https://www.jetsetter.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Principal Software Engineer &ndash; July 2016 to February 2018:
 
