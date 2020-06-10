@@ -20,8 +20,8 @@
 body { background: white; color: #603000; font-family: Georgia, serif; font-size: 17px; line-height: 1.6; word-spacing: 0.1em; margin: 0 auto; max-width: 1000px; }
 #menu { margin: 0 auto; width: 92.5%; height: 5.5em; border-bottom: 1px solid #d0c8c0; }
 #menu .site-title { float: left; font-size: 225%; color: #d0c8c0; letter-spacing: 0.15em; padding: 0.45em 0; text-transform: uppercase; margin-left: -0.05em; }
-#menu ul.links { float: right; list-style-type: none; font-size: 85%; margin-top: 2.5em; }
-#menu ul.links li { display: inline; margin: 0 0 0 0.8em; padding: 0; }
+#menu ul.links { float: right; list-style-type: none; font-size: 80%; margin-top: 2.8em; }
+#menu ul.links li { display: inline; margin: 0 0 0 0.5em; padding: 0; }
 #menu a { border: none; color: #c04000; }
 #menu a:hover { border-bottom: 1px solid; }
 #content { margin: 2em auto; width: 92.5%; max-width: 700px; }
@@ -55,6 +55,7 @@ th { text-align: left; padding-right: 2rem; }
 td { padding-right: 2em; }
 @media (max-width: 750px) {
 body { font-size: 15px; }
+#menu ul.links { font-size: 75%; }
 }
 @media (max-width: 615px) {
 body { font-size: 13px; }
@@ -148,8 +149,9 @@ a:link, a:visited { color: #603000; }
   <li>{% if page.url == '/' %}<b>Home</b>{% else %}<a href="/" title="Go to the home page">Home</a>{% endif %}</li>
   <li>{% if page.url == '/cv/' %}<b>Resume/CV</b>{% else %}<a href="/cv/" title="Go to my Resume/CV">Resume/CV</a>{% endif %}</li>
   <li>{% if page.url == '/projects/' %}<b>Projects</b>{% else %}<a href="/projects/" title="Projects I&#39;ve authored">Projects</a>{% endif %}</li>
-  <li>{% if page.url == '/writings/' %}<b>Writings</b>{% else %}<a href="/writings/" title="Stuff I&#39;ve written">Writings</a>{% endif %}</li>
-  <li><a href="mailto:benhoyt@gmail.com" title="Email me">Contact</a></li>
+  <li>{% if page.url == '/writings/' %}<b>Tech Writing</b>{% else %}<a href="/writings/" title="Stuff I&#39;ve written">Tech Writing</a>{% endif %}</li>
+  <li>{% if page.url == '/writings/non-tech/' %}<b>Non-Tech</b>{% else %}<a href="/writings/non-tech/" title="Stuff I&#39;ve written">Non-Tech</a>{% endif %}</li>
+  <li><a href="mailto:benhoyt@gmail.com" title="Email me">Email</a></li>
  </ul>
 
  <ul class="links print-only">
