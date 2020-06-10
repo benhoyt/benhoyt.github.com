@@ -12,6 +12,7 @@ I’ve also written [guest articles for LWN.net](https://lwn.net/Archives/GuestI
 
 ## Technical writing
 
+* [Intro to Go](/writings/go-intro/) is a brief introduction to Go for programmers who haven't used Go before: Why use it? The standard library. And the language itself. (June&nbsp;2020)
 * [ZZT in Go](/writings/zzt-in-go/) describes my port of Adrian Siekierka's "Reconstruction of ZZT" to Go, done in a semi-automated way using a Pascal-to-Go converter. (May&nbsp;2020)
 * [Testing in Go: philosophy and tools](https://lwn.net/Articles/821358/) describes the minimalist philosophy of testing in Go and the built-in testing tools. (LWN.net, May&nbsp;2020)
 * [The state of the AWK](https://lwn.net/Articles/820829/) surveys the AWK landscape, looks at new features in GNU Awk, and discusses why AWK is still relevant in 2020. (LWN.net, May&nbsp;2020)
