@@ -1,4 +1,10 @@
 
+<style>
+body {
+    font-family: Palatino;
+}
+</style>
+
 <h1 id="title">Hangman</h1>
 
 <div style="width: 800px; background: url('https://i.pinimg.com/564x/51/d9/62/51d96225c0ddd0712543f85f65ec7a0c.jpg') no-repeat;">
@@ -7,7 +13,7 @@
 
 <p style="font-size: 300%;" id="word">
 <script>
-word = "BALLOON";
+word = prompt("Enter your hangman word:", "").toUpperCase();
 for (i = 0; i < word.length; i++) {
     document.write("<span id='word" + i + "'>_</span> ");
 }
@@ -60,6 +66,10 @@ function clicked(event, letter) {
         document.getElementById("hangman").src = "./hangman" + hangn + ".svg";
         if (hangn >= maxHangn) {
             document.getElementById("title").innerHTML = "<span style='color: red'>GAME OVER</span>";
+            for (i = 0; i < word.length; i++) {
+                if (placed[i]) continue;
+                document.getElementById("word" + i).innerHTML = "<span style='color: red'>" + word.charAt(i) + "</span>";
+            }
             return;
         }
     }
