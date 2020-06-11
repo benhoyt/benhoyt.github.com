@@ -1,0 +1,77 @@
+
+<style>
+body {
+    font-family: Palatino;
+}
+</style>
+
+<h1 id="title">Hangman</h1>
+
+<div style="width: 800px; background: url('https://i.pinimg.com/564x/51/d9/62/51d96225c0ddd0712543f85f65ec7a0c.jpg') no-repeat;">
+ <img id="hangman" src="./hangman0.svg" style="width: 300px; margin: 80px 0 0 150px;">
+</div>
+
+<p style="font-size: 300%;" id="word">
+<script>
+word = prompt("Enter your hangman word:", "").toUpperCase();
+for (i = 0; i < word.length; i++) {
+    document.write("<span id='word" + i + "'>_</span> ");
+}
+</script>
+</p>
+
+<p style="font-size: 200%;">
+<script>
+for (i = 0; i < 26; i++) {
+    letter = String.fromCharCode(65+i);
+    document.write("<span id=\"" + letter + "\">");
+    document.write("<a href=\"\" onclick=\"clicked(event, '" + letter + "')\">" + letter + "</a>");
+    document.write("</span> ");
+}
+</script>
+</p>
+
+<script>
+maxHangn = 10;
+hangn = 0;
+turns = 0;
+placed = {};
+
+function clicked(event, letter) {
+    event.preventDefault();
+    console.log(letter);
+
+    if (hangn >= maxHangn || Object.keys(placed).length >= word.length) {
+        return;
+    }
+
+    turns++;
+    if (word.indexOf(letter) >= 0) {
+        start = 0;
+        while ((i = word.indexOf(letter, start)) >= 0) {
+            if (!placed[i]) {
+                document.getElementById("word" + i).innerHTML = letter;
+                placed[i] = letter;
+                if (Object.keys(placed).length >= word.length) {
+                    document.getElementById("title").innerHTML = "You won in " + turns + " turns!";
+                    return;
+                }
+            }
+            start = i+1;
+        }
+        document.getElementById(letter).innerHTML = letter;
+    } else {
+        hangn++;
+        document.getElementById(letter).innerHTML = "<s>" + letter + "</s>";
+        document.getElementById("hangman").src = "./hangman" + hangn + ".svg";
+        if (hangn >= maxHangn) {
+            document.getElementById("title").innerHTML = "<span style='color: red'>GAME OVER</span>";
+            for (i = 0; i < word.length; i++) {
+                if (placed[i]) continue;
+                document.getElementById("word" + i).innerHTML = "<span style='color: red'>" + word.charAt(i) + "</span>";
+            }
+            return;
+        }
+    }
+}
+</script>
