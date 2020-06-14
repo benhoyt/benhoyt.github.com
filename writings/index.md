@@ -4,6 +4,8 @@ title: Technical Writing
 permalink: /writings/
 rss_url: /writings/rss.xml
 ---
+<div style="float: right; font-size: 80%;"><a href="/writings/rss.xml">RSS feed</a></div>
+
 # {{ page.title }}
 
 Below are the programming-related articles I’ve written (see also my [**non-technical writings**](/writings/non-tech/)). The list includes the guest contributions I've written for LWN.net, and tech blog articles for several of the companies I’ve worked for.
