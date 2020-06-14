@@ -37,12 +37,12 @@ we'll look at some of these open-source options.</p>
 <p>GA is by far the biggest player here: BuiltWith <a
 href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a>
 that around 86% of the top 100,000 web sites use it. This figure goes down
-to 64% for the top one million web sites. These figures have grown steadily
+to 64% for the top one-million web sites. These figures have grown steadily
 for the past 15 years, since Google acquired Urchin and rebranded it as
 Google Analytics.</p>
 
 <p>In addition to privacy concerns, GA is more complex and feature-heavy
-than some web site owners need; many of them just want to see
+than some web-site owners need; many of them just want to see
 how much traffic is going to the pages on their site, and from what sources
 the traffic is coming from. So it's not surprising that a plethora of
 simpler, more open tools have taken off in the past few years.</p>
@@ -51,12 +51,13 @@ simpler, more open tools have taken off in the past few years.</p>
 <h4>Lightweight alternatives</h4>
 
 <p><a href="https://plausible.io/">Plausible</a> is one of the more recent
-web-analytics tools, and since soon after launching in early 2019 it has
-been <a
-href="https://plausible.io/blog/plausible-is-going-open-source">fully open
+web-analytics tools, which launched in early 2019. Soon after launching it
+switched to 
+<a
+href="https://plausible.io/blog/plausible-is-going-open-source">open
 source</a>, with the code licensed under a permissive MIT license. Its
 business model is to charge for the hosting, with low pricing aimed 
-work for a lot of small businesses. Self-hosting Plausible is possible
+for small businesses. Self-hosting Plausible is possible
 (even <i>plausible</i>), though as founder Uku Taht points out in that
 announcement:</p>
 
@@ -68,11 +69,11 @@ considerably. I would love to offer a self-hosted solution in the future
 once the product and the business are more stable.</p>
 </div>
 
-<p>In addition to its source code being available, Plausible is one of an
+<p>In addition to making its source code available, Plausible is one of an
 increasing number of companies that has a <a
 href="https://plausible.nolt.io/roadmap">publicly-visible roadmap</a>,
-presumably for better transparency and engagement with its customers. It
-seems that customer engagement is a big part of what the company does, with a
+presumably for better transparency and engagement with its customers. In
+addition, it has a 
 blog featuring content like "<a
 href="https://plausible.io/blog/remove-google-analytics">Why you should
 stop using Google Analytics on your website</a>", "<a
@@ -81,7 +82,7 @@ Analytics from a site hurt search engine rankings?</a>", and a <a
 href="https://plausible.io/vs-matomo">comparison</a> with the popular
 Matomo open-source analytics tool (more about Matomo below).</p>
 
-<img src="/images/lwn-plausible.png" alt="[Plausible UI from plausible.io]" title="Plausible UI">
+<img class="photo" src="/images/lwn-plausible.png" alt="[Plausible UI from plausible.io]" title="Plausible UI">
 
 <p>Plausible is also unique from a developer perspective, with its <a
 href="https://github.com/plausible-insights/plausible">server code</a>
@@ -95,9 +96,10 @@ href="https://plausible.io/js/plausible.js"><tt>plausible.js</tt></a>
 weighing in at 781 bytes at the time of writing (about half the size of
 Plausible's favicon). GA's <a
 href="https://www.google-analytics.com/analytics.js"><tt>analytics.js</tt></a>,
-in comparison, is almost 18KB.</p>
+in comparison, is almost 18KB.  That size can make a meaningful difference
+since the scripts are loaded for each page on the site.</p>
 
-<p>Another open-source analytics, <a
+<p>Another open-source analytics tool, <a
 href="https://www.goatcounter.com/">GoatCounter</a>, launched shortly after
 Plausible, in <a 
 href="https://www.arp242.net/goatcounter.html">August 2019</a>. Created by
@@ -105,15 +107,16 @@ Martin Tournoij, it has more of a "made by a single developer" feel than
 other tools; it's a little less slick-looking than Plausible, but that
 may well be a positive to some.</p>
 
-<img src="/images/lwn-goatcounter.png" alt="[GoatCounter UI from www.goatcounter.com]" title="GoatCounter UI">
+<img class="photo" src="/images/lwn-goatcounter.png" alt="[GoatCounter UI from www.goatcounter.com]" title="GoatCounter UI">
 
 <p>GoatCounter has a slightly different model than Plausible does, with its
-source code licensed under the copyleft European Union Public License
-(EUPL). Companies can host the software themselves, or use GoatCounter's
-hosted version for a small fee (the hosted version doesn't cost anything
-for non-commercial projects). Tournoij has a <a
-href="https://www.arp242.net/license.html">lengthy article</a> discussing
-why he chose the EUPL, noting:</p>
+source code licensed under the copyleft <a
+href="https://joinup.ec.europa.eu/collection/eupl/introduction-eupl-licence">European
+Union Public License</a> (EUPL). Companies can host the software
+themselves, or use GoatCounter's hosted version for a small fee (the hosted
+version doesn't cost anything for non-commercial projects). Tournoij has a
+<a href="https://www.arp242.net/license.html">lengthy article</a>
+discussing why he chose the EUPL, noting:</p>
 
 <div class="BigQuote">
 <p>I still don't really care what people do with my code, but I do care if
@@ -143,13 +146,13 @@ you for making this.</p>
 founded in 2013. Countly is comparatively feature rich and has a large
 number of dashboard types. However, of the smaller analytics tools it feels
 the most like a "web startup", complete with a polished video on its
-home page and <a href="https://count.lyhome/countly-overview.png">sleek
+home page and <a href="https://count.ly/images/home/countly-overview.png">sleek
 dashboards</a> in its UI. Countly seems to make less of a big deal about
 privacy, but it is "<a
 href="https://count.ly/your-data-your-rules">committed to giving you
 control of your analytics data</a>".</p>
 
-<img src="/images/lwn-countly.png" alt="[Countly UI from count.ly]" title="Countly UI">
+<img class="photo" src="/images/lwn-countly.png" alt="[Countly UI]" title="Countly UI">
 
 <p>Countly has a <a href="https://count.ly/pricing">clear distinction</a>
 between its enterprise edition (relatively expensive at $5000 annually) and
@@ -195,7 +198,8 @@ and be open source.  </p>
 has been around the longest, it's still only used <a
 href="https://trends.builtwith.com/analytics/Matomo">on 1.4%</a> of the top
 one million web sites, roughly one-fiftieth of GA's market share &mdash; it's
-hard for even well known open-source software to compete with the $600-billion gorilla.</p>
+hard for even well-known open-source software to compete with the
+$600-billion gorilla.</p> 
 
 <p>Matomo is written in PHP and uses MySQL as its data store. It's licensed
 under the GNU General Public License (GPL), and supports <a
@@ -252,7 +256,7 @@ want full control over their data pipeline.</p>
 <h4>Web access log analytics</h4>
 
 <p>All of the systems described above use JavaScript-based tracking: the
-benefits of that approach is that it provides richer information
+benefit of that approach is that it provides richer information
 (for example, screen resolution) and doesn't require access to web
 logs. However, if server access logs are available, it may be better to feed
 those logs directly into analysis software. There are a number of
@@ -272,7 +276,7 @@ and supports all of the common access-log formats, as well as log files
 from cloud services such as Amazon S3 and Cloudfront. GoAccess 
 seems like a good choice for web-log analysis in 2020.</p>
 
-<img src="/images/lwn-goaccess-html.png" alt="[GoAccess UI]" title="GoAccess UI">
+<img class="photo" src="/images/lwn-goaccess-html.png" alt="[GoAccess UI]" title="GoAccess UI">
 
 <p>If web-access logs are unavailable, developers can still use GoAccess if
 they are willing to put a Content Delivery Network (CDN) &mdash; such as AWS
