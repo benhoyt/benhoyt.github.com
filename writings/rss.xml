@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+ <title>Ben Hoyt's technical writing</title>
+ <description>RSS feed for Ben Hoyt's technical writing</description>
+ <link>https://benhoyt.com/writings/</link>
+ <ttl>3600</ttl>
+ <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
+
+ <item>
+  <title>An intro to Go for non-Go developers</title>
+  <description>A brief introduction to Go for programmers who haven't used Go before: Why use it? The standard library. And the language itself.</description>
+  <link>https://benhoyt.com/writings/go-intro/</link>
+  <guid>https://benhoyt.com/writings/go-intro/</guid>
+  <pubDate>Wed, 10 Jun 2020 23:38:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>ZZT in Go (using a Pascal-to-Go converter)</title>
+  <description>Describes my port of Adrian Siekierka's "Reconstruction of ZZT" to Go, done in a semi-automated way using a Pascal-to-Go converter.</description>
+  <link>https://benhoyt.com/writings/zzt-in-go/</link>
+  <guid>https://benhoyt.com/writings/zzt-in-go/</guid>
+  <pubDate>Fri, 29 May 2020 17:25:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>Testing in Go: philosophy and tools</title>
+  <description>Describes the minimalist philosophy of testing in Go and the built-in testing tools (LWN.net).</description>
+  <link>https://lwn.net/Articles/821358/</link>
+  <guid>https://lwn.net/Articles/821358/</guid>
+  <pubDate>Wed, 27 May 2020 12:00:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>The state of the AWK</title>
+  <description>Surveys the AWK landscape, looks at new features in GNU Awk, and discusses why AWK is still relevant in 2020 (LWN.net).</description>
+  <link>https://lwn.net/Articles/820829/</link>
+  <guid>https://lwn.net/Articles/820829/</guid>
+  <pubDate>Wed, 20 May 2020 12:00:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>What's coming in Go 1.15</title>
+  <description>An overview of what's coming in the Go 1.15 final release in August 2020 (LWN.net).</description>
+  <link>https://lwn.net/Articles/820217/</link>
+  <guid>https://lwn.net/Articles/820217/</guid>
+  <pubDate>Wed, 13 May 2020 12:00:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>Don't try to sanitize input. Escape output.</title>
+  <description>Why you shouldn't try to sanitize user input; instead, escape output correctly.</description>
+  <link>https://benhoyt.com/writings/dont-sanitize-do-escape/</link>
+  <guid>https://benhoyt.com/writings/dont-sanitize-do-escape/</guid>
+  <pubDate>Thu, 27 Feb 2020 19:27:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>SEO for Software Engineers</title>
+  <description>The basics of Search Engine Optimization, written for software developers.</description>
+  <link>https://benhoyt.com/writings/seo-for-software-engineers/</link>
+  <guid>https://benhoyt.com/writings/seo-for-software-engineers/</guid>
+  <pubDate>Thu, 20 Feb 2020 12:00:00 +1200</pubDate>
+ </item>
+</channel>
+</rss>

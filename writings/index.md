@@ -2,6 +2,7 @@
 layout: default
 title: Technical Writing
 permalink: /writings/
+rss_url: /writings/rss.xml
 ---
 # {{ page.title }}
 
