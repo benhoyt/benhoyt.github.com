@@ -96,7 +96,7 @@ users' browsing history across many websites, both popular sites and smaller
 "mom and pop" sites. In short, Google knows a lot about what you like, where you
 are, and what you buy.</p>
 
-<p>Google does now provide ways to turn off features like targetted advertising
+<p>Google does now provide ways to turn off features like targeted advertising
 and location tracking, as well as delete the personalized profile associated
 with your account. However, these features are almost entirely opt-in, and most
 users either don't know about them or just never bother to turn them off.</p>
@@ -143,7 +143,7 @@ developer-friendly and simple to set up.</p>
 <img class="photo" src="/images/lwn-goatcounter.png" alt="[GoatCounter UI from
 www.goatcounter.com]" title="GoatCounter UI">
 
-<p>The tool supports all the basic analytics: pageviews and visits by URL,
+<p>The tool supports all the basic analytics: page views and visits by URL,
 browser and operating system statistics, device screen sizes, locations, and
 referrer information. By default GoatCounter shows the last 7 days with counts
 broken down by hour, but site owners can adjust the date span with simple
@@ -178,7 +178,7 @@ accessibility on the homepage of a mainstream product like this. As a blind
 developer this was just awesome, made me really feel like somebody out there is
 listening. Thank you for making this.</p> </div>
 
-<p>In addition to counting pageviews, GoatCounter tracks sessions using a hash
+<p>In addition to counting page views, GoatCounter tracks sessions using a hash
 of the browser's user agent and IP to identify the client without storing any
 personal information. The "salt" used to generate these hashes is rotated every
 12 hours with a sliding window. Tournoij has a <a
@@ -242,7 +242,7 @@ the scripts are loaded for each page on the site.</p>
 
 <p>In terms of user interface, Plausible is definitely nicer-looking than
 GoatCounter. It's also quite minimalist, perhaps even more so than GoatCounter,
-providing total visitor counts, pageview counts per path, referrer information,
+providing total visitor counts, page view counts per path, referrer information,
 map location, and devices (broken down by screen size, browser, and operating
 system). The tool also provides a "bounce rate" metric, though the exact
 definition is unclear.</p>
@@ -307,6 +307,6 @@ and documentation might prefer Plausible; those that would value a more
 developer-friendly tool with easy self-hosting will probably prefer
 GoatCounter.</p>
 
-<p>In the next week or two, we'll be publising a second article on
+<p>In the next week or two, we'll be publishing a second article on
 heavier-weight GA alternatives, as well as looking at tools that provide
 analytics from web server logs.</p>
