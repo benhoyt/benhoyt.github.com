@@ -25,11 +25,32 @@ pre {
 }
 </style>
 
-TODO
+<p>TODO: continued from last time, here are the heavy-weight tools, etc.</p>
 
-<h4>The heavies</h4>
+<h4>Countly</h4>
 
-<p>On the heavier end of the spectrum, there is <a
+<p>Another open-source offering is <a href="https://count.ly/">Countly</a>,
+founded in 2013. Countly is comparatively feature rich and has a large
+number of dashboard types. However, of the smaller analytics tools it feels
+the most like a "web startup", complete with a polished video on its
+home page and <a href="https://count.ly/images/home/countly-overview.png">sleek
+dashboards</a> in its UI. Countly seems to make less of a big deal about
+privacy, but it is "<a
+href="https://count.ly/your-data-your-rules">committed to giving you
+control of your analytics data</a>".</p>
+
+<img class="photo" src="/images/lwn-countly.png" alt="[Countly UI]" title="Countly UI">
+
+<p>Countly has a <a href="https://count.ly/pricing">clear distinction</a>
+between its enterprise edition (relatively expensive at $5000 annually) and
+its install-it-yourself community edition, with the latter limited to
+"basic Countly plugins" and "aggregated data". Countly's core source code
+is licensed under the GNU AGPL, with the server written in JavaScript, and
+SDKs for Android and iOS written in Java and Objective C.</p>
+
+<h4>Matomo</h4>
+
+<p>Another heavier offering is <a
 href="https://matomo.org/">Matomo</a>, formerly called "Piwik", which was
 created in 2007 (LWN <a href="/Articles/372594/">looked at</a> Piwik way
 back in 2010). It's a full-featured alternative to Google Analytics, so
