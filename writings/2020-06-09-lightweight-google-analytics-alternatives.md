@@ -181,7 +181,7 @@ listening. Thank you for making this.</p> </div>
 <p>In addition to counting page views, GoatCounter tracks sessions using a hash
 of the browser's user agent and IP to identify the client without storing any
 personal information. The "salt" used to generate these hashes is rotated every
-12 hours with a sliding window. Tournoij has a <a
+4 hours with a sliding window. Tournoij has a <a
 href="https://github.com/zgoat/goatcounter/blob/master/docs/sessions.markdown">detailed
 write-up</a> about the technical aspects of session tracking, including a
 comparison with other solutions that have similar aims.</p>
