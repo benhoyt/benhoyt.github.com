@@ -3,7 +3,7 @@ layout: default
 title: "Lightweight Google Analytics alternatives"
 permalink: /writings/lightweight-google-analytics-alternatives/
 description: "Replacing Google Analytics with lightweight open source and privacy-conscious alternatives"
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/822568/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">June 2020</p>
@@ -27,30 +27,35 @@ pre {
 
 
 <p>More and more web site owners are concerned about the "all-seeing Google"
-tracking their users as they browse around the web. Google Analytics (GA) is a
-full-featured web-analytics system available for free and, despite the privacy
+tracking users as they browse around the web. <a
+href="https://en.wikipedia.org/wiki/Google_Analytics">Google Analytics</a> (GA) is a 
+full-featured web-analytics system that is available for free and, despite the privacy
 concerns, has become the de facto analytics tool for small and large web sites
 alike. However, in recent years, a growing number of alternatives are helping
 break Google's dominance. In this article we'll look at two of the lightweight
 open-source options, namely GoatCounter and Plausible. In a subsequent article
-we'll look at a few of the heavier tools.</p>
+we'll look at a few of the larger tools.</p>
 
 <p>GA is by far the biggest player here: BuiltWith <a
 href="https://trends.builtwith.com/analytics/Google-Analytics">shows</a> that
 around 86% of the top 100,000 web sites use it. This figure goes down to 64% for
 the top one-million web sites. These figures have grown steadily for the past 15
-years, since Google acquired Urchin and rebranded it as Google Analytics.</p>
-
-<p>In addition to privacy concerns, GA is more complex and feature-heavy than
+years, since Google acquired Urchin and rebranded it as Google Analytics.
+In addition to privacy concerns, GA is more complex and feature-heavy than 
 some web-site owners need; many of them just want to see how much traffic is
-going to the pages on their site, and from what sources the traffic is coming
-from. So it's not surprising that a plethora of simpler, more open tools have
+going to the pages on their site, and where that traffic is coming
+from. So it's not surprising that a number of simpler, more open tools have
 taken off in the past few years.</p>
+
+<p>
+It should be noted that LWN does use GA, though we are evaluating other
+choices.  Those who turn off ads in their preferences will not be served
+with the GA code, however.
 
 
 <h4>What Google tracks, and why it's concerning</h4>
 
-<p>If asked what information Google tracks, a cynic might say, "everything!"
+<p>If asked what information Google tracks, a cynic might say, "everything".
 Part of the problem is that this isn't too far from the truth: Google tracks and
 stores a huge amount of information about users.</p>
 
@@ -66,11 +71,11 @@ location information to Google 340 times during a 24-hour period, or at an
 average of 14 data communications per hour. </p> </div>
 
 <p>The paper distinguishes between "active" and "passive" tracking. Active
-tracking is when the user directly uses or logs in to a Google service, such as
+tracking is when the user directly uses or logs into a Google service, such as
 performing a search, logging into Gmail, and so on. In addition to recording all
-of a user's search keywords, Google passively tracks users as they use other
-products like Google Maps, Android devices, and (pertinent to this article)
-websites that use GA. Schmidt found that in an example "day in the life"
+of a user's search keywords, Google passively tracks users as they visit other
+products like Google Maps and (pertinent to this article)
+web sites that use GA. Schmidt found that in an example "day in the life"
 scenario, "<span>Google collected or inferred over two-thirds of the information
 through passive means</span>".</p>
 
@@ -90,37 +95,29 @@ and generates a unique client ID. Thereafter, if the user visits the advertised
 website, the stored cookie information gets accessed by the DoubleClick server,
 thereby recording the visit as a valid conversion.</p> </div>
 
-<p>Because such a large percentage of websites use Google advertising products
+<p>Because such a large percentage of web sites use Google advertising products
 as well as GA, this has the effect that the company knows a large fraction of
-users' browsing history across many websites, both popular sites and smaller
+users' browsing history across many web sites, both popular sites and smaller
 "mom and pop" sites. In short, Google knows a lot about what you like, where you
 are, and what you buy.</p>
 
-<p>Google does now provide ways to turn off features like targeted advertising
-and location tracking, as well as delete the personalized profile associated
-with your account. However, these features are almost entirely opt-in, and most
+<p>Google does provide ways to turn off features like targeted advertising
+and location tracking, as well as to delete the personalized profile associated
+with an account. However, these features are almost entirely opt-in, and most
 users either don't know about them or just never bother to turn them off.</p>
 
-<p>One of the subtler problems with Google's personalization is what Eli Pariser
-calls the "<a href="https://en.wikipedia.org/wiki/Filter_bubble">filter
-bubble</a>". Because users are provided with heavily personalized search
-results, they get less exposure to differing points of view, and end up being
-"<span>isolated intellectually in their own informational bubble</span>". Some
-even argue that filter bubbles contribute to the deep political polarization
-present in many countries.</p>
-
-<p>Of course, just switching away from GA won't eliminate all these privacy
+<p>Of course, just switching away from GA won't eliminate all of these privacy
 issues (for example, it will do nothing to stop Android location tracking or
 search tracking), but it's one way to reduce the huge amount of data Google
 collects. In addition, for site owners that use a GA alternative, Google does
 not get a behind-the-scenes look at the site's traffic patterns &mdash; data
-which it could conceivably use in future to build a competing tool.</p>
+which it could conceivably use in the future to build a competing tool.</p>
 
-<p>LWN readers likely skew towards privacy-conscious: using Firefox instead of
+<p>LWN readers likely skew toward privacy-conscious: using Firefox instead of
 Google Chrome, turning on ad blockers, and so on. However, the users of the web
-sites they build may not be so privacy-conscious. For web site developers, the
+sites they build may not be so privacy-conscious. For web-site developers, the
 analytics tools they choose can help respect their users' privacy and avoid
-Google knowing so much about their users' browsing patterns.</p>
+Google knowing quite so much about their users' browsing patterns.</p>
 
 
 <h4>GoatCounter</h4>
@@ -129,15 +126,15 @@ Google knowing so much about their users' browsing patterns.</p>
 recent web-analytics tools, launched in <a 
 href="https://www.arp242.net/goatcounter.html">August 2019</a>. Created by
 Martin Tournoij, it has more of a "made by a single developer" feel than other
-tools; it's a little less slick-looking than some, but it is also very
+tools; it's a little less slick-looking than some, but it is also
 developer-friendly and simple to set up.</p>
 
 <img class="photo" src="/images/lwn-goatcounter.png" alt="[GoatCounter UI from
 www.goatcounter.com]" title="GoatCounter UI">
 
-<p>The tool supports all the basic analytics: page views and visits by URL,
+<p>The tool supports all of the basic analytics: page views and visits by URL,
 browser and operating system statistics, device screen sizes, locations, and
-referrer information. By default GoatCounter shows the last 7 days with counts
+referrer information. By default GoatCounter shows the last seven days with counts
 broken down by hour, but site owners can adjust the date span with simple
 controls.</p>
 
@@ -171,7 +168,7 @@ developer this was just awesome, made me really feel like somebody out there is
 listening. Thank you for making this.</p> </div>
 
 <p>In addition to counting page views, GoatCounter tracks sessions using a hash
-of the browser's user agent and IP to identify the client without storing any
+of the browser's user agent and IP address to identify the client without storing any
 personal information. The "salt" used to generate these hashes is rotated every
 4 hours with a sliding window. Tournoij has a <a
 href="https://github.com/zgoat/goatcounter/blob/master/docs/sessions.markdown">detailed
@@ -179,35 +176,33 @@ write-up</a> about the technical aspects of session tracking, including a
 comparison with other solutions that have similar aims.</p>
 
 <p>The hosted version of GoatCounter is extremely easy to set up &mdash; it took
-me about 5 minutes to set up an account and add the one line of JavaScript to my
-website. It also supports <a
+me about five minutes to set up an account and add the one line of JavaScript to my
+web site. It also supports <a
 href="https://www.goatcounter.com/code#image-based-tracking-without-javascript">non-JavaScript
 tracking</a> for users with JavaScript disabled or for web site owners who
 prefer that approach. Analytics data started showing up within a few seconds.
 Even with the hosted version, the site owner fully owns the data, and can export
 the full dump or delete their account at any time.</p>
 
-<p>The self-hosted version is also straight-forward to set up using the <a
+<p>The self-hosted version is also straightforward to set up using the <a
 href="https://github.com/zgoat/goatcounter/releases">Linux binaries</a> or by
-building from source &mdash; it took me less than 10 minutes to build from
+building from source &mdash; it took me less than ten minutes to build from
 source and set it up locally with the default SQLite database configuration. In
-contrast to Plausible (discussed below), it was much lighter to install, it
-didn't download anything, and it started up almost instantly.</p>
+contrast to Plausible (discussed below), it was much lighter to install, 
+didn't download anything, and  started up almost instantly.</p>
 
 
 <h4>Plausible</h4>
 
 <p><a href="https://plausible.io/">Plausible</a> is another relatively new
-analytics tool, and launched in early 2019. Soon after launching it switched to 
+analytics tool that was launched in early 2019. Soon after launching, it switched to 
 <a href="https://plausible.io/blog/plausible-is-going-open-source">open
-source</a>, with the code licensed under a permissive MIT license. Its business
-model is to charge for the hosting, with low pricing aimed for small
-businesses.</p>
-
-<p>In addition to making its source code available, Plausible is one of an
+source</a>, with the code licensed under the permissive MIT license. Its business
+model is to charge for the hosting, with pricing aimed at small
+businesses. In addition to making its source code available, Plausible is one of an
 increasing number of companies that has a <a
 href="https://plausible.nolt.io/roadmap">publicly-visible roadmap</a> for better
-transparency. It posts informational content for potential customers on its
+transparency. It also posts informational content for potential customers on its
 <a href="https://plausible.io/blog/">blog</a>.</p>
 
 <img class="photo" src="/images/lwn-plausible.png" alt="[Plausible UI from
@@ -215,36 +210,36 @@ plausible.io]" title="Plausible UI">
 
 <p>Plausible is unique from a developer perspective, with its <a
 href="https://github.com/plausible/analytics">server code</a> written in <a
-href="https://elixir-lang.org/">Elixir</a>, a functional programming language
+href="https://elixir-lang.org/">Elixir</a>, which is a functional programming language
 that runs on the Erlang virtual machine. Its frontend UI uses a small amount of
-vanilla JavaScript for the interactive parts rather than a rendering framework
+vanilla JavaScript for the interactive parts, rather than a rendering framework
 like React. It also <a
 href="https://plausible.io/lightweight-web-analytics">boasts</a> one of the
 smallest analytics scripts, with <a
 href="https://plausible.io/js/plausible.js"><tt>plausible.js</tt></a> weighing
-in at 781 bytes at the time of writing (about half the size of Plausible's
+in at 781 bytes at the time of this writing (about half the size of Plausible's
 favicon). GA's <a
 href="https://www.google-analytics.com/analytics.js"><tt>analytics.js</tt></a>,
-in comparison, is almost 18KB.  That size can make a meaningful difference since
+by comparison, is almost 18KB.  That size can make a meaningful difference since
 the scripts are loaded for each page on the site.</p>
 
-<p>In terms of user interface, Plausible is definitely nicer-looking than
-GoatCounter. It's also quite minimalist, perhaps even more so than GoatCounter,
-providing total visitor counts, page view counts per path, referrer information,
+<p>In terms of user interface, Plausible is definitely more polished than
+GoatCounter. It is fairly minimalist, though, perhaps even more so than GoatCounter,
+providing total visitor counts, page-view counts per path, referrer information,
 map location, and devices (broken down by screen size, browser, and operating
-system). The tool also provides a "bounce rate" metric, though the exact
+system). The tool also provides a "<a
+href="https://en.wikipedia.org/wiki/Bounce_rate">bounce rate</a>" metric,
+though the exact 
 definition is unclear.</p>
 
-<p>Plausible's home page states it provides "100% data ownership", and it is
+<p>Plausible's home page states that it provides "100% data ownership", and it is
 possible to export the CSV data for a single chart (as well as delete a
 Plausible.io account). However, the data dump is significantly less useful than
 GoatCounter's full data dump, which includes detailed information for every
 event.</p>
 
 <p>Self-hosting Plausible is possible (even <i>plausible</i>), though as founder
-Uku Taht points out in his  <a
-href="https://plausible.io/blog/plausible-is-going-open-source">announcement</a>
-about going open source:</p>
+Uku Taht points out in the announcement of switching to open source:</p>
 
 <div class="BigQuote"> <p>It's worth noting that for now, there's no explicit
 support for self-hosting Plausible. The project is still evolving quickly and
@@ -259,16 +254,16 @@ Following those recommendations, I tried to use <tt>docker-compose</tt> to get
 it running locally. It was a little disconcerting how many Docker and
 <tt>npm</tt> packages it downloaded during the minutes-long installation
 process, and even when it was done, there was a hard-to-comprehend error with a
-PostgreSQL migration which prevented it starting &mdash; the "experimental"
+PostgreSQL migration which prevented it from starting &mdash; the "experimental"
 label definitely fits.</p>
 
 
 <h4>Proprietary options, briefly</h4>
 
 <p>There are also a couple of lightweight proprietary tools with a focus on
-privacy worth mentioning. Obviously these don't have the advantages of open
+privacy worth mentioning. Obviously, these don't have the advantages of open
 development or self-hosting, but still provide a low-cost way out of Google's
-data collection net.</p>
+data-collection net.</p>
 
 <p>One is the minimalist <a href="https://simpleanalytics.com/">Simple
 Analytics</a> product, which is a cloud-based tool created by solo developer
@@ -285,16 +280,15 @@ to start maintaining the open-source code base again in the future).</p>
 
 <p>The last few years have seen a number of good alternatives to Google
 Analytics, particularly for those who only need a few basic features. Many of
-the recent alternatives are both open source and privacy conscious, so now there
-are few reasons for projects and businesses to use proprietary analytics
+the recent alternatives are both open source and privacy-conscious, which means there
+are fewer reasons for projects and businesses to continue using proprietary analytics
 systems.</p>
 
 <p>For site owners who just need basic traffic numbers, GoatCounter and
-Plausible both seem like excellent options. Those that like more visual polish
-and documentation might prefer Plausible; those that would value a more
+Plausible both seem like excellent options. Those who like more visual polish
+and documentation might prefer Plausible; those who value a more
 developer-friendly tool with easy self-hosting will probably prefer
-GoatCounter.</p>
-
-<p>In the next week or two, we'll be publishing a second article on
-heavier-weight GA alternatives, as well as looking at tools that provide
-analytics from web server logs.</p>
+GoatCounter. 
+We will soon be publishing a second article that looks at some
+heavier-weight GA alternatives, as well as tools that provide
+analytics from web-server logs.</p>
