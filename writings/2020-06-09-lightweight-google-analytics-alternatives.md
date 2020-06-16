@@ -209,18 +209,14 @@ didn't download anything, and it started up almost instantly.</p>
 analytics tool, and launched in early 2019. Soon after launching it switched to 
 <a href="https://plausible.io/blog/plausible-is-going-open-source">open
 source</a>, with the code licensed under a permissive MIT license. Its business
-model is to charge for the hosting, with low pricing aimed  for small
+model is to charge for the hosting, with low pricing aimed for small
 businesses.</p>
 
 <p>In addition to making its source code available, Plausible is one of an
 increasing number of companies that has a <a
 href="https://plausible.nolt.io/roadmap">publicly-visible roadmap</a> for better
-transparency. It engages with its customers (and potential customers) on its
-blog, featuring content like "<a
-href="https://plausible.io/blog/remove-google-analytics">Why you should stop
-using Google Analytics on your website</a>" and "<a
-href="https://plausible.io/blog/google-analytics-seo">Will removing Google
-Analytics from a site hurt search engine rankings?</a>".</p>
+transparency. It posts informational content for potential customers on its
+<a href="https://plausible.io/blog/">blog</a>.</p>
 
 <img class="photo" src="/images/lwn-plausible.png" alt="[Plausible UI from
 plausible.io]" title="Plausible UI">
