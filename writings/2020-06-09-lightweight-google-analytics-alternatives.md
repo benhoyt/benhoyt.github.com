@@ -101,21 +101,6 @@ and location tracking, as well as delete the personalized profile associated
 with your account. However, these features are almost entirely opt-in, and most
 users either don't know about them or just never bother to turn them off.</p>
 
-<p>The company's justification for this level of tracking, of course, is that it
-can provide personalized search results so that you can more easily find what
-you're looking for. Search competitor <a
-href="https://duckduckgo.com/">DuckDuckGo</a>, however, seems to be <a
-href="https://spreadprivacy.com/duckduckgo-revenue-model/">doing just fine</a>
-without this kind of tracking.</p>
-
-<p>People often say they have "nothing to hide", so they aren't particularly
-concerned about Google tracking this information. However, as DuckDuckGo's blog
-<a
-href="https://spreadprivacy.com/three-reasons-why-the-nothing-to-hide-argument-is-flawed/">points
-out</a>, this argument is flawed &mdash; none of us wants someone looking over
-our shoulder when we go to the bathroom, or when we enter our salary information
-into an online form.</p>
-
 <p>One of the subtler problems with Google's personalization is what Eli Pariser
 calls the "<a href="https://en.wikipedia.org/wiki/Filter_bubble">filter
 bubble</a>". Because users are provided with heavily personalized search
@@ -124,11 +109,18 @@ results, they get less exposure to differing points of view, and end up being
 even argue that filter bubbles contribute to the deep political polarization
 present in many countries.</p>
 
+<p>Of course, just switching away from GA won't eliminate all these privacy
+issues (for example, it will do nothing to stop Android location tracking or
+search tracking), but it's one way to reduce the huge amount of data Google
+collects. In addition, for site owners that use a GA alternative, Google does
+not get a behind-the-scenes look at the site's traffic patterns &mdash; data
+which it could conceivably use in future to build a competing tool.</p>
+
 <p>LWN readers likely skew towards privacy-conscious: using Firefox instead of
 Google Chrome, turning on ad blockers, and so on. However, the users of the web
 sites they build may not be so privacy-conscious. For web site developers, the
 analytics tools they choose can help respect their users' privacy and avoid
-Google-level invasiveness.</p>
+Google knowing so much about their users' browsing patterns.</p>
 
 
 <h4>GoatCounter</h4>
