@@ -26,14 +26,14 @@ pre {
 </style>
 
 
-<p>More and more web site owners are concerned about the "all-seeing Google"
+<p>More and more web-site owners are concerned about the "all-seeing Google"
 tracking users as they browse around the web. <a
 href="https://en.wikipedia.org/wiki/Google_Analytics">Google Analytics</a> (GA) is a 
 full-featured web-analytics system that is available for free and, despite the privacy
 concerns, has become the de facto analytics tool for small and large web sites
 alike. However, in recent years, a growing number of alternatives are helping
 break Google's dominance. In this article we'll look at two of the lightweight
-open-source options, namely GoatCounter and Plausible. In a subsequent article
+open-source options, namely GoatCounter and Plausible. In a subsequent article,
 we'll look at a few of the larger tools.</p>
 
 <p>GA is by far the biggest player here: BuiltWith <a
@@ -73,9 +73,10 @@ average of 14 data communications per hour. </p> </div>
 <p>The paper distinguishes between "active" and "passive" tracking. Active
 tracking is when the user directly uses or logs into a Google service, such as
 performing a search, logging into Gmail, and so on. In addition to recording all
-of a user's search keywords, Google passively tracks users as they visit other
-products like Google Maps and (pertinent to this article)
-web sites that use GA. Schmidt found that in an example "day in the life"
+of a user's search keywords, Google passively tracks users as they visit
+web sites that use GA and other Google <a
+href="https://www.google.com/ads/publisher/">publisher tools</a>. Schmidt
+found that in an example "day in the life" 
 scenario, "<span>Google collected or inferred over two-thirds of the information
 through passive means</span>".</p>
 
@@ -156,8 +157,10 @@ free, from their perspective), and them. They will always have an advantage over
 me.</p> </div>
 
 <p>GoatCounter is written in Go, and uses vanilla JavaScript in its UI for some
-lightweight interactivity. JavaScript frameworks often get in the way of web
-accessibility, and GoatCounter's prioritization of accessibility (mentioned on
+lightweight interactivity. <a
+href="https://hiredigitally.com/2019/04/17/are-javascript-frameworks-accessible/">JavaScript
+frameworks often get in the way of web 
+accessibility</a>, and GoatCounter's prioritization of accessibility (mentioned on
 its home page) struck a chord with "ctoth", who <a
 href="https://news.ycombinator.com/item?id=22047556">thanked</a> Tournoij on
 Hacker News:</p>
@@ -169,18 +172,27 @@ listening. Thank you for making this.</p> </div>
 
 <p>In addition to counting page views, GoatCounter tracks sessions using a hash
 of the browser's user agent and IP address to identify the client without storing any
-personal information. The "salt" used to generate these hashes is rotated every
+personal information. The <a
+href="https://en.wikipedia.org/wiki/Salt_(cryptography)">salt</a> used to
+generate these hashes is rotated every 
 4 hours with a sliding window. Tournoij has a <a
 href="https://github.com/zgoat/goatcounter/blob/master/docs/sessions.markdown">detailed
 write-up</a> about the technical aspects of session tracking, including a
 comparison with other solutions that have similar aims.</p>
 
-<p>The hosted version of GoatCounter is extremely easy to set up &mdash; it took
-me about five minutes to set up an account and add the one line of JavaScript to my
-web site. It also supports <a
+<p>
+For web-site owners who prefer to avoid JavaScript or who want analytics
+from users with JavaScript disabled, 
+GoatCounter supports <a
 href="https://www.goatcounter.com/code#image-based-tracking-without-javascript">non-JavaScript
-tracking</a> for users with JavaScript disabled or for web site owners who
-prefer that approach. Analytics data started showing up within a few seconds.
+tracking</a> scheme.  It uses a 1x1 transparent GIF image in an
+"<tt>&lt;img&gt;</tt>" tag on the pages to be counted, though this approach
+will not record the referrer or screen size.</p>
+
+
+<p>The hosted version of GoatCounter is easy to set up &mdash; taking about
+five minutes to set up an account and add the one line of JavaScript to my 
+web site. Analytics data started showing up within a few seconds.
 Even with the hosted version, the site owner fully owns the data, and can export
 the full dump or delete their account at any time.</p>
 
@@ -197,7 +209,7 @@ didn't download anything, and  started up almost instantly.</p>
 <p><a href="https://plausible.io/">Plausible</a> is another relatively new
 analytics tool that was launched in early 2019. Soon after launching, it switched to 
 <a href="https://plausible.io/blog/plausible-is-going-open-source">open
-source</a>, with the code licensed under the permissive MIT license. Its business
+source</a>, with the code licensed under the permissive MIT license. The company's business
 model is to charge for the hosting, with pricing aimed at small
 businesses. In addition to making its source code available, Plausible is one of an
 increasing number of companies that has a <a
@@ -208,7 +220,7 @@ transparency. It also posts informational content for potential customers on its
 <img class="photo" src="/images/lwn-plausible.png" alt="[Plausible UI from
 plausible.io]" title="Plausible UI">
 
-<p>Plausible is unique from a developer perspective, with its <a
+<p>Plausible is unique from a technology perspective, with its <a
 href="https://github.com/plausible/analytics">server code</a> written in <a
 href="https://elixir-lang.org/">Elixir</a>, which is a functional programming language
 that runs on the Erlang virtual machine. Its frontend UI uses a small amount of
@@ -217,10 +229,11 @@ like React. It also <a
 href="https://plausible.io/lightweight-web-analytics">boasts</a> one of the
 smallest analytics scripts, with <a
 href="https://plausible.io/js/plausible.js"><tt>plausible.js</tt></a> weighing
-in at 781 bytes at the time of this writing (about half the size of Plausible's
-favicon). GA's <a
+in at 781 bytes (1.2KB uncompressed) at the time of this writing. GA's <a
 href="https://www.google-analytics.com/analytics.js"><tt>analytics.js</tt></a>,
-by comparison, is almost 18KB.  That size can make a meaningful difference since
+by comparison, is almost 18KB (46KB uncompressed), while GoatCounter's <a
+href="https://gc.zgo.at/count.js"><tt>count.js</tt></a> is 2.3KB (6.3KB
+uncompressed).  That size can make a meaningful difference since 
 the scripts are loaded for each page on the site.</p>
 
 <p>In terms of user interface, Plausible is definitely more polished than
