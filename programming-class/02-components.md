@@ -3,7 +3,7 @@ layout: default
 title: "Session 2: Computer Components"
 permalink: /programming-class/02-components/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">September 2016</p>
 
 > These are my "teaching notes" for the second session of my [Computers and Programming Class](/programming-class/). This class was pretty hands-on, so my notes here are very light (I brought an old desktop PC to the class and discussed how each component worked).

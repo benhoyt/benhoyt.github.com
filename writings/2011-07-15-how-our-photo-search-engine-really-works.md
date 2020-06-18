@@ -5,7 +5,7 @@ permalink: /writings/how-our-photo-search-engine-really-works/
 description: How I wrote Oyster.com's photo search engine in Python
 canonical_url: http://tech.oyster.com/how-our-photo-search-engine-really-works/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">July 2011</p>
 
 > [Original article on tech.oyster.com]({{ page.canonical_url }})

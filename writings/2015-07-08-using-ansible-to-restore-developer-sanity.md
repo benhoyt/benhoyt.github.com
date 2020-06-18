@@ -5,7 +5,7 @@ permalink: /writings/using-ansible-to-restore-developer-sanity/
 description: How we went from a deployment including 28 manual steps to a single Ansible command
 canonical_url: http://tech.oyster.com/using-ansible-to-restore-developer-sanity/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">July 2015</p>
 
 > [Original article on tech.oyster.com]({{ page.canonical_url }})

@@ -3,7 +3,7 @@ layout: default
 title: "Session 14: Review Quiz"
 permalink: /programming-class/14-review-quiz/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">April 2017</p>
 
 <style>

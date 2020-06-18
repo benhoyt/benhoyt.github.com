@@ -4,7 +4,7 @@ title: A Lox interpreter implemented in ... Lox
 permalink: /writings/loxlox/
 description: LoxLox is an interpreter for Crafting Interpreters' Lox programming language written in Lox!
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">October 2018</p>
 
 

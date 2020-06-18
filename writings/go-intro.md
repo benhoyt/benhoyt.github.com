@@ -4,7 +4,7 @@ title: An intro to Go for non-Go developers
 permalink: /writings/go-intro/
 description: "A brief introduction to Go for programmers who haven't used Go before: Why use it? The standard library. And the language itself."
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">June 2020</p>
 
 

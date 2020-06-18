@@ -4,7 +4,7 @@ title: Contributing os.scandir() to Python
 permalink: /writings/scandir/
 description: My experience contributing a medium-sized feature (os.scandir) to the Python 3.5 standard library.
 ---
-<h1><a href="/writings/scandir/">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">August 2016</p>
 
 This article describes my experience contributing a medium-sized feature to Python. In short: I wrote [PEP 471](https://www.python.org/dev/peps/pep-0471/) and contributed [os.scandir()](https://docs.python.org/3/library/os.html#os.scandir) to the Python standard library and the CPython codebase. It was a lot more work than I expected, but it was a fun journey, and as a result the end product has a better API than my initial one.

@@ -4,7 +4,7 @@ title: Learning Go by porting a medium-sized web backend from Python
 permalink: /writings/learning-go/
 description: How I learnt the basics of Go (its good parts as well as a few quirks) by porting a medium-sized web backend from Python.
 ---
-<h1><a href="/writings/learning-go/">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">November 2017</p>
 
 

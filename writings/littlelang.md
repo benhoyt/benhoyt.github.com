@@ -4,7 +4,7 @@ title: Learning more Go and some computer science by implementing a language
 permalink: /writings/littlelang/
 description: Littlelang is a dynamically-typed programming language I designed and wrote an interpreter for in Go (and in littlelang itself!).
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">December 2017</p>
 
 

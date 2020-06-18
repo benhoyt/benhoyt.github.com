@@ -3,7 +3,7 @@ layout: default
 title: "Session 11: Programming Careers"
 permalink: /programming-class/11-careers/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">March 2017</p>
 
 > These are my "teaching notes" for the eleventh session of my [Computers and Programming Class](/programming-class/).

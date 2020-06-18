@@ -4,7 +4,7 @@ title: "Fast pentomino puzzle solver ported from Forth to Python"
 permalink: /writings/python-pentomino/
 description: Uses Python code generation to find all 2339 tilings of the 12 free pentominoes on a 6x10 board. Based on my dad's Forth version.
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">July 2017</p>
 
 > Summary: Based on a Forth pentomino puzzle solver that my dad wrote and refined over the years, I wrote a version in Python. It uses a brute force (but clever) approach using code generation to find all 2339 tilings of the 12 free pentominoes on a 6x10 board.

@@ -4,7 +4,7 @@ title: Learning Elm by porting a medium-sized web frontend from React
 permalink: /writings/learning-elm/
 description: How I learnt Elm (its good parts and bad) by porting a medium-sized web frontend from React.
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">October 2019</p>
 
 

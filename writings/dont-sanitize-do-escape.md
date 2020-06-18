@@ -4,7 +4,7 @@ title: Don’t try to sanitize input. Escape output.
 permalink: /writings/dont-sanitize-do-escape/
 description: Why you should escape output correctly, but generally not sanitize user input.
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">February 2020</p>
 
 

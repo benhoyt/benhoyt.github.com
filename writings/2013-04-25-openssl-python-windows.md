@@ -5,7 +5,7 @@ permalink: /writings/openssl-python-windows/
 description: Details a serious bug in an older version of OpenSSL that causes O(N^2) behaviour
 canonical_url: http://tech.oyster.com/openssl-python-windows/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">April 2013</p>
 
 > [Original article on tech.oyster.com]({{ page.canonical_url }})

@@ -4,7 +4,7 @@ title: "Compiling Python syntax to x86-64 assembly for fun and (zero) profit"
 permalink: /writings/pyast64/
 description: A toy (but working) compiler that turns Python syntax into x86-64 assembly using Python's built-in AST module.
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">June 2017</p>
 
 > Summary: I used Python's built-in AST module to parse a subset of Python syntax and turn it into an x86-64 assembly program. It's basically a toy, but it shows how easy it is to use the `ast` module to co-opt Python's lovely syntax for your own ends.

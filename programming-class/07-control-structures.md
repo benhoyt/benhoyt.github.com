@@ -3,7 +3,7 @@ layout: default
 title: "Session 7: Control Structures"
 permalink: /programming-class/07-control-structures/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">January 2017</p>
 
 > These are my "teaching notes" for the seventh session of my [Computers and Programming Class](/programming-class/).

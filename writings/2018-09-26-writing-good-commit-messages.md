@@ -17,7 +17,7 @@ canonical_url: https://medium.com/compass-true-north/writing-good-commit-message
 }
 </style>
 
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">September 2018</p>
 
 > [Original article on Compass's tech blog]({{ page.canonical_url }})

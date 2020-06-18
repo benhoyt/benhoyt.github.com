@@ -3,7 +3,7 @@ layout: default
 title: "Session 4: Networks and the Internet"
 permalink: /programming-class/04-networks/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">November 2016</p>
 
 > These are my "teaching notes" for the fourth session of my [Computers and Programming Class](/programming-class/).

@@ -5,7 +5,7 @@ permalink: /writings/go-testing/
 description: "Go's philosophy of testing and an overview of the built-in testing tools."
 canonical_url: https://lwn.net/Articles/821358/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">May 2020</p>
 
 > [Original article on LWN.net]({{ page.canonical_url }})

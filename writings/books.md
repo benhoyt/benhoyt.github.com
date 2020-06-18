@@ -4,7 +4,7 @@ title: Books I’ve read
 permalink: /writings/books/
 description: (Some of the) books I’ve read
 ---
-<h1><a href="/writings/learning-go/">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 
 
 These are some of the books I've read over the years. I've only kept track intermittently, so there are some pretty big gaps!

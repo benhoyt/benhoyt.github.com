@@ -3,7 +3,7 @@ layout: default
 title: "Session 8: Lists"
 permalink: /programming-class/08-lists/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">January 2017</p>
 
 > These are my "teaching notes" for the eighth session of my [Computers and Programming Class](/programming-class/).

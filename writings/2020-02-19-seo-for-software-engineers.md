@@ -6,7 +6,7 @@ description: The basics of SEO (Search Engine Optimization), written by a softwa
 canonical_url: https://medium.com/compass-true-north/seo-for-software-engineers-bd18daca7cd4
 ---
 
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">February 2020</p>
 
 > [Original article on Compass's tech blog]({{ page.canonical_url }})

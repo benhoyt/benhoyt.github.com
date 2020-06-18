@@ -5,7 +5,7 @@ permalink: /writings/cherrypy-ctypes-and-being-explicit/
 description: Details a bug in CherryPy on Windows due to lack of ctypes argument types
 canonical_url: http://tech.oyster.com/cherrypy-ctypes-and-being-explicit/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">October 2011</p>
 
 > [Original article on tech.oyster.com]({{ page.canonical_url }})

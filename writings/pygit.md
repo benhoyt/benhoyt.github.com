@@ -4,7 +4,7 @@ title: "pygit: Just enough of a Git client to create a repo, commit, and push it
 permalink: /writings/pygit/
 description: pygit implements just enough of a Git client (in 500 lines of Python) to create a repo, commit, and push itself to GitHub.
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">April 2017</p>
 
 > Summary: Recently I wrote approximately 500 lines of Python code that implements just enough of a Git client to create a repository, add files to the index, commit, and push itself to GitHub. This article gives a bit of background on my hack and walks through the code.

@@ -3,7 +3,7 @@ layout: default
 title: "Session 9: Grammar and Dictionaries"
 permalink: /programming-class/09-grammar-and-dicts/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">February 2017</p>
 
 > These are my "teaching notes" for the ninth session of my [Computers and Programming Class](/programming-class/).

@@ -4,7 +4,7 @@ title: ZZT in Go (using a Pascal-to-Go converter)
 permalink: /writings/zzt-in-go/
 description: "An (incomplete) port of Adrian Siekierka's 'Reconstruction of ZZT' to Go, done in a semi-automated way using a Pascal-to-Go converter."
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">May 2020</p>
 
 > Summary: After seeing Adrian Siekierka's "Reconstruction of ZZT", I wrote a program to translate his Turbo Pascal code to Go. This article describes my Pascal-to-Go converter and my (not exactly complete) Go port of ZZT.

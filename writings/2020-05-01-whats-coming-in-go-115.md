@@ -5,7 +5,7 @@ permalink: /writings/whats-coming-in-go-115/
 description: "A general look at what's coming for the Go 1.15 final release in August 2020."
 canonical_url: https://lwn.net/Articles/820217/
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">May 2020</p>
 
 > [Original article on LWN.net]({{ page.canonical_url }})

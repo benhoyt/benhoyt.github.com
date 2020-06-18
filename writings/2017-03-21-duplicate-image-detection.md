@@ -4,7 +4,7 @@ layout: default
 permalink: /writings/duplicate-image-detection/
 description: A simple algorithm to detect duplicate or very similar images
 ---
-<h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">March 2017</p>
 
 > **Go to:** [dHash](#difference-hash-dhash) \| [Dupe threshold](#dupe-threshold) \| [MySQL bit counting](#mysql-bit-counting) \| [BK-trees](#bk-trees-and-fast-dupe-detection)

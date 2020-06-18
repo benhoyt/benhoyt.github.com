@@ -4,7 +4,7 @@ title: Developing GiftyWeddings.com
 permalink: /writings/gifty/
 description: How I got started with my wedding gift registry website and also describes the 2016 revamp I gave the site.
 ---
-<h1><a href="/writings/gifty/">{{ page.title }}</a></h1>
+<h1>{{ page.title }}</h1>
 <p class="subtitle">January 2017</p>
 
 > Update: In November 2017, I [rewrote the backend in Go](/writings/learning-go/) (it was Python). The frontend is still as described below.
