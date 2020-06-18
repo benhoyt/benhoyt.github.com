@@ -401,7 +401,7 @@ func main() {
 It's hard to overstate the importance of interfaces in Go. They're used to make algorithms generic and functions testable. [Read more about them in Effective Go.](https://golang.org/doc/effective_go.html#interfaces)
 
 
-### HTTP server examples
+## HTTP server examples
 
 Before we go, here are a couple of small programs showing how easy it is to write HTTP servers in Go. And these aren't just toys -- Go's `net/http` package is production-ready (unlike the built-in web servers that come with many other languages, which always have to say "don't use in production" on the tin).
 
@@ -475,7 +475,7 @@ func main() {
 }
 ```
 
-### The `go` tool
+## The `go` tool
 
 Someone asked me recently what my favourite developer tool was. At first I said, "maybe Sublime Text?" But then I changed my mind: I think my (current) favourite developer tool is the `go` command. Without a Makefile, it can do all of the following, and it does them fast:
 
@@ -501,7 +501,7 @@ GOOS=linux GOARCH=amd64 go build
 Isn't that cool? Development hasn't been this easy since [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal)...
 
 
-### Wrapping up
+## Wrapping up
 
 There's much more to say about Go and its ecosystem, but hopefully this is a helpful introduction for those coming from other languages. To get started, I highly recommend the official [Go Tour](https://tour.golang.org/). For going deeper, read [Effective Go](https://golang.org/doc/effective_go.html) and then the excellent book [The Go Programming Language](https://www.gopl.io/).
 
