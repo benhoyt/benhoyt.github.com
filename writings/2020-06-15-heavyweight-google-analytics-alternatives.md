@@ -54,7 +54,7 @@ Analytics, or was even better than it. The solution needed to offer real-time
 analytics, geo-location, advertising campaign tracking, heat Maps, and be open
 source.</p> </div>
 
-<img class="photo" src="/images/lwn-matomo.png" alt="[Matomo UI]" title="Matomo
+<img class="photo" src="/images/lwn-matomo.png" alt="[Matomo UI from matomo.org]" title="Matomo
 UI">
 
 <p>Even though Matomo is the most popular open-source analytics tool and has
@@ -132,7 +132,7 @@ Countly seems to make less of a big deal about privacy, but it is "<a
 href="https://count.ly/your-data-your-rules">committed to giving you control of
 your analytics data</a>".</p>
 
-<img class="photo" src="/images/lwn-countly.png" alt="[Countly UI]"
+<img class="photo" src="/images/lwn-countly.png" alt="[Countly UI from count.ly]"
 title="Countly UI">
 
 <p>Countly has a <a href="https://count.ly/pricing">clear distinction</a>
