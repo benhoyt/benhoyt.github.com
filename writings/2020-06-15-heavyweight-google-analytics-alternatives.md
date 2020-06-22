@@ -119,7 +119,7 @@ releases</a> in early 2020. (Though it is somewhat worrisome that the latest
 point release, 1.6.9, has three large breaking-change warnings in the release
 description, such as "<span>! IMPORTANT: The API endpoint has changed!</span>")
 Installation is again straightforward, and just requires copying the PHP files
-to your web server and having a MySQL database installed.</p>
+to a web server and having a MySQL database installed.</p>
 
 
 <h4>Countly</h4>
@@ -137,12 +137,12 @@ title="Countly UI">
 
 <p>Countly has a <a href="https://count.ly/pricing">clear distinction</a>
 between its enterprise edition (relatively expensive, starting at $5000
-annually) and its install-it-yourself community edition, with the latter limited
+annually) and its self-hosted community edition, with the latter limited
 to "basic Countly plugins" and "aggregated data". Countly's core source code is
 licensed under the GNU AGPL, with the server written using Node.js (JavaScript),
 and SDKs for Android and iOS written in Java and Objective C.</p>
 
-<p>Countly's basic plugins give you typical analytics metrics such as basic
+<p>Countly's basic plugins provide typical analytics metrics such as basic
 statistics and referrers on web and mobile, but also some more advanced features
 like email reports, crash analytics, and push notifications. However, its
 enterprise edition brings in a wide range of plugins (made either by Countly or
@@ -167,7 +167,7 @@ is useful for larger companies who want control over how they model sessions or
 heart; it requires configuring the various components, along with significant
 AWS setup. However, there is a comprehensive <a
 href="https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow">setup
-guide</a> on the GitHub wiki (and they do offer for-pay hosted options).
+guide</a> on the GitHub wiki (and the company does offer for-pay hosted options).
 Companies can set it up to insert events into PostgreSQL, AWS's columnar
 Redshift database, or leave the data in Amazon S3 for further processing.
 Typically a business-intelligence tool like <a
