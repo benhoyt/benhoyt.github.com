@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "More alternatives for web-analytics data"
-permalink: /writings/heavier-google-analytics-alternatives/
+title: "More alternatives to Google Analytics"
+permalink: /writings/more-google-analytics-alternatives/
 description: "Some heavier replacements for Google Analytics, and a brief look at log-based analytics tools"
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/824294/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">June 2020</p>
@@ -26,23 +26,23 @@ pre {
 </style>
 
 
-<p>Last week we <a href="https://lwn.net/Articles/822568/">introduced</a> the privacy
+<p>Last week, we <a href="https://lwn.net/Articles/822568/">introduced</a> the privacy
 concerns with using Google Analytics (GA) and presented two lightweight
-open-source alternatives: GoatCounter and Plausible. Those tools are useful
-for site owners that need relatively basic metrics. In this second article,
-we present several heavier-weight GA alternatives for those who need more
-powerful analytics. We also look at some tools that produce analytics data
+open-source options: GoatCounter and Plausible. Those tools are useful
+for site owners who need relatively basic metrics. In this second article,
+we present several heavier-weight GA replacements for those who need more
+detailed analytics. We also look at some tools that produce analytics data
 based on web-server-access logs, GoAccess, in particular.</p>
 
 <h4>Matomo</h4>
 
-<p>One of the most popular heavyweight offerings is <a
-href="https://matomo.org/">Matomo</a>, formerly called "Piwik", which was
+<p>One of the most popular heavyweight offerings is the open core <a
+href="https://matomo.org/">Matomo</a>.  It was formerly called "Piwik" and was
 created in 2007; LWN <a href="https://lwn.net/Articles/372594/">looked
 at</a> Piwik way back in 2010. It's a full-featured alternative to Google
 Analytics, so companies that need the power of GA can transition to it, but
 still get the privacy and transparency benefits that come from using an
-open-source and self-hosted alternative. As an example, web agency
+open-source and self-hosted option. As an example, web agency
 Isotropic recently <a
 href="https://isotropic.co/moving-to-matomo-google-analytics-biggest-competition/">switched</a>
 to Matomo:</p>
@@ -57,7 +57,7 @@ tracking, heat maps, and be open source.</p> </div>
 <p>Even though Matomo is the most popular open-source analytics tool and
 has been around the longest, it's still only used <a
 href="https://trends.builtwith.com/analytics/Matomo">on 1.4%</a> of the top
-one million web sites, roughly one-fiftieth of GA's market share &mdash;
+one million web sites, roughly 2% of GA's market share &mdash;
 it's hard for even well-known open-source software to compete with the
 $600-billion gorilla.</p>
 
@@ -66,21 +66,29 @@ title="Matomo UI">
 
 <p>Like GA, Matomo provides a summary dashboard with a few basic numbers
 and charts, as well as many detailed reports, including location maps,
-referral information, and so on. The self-hosted version has all of these
-basics, but site owners can also pay for and install various <a
-href="https://plugins.matomo.org/">plugins</a> such as funnel measurement,
+referral information, and so on.
+    Additionally, Matomo has a feature called "<a
+href="https://matomo.org/docs/content-tracking/">content tracking</a>"
+that allows  automatically tracking users' interactions with the
+content (clicks and impressions) without writing code, unlike GA, which
+requires writing JavaScript or installing a third-party plugin.
+The self-hosted version of Matomo has all of these features, but site
+owners can also pay for and install various <a 
+href="https://plugins.matomo.org/">plugins</a> such as <a
+href="https://en.wikipedia.org/wiki/Purchase_funnel">funnel</a>
+measurement, 
 single-sign-on support, and even a rather invasive <a
 href="https://plugins.matomo.org/HeatmapSessionRecording">plugin</a> that
 records full user sessions including mouse movements. </p>
 
-<p>Matomo is written in PHP and uses MySQL as its data store;
-self-installation is straightforward by simply copying the files to a
-web server with PHP and MySQL installed. It's licensed under the GPL; it supports <a
-href="https://matomo.org/docs/installation/">self-hosting</a> for free
-(standalone or as a WordPress plugin), two relatively low-cost cloud
-options, and enterprise pricing. Matomo seems like a well-run project and
-has a fairly active <a href="https://forum.matomo.org/">community support
-forum</a>; it also provides business-level <a
+<p>Matomo is written in PHP and uses MySQL as its data store; <a
+href="https://matomo.org/docs/installation/">installation</a> is
+straightforward by simply copying the files to a web server with PHP and
+MySQL installed. It's licensed under the GPLv3; it supports self-hosting
+for free (standalone or as a WordPress plugin), two relatively low-cost
+cloud options, and enterprise pricing. Matomo seems like a well-run project
+and has a fairly active <a href="https://forum.matomo.org/">community
+support forum</a>; it also provides business-level <a
 href="https://matomo.org/support-plans/">support plans</a> for companies
 using the self-hosted version.</p>
 
@@ -88,22 +96,22 @@ using the self-hosted version.</p>
 
 <p>A similar but less popular tool is <a
 href="http://www.openwebanalytics.com/">Open Web Analytics (OWA)</a>, which
-is also written in PHP and licensed under the GPL. OWA uses a
+is also written in PHP and licensed under the GPLv2. OWA uses a
 donation-based development model rather than having monthly pricing options
 for a hosted service. Of all the open-source tools, OWA is the one that
 feels most like a clone of Google Analytics; even <a
 href="http://demo.openwebanalytics.com/owa/index.php?owa_do=base.reportDashboard&owa_siteId=c9b7d12e322c7c360fb8f7c72ffe4c41">its
 dashboard</a> looks similar to GA's &mdash; so it may be a good option for
-non-technical users who are familiar with GA's interface.</p>
+users who are familiar with GA's interface.</p>
 
 <p>OWA is not as feature-rich as Matomo, but still has all the basics: an
 overview dashboard, web statistics, visitor locations on a map overlay, and
-referrer tracking. Like Matomo, it comes with WordPress and MediaWiki
-integrations to analyze visitors on sites built using those
-technologies. It also provides various ways to <a
+referrer tracking. Like Matomo, it comes with a WordPress 
+integration to analyze visitors on those type of sites. It also provides various ways to <a
 href="https://github.com/Open-Web-Analytics/Open-Web-Analytics/wiki#extending-owa">extend</a>
 the built-in functionality, including an API, the ability to add new "modules"
-(plugins), and the ability to hook into various tracking events.</p>
+(plugins), and the ability to hook into various tracking events (e.g. a
+visitor's first page view or a user's mouse clicks).</p>
 
 <p>OWA is maintained by a single developer, Peter Adams, and has had
 periods of significant
@@ -113,7 +121,7 @@ href="https://github.com/Open-Web-Analytics/Open-Web-Analytics/releases">new
 releases</a> in early 2020.
 Some of the warnings on recent releases, such as <a
 href="https://github.com/Open-Web-Analytics/Open-Web-Analytics/releases/tag/1.6.9">those
-for the 1.6.9 release</a> may be a bit worrisome, however ("<span>!
+for the 1.6.9 release</a>, may be a bit worrisome, however ("<span>!
 IMPORTANT: The API endpoint has 
 changed!</span>"). Installation is again straightforward, and just requires
 copying the PHP files to a web server and having a MySQL database
@@ -121,12 +129,11 @@ available.</p>
 
 <h4>Countly</h4>
 
-<p><a href="https://count.ly/">Countly</a> was founded in 2013; it is
-relatively feature rich and has a large number of dashboard types. Of the
+<p>Another open-core option, <a href="https://count.ly/">Countly</a>, was founded in 2013; it is
+relatively feature-rich and has many dashboard types. Of the
 tools we are covering, though, it is the one that feels the most like a "web
 startup", complete with a polished video on its home page and sleek
-dashboards in its UI.  Countly seems to make less of a big deal about
-privacy, but it is "<a
+dashboards in its UI.  Countly advertises that it is "<a
 href="https://count.ly/your-data-your-rules">committed to giving you
 control of your analytics data</a>".</p>
 
@@ -142,8 +149,8 @@ is licensed under the GNU AGPL, with the server written using Node.js
 
 <p>Countly's basic plugins provide typical analytics metrics such as simple
 statistics and referrers for web and mobile devices, but also some more advanced
-features like email reports, crash analytics, and push
-notifications. However, its enterprise edition brings in a wide range of
+features like scheduling email-based reports and recording JavaScript and
+mobile app crashes. However, its enterprise edition brings in a wide range of
 plugins (made either by Countly or by third-party developers) that provide
 advanced features such as HTTP performance monitoring, funnels with goals
 and completion rates, A/B testing, and so on. Overall, Countly's community
@@ -165,8 +172,11 @@ fields.</p>
 
 <p>Setting up an installation of Snowplow is definitely not for the faint
 of heart; it requires configuring the various components, along with
-significant Amazon Web Services (AWS) setup. However, there is a comprehensive <a
-href="https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow">setup
+significant Amazon Web Services (AWS) setup; it <a
+href="https://discourse.snowplowanalytics.com/t/selfhosting-of-snowplow/1109">may
+be possible</a>, but not easy, to install it outside of AWS. However, there
+is a comprehensive <a
+href="https://github.com/snowplow/snowplow/wiki/Setting-up-Snowplow">AWS setup
 guide</a> on the GitHub wiki (and the company does offer for-pay hosted
 options).  Companies can set it up to insert events into PostgreSQL, AWS's
 columnar Redshift database, or leave the data in Amazon S3 for further
@@ -176,9 +186,10 @@ href="https://chartio.com/">ChartIO</a> is used to view the data, but
 Snowplow does not prescribe that aspect.</p>
 
 <p>Snowplow is a collection of tools written in a number of languages,
-notably Scala (via Spark) and Ruby. It is used by <a
+notably Scala (via Spark) and Ruby. It is available under the
+Apache&nbsp;2.0 license. Snowplow is used by <a
 href="https://trends.builtwith.com/analytics/Snowplow">almost 3%</a> of the
-top 10,000 web sites, so it may be a compelling option for larger companies that
+top 10,000 web sites, so it may be a reasonable option for larger companies that
 want full control over their data pipeline.</p>
 
 <h4>Analytics using web access logs</h4>
@@ -193,14 +204,15 @@ over 20 years are <a href="https://awstats.sourceforge.io/">AWStats</a>, <a
 href="https://analog.readthedocs.io/en/latest/">Analog</a>, and <a
 href="http://www.webalizer.org/">Webalizer</a>. AWStats is written in Perl
 and is the most full-featured and actively maintained of the bunch; Analog
-and Webalizer are both written in C and are not actively maintained.</p>
+is written in Python
+and Webalizer is written in C, but neither is actively maintained.</p>
 
 <p>A more recent contender is the MIT-licensed <a
 href="https://goaccess.io/">GoAccess</a>, which was designed first as a
 terminal-based log analyzer, but also has a nice looking HTML
 view. GoAccess is written in C with only an <a
 href="https://invisible-island.net/ncurses/">ncurses</a> dependency, 
-and supports all of the common access-log formats, as well as log files
+and supports all of the common access-log formats, including those
 from cloud services such as Amazon S3 and Cloudfront.</p>
 
 <img class="photo" src="/images/lwn-goaccess-html.png" alt="[GoAccess UI]"
