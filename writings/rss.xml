@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Lightweight Google Analytics alternatives</title>
+  <description>Discusses what Google Analytics tracks, and presents two lightweight alternatives: GoatCounter and Plausible (LWN.net).</description>
+  <link>https://lwn.net/Articles/822568/</link>
+  <guid>https://lwn.net/Articles/822568/</guid>
+  <pubDate>Wed, 17 Jun 2020 11:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>An intro to Go for non-Go developers</title>
   <description>A brief introduction to Go for programmers who haven't used Go before: Why use it? The standard library. And the language itself.</description>
   <link>https://benhoyt.com/writings/go-intro/</link>

@@ -13,6 +13,11 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 ## 2020
 
+<!-- TODO: also add to rss
+* [More alternatives to Google Analytics](https://lwn.net/Articles/824294/) looks at some heavier replacements for Google Analytics, as well as the GoAccess log-based analytics tool. (June, LWN.net)
+-->
+
+* [Lightweight Google Analytics alternatives](https://lwn.net/Articles/822568/) discusses what Google Analytics tracks, and presents two lightweight alternatives: GoatCounter and Plausible. (June, LWN.net)
 * [Intro to Go](/writings/go-intro/) is a brief introduction to Go for programmers who haven't used Go before: Why use it? The standard library. And the language itself. (June)
 * [ZZT in Go](/writings/zzt-in-go/) describes my port of Adrian Siekierka's "Reconstruction of ZZT" to Go, done in a semi-automated way using a Pascal-to-Go converter. (May)
 * [Testing in Go: philosophy and tools](https://lwn.net/Articles/821358/) describes the minimalist philosophy of testing in Go and the built-in testing tools. (May, LWN.net)

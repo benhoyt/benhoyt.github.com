@@ -13,6 +13,8 @@ These are some of the books I've read over the years. I've only kept track inter
 2020
 ----
 
+*Hillbilly Elegy* by J. D. Vance. TODO
+
 *A Different Shade of Green* by Gordon Wilson. I really enjoyed Wilson's obvious love of creation and little creatures and the like, simply because they're beautiful and God made them. And a book on this subject by a conservative Christian is a much-needed thing. However, I found it a bit simplistic overall, and I found his constant use of the terms "dominion" and "Biblical dominion" a bit tiresome. Could have been more thoughtful and in-depth, and could definitely have used better editing.
 
 *Surprised by Hope* by N. T. Wright. TODO
