@@ -28,8 +28,6 @@ span {
 }
 </style>
 
-<!-- TODO: you/they/spell check -->
-
 
 <p>The <a href="https://golang.org/">Go programming language</a> came out in 2009, with a 1.0 release in March 2012. Even before the 1.0 release, some developers criticized the language as being too simplistic, partly due to its lack of user-defined generics. Despite this lack, in recent years Go has been widely used, with an <a href="https://research.swtch.com/gophercount">estimated</a> 1-2 million developers worldwide. Over the years there have been several proposals to add some form of generics to the language, but the <a href="https://go.googlesource.com/proposal/+/refs/heads/master/design/go2draft-type-parameters.md">recent proposal</a> written by core developers Ian Lance Taylor and Robert Griesemer looks likely to be included in a future version of Go.</p>
 
@@ -58,7 +56,7 @@ span {
     }
 </pre>
 
-<p>Built-in functions like <tt><a href="https://golang.org/pkg/builtin/#len">len()</a></tt> and <tt><a href="https://golang.org/pkg/builtin/#append">append()</a></tt> work on these container types, though there's no way to define your own equivalents of those generic built-in functions. As many Go developers will attest, having type-safe built-in versions of growable arrays and maps will get you a long way, even without user-defined generic types.</p>
+<p>Built-in functions like <tt><a href="https://golang.org/pkg/builtin/#len">len()</a></tt> and <tt><a href="https://golang.org/pkg/builtin/#append">append()</a></tt> work on these container types, though there's no way for a developer to define their own equivalents of those generic built-in functions. As many Go developers will attest, having type-safe built-in versions of growable arrays and maps will go a long way, even without user-defined generic types.</p>
 
 <p>In addition, Go has strong support for interfaces and closures, two features which are often used instead of generics, or to work around their lack. For example, sorting in Go is done using the <tt>sort.Interface</tt> type, which is an interface requiring three methods:</p>
 
@@ -88,7 +86,7 @@ span {
     })
 </pre>
 
-<p>There are other ways to work around Go's lack of generics, such as creating container types that use <tt>interface{}</tt> (the "empty interace"). This effectively "boxes" every value inserted into the collection, and requires run-time type assertions, so it is neither particularly efficient or type-safe. However, it works and is pragmatic, and even some standard library types like <tt><a href="https://golang.org/pkg/sync/#Map">sync.Map</a></tt> use this approach.</p>
+<p>There are other ways to work around Go's lack of generics, such as creating container types that use <tt>interface{}</tt> (the "empty interface"). This effectively "boxes" every value inserted into the collection, and requires run-time type assertions, so it is neither particularly efficient or type-safe. However, it works and is pragmatic, and even some standard library types like <tt><a href="https://golang.org/pkg/sync/#Map">sync.Map</a></tt> use this approach.</p>
 
 <p>Some developers go so far as to argue generics shouldn't be added at all, as they will bring too much complexity. For example, developer Greg Hall <a href="https://dzone.com/articles/go-doesnt-need-generics">hopes</a> "<span>that Go never has generics, or if it does, the designers find some way to avoid the complexity and difficulties I have seen in both Java generics and C++ templates</span>".</p>
 
@@ -106,7 +104,7 @@ span {
 
 <p>Still, many Go developers are asking for generics, and there has been a <a href="https://docs.google.com/document/d/1vrAy9gMpMoS3uaVphB32uVXX4pi-HnNjkMEgyAHX4N4/edit">huge amount of discussion</a> over the years on the best way to add them in a Go-like way. Several developers have provided thoughtful rationale in "<a href="https://github.com/golang/go/wiki/ExperienceReports#generics">experience reports</a>" from their own usage of Go.</p>
 
-<p>Taylor's official Go blog entry "<a href="https://blog.golang.org/why-generics">Why Generics?</a>" details what adding generics will bring to Go, and lists the guidelines the Go team is following when adding them. Notably, they want to "<span>preserve clarity and simplicity of Go</span>":</p>
+<p>Taylor's official Go blog entry "<a href="https://blog.golang.org/why-generics">Why Generics?</a>" details what adding generics will bring to Go, and lists the guidelines the Go team is following when adding them. Notably, it wants to "<span>preserve clarity and simplicity of Go</span>":</p>
 
 <div class="BigQuote">
 <p>Most importantly, Go today is a simple language. Go programs are usually clear and easy to understand. A major part of our long process of exploring this space has been trying to understand how to add generics while preserving that clarity and simplicity. We need to find mechanisms that fit well into the existing language, without turning it into something quite different.</p>
@@ -148,7 +146,7 @@ span {
     }
 </pre>
 
-<p>The type parameter is <tt>T</tt>, specified in the extra set of parentheses after the function name, along with the <tt>Stringer</tt> constraint: <tt>type T Stringer</tt>. Currently writing functions like this is not possible in Go, because you <a href="https://golang.org/doc/faq#convert_slice_of_interface">can't pass</a> a slice of a concrete type to a function which accepts a slice of an interface type (e.g., <tt>Stringer</tt>).</p>
+<p>The type parameter is <tt>T</tt>, specified in the extra set of parentheses after the function name, along with the <tt>Stringer</tt> constraint: <tt>type T Stringer</tt>. Writing functions like this is not currently possible in Go; it <a href="https://golang.org/doc/faq#convert_slice_of_interface">does not allow</a> passing a slice of a concrete type to a function which accepts a slice of an interface type (e.g., <tt>Stringer</tt>).</p>
 
 <p>In addition to generic functions, the new proposal also supports parameterization of types, to support type-safe collections such as binary trees, graph data structures, and so on. Here is what a generic <tt>Vector</tt> type might look like:</p>
 
@@ -180,7 +178,7 @@ span {
     }
 </pre>
 
-<p>In practice, a <tt>constraints</tt> package would probably be added to the standard library which pre-defined common constraints like <tt>Ordered</tt>. Type lists allow you to write generic functions which use built-in operators:</p>
+<p>In practice, a <tt>constraints</tt> package would probably be added to the standard library which pre-defined common constraints like <tt>Ordered</tt>. Type lists allow developers to write generic functions which use built-in operators:</p>
 
 <pre>
     // Smallest returns the smallest element in a slice of "ordered" values.
@@ -195,7 +193,7 @@ span {
     }
 </pre>
 
-<p>The one constraint you can't write as a type list is for the <tt>==</tt> and <tt>!=</tt> operators, because in Go you can compare structs, arrays, and interface types for equality. To solve this, the proposal suggests adding a built-in <tt>comparable</tt> constraint to allow equality operators. This would be useful, for example, in a function which finds the index of a value in a slice or array:</p>
+<p>The one constraint that can't be written as a type list is for the <tt>==</tt> and <tt>!=</tt> operators, because Go allows comparing structs, arrays, and interface types for equality. To solve this, the proposal suggests adding a built-in <tt>comparable</tt> constraint to allow equality operators. This would be useful, for example, in a function which finds the index of a value in a slice or array:</p>
 
 <pre>
     // Index returns the index of x in s, or -1 if not found.
@@ -211,7 +209,7 @@ span {
     }
 </pre>
 
-<p>Taylor and Griesemer have developed an experimentation tool (on the <a href="https://go.googlesource.com/go/+/refs/heads/dev.go2go">go2go</a> branch) that converts generic Go code as specified in this proposal to normal Go code, allowing you to compile and run generic code today. There's even a version of the Go playground that lets you share and run code written under this proposal online &mdash; for example, here is a <a href="https://go2goplay.golang.org/p/XdSJZ9K5-5E">working example</a> of the <tt>Stringify</tt> function above.</p>
+<p>Taylor and Griesemer have developed an experimentation tool (on the <a href="https://go.googlesource.com/go/+/refs/heads/dev.go2go">go2go</a> branch) that converts generic Go code as specified in this proposal to normal Go code, allowing developers to compile and run generic code today. There's even a version of the Go playground that lets people share and run code written under this proposal online &mdash; for example, here is a <a href="https://go2goplay.golang.org/p/XdSJZ9K5-5E">working example</a> of the <tt>Stringify</tt> function above.</p>
 
 <p>The Go team is asking developers to try to solve their own problems with the generics experimentation tool and send detailed feedback in response to the following questions:</p>
 
