@@ -32,7 +32,9 @@ span {
 <p>The <a href="https://golang.org/">Go programming language</a> came out
 in 2009, with a 1.0 release in March 2012. Even before the 1.0 release,
 some developers criticized the language as being too simplistic, partly due
-to its lack of user-defined generics. Despite this lack, in recent years Go
+to its lack of user-defined <a
+href="https://en.wikipedia.org/wiki/Generic_programming">generics</a>. Despite
+this lack, in recent years Go 
 has been widely used, with an <a
 href="https://research.swtch.com/gophercount">estimated</a> 1-2 million
 developers worldwide. Over the years there have been several proposals to
@@ -44,18 +46,17 @@ Griesemer looks likely to be included in a future version of Go.</p>
 
 <h4>Background</h4>
 
-<p>Go is a statically-typed language, meaning types are specified in the
+<p>Go is a statically-typed language, meaning that  types are specified in the
 source code (or inferred from it) and checked by the compiler. The compiler
 produces optimized machine code, so CPU-intensive code is significantly
 more efficient than languages like Python or Ruby, which have bytecode
-compilers and use a virtual machine for execution.</p>
+compilers and use virtual machines for execution.</p>
 
-<p><a
-href="https://en.wikipedia.org/wiki/Generic_programming">Generics</a>, also
-known as "parameterized types" or "parametric polymorphism", are very
+<p>Generics, also
+known as "parameterized types" or "parametric polymorphism", are 
 useful when writing generalized algorithms like sorting and searching (or
-even simple algorithms like a generic <tt>min()</tt> function), as well as
-type-agnostic data structures like trees, thread-safe maps, and so on. Like
+even for simple algorithms like a generic <tt>min()</tt> function), as well as
+type-independent data structures like trees, thread-safe maps, and so on. Like
 the first versions of Java, Go doesn't ship with user-defined generics. As
 the Go FAQ <a href="https://golang.org/doc/faq#generics">notes</a>,
 generics "<span>may well be added at some point</span>"; it also describes
@@ -99,8 +100,8 @@ developers will attest, having type-safe built-in versions of growable
 arrays and maps will go a long way, even without user-defined generic
 types.</p>
 
-<p>In addition, Go has strong support for interfaces and closures, two
-features which are often used instead of generics, or to work around their
+<p>In addition, Go has support for interfaces and closures, two
+features that are often used instead of generics, or to work around their
 lack. For example, sorting in Go is done using the <tt>sort.Interface</tt>
 type, which is an interface requiring three methods:</p>
 
@@ -131,30 +132,31 @@ for example:</p>
         {"Bob", 75},
     }
     // i and j are the two slice indices
-    sort.Slice(people, func(i, j int) bool {
-        return people[i].Name &lt; people[j].Name
-    })
+    sort.Slice(people,
+               func(i, j int) bool {
+                   return people[i].Name &lt; people[j].Name
+               })
 </pre>
 
 <p>There are other ways to work around Go's lack of generics, such as
 creating container types that use <tt>interface{}</tt> (the "empty
 interface"). This effectively "boxes" every value inserted into the
 collection, and requires run-time type assertions, so it is neither
-particularly efficient or type-safe. However, it works and is pragmatic,
-and even some standard library types like <tt><a
+particularly efficient nor type safe. However, it works and is pragmatic;
+even some standard library types like <tt><a 
 href="https://golang.org/pkg/sync/#Map">sync.Map</a></tt> use this
 approach.</p>
 
-<p>Some developers go so far as to argue generics shouldn't be added at
-all, as they will bring too much complexity. For example, developer Greg
+<p>Some developers go so far as to argue generics shouldn't be added to Go at
+all, since they will bring too much complexity. For example, Greg
 Hall <a href="https://dzone.com/articles/go-doesnt-need-generics">hopes</a>
 "<span>that Go never has generics, or if it does, the designers find some
 way to avoid the complexity and difficulties I have seen in both Java
 generics and C++ templates</span>".</p>
 
-<p>The Go team takes the complexity issues seriously. As core developer
-Russ Cox states in his 2009 article <a
-href="https://research.swtch.com/generic">The Generic Dilemma</a>:</p>
+<p>The Go team takes the complexity issue seriously. As core developer
+Russ Cox states in his 2009 article "<a
+href="https://research.swtch.com/generic">The Generic Dilemma</a>":</p>
 
 <div class="BigQuote">
 <p>It seems like there are three basic approaches to generics:</p>
@@ -165,10 +167,11 @@ href="https://research.swtch.com/generic">The Generic Dilemma</a>:</p>
     expansion. This slows compilation. It generates a lot of code, much of
     it redundant, and needs a good linker to eliminate duplicate
     copies. [...]</li> 
-    <li>(The Java approach.) Box everything implicitly. This slows execution.</li>
+    <li>(The Java approach.) Box everything implicitly. This slows
+    execution. [...]</li>
 </ol>
-<p>The generic dilemma is this: do you want slow programmers, slow
-compilers and bloated binaries, or slow execution times?</p> 
+<p>The generic dilemma is this: <i>do you want slow programmers, slow
+compilers and bloated binaries, or slow execution times?</i></p> 
 </div>
 
 <p>Still, many Go developers are asking for generics, and there has been a
@@ -202,11 +205,12 @@ worth doing if Go still feels like Go.</p>
 
 <h4>The recent proposal</h4>
 
-<p>Taylor in particular has been prolific on the subject, having written no
+<p>Taylor, in particular, has been prolific on the subject of adding
+generics to Go, having written no
 fewer than six proposals. The first four, written from 2010 through 2013,
 are listed at the bottom of his document, "<a
 href="https://go.googlesource.com/proposal/+/master/design/15292-generics.md">Go
-should have generics</a>". He notes of these proposals that "<span>all are
+should have generics</a>".  About them, he notes: "<span>all are
 flawed in various ways</span>".</p> 
 
 <p>In July 2019 he posted the "Why Generics?" blog article mentioned above,
@@ -215,7 +219,7 @@ href="https://go.googlesource.com/proposal/+/master/design/go2draft-contracts.md
 2019 proposal</a> written by Taylor and Griesemer for a version of generics
 based on "contracts".</p> 
 
-<p>Almost a year later, in June 2020, Taylor and Griesemer published the <a href="https://go.googlesource.com/proposal/+/refs/heads/master/design/go2draft-type-parameters.md">revised and simplified proposal</a> which avoids adding contracts. In Taylor's words:</p>
+<p>Almost a year later, in June 2020, Taylor and Griesemer published a <a href="https://go.googlesource.com/proposal/+/refs/heads/master/design/go2draft-type-parameters.md">revised and simplified proposal</a> that avoids adding contracts. In Taylor's words:</p>
 
 <div class="BigQuote">
 <p>An earlier draft design of generics implemented constraints using a new
@@ -236,8 +240,8 @@ presentation</a>). Wadler is a type theorist who has contributed to the
 design of Haskell, and was involved in adding generics to Java back in
 2004. Rob Pike, one of Go's creators, had asked Wadler if he would
 "<span>be interested in helping us get polymorphism right (and/or figuring
-out what 'right' means) for some future version of Go</span>", and this
-paper is their response to Pike's request.</p> 
+out what 'right' means) for some future version of Go</span>"; this
+paper is the response to Pike's request.</p> 
 
 <p>The 2020 proposal suggests adding optional type parameters to functions
 and types, allowing generic algorithms and generic container types,
@@ -267,7 +271,7 @@ parentheses after the function name, along with the <tt>Stringer</tt>
 constraint: <tt>type T Stringer</tt>. Writing functions like this is not
 currently possible in Go; it <a
 href="https://golang.org/doc/faq#convert_slice_of_interface">does not
-allow</a> passing a slice of a concrete type to a function which accepts a
+allow</a> passing a slice of a concrete type to a function that accepts a
 slice of an interface type (e.g., <tt>Stringer</tt>).</p> 
 
 <p>In addition to generic functions, the new proposal also supports
@@ -310,10 +314,10 @@ of which is shown below:</p>
 <p>In practice, a <tt>constraints</tt> package would probably be added to
 the standard library which pre-defined common constraints like
 <tt>Ordered</tt>. Type lists allow developers to write generic functions
-which use built-in operators:</p> 
+that use built-in operators:</p> 
 
 <pre>
-    // Smallest returns the smallest element in a slice of "ordered" values.
+    // Smallest returns the smallest element in a slice of "Ordered" values.
     func Smallest(type T Ordered)(s []T) T {
         r := s[0]
         for _, v := range s[1:] {
@@ -329,7 +333,7 @@ which use built-in operators:</p>
 <tt>==</tt> and <tt>!=</tt> operators, because Go allows comparing structs,
 arrays, and interface types for equality. To solve this, the proposal
 suggests adding a built-in <tt>comparable</tt> constraint to allow equality
-operators. This would be useful, for example, in a function which finds the
+operators. This would be useful, for example, in a function that finds the
 index of a value in a slice or array:</p> 
 
 <pre>
@@ -348,7 +352,7 @@ index of a value in a slice or array:</p>
 
 <p>Taylor and Griesemer have developed an experimentation tool (on the <a
 href="https://go.googlesource.com/go/+/refs/heads/dev.go2go">go2go</a>
-branch) that converts generic Go code as specified in this proposal to
+branch) that converts the Go code as specified in this proposal to
 normal Go code, allowing developers to compile and run generic code
 today. There's even a version of the Go playground that lets people share
 and run code written under this proposal online &mdash; for example, here
@@ -371,7 +375,7 @@ when using this tool?</p>
 </div>
 
 
-<h4>Discussion on the proposal</h4>
+<h4>Discussion</h4>
 
 <p>There has been a lot of public discussion about generics on the main <a
 href="https://groups.google.com/forum/#!forum/golang-nuts">golang-nuts</a>
@@ -380,14 +384,14 @@ href="https://news.ycombinator.com/item?id=23543131">Hacker News</a> and <a
 href="https://www.reddit.com/r/golang/comments/haaz5w/the_next_step_for_generics_the_go_blog/">reddit.com/r/golang</a>
 threads.</p> 
 
-<p>As Pike <a href="https://youtu.be/RIvL2ONhFBI?t=1989">said</a> last
-year, "<span>syntax is not the problem, at least not yet</span>", however,
+<p>As Pike <a href="https://youtu.be/RIvL2ONhFBI?t=1989">said [YouTube]</a> last
+year, "syntax is not the problem, at least not yet", however,
 many of the threads on the mailing list have been immediately critical of
 the syntax. Admittedly, the syntax is unusual, and it adds another set of
 (round) parentheses to Go, which is already known for having lots of
 parentheses (for example, Go's method definitions use one set for the
 method's receiver type, and another for the method's arguments). The
-proposal tries to pre-empt the syntax bikeshedding with an <a
+proposal tries to preempt the syntax bikeshedding with an <a
 href="https://go.googlesource.com/proposal/+/refs/heads/master/design/go2draft-type-parameters.md#why-not-use-the-syntax-like-c_and-java">explanation</a>
 of why they chose parentheses instead of angle brackets:</p> 
 
@@ -412,7 +416,7 @@ we worry about alternatives. Thanks.</p>
 
 <p>This has happened so many times that one mailing list contributor, Tyler
 Compton, compiled a <a
-href="https://groups.google.com/g/golang-nuts/c/uQDrcHDwT_w/m/Y-Myzuw_AQAJ">nice
+href="https://groups.google.com/g/golang-nuts/c/uQDrcHDwT_w/m/Y-Myzuw_AQAJ">helpful
 list</a> of all the syntax-related threads.</p> 
 
 <p>Generics will help eliminate types and functions repeated for multiple
@@ -420,7 +424,7 @@ types, for example <tt>sort.Ints</tt>, <tt>sort.Float64s</tt>, and
 <tt>sort.Strings</tt> in the <a
 href="https://golang.org/pkg/sort/">sort</a> package. In a <a
 href="https://news.ycombinator.com/item?id=23544977">comment</a> on Hacker
-News, Kyle Conroy shows "<span>a four-line replacement for the various
+News, Kyle Conroy showed "<span>a four-line replacement for the various
 <tt><a
 href="https://golang.org/pkg/database/sql/#NullBool">sql.Null*</a></tt>
 types in the standard library</span>":</p> 
@@ -433,15 +437,17 @@ types in the standard library</span>":</p>
 </pre>
 
 <p>Mailing list contributor Pee Jai <a
-href="https://groups.google.com/d/msg/golang-nuts/UxVAj75L-rg/gf83XfwiAQAJ">wonders</a>
-whether there's a way to constraint a type to only allow structs, but
-Taylor indicates that's not possible, and notes that "<span>generics don't
-solve all problems</span>". Robert Engels notes that reflection would still
+href="https://groups.google.com/d/msg/golang-nuts/UxVAj75L-rg/gf83XfwiAQAJ">wondered</a>
+whether there's a way to constrain a type to only allow structs, but
+Taylor indicated that's not possible; he <a href="https://groups.google.com/d/msg/golang-nuts/UxVAj75L-rg/raCOyQRjAAAJ">noted</a> that "<span>generics don't
+solve all problems</span>". Robert Engels <a
+href="https://groups.google.com/d/msg/golang-nuts/UxVAj75L-rg/KctfY4mJAQAJ">said</a>
+that reflection would still 
 be needed for this case anyway.</p> 
 
-<p>In one thread, "i3dmaster" asks some questions about custom map types,
+<p>In one thread, "i3dmaster" <a href="https://groups.google.com/g/golang-nuts/c/ftFxFPa2BfU/m/Os58GKd2CAAJ">asked</a> some questions about custom map types,
 and Taylor <a
-href="https://groups.google.com/g/golang-nuts/c/ftFxFPa2BfU/m/5I-KHAhlAAAJ">clarifies</a>
+href="https://groups.google.com/g/golang-nuts/c/ftFxFPa2BfU/m/5I-KHAhlAAAJ">clarified</a>
 that "<span>custom container types aren't going to support <tt>len()</tt>
 or <tt>range</tt></span>". Creators of collection types won't have access
 to this special syntax, but will need to define their own <tt>Len()</tt>
@@ -451,11 +457,10 @@ method, and their own way to iterate through the collection.</p>
 href="https://groups.google.com/forum/?oldui=1#!searchin/golang-nuts/bryan$20mills%7Csort:date">insightful
 replies</a> on a number of threads. He has also created his own <a
 href="https://github.com/bcmills/go2go">repository</a> with various notes
-and code examples as he's played with generics, including a <a
-href="https://github.com/bcmills/go2go/blob/master/typelist.md">discussion</a>
-about why he considers type lists less than ideal, and various attempts at
-re-implementing the <tt>append()</tt> built-in using the new generics
-proposal.</p> 
+and code examples from his experiments with generics, including an <a
+href="https://github.com/bcmills/go2go/blob/master/typelist.md">explanation</a>
+about why he considers type lists less than ideal. The repository also includes various attempts at
+re-implementing the <tt>append()</tt> built-in using generics as proposed.</p> 
 
 
 <h4>Timeline</h4>
@@ -481,5 +486,5 @@ for a feature of this size. It's going to take quite a while to solicit
 feedback, iterate on the design, and implement generics in a
 production-ready way instead of using the current Go-to-Go translator. But
 given the number of proposals and the amount of feedback so far, generics
-are sure to be a much-used (and hopefully little-abused) feature when they
-do arrive.</p> 
+are sure to be a much-used (and hopefully little-abused) feature whenever they
+do arrive.</p>
