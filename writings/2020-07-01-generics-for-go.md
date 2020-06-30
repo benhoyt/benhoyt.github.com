@@ -53,9 +53,10 @@ more efficient than languages like Python or Ruby, which have bytecode
 compilers and use virtual machines for execution.</p>
 
 <p>Generics, also known as "parameterized types" or "parametric
-polymorphism", are a way to write code or build data structures that you
-can instantitate to process values of a specific type, without code
-duplication. They're useful when writing generalized algorithms like
+polymorphism", are a way to write code or build data structures
+that will work for any data type; the code or data structure can be 
+instantiated to process each different data type, without having to
+duplicate code. They're useful when writing generalized algorithms like
 sorting and searching, as well as type-independent data structures like
 trees, thread-safe maps, and so on. For example, a developer might write a
 generic <tt>min()</tt> function that works on all integer types and
@@ -88,13 +89,13 @@ writing blog software might write a function to fetch a list of articles or
 a mapping of author ID to author information:</p>
 
 <pre>
-    // returns "slice of Article" (compiler checks types)
+    // takes ID, returns "slice of Article" (compiler checks types)
     func GetLatestArticles(num int) []Article {
         ...
     }
 
-    // takes "slice of int" of IDs, returns "map of string to Author"
-    func GetAuthors(authorIDs []int) map[string]Author {
+    // takes "slice of int" of IDs, returns "map of int IDs to Author"
+    func GetAuthors(authorIDs []int) map[int]Author {
         ...
     }
 </pre>
@@ -154,7 +155,7 @@ creating container types that use <tt>interface{}</tt> (the "empty
 interface"). This effectively <a
 href="https://en.wikipedia.org/wiki/Object_type_(object-oriented_programming)#Boxing">boxes</a>
 every value inserted into the collection, and requires run-time type
-assertions, so it is neither particularly efficient nor type safe. However,
+assertions, so it is neither particularly efficient nor type-safe. However,
 it works and is pragmatic; even some standard library types like <tt><a
 href="https://golang.org/pkg/sync/#Map">sync.Map</a></tt> use this
 approach.</p>
