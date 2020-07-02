@@ -23,6 +23,7 @@
 body { background: white; color: #301800; font-family: Georgia, serif; font-size: 17px; line-height: 1.6; word-spacing: 0.1em; margin: 0 auto; max-width: 1000px; }
 #menu { margin: 0 auto; width: 92.5%; height: 5.5em; border-bottom: 1px solid #d0c8c0; }
 #menu .site-title { float: left; font-size: 225%; color: #d0c8c0; letter-spacing: 0.15em; padding: 0.45em 0; text-transform: uppercase; margin-left: -0.05em; }
+#menu .site-title a, #menu .site-title a:hover { color: #d0c8c0; text-decoration: none; }
 #menu ul.links { float: right; list-style-type: none; font-size: 80%; margin-top: 2.8em; }
 #menu ul.links li { display: inline; margin: 0 0 0 0.5em; padding: 0; }
 #menu a { border: none; color: #c04000; }
@@ -146,7 +147,11 @@ a:link, a:visited { color: #301800; }
 <div id="container">
 
 <div id="menu">
+{% if page.url == '/' %}
  <div class="site-title">Ben Hoyt</div>
+{% else %}
+ <div class="site-title"><a href="/">Ben Hoyt</a></div>
+{% endif %}
  
  <ul class="links no-print">
   <li>{% if page.url == '/' %}<b>Home</b>{% else %}<a href="/" title="Go to the home page">Home</a>{% endif %}</li>
