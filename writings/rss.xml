@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>More alternatives to Google Analytics</title>
+  <description>Looks at some heavier replacements for Google Analytics, as well as the GoAccess log-based analytics tool (LWN.net).</description>
+  <link>https://lwn.net/Articles/824294/</link>
+  <guid>https://lwn.net/Articles/824294/</guid>
+  <pubDate>Wed, 24 Jun 2020 11:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Lightweight Google Analytics alternatives</title>
   <description>Discusses what Google Analytics tracks, and presents two lightweight alternatives: GoatCounter and Plausible (LWN.net).</description>
   <link>https://lwn.net/Articles/822568/</link>
