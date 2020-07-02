@@ -7,6 +7,7 @@ permalink: /writings/non-tech/
 
 In addition to my [**technical writing**](/writings/), I also occassionally write about things more philosophical or poetic:
 
+* [Review of *Hillbilly Elegy*](/writings/hillbilly-elegy/) contains some of my thoughts on J.&nbsp;D.&nbsp;Vance's eye-opening and thought-provoking book. (Jul&nbsp;2020)
 * [Hacker Christianity](http://aliensintheapple.com/2013/12/22/hacker-christianity/), some thoughts on the intersection between Christianity and hacker culture, as well as a retelling of the Christian story in hacker terms. (Dec&nbsp;2013)
 * [Plain English Westminster](/writings/pew/) is a version of the Westminster Confession of Faith for us in the <span class="sc">pew</span>. (Nov&nbsp;2013)
 * [Quotes and notes on *The Autobiography of Benjamin Franklin*.](http://aliensintheapple.com/2011/12/23/the-autobiography-of-benjamin-franklin/) (Dec&nbsp;2011)
