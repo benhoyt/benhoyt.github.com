@@ -43,3 +43,4 @@ All in all, I highly recommend the book. I read the written version (ask me to b
 My wife listened to the book [on Audible](https://www.audible.com.au/pd/Hillbilly-Elegy-Audiobook/B01LT8LJII) a couple of years ago, and had talked about how good it was. One thing she noted -- and I'll reiterate -- was how it has a lot of bad language. It's usually when he's quoting his grandma or uncles, and doesn't seem at all out of place. Still, not a book for listening to in the car with kids.
 
 Printed or audio, go and read it -- you won't be disappointed!
+
