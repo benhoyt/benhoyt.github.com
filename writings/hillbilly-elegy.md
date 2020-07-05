@@ -12,7 +12,7 @@ description: A review of J. D. Vance's incredible story, "Hillbilly Elegy"
 
 I just finished reading [*Hillbilly Elegy*](https://www.amazon.com/Hillbilly-Elegy-Memoir-Family-Culture/dp/0062300547) by J.&nbsp;D.&nbsp;Vance, and can't recommend it enough -- it definitely deserved to be a *New York Times* bestseller. It's a great yarn, but it was also eye-opening and provocative.
 
-The book is an autobiographical account by Vance (who's only 35) of his journey from a rough, rough upbringing in [hillbilly](https://en.wikipedia.org/wiki/Hillbilly) America to a university education ending with Yale Law School. I knew I was going to like it from the introduction, where he speaks of those he grew up around and identifies with: "Americans call them hillbillies, rednecks, or white trash. I call them neighbors, friends, and family."
+The book is an autobiographical account by Vance (who's only 35) of his journey from a rough, rough upbringing in [hillbilly](https://en.wikipedia.org/wiki/Hillbilly) America to a university education ending with Yale Law School. I appreciated the empathetic writing style from the introduction, where he speaks of those he grew up around and identifies with: "Americans call them hillbillies, rednecks, or white trash. I call them neighbors, friends, and family."
 
 Vance's grandfather struggled with drink, his grandmother was as tough and as rough as nails, and his five-times-married mother struggled (and I believe still struggles) with hard drug abuse. Those around him growing up weren't much different. The stories Vance relates give insight into the cycles of poverty, addiction, and mistreatment that he grew up around.
 
