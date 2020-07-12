@@ -2,7 +2,7 @@
 layout: default
 title: "Generics for Go"
 permalink: /writings/generics-for-go/
-description: "Generics for Go: some background, the current state, and potential timeline for including generics in the language."
+description: "Generics for Go: some background, the current state, and potential timeline for including generics in the Go programming language."
 canonical_url: https://lwn.net/Articles/824716/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>

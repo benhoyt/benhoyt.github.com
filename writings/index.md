@@ -13,6 +13,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 ## 2020
 
+* [Generics for Go](https://lwn.net/Articles/824716/) gives some background, the current state, and potential timeline for including generics in the Go programming language. (July, LWN.net)
 * [More alternatives to Google Analytics](https://lwn.net/Articles/824294/) looks at some heavier replacements for Google Analytics, as well as the GoAccess log-based analytics tool. (June, LWN.net)
 * [Lightweight Google Analytics alternatives](https://lwn.net/Articles/822568/) discusses what Google Analytics tracks, and presents two lightweight alternatives: GoatCounter and Plausible. (June, LWN.net)
 * [Intro to Go](/writings/go-intro/) is a brief introduction to Go for programmers who haven't used Go before: Why use it? The standard library. And the language itself. (June)

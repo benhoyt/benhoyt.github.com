@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Generics for Go</title>
+  <description>Gives some background, the current state, and potential timeline for including generics in the Go programming language (LWN.net).</description>
+  <link>https://lwn.net/Articles/824716/</link>
+  <guid>https://lwn.net/Articles/824716/</guid>
+  <pubDate>Wed, 1 Jul 2020 11:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>More alternatives to Google Analytics</title>
   <description>Looks at some heavier replacements for Google Analytics, as well as the GoAccess log-based analytics tool (LWN.net).</description>
   <link>https://lwn.net/Articles/824294/</link>
