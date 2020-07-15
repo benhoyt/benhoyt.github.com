@@ -29,15 +29,15 @@ span {
 </style>
 
 
-<p>Two weeks ago <a href="https://www.lua.org/">Lua</a> version 5.4 was
-released, the fifteenth major version of the lightweight scripting language
+<p><a href="https://www.lua.org/">Lua</a> version 5.4 was
+released at the end of June; it is the fifteenth major version of the lightweight scripting language
 since its creation in 1993. <a
 href="https://www.lua.org/manual/5.4/readme.html#changes">New in 5.4</a> is
 a generational mode for the garbage collector, which performs better for
 programs with lots of short-lived allocations. The language now supports
 "attributes" on local variable, allowing developers to mark variables as
 constant (<tt>const</tt>) or resources as closeable (<tt>close</tt>). There
-were also significant performance improvements over 5.3, and a host of
+were also significant performance improvements over 5.3 along with a host of
 minor changes.</p>
 
 <p>Lua is a programming language optimized for embedding inside other
@@ -48,29 +48,31 @@ scripting languages for games, including big names such as World of
 Warcraft and Angry Birds. Part of the reason Lua is good for embedding is
 because it is small: in these days of multi-megabyte downloads for even the
 simplest applications, the entire Lua 5.4 distribution (source plus docs)
-is a 349 KB archive. To build a Lua interpreter with the default
+is a 349KB archive. To build a Lua interpreter with the default
 configuration, a developer can type <tt>make</tt> and wait about five
-seconds for compilation &mdash; the result is a self-contained 200-300 KB
+seconds for compilation &mdash; the result is a self-contained 200-300KB
 binary.</p>
 
 <p><a href="https://www.lua.org/versions.html">Major versions</a> of Lua
 are released every few years, not on any particular release cycle. The <a
 href="https://www.lua.org/manual/5.3/readme.html#changes">previous major
-version</a>, 5.3, was released over five years ago in January 2015, with
-the addition of a separate integer type (previously it used only
+version</a>, 5.3, was released over five years ago, in January 2015, with
+the addition of a separate integer type (previously Lua used only
 floating-point numbers), bitwise operators, a basic UTF-8 library, and many
 minor features.</p>
 
+<h4>New stuff</h4>
+
 <p>One of the interesting new features in Lua 5.4 is the addition of <a
 href="https://www.lua.org/manual/5.4/manual.html#3.3.7">local variable
-"attributes"</a>. When declaring a local (block-scoped) variable, the
+"attributes"</a>. When declaring a local (block-scoped) variable, a
 developer can add <tt>&lt;const&gt;</tt> or <tt>&lt;close&gt;</tt> after a
 variable name to give it that attribute. The <tt>const</tt> attribute is
-straight-forward: similar to <tt>const</tt> in JavaScript, it means the
+straightforward: similar to <tt>const</tt> in JavaScript, it means that the
 specified variable cannot be reassigned after the initialization in its
 declaration. The <tt>const</tt> attribute does not make a data structure
 "immutable": a developer is not prevented from changing entries in a table
-using a <tt>const</tt> variable, but the variable name cannot be assigned
+stored in a <tt>const</tt> variable, but the variable name cannot be assigned
 again. The <tt>const</tt> attribute provides a small amount of compile-time
 safety, as the compiler will give an error if a constant is accidentally
 reassigned:</p>
@@ -85,15 +87,15 @@ reassigned:</p>
 
 <p>Perhaps more useful (though with similarly unusual syntax) is the
 <tt>close</tt> attribute. This tells Lua to call the object's
-<tt>__close</tt> "<a
+<tt>__close()</tt> "<a
 href="https://www.lua.org/manual/5.4/manual.html#2.4">metamethod</a>" when
 the variable goes out of scope. Similar to <a
 href="https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization">RAII</a>
 in C++ or the <a
 href="https://docs.python.org/3/reference/compound_stmts.html#with"><tt>with</tt>
-statement</a> in Python, it is a way to ensure memory is freed, files are
+statement</a> in Python, it is a way to ensure that memory is freed, files are
 closed, or other resources are shut down in a deterministic way. For
-example, the file object returned by the built-in <tt>io.open</tt> function
+example, the file object returned by the built-in <tt>io.open()</tt> function
 can be used with <tt>&lt;close&gt;</tt>:</p>
 
 <pre>
@@ -121,12 +123,14 @@ can be used with <tt>&lt;close&gt;</tt>:</p>
         local x &lt;close&gt; = new_thing()
         print("use thing")
     end
-    -- "thing closed" is printed here
+    -- "thing closed" is printed here after "use thing"
 </pre>
 
-<p>Previously developers would have to use the <tt>__gc</tt> metamethod for
+<p>Previously, developers would have to use the <tt>__gc()</tt> metamethod for
 this purpose, but that is only called when the object is garbage collected
 some time later, not deterministically at the end of the block.</p>
+
+<h4>Generational GC</h4>
 
 <p>Version 5.4 also brings a new <a
 href="http://www.lua.org/manual/5.4/manual.html#2.5.2">generational</a>
@@ -137,7 +141,7 @@ scans and collects garbage from "young" objects more frequently than older
 objects (those which are still referenced after a generation or
 more). Interestingly, Roberto Ierusalimschy (one of the creators of Lua) <a
 href="http://lua-users.org/lists/lua-l/2017-10/msg00113.html">noted in
-2017</a> that Lua had a generational GC previously:</p>
+2017</a> that Lua previously had a generational GC:</p>
 
 <div class="BigQuote">
 <p>Lua has an incremental garbage collector since 5.1. It was the
@@ -147,39 +151,43 @@ stay.</p>
 </div>
 
 <p>Ierusalimschy gave a talk in 2019 (<a
-href="https://www.lua.org/wshop18/Ierusalimschy.pdf">slides PDF</a> and <a
+href="https://www.lua.org/wshop18/Ierusalimschy.pdf">PDF slides</a> and <a
 href="https://www.youtube.com/watch?v=wGizKsOJQuE">YouTube video</a>) that
 goes into more detail about how incremental GC works, as well as why the
-5.2 generational GC didn't perform very well and what the Lua team replaced
+5.2 generational GC didn't perform that well, and what the Lua team replaced
 it with. In 5.2's version, objects only had to survive a single GC cycle
 (collector pass) before becoming "old", but in 5.4 they have to survive two
 GC cycles, which is a more accurate model for real-world Lua programs. The
 two-cycle approach is more complicated to implement but gives better GC
-performance for many programs &mdash; though not all: Ierusalimschy notes
-that batch programs that build large data structures won't
+performance for many programs &mdash; though not all. Ierusalimschy notes
+that batch programs which build large data structures won't
 benefit. Possibly for that reason, the Lua team didn't change the default:
-in 5.4 the default is still to use the incremental collector, and a
-developer needs to write <tt>collectgarbage("generational")</tt> to turn on
+in 5.4 the default is still to use the incremental collector; a
+developer needs to add "<tt>collectgarbage("generational")</tt>" to their
+program in order to turn on
 the generational GC.</p>
 
 <p>On the lua-l mailing list, Gé Weijers <a
 href="http://lua-users.org/lists/lua-l/2019-06/msg00169.html">describes</a>
 how the generational GC ties into the new <tt>&lt;close&gt;</tt> feature
-(which used to be called <tt>toclose</tt>):</p>
+(which used to be called "<tt>toclose</tt>"):</p>
 
 <div class="BigQuote">
 <p>The garbage collector in 5.4 implements a generational mode. If an object survives the minor collections it may take a very, very long time before its __gc metamethod gets called after is becomes inaccessible, especially if your program mostly creates short lived objects. This makes __gc less useful as a poor man's RAII replacement.</p>
 <p>The new "toclose" feature is much more useful to release resources and unlock locks in a timely matter.</p>
 </div>
 
+<h4>Faster</h4>
+
 <p>One of the unsung features in 5.4 is a significantly faster
 interpreter. In a test I did on my 64-bit macOS machine using Gabriel de
 Quadros Ligneul's <a
 href="https://github.com/gligneul/Lua-Benchmarks">Lua-Benchmarks</a> suite,
 I found that version 5.4 was an average of 40% faster than version 5.3
-across the 11 benchmarks included in the suite:</p>
+across 11 benchmarks included in the suite:</p>
 
-<img src="/images/lua-54-benchmark.png">
+<img src="/images/lua-54-benchmark.png"
+alt="[Lua benchmarks]" title="Lua benchmarks">
 
 <p>Similar gains are shown in Elmar Klausmeier's <a
 href="https://eklausmeier.wordpress.com/2020/05/14/performance-comparison-pallene-vs-lua-5-1-5-2-5-3-5-4-vs-c/">performance
@@ -189,7 +197,7 @@ performance-sensitive code like graphics or matrix multiplication will no
 doubt be written in C. Still, an improvement of this magnitude for
 number-centric code (which most of these benchmarks are) is not to be
 scoffed at. Dibyendu Majumdar <a
-href="http://lua-users.org/lists/lua-l/2018-03/msg00404.html">describes</a>
+href="http://lua-users.org/lists/lua-l/2018-03/msg00404.html">described</a>
 some of the reasons for these improvements on the lua-l mailing list back
 in 2018:</p>
 
@@ -208,18 +216,17 @@ net result is improved performance which is very welcome.</p>
 href="https://luajit.org/">LuaJIT</a>, a just-in-time compiler for Lua 5.1
 that is <a href="https://luajit.org/performance_arm.html">significantly
 faster</a> than the stock Lua interpreter. However, LuaJIT hasn't added any
-of Lua's new features since version 5.1, and to do so would be <a
+of Lua's new features since version 5.1. Doing so would be <a
 href="https://news.ycombinator.com/item?id=9985074">quite an
 undertaking</a> due to many breaking changes, including new scoping rules
-in 5.2 and the addition of an integer type in 5.3. For this reason, Pall
+in 5.2 and the new integer type in 5.3. For this reason, Pall
 has been a <a
 href="https://www.freelists.org/post/luajit/Port-bitop-to-53,1">vocal
-critic</a> of how many backwards-incompatible changes the Lua team makes in
-each release.</p>
+critic</a> of the backward-incompatible changes that the Lua team makes.</p>
 
 <p>This does seem to be a real problem, and not only with obscure edge
 cases: two of the benchmarks in the original Lua-Benchmarks suite failed in
-5.4 with a "C stack overflow" error (but work fine in 5.3), so I had to
+5.4 with a "C stack overflow" error (though they work fine in 5.3), so I had to
 remove them before running it. The <tt><a
 href="https://github.com/gligneul/Lua-Benchmarks/blob/master/ack.lua">ack</a></tt>
 and <tt><a
@@ -236,18 +243,20 @@ version of Lua (in Redis's case, version 5.1).</p>
 problem of Lua not having a unified standard library, which LWN <a
 href="https://lwn.net/Articles/812122/">wrote about</a> back in
 February. If a library author has to do a bunch of work to upgrade when a
-new Lua version comes out, they will be less likely to keep it up to date,
-and make it more likely for someone to create a fork that works on the new
-Lua version, or simply write a new library.</p>
+new Lua version comes out, they may be less likely to keep it up to date.
+That makes it more likely that someone will create a fork that works on the new
+Lua version or simply write a new library.</p>
+
+<h4>Smaller changes</h4>
 
 <p>In addition to the larger changes, Lua 5.4 adds many smaller features,
 including a new random number generator using the <a
 href="https://en.wikipedia.org/wiki/Xorshift#xoshiro256**">xoshiro256**</a>
 algorithm instead of using the underlying C library's <tt>rand()</tt>
-function, a simple <a
+function.  There is now a simple <a
 href="https://www.lua.org/manual/5.4/manual.html#pdf-warn">warning
-system</a> used when there's an error in a finalizer or <tt>__close</tt>
-method, and the ability for Lua values with "<a
+system</a> used when there's an error in a finalizer or <tt>__close()</tt>
+method.  Also added is the ability for Lua values with "<a
 href="https://www.lua.org/manual/5.4/manual.html#2.1">userdata</a>" to have
 multiple user values (userdata is a pointer to a memory block created with
 the Lua C API, so this feature allows objects created by C extensions to
@@ -256,20 +265,21 @@ have multiple memory blocks associated with them).</p>
 <p>There were some minor changes in semantics as well: <a
 href="https://github.com/pallene-lang/pallene/issues/170">slightly
 different handling</a> of edge cases with wrap-around in <tt>for</tt>
-loops, and <a
+loops and <a
 href="http://lua-users.org/lists/lua-l/2018-01/msg00020.html">adjustment</a>
 of string-to-number coercion for integers (for example, <tt>"10"+1</tt> is
 the integer <tt>11</tt> is 5.4, but the floating-point number <tt>11.0</tt>
 in 5.3).</p>
 
-<p>Overall, Lua seems like a good language in its domain (embedding into
-applications), and the release of 5.4 shows it is receiving continual
+<p>Overall, Lua seems like a good language for its domain (embedding into
+applications); the release of 5.4 shows that it is receiving continual
 improvements from the core team. Lua has <a
 href="https://www.lua.org/faq.html#1.4">no clear roadmap</a>, so it's hard
 to know at this early stage what changes are being planned for 5.5, or when
-that is likely to be released (one developer even <a
+it is likely to be released (one developer even <a
 href="https://www.quora.com/What-is-the-future-of-Lua/answer/Pierre-Chapuis">speculates</a>
 the next version may be "<span>a very impacting change</span>" with a 6.0
 version number). In any event, the new features in 5.4 will probably be
-fairly minor for most users, but the performance improvements are a nice
-win.</p>
+fairly minor for most users, but the performance improvements will prove to
+be a nice
+win for Lua users.</p>
