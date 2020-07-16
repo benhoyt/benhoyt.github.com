@@ -13,7 +13,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 ## 2020
 
-* [Hugo](https://lwn.net/Articles/825507/) is a flexible static website generator written in Go and optimized for speed. (July, LWN.net)
+* [An overview of Hugo](https://lwn.net/Articles/825507/), a flexible static website generator written in Go and optimized for speed. (July, LWN.net)
 * [Generics for Go](https://lwn.net/Articles/824716/) gives some background, the current state, and potential timeline for including generics in the Go programming language. (July, LWN.net)
 * [More alternatives to Google Analytics](https://lwn.net/Articles/824294/) looks at some heavier replacements for Google Analytics, as well as the GoAccess log-based analytics tool. (June, LWN.net)
 * [Lightweight Google Analytics alternatives](https://lwn.net/Articles/822568/) discusses what Google Analytics tracks, and presents two lightweight alternatives: GoatCounter and Plausible. (June, LWN.net)

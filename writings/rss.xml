@@ -9,7 +9,7 @@
 
  <item>
   <title>Hugo: a static-site generator</title>
-  <description>A look at Hugo, a flexible static website generator written in Go and optimized for speed (LWN.net).</description>
+  <description>An overview of Hugo, a flexible static website generator written in Go and optimized for speed (LWN.net).</description>
   <link>https://lwn.net/Articles/825507/</link>
   <guid>https://lwn.net/Articles/825507/</guid>
   <pubDate>Wed, 8 Jul 2020 11:00:00 +1200</pubDate>
