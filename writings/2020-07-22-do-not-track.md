@@ -39,8 +39,10 @@ almost a decade ago. Most web browsers still support sending it, but in
 it. Advertising companies, in particular, argued that its legal status was
 unclear, and that it was difficult to determine how to interpret the
 header. There have been some relatively recent attempts at legislation to
-enforce honoring  the DNT header, but those efforts appear to have been
-dead on arrival.</p>
+enforce honoring  the DNT header, but those efforts appear to have stagnated.
+In comparison, the European Union's General Data Protection Regulation (GDPR)
+and the California Consumer Privacy Act (CCPA) attempt to solve some of the
+same problems as DNT but are legally enforceable.</p>
 
 <p>In 2007, the US Federal Trade Commission was asked to create a "Do Not
 Track" list, similar to the popular "Do Not Call" list. This would be a
@@ -239,18 +241,23 @@ Science, and Transportation</span>". There has not been any activity on
 this bill in the last year, so it seems there is little chance of it going
 further.</p>
 
-<p>As law firm Davis Wright Tremaine LLP <a
-href="https://www.dwt.com/blogs/privacy--security-law-blog/2020/07/pole-camera-surveilance-fourth-amendment">pointed
-out</a>, the recent <a href="https://oag.ca.gov/privacy/ccpa">California
-Consumer Privacy Act</a> (CCPA) legislation is enforceable (where DNT is
-not), but it only applies to businesses operating in the state of
-California, and only to the "sale" of personal information. One possible
-way forward is to generalize efforts like CCPA rather than trying to give
-DNT a new lease of life. However, as the firm noted, the CCPA waters are
-almost as muddy as those of DNT: "<span>we do not yet have clarity under
-the CCPA, however, regarding which tracking activities (e.g., tracking for
-analytics, tracking to serve targeted ads, etc.) would be considered
-'sales'</span>."</p>
+<p>In June 2018 the W3C working group published an <a
+href="https://www.w3.org/blog/2018/06/do-not-track-and-the-gdpr/">article</a>
+comparing DNT with the GDPR. The GDPR requires a web site to get a user's
+consent before tracking them, and is enforceable by law (where DNT is not).
+Similarly, the recent <a href="https://oag.ca.gov/privacy/ccpa">CCPA</a>
+legislation is enforceable, but it only applies to businesses operating in the
+state of California, and only to the "sale" of personal information. As law firm
+Davis Wright Tremaine LLP <a
+href="https://www.dwt.com/blogs/privacy--security-law-blog/2020/07/pole-camera-surveilance-fourth-amendment">noted</a>,
+the CCPA waters are almost as muddy as those of DNT: "<span>we do not yet have
+clarity under the CCPA, however, regarding which tracking activities (e.g.,
+tracking for analytics, tracking to serve targeted ads, etc.) would be
+considered 'sales'</span>." One possible way forward is to generalize efforts
+like the GDPR and CCPA rather than trying to give DNT a new lease of life (the
+recently-proposed <a
+href="https://www.natlawreview.com/article/california-privacy-rights-act-cpra-headed-to-november-2020-ballot">California
+Privacy Rights Act</a> looks like an attempt to strengthen CCPA).</p>
 
 <p>It looks as though, after a decade-long ride with a lot of bumps, the Do
 Not Track header never quite got enough traction with the right people to
