@@ -3,7 +3,7 @@ layout: default
 title: "The sad, slow-motion death of Do Not Track"
 permalink: /writings/do-not-track/
 description: "The Do Not Track header was a valiant, 10-year effort to prevent tracking. Unfortunately, it doesn't seem to have taken."
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/826575/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">July 2020</p>
@@ -29,23 +29,20 @@ span {
 </style>
 
 
-<p>The "Do Not Track" (DNT) header is a simple HTTP header that a browser
+<p>"Do Not Track" (DNT) is a simple HTTP header that a browser
 can send to signal to a web site that the user does not want to be
-tracked. Internet privacy is not a new topic, and the DNT header had a <a
+tracked. The DNT header had a <a
 href="https://lwn.net/Articles/424861/">promising start</a> and the <a
 href="https://lwn.net/Articles/439460/">support of major browsers</a>
-almost a decade ago. Most web browsers still support sending it, but as of
+almost a decade ago. Most web browsers still support sending it, but in
 2020 it is almost useless because the vast majority of web sites ignore
-it. Advertising companies in particular argued that its legal status was
-unclear, and that it was difficult to determine how to interpreter the
-header. There have been some relatively recent attempts to enforce that
-sites honor the DNT header using legislation, but as of today those efforts
-have not got traction. For comparison, the <a
-href="https://www.cov.com/en/news-and-insights/insights/2020/06/california-attorney-general-finalizes-ccpa-regulations">recently-finalized</a>
-California Consumer Privacy Act (CCPA) legislation is enforceable, but is
-also much narrower in geography and scope.</p>
+it. Advertising companies, in particular, argued that its legal status was
+unclear, and that it was difficult to determine how to interpret the
+header. There have been some relatively recent attempts at legislation to
+enforce honoring  the DNT header, but those efforts appear to have been
+dead on arrival.</p>
 
-<p>In 2007 the Federal Trade Commission was asked to create a "Do Not
+<p>In 2007, the US Federal Trade Commission was asked to create a "Do Not
 Track" list, similar to the popular "Do Not Call" list. This would be a
 list of domain names of advertisers that tracked consumer behavior online,
 and would allow browsers to prevent requests to those sites if the user
@@ -54,7 +51,7 @@ appeared as a header in 2009, when security researchers Christopher
 Soghoian, Sid Stamm, and Dan Kaminsky got together to create a
 prototype. In his article on the <a
 href="http://paranoia.dubfire.net/2011/01/history-of-do-not-track-header.html">history
-of DNT</a>, Soghoian writes:</p>
+of DNT</a>, Soghoian wrote:</p>
 
 <div class="BigQuote">
 <p>In July of 2009, I decided to try and solve this problem. My friend and
@@ -70,7 +67,7 @@ is, even after you opt out, they continue to track you.</p>
 
 </div>
 
-<p>At some point, Soghoian writes, "<span>the Behavioral Advertising Opt
+<p>At some point, Soghoian said, "<span>the Behavioral Advertising Opt
 Out header seems to have been discarded, and instead, focus has shifted to
 a single header to communicate a user's preference to not be
 tracked</span>". The final <a
@@ -89,7 +86,7 @@ something that is very much still up in the air (particularly since no ad
 network has agreed to look for or respect the header).</p>
 </div>
 
-<p>Part of the problem from the beginning was defining what "tracking"
+<p>Part of the problem was defining what "tracking"
 means in this context. The Electronic Frontier Foundation (EFF), which has
 been involved in DNT efforts from the beginning, <a
 href="https://www.eff.org/deeplinks/2011/02/what-does-track-do-not-track-mean">defines</a>
@@ -103,7 +100,7 @@ bar</span>"), which is allowed, and tracking by a third-party (other
 domains), which is not.</p>
 
 <p>Starting with Mozilla Firefox in January 2011, browsers began to
-implement the "trivially easy" part, allowing users to opt in to sending
+implement the "trivially easy" part, allowing users to opt into sending
 the new header. Microsoft followed soon after, adding DNT support to
 Internet Explorer 9 in March 2011. Apple followed suit with Safari in April
 2011. Google was a little late to the game, but <a
@@ -119,7 +116,7 @@ its eight active years, the group published a <a
 href="https://www.w3.org/TR/tracking-dnt/">specification of the DNT
 header</a> as well as a <a
 href="https://www.w3.org/TR/tracking-compliance/">set of practices</a>
-about what compliance to DNT means. Unfortunately in January 2019 the
+about what compliance for DNT means. Unfortunately, in January 2019 the
 working group was closed with this <a
 href="https://github.com/w3c/dnt/commit/5d85d6c3d116b5eb29fddc69352a77d87dfd2310">notice</a>:</p>
 
@@ -133,17 +130,17 @@ product as this Note, with any future addendums to be published
 separately.</p> 
 </div>
 
-<p>As early as 2012 <a href="https://lwn.net/Articles/520047/">LWN
+<p>As early as 2012, <a href="https://lwn.net/Articles/520047/">LWN
 wrote</a> about how it wasn't looking good for DNT: advertising groups were
 pushing back (unsurprisingly), and there was no legal definition of how the
 header should be interpreted. In addition, Microsoft's decision in May 2012
 to <a
 href="https://docs.microsoft.com/en-us/archive/blogs/microsoft_on_the_issues/advancing-consumer-trust-and-privacy-internet-explorer-in-windows-8">enable
 the header by default</a> in Internet Explorer 10 backfired, as DNT had
-always been intended as to be a deliberate choice made by the consumer. Roy
-Fielding from Apache even committed a <a
+always been intended to indicate a deliberate choice made by the consumer. Roy
+Fielding even committed a <a
 href="https://github.com/apache/httpd/commit/a381ff35fa4d50a5f7b9f64300dfd98859dee8d0">change</a>
-to un-set the DNT header if the request was coming from Internet Explorer
+to unset the DNT header in the Apache web server if the request was coming from Internet Explorer
 10 &mdash; possibly setting a record for the number of comments on a GitHub
 commit. Even though Microsoft finally <a
 href="https://blogs.microsoft.com/on-the-issues/2015/04/03/an-update-on-microsofts-approach-to-do-not-track/">removed
@@ -174,7 +171,7 @@ reason for removing it was to "<span>prevent potential use as a
 fingerprinting variable</span>". Tracking systems often use a fingerprint
 of a user's HTTP headers to help track them across different websites, and
 the <tt>DNT:&nbsp;1</tt> header &mdash; given its low use &mdash; adds
-uniqueness to the user's headers and may actually make them easier to
+uniqueness to the user's headers that may actually make them easier to
 track.</p>
 
 <p>Since then, Apple has been steadily rolling out what it calls "<a
@@ -183,15 +180,13 @@ Tracking Prevention</a>", which is a more holistic approach that prevents
 the use of third-party cookies after a certain time window, and helps avoid
 tracking via query string parameters ("<a
 href="https://webkit.org/blog/8828/intelligent-tracking-prevention-2-2/">link
-decoration</a>").</p>
-
-<p>Mozilla Firefox <a
+decoration</a>"). Mozilla Firefox <a
 href="https://blog.mozilla.org/blog/2019/09/03/todays-firefox-blocks-third-party-tracking-cookies-and-cryptomining-by-default/">added</a>
 similar protections from third-party cookies in September 2019. Microsoft
 <a
 href="https://docs.microsoft.com/en-us/microsoft-edge/web-platform/tracking-prevention">included</a>
 tracking prevention in the new Chromium-based version of its Edge browser,
-released in January 2020. Even Google, much of whose revenue comes from
+released in January 2020. Even Google, where much of its revenue comes from
 advertising (and indirectly, tracking), announced its own <a
 href="https://blog.chromium.org/2020/01/building-more-private-web-path-towards.html">plans</a>
 to phase out support for third-party cookies in Chrome over the next two
@@ -215,12 +210,12 @@ blocking that domain. This sounds like a great idea for users, but it just
 doesn't seem to have taken off with advertisers.</p>
 
 <p>One recent attempt to revitalize the DNT header is by <a
-href="https://duckduckgo.com/">DuckDuckGo</a>, a company that builds
+href="https://duckduckgo.com/">DuckDuckGo</a>, which is a company that builds
 privacy-oriented internet tools (including a search engine that
 "<span>doesn't track you</span>"). It found (in November 2018) that,
 despite web sites mostly ignoring the header, DNT was <a
 href="https://spreadprivacy.com/do-not-track/">enabled by approximately
-23%</a> of adults in the U.S. In May 2019 DuckDuckGo published draft
+23%</a> of adults in the US. In May 2019 DuckDuckGo published draft
 legislation titled "<a
 href="https://duckduckgo.com/download/The_Do-Not-Track_Act_of_2019.pdf">The
 Do-Not-Track Act of 2019 [PDF]</a>" which it <a
@@ -230,13 +225,13 @@ that would align with current consumer expectations and empower people to
 more easily regain control of their online privacy</span>". The company's
 proposal would require web sites to honor the DNT header by preventing
 third-party tracking and only using first-party tracking in ways "<span>the
-user expects</span>", for example, a site could show a user the local
+user expects</span>". For example, a site could show a user the local
 weather forecast, but not sell or share the user's location data to third
 parties.</p>
 
-<p>Unfortunately in the year since DuckDuckGo published the proposal,
+<p>Unfortunately, in the year since DuckDuckGo published the proposal,
 nothing further seems to have come of it. However, around the same time,
-U.S. senator Josh Hawley, supported by senators Dianne Feinstein and Mark
+US senator Josh Hawley, supported by senators Dianne Feinstein and Mark
 Warner, introduced a similar <a
 href="https://www.congress.gov/bill/116th-congress/senate-bill/1578/all-info">Do
 Not Track Act</a> that was "<span>referred to the Committee on Commerce,
@@ -245,15 +240,17 @@ this bill in the last year, so it seems there is little chance of it going
 further.</p>
 
 <p>As law firm Davis Wright Tremaine LLP <a
-href="https://www.dwt.com/blogs/privacy--security-law-blog/2020/07/pole-camera-surveilance-fourth-amendment">points
-out</a>, the recent CCPA legislation is enforceable (where DNT is not), but
-it only applies to businesses operating in the state of California, and
-only to the "sale" of personal information. One possible way forward is to
-generalize efforts like CCPA rather than trying to give DNT a new lease of
-life. However, as the firm notes, the CCPA waters are almost as muddy as
-those of DNT: "<span>we do not yet have clarity under the CCPA, however,
-regarding which tracking activities (e.g., tracking for analytics, tracking
-to serve targeted ads, etc.) would be considered 'sales'</span>."</p>
+href="https://www.dwt.com/blogs/privacy--security-law-blog/2020/07/pole-camera-surveilance-fourth-amendment">pointed
+out</a>, the recent <a href="https://oag.ca.gov/privacy/ccpa">California
+Consumer Privacy Act</a> (CCPA) legislation is enforceable (where DNT is
+not), but it only applies to businesses operating in the state of
+California, and only to the "sale" of personal information. One possible
+way forward is to generalize efforts like CCPA rather than trying to give
+DNT a new lease of life. However, as the firm noted, the CCPA waters are
+almost as muddy as those of DNT: "<span>we do not yet have clarity under
+the CCPA, however, regarding which tracking activities (e.g., tracking for
+analytics, tracking to serve targeted ads, etc.) would be considered
+'sales'</span>."</p>
 
 <p>It looks as though, after a decade-long ride with a lot of bumps, the Do
 Not Track header never quite got enough traction with the right people to
