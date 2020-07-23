@@ -3,7 +3,7 @@ layout: default
 title: "What's new in Lua 5.4"
 permalink: /writings/whats-new-in-lua-54/
 description: "An overview of the new features in Lua 5.4."
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/826134/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">July 2020</p>
