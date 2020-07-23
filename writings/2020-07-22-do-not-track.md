@@ -29,29 +29,33 @@ span {
 </style>
 
 
-<p>"Do Not Track" (DNT) is a simple HTTP header that a browser
-can send to signal to a web site that the user does not want to be
-tracked. The DNT header had a <a
-href="https://lwn.net/Articles/424861/">promising start</a> and the <a
-href="https://lwn.net/Articles/439460/">support of major browsers</a>
-almost a decade ago. Most web browsers still support sending it, but in
-2020 it is almost useless because the vast majority of web sites ignore
-it. Advertising companies, in particular, argued that its legal status was
-unclear, and that it was difficult to determine how to interpret the
-header. There have been some relatively recent attempts at legislation to
-enforce honoring  the DNT header, but those efforts appear to have stagnated.
-In comparison, the European Union's General Data Protection Regulation (GDPR)
-and the California Consumer Privacy Act (CCPA) attempt to solve some of the
-same problems as DNT but are legally enforceable.</p>
+<p>"Do Not Track" (DNT) is a simple HTTP header that a browser can send to
+signal to a web site that the user does not want to be tracked. The DNT
+header had a <a href="https://lwn.net/Articles/424861/">promising start</a> and the <a
+href="https://lwn.net/Articles/439460/">support of major browsers</a> almost a decade
+ago. Most web browsers still support sending it, but in 2020 it is almost
+useless because the vast majority of web sites ignore it. Advertising
+companies, in particular, argued that its legal status was unclear, and
+that it was difficult to determine how to interpret the header. There have
+been some relatively recent attempts at legislation to enforce honoring the
+DNT header, but those efforts do not appear to be going anywhere.  In
+comparison, the European Union's <a
+href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation">General
+Data Protection Regulation</a> (GDPR) and the <a
+href="https://en.wikipedia.org/wiki/California_Consumer_Privacy_Act">California
+Consumer Privacy Act</a> (CCPA) attempt to solve some of the same problems
+as DNT but are legally enforceable.  </p>
 
-<p>In 2007, the US Federal Trade Commission was asked to create a "Do Not
-Track" list, similar to the popular "Do Not Call" list. This would be a
-list of domain names of advertisers that tracked consumer behavior online,
+<p>In 2007, the US Federal Trade Commission was <a
+href="https://cdt.org/wp-content/uploads/privacy/20071031consumerprotectionsbehavioral.pdf">asked
+[PDF]</a> to create a "Do Not
+Track" list, similar to the popular "Do Not Call" list. This would have been a
+list of advertiser domain names  that tracked consumer behavior online,
 and would allow browsers to prevent requests to those sites if the user
 opted in. However, that approach never got off the ground, and DNT first
 appeared as a header in 2009, when security researchers Christopher
 Soghoian, Sid Stamm, and Dan Kaminsky got together to create a
-prototype. In his article on the <a
+prototype. In his 2011 article on the <a
 href="http://paranoia.dubfire.net/2011/01/history-of-do-not-track-header.html">history
 of DNT</a>, Soghoian wrote:</p>
 
@@ -76,7 +80,7 @@ tracked</span>". The final <a
 href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/DNT">format</a>
 of the header is literally "<tt>DNT:&nbsp;1</tt>".</p>
 
-<p>Even back when Soghoian wrote that article in 2011, it was clear that
+<p>Even back when Soghoian wrote that article, it was clear that
 getting advertisers to respect the header wasn't going to be easy:</p>
 
 <div class="BigQuote">
@@ -163,12 +167,12 @@ present, <a
 href="https://help.medium.com/hc/en-us/articles/213690167-Medium-s-Do-Not-Track-Policy">Medium</a>
 and <a
 href="https://help.pinterest.com/en/article/do-not-track">Pinterest</a>
-still honor the header.</p>
+still act on the header.</p>
 
-<p>Apple's Safari is the first major browser to <a
-href="https://developer.apple.com/documentation/safari_release_notes/safari_12_1_release_notes#3130299">remove
+<p>Apple's Safari was the first major browser to <a
+href="https://developer.apple.com/documentation/safari_release_notes/safari_12_1_release_notes#3130299">lose
 support</a> for "<span>the expired Do Not Track standard</span>" &mdash;
-Apple removed it from Safari in March 2019. Ironically, Apple's stated
+it was removed from Safari in March 2019. Ironically, Apple's stated
 reason for removing it was to "<span>prevent potential use as a
 fingerprinting variable</span>". Tracking systems often use a fingerprint
 of a user's HTTP headers to help track them across different websites, and
@@ -178,13 +182,13 @@ track.</p>
 
 <p>Since then, Apple has been steadily rolling out what it calls "<a
 href="https://webkit.org/blog/7675/intelligent-tracking-prevention/">Intelligent
-Tracking Prevention</a>", which is a more holistic approach that prevents
-the use of third-party cookies after a certain time window, and helps avoid
-tracking via query string parameters ("<a
+Tracking Prevention</a>", which is an approach that prevents
+the use of third-party cookies after a certain time window and helps avoid
+tracking via query-string parameters ("<a
 href="https://webkit.org/blog/8828/intelligent-tracking-prevention-2-2/">link
-decoration</a>"). Mozilla Firefox <a
+decoration</a>"). Mozilla  <a
 href="https://blog.mozilla.org/blog/2019/09/03/todays-firefox-blocks-third-party-tracking-cookies-and-cryptomining-by-default/">added</a>
-similar protections from third-party cookies in September 2019. Microsoft
+similar protections from third-party cookies to Firefox in September 2019. Microsoft
 <a
 href="https://docs.microsoft.com/en-us/microsoft-edge/web-platform/tracking-prevention">included</a>
 tracking prevention in the new Chromium-based version of its Edge browser,
@@ -241,11 +245,11 @@ Science, and Transportation</span>". There has not been any activity on
 this bill in the last year, so it seems there is little chance of it going
 further.</p>
 
-<p>In June 2018 the W3C working group published an <a
+<p>In June 2018, the W3C working group published an <a
 href="https://www.w3.org/blog/2018/06/do-not-track-and-the-gdpr/">article</a>
 comparing DNT with the GDPR. The GDPR requires a web site to get a user's
-consent before tracking them, and is enforceable by law (where DNT is not).
-Similarly, the recent <a href="https://oag.ca.gov/privacy/ccpa">CCPA</a>
+consent before tracking them and, unlike DNT, that  is enforceable by law.
+Similarly, the recent CCPA
 legislation is enforceable, but it only applies to businesses operating in the
 state of California, and only to the "sale" of personal information. As law firm
 Davis Wright Tremaine LLP <a
@@ -254,10 +258,7 @@ the CCPA waters are almost as muddy as those of DNT: "<span>we do not yet have
 clarity under the CCPA, however, regarding which tracking activities (e.g.,
 tracking for analytics, tracking to serve targeted ads, etc.) would be
 considered 'sales'</span>." One possible way forward is to generalize efforts
-like the GDPR and CCPA rather than trying to give DNT a new lease of life (the
-recently-proposed <a
-href="https://www.natlawreview.com/article/california-privacy-rights-act-cpra-headed-to-november-2020-ballot">California
-Privacy Rights Act</a> looks like an attempt to strengthen CCPA).</p>
+like the GDPR and CCPA rather than trying to give DNT a new lease on life.</p>
 
 <p>It looks as though, after a decade-long ride with a lot of bumps, the Do
 Not Track header never quite got enough traction with the right people to
