@@ -64,10 +64,8 @@ var routes = []route{
     newRoute("POST", "/api/widgets", apiCreateWidget),
     newRoute("POST", "/api/widgets/([^/]+)", apiUpdateWidget),
     newRoute("POST", "/api/widgets/([^/]+)/parts", apiCreateWidgetPart),
-    newRoute("POST", "/api/widgets/([^/]+)/parts/([0-9]+)/update",
-        apiUpdateWidgetPart),
-    newRoute("POST", "/api/widgets/([^/]+)/parts/([0-9]+)/delete",
-        apiDeleteWidgetPart),
+    newRoute("POST", "/api/widgets/([^/]+)/parts/([0-9]+)/update", apiUpdateWidgetPart),
+    newRoute("POST", "/api/widgets/([^/]+)/parts/([0-9]+)/delete", apiDeleteWidgetPart),
     newRoute("GET", "/([^/]+)", widget),
     newRoute("GET", "/([^/]+)/admin", widgetAdmin),
     newRoute("POST", "/([^/]+)/image", widgetImage),
@@ -99,8 +97,7 @@ func Serve(w http.ResponseWriter, r *http.Request) {
     }
     if len(allow) > 0 {
         w.Header().Set("Allow", strings.Join(allow, ", "))
-        http.Error(w, "405 method not allowed",
-            http.StatusMethodNotAllowed)
+        http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
         return
     }
     http.NotFound(w, r)
@@ -388,6 +385,74 @@ func match(path, pattern string, vars ...interface{}) bool {
 ```
 
 Other than that, the `get` and `post` helpers, as well as the handlers themselves, are identical to the regex switch method. I quite like this method (and it's quite efficient), but the byte-by-byte matching code was a little fiddly to write -- definitely not as simple as calling `regex.FindStringSubmatch`.
+
+
+Split switch
+------------
+
+This approach simply splits the request path on `/` and then uses a `switch` with `case` statements that compare the number of path segments and the content of each segment. It's very direct and simple, but also a bit error-prone with lots of hard-coded index constants. Here is the code:
+
+```go
+func Serve(w http.ResponseWriter, r *http.Request) {
+    // Split path into slash-separated parts, for example, path "/foo/bar"
+    // gives p==["foo", "bar"] and path "/" gives p==[""].
+    p := strings.Split(r.URL.Path, "/")[1:]
+    n := len(p)
+
+    var h http.Handler
+    var id int
+    switch {
+    case n == 1 && p[0] == "":
+        h = get(home)
+    case n == 1 && p[0] == "contact":
+        h = get(contact)
+    case n == 2 && p[0] == "api" && p[1] == "widgets" && r.Method == "GET":
+        h = get(apiGetWidgets)
+    case n == 2 && p[0] == "api" && p[1] == "widgets":
+        h = post(apiCreateWidget)
+    case n == 3 && p[0] == "api" && p[1] == "widgets" && p[2] != "":
+        h = post(apiWidget{p[2]}.update)
+    case n == 4 && p[0] == "api" && p[1] == "widgets" && p[2] != "" && p[3] == "parts":
+        h = post(apiWidget{p[2]}.createPart)
+    case n == 6 && p[0] == "api" && p[1] == "widgets" && p[2] != "" && p[3] == "parts" && isId(p[4], &id) && p[5] == "update":
+        h = post(apiWidgetPart{p[2], id}.update)
+    case n == 6 && p[0] == "api" && p[1] == "widgets" && p[2] != "" && p[3] == "parts" && isId(p[4], &id) && p[5] == "delete":
+        h = post(apiWidgetPart{p[2], id}.delete)
+    case n == 1:
+        h = get(widget{p[0]}.widget)
+    case n == 2 && p[1] == "admin":
+        h = get(widget{p[0]}.admin)
+    case n == 2 && p[1] == "image":
+        h = post(widget{p[0]}.image)
+    default:
+        http.NotFound(w, r)
+        return
+    }
+    h.ServeHTTP(w, r)
+}
+```
+
+The handlers are identical to the other `switch`-based methods, as are the `get` and `post` helpers. The only helper here is the `isId` function, which checks that the ID segments are in fact positive integers:
+
+```go
+func isId(s string, p *int) bool {
+    id, err := strconv.Atoi(s)
+    if err != nil || id <= 0 {
+        return false
+    }
+    *p = id
+    return true
+}
+```
+
+So while I like the bare-bones simplicity of this approach -- just basic string equality comparisons -- the verbosity of the matching and the error-prone integer constants would make me think twice about actually using it for anything but very simple routing.
+
+
+ShiftPath
+---------
+
+TODO
+
 
 
 Benchmarks
