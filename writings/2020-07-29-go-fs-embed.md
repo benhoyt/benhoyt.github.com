@@ -38,22 +38,25 @@ files: one for a new read-only <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-iofs.md">filesystem
 interface</a>, and a second design that proposes a standard way to <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-embed.md">embed
-files</a> into Go binaries (building on the filesystem interface). The
+files</a> into Go binaries (by building on the filesystem interface).
+Embedding files into Go binaries is intended to  simplify deployments
+by including all of a program's resources in a single binary; 
+the
 filesystem interface design was drafted primarily as a building block for
-the file-embedding proposal, the goal of which is to simplify deployments
-by including a program's resource files in a single binary. There has been
-a lot of discussion on the draft designs: mostly positive, but with some
+that. There has been
+a lot of discussion on the draft designs, which has been generally
+positive, but there are some
 significant concerns.</p>
 
 <p>Russ Cox, technical lead of the Go team, and Rob Pike, one of the
-creators of Go, are the authors of the design on the filesystem
-interface. Cox is also an author of the design on file embedding, along
-with Brad Fitzpatrick, a long-time Go contributor.  Additionally, Cox
-created video presentations of each design for those who prefer that format
+creators of Go, are the authors of the design for the filesystem
+interface. Cox is also an author of the design for file embedding along
+with longtime Go contributor Brad Fitzpatrick.  Additionally, Cox
+created YouTube video presentations of each design for those who prefer that format
 (the <a href="https://www.youtube.com/watch?v=yx7lmuwUNv8">filesystem
 interface video</a> and the <a
 href="https://www.youtube.com/watch?v=rmS-oWcBZaI">file-embedding
-video</a>). Both documents are quick to note that these designs are not
+video</a>). Both designs are quick to note that they are not
 (yet) formal proposals:</p>
 
 <div class="BigQuote">
@@ -69,16 +72,16 @@ intended eventual proposal.</p>
 <p>Many smaller language and library changes are discussed on the <a
 href="https://github.com/golang/go/issues">GitHub issue tracker</a>, but
 for these larger discussions the Go team is trying to use <a
-href="https://reddit.com/r/golang">Go Reddit</a> threads to scale the
-discussion &mdash; GitHub issues does not have any form of threading, so
+href="https://reddit.com/r/golang">r/golang</a> Reddit threads to scale the
+discussion &mdash; GitHub issues do not have any form of threading, so
 multiple conversations are hard to keep track of. There is a Reddit thread
-for each draft design: the <a
+for each draft design (the <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/">filesystem
-interface</a> and the <a
-href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/">file-embedding</a>
-one, with quite a number of comments on each. There is also a lengthy,
-non-official <a href="https://news.ycombinator.com/item?id=23933966">Hacker
-News thread</a> discussing the file-embedding design.</p>
+interface thread</a> and the <a
+href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/">file-embedding
+thread</a>) with quite a few of comments on each. There is also a lengthy <a
+href="https://news.ycombinator.com/item?id=23933966">Hacker News thread</a>
+that discusses the file-embedding design.</p>
 
 
 <h4>A filesystem interface</h4>
@@ -105,9 +108,12 @@ error. The <tt>File</tt> interface is defined as follows:</p>
     }
 </pre>
 
-<p>In other words, a file has to be able to return file information via
-<tt>stat()</tt>, be readable, and be closable. These are the bare minimum
-methods a conforming filesystem needs to provide, but an implementation
+<p>In other words, a file has the following characteristics: is able to provide
+file information like that returned from 
+<a
+href="https://man7.org/linux/man-pages/man2/stat.2.html"><tt>stat()</tt></a>,
+is able to be read, and can be closed. These are the bare minimum 
+that a conforming filesystem needs to provide, but an implementation
 "<span>may also provide other methods to optimize operations or add new
 functionality</span>". The standard library's file type (<a
 href="https://golang.org/pkg/os/#File"><tt>os.File</tt></a>) already
@@ -144,7 +150,7 @@ extension interface</a>:</p>
 
 <p>Along with the extension interface, the design adds a
 <tt>ReadFile()</tt> helper function that checks the filesystem for the
-<tt>ReadFileFS</tt> extension, and uses it if it exists, otherwise falls
+<tt>ReadFileFS</tt> extension, and uses it if it exists, otherwise it falls
 back to performing the open/read/close sequence. There are various other
 extension interfaces defined in the draft proposal, including <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-iofs.md#stat"><tt>StatFS</tt></a>,
@@ -170,8 +176,8 @@ package implement <tt>FS</tt> so that developers can treat a zip file as a
 filesystem and use it wherever <tt>FS</tt> is allowed.</p>
 
 <p>Much of the feedback on the Reddit discussion has been positive, and it
-seems like an interface of this kind is something developers want. However,
-one of the criticisms by several people is about the drawbacks of extension
+seems like an interface of this kind is something that developers want. However,
+one of the criticisms made by several people is about the drawbacks of extension
 interfaces. "Acln0" <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fys0w28/">summarized</a>
 the concerns:</p>
@@ -195,13 +201,13 @@ that this use of extension interfaces means that it "<span>becomes
 infeasible to use the (extremely useful) decorator pattern. That's really
 unfortunate. To me that makes the proposal almost a non-starter; the
 decorator pattern is too useful to break in this way.</span>" The decorator
-pattern wraps an interface and adds some functionality. It is used for
-logging or authentication middleware in web servers; in the context of
+pattern wraps an interface and adds some functionality. It is often used
+for logging or authentication middleware in web servers; in the context of
 filesystems it would likely be used to add a caching or transformation
 layer. If a middleware author does not take into account the various
 optional interfaces, the resulting wrapper will not support them. Nick
-Craig-Wood, author of <a href="https://rclone.org/">Rclone</a>, a cloud
-storage tool written in Go, is positive about the proposal but <a
+Craig-Wood, author of <a href="https://rclone.org/">Rclone</a>, a
+cloud-storage tool written in Go, likes the proposal but <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fysyrht/">expressed</a>
 similar concerns: "<span>Extension (or optional as I usually call them)
 interfaces are a big maintenance burden - wrapping them is really
@@ -218,14 +224,14 @@ that.</span>".</p>
 
 <p>Another <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fyryjmj/">concern</a>
-comes from "TheSwedeheart": "<span>One thing I'm missing to migrate [his
+came from "TheSwedeheart": "<span>One thing I'm missing to migrate [his
 virtual filesystem] over to this is support for propagating contexts to
 each operation, for cancellation.</span>". Cox <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fys58od/">replied</a>
 that a library author could "<span>probably pass the context to a
 constructor that returns an FS with the context embedded in it, and then
 have that context apply to the calls being made with that specific
-FS.</span>" As "lobster_johnson" points out, this goes against the <a
+FS.</span>" As "lobster_johnson" pointed out, this goes against the <a
 href="https://golang.org/pkg/context/"><tt>context</tt></a> package's
 guideline to explicitly pass context as the first function argument, not
 store a context inside a struct. However, Cox <a
@@ -236,12 +242,12 @@ sense.</span>"</p>
 
 <p>There are of course the usual bikeshedding threads that debate naming;
 "olegkovalov" <a
-href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fyrx54b/">said</a>
+href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fyrx54b/">said</a>:
 "<span>I'm somewhat scared about <tt>io/fs</tt> name, <tt>fs</tt> is a good
 variable name, it'll cause many troubles to the users when <tt>io/fs</tt>
 will appear</span>." After some back-and-forth, Cox <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fysxjnp/">stressed</a>
-the need to focus on application developers instead of on the filesystem
+the need to focus on application developers rather than on the filesystem
 implementers:</p>
 
 <div class="BigQuote">
@@ -256,9 +262,9 @@ than implementing file systems.</p>
 
 <h4>Embedding files in binaries</h4>
 
-<p>The second, related draft design proposes a way to embed files (or
+<p>The other draft design proposes a way to embed files (or
 "static assets") in Go binaries and read their contents at runtime. This
-simplifies releases and deployments, as developers can simply copy around a
+simplifies releases and deployments, since developers can simply copy around a
 large binary with no external dependencies (for SQL snippets, HTML
 templates, CSS and JavaScript assets for a web application, and so on). As
 the document points out, there are already over a dozen third-party tools
@@ -283,8 +289,8 @@ process Go code, among them goimports, gopls, and staticcheck.</p>
 <p>The <tt>go</tt> tool already looks for special comments in Go source
 files for various things, including <tt>//&nbsp;+build</tt> tags to include
 certain files only on specific architectures, and <tt>//go:generate</tt>
-comments that tell <tt>go generate</tt> what commands to run for code
-generation purposes. This file-embedding design proposes a new
+comments that tell <tt>go generate</tt> what commands to run for
+code-generation purposes. This file-embedding design proposes a new
 <tt>//go:embed</tt> comment directive that tells <tt>go build</tt> to
 include those files in the resulting binary. Here is a concrete
 example:</p>
@@ -301,7 +307,7 @@ example:</p>
 <tt>html/index.html</tt> file, and make them accessible via the
 <tt>content</tt> variable (which is of type <tt>embed.Files</tt>). The
 <tt>embed</tt> package is a new standard library package being proposed
-which contains the API for accessing the embedded files. In addition, the
+that contains the API for accessing the embedded files. In addition, the
 <tt>embed.Files</tt> type implements the <tt>fs.FS</tt> interface from the
 filesystem design discussed above, allowing the embedded files to be used
 directly with other standard library packages like <tt>net/http</tt> and
@@ -311,7 +317,7 @@ the new filesystem interface.</p>
 <p>The design <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-embed.md#codecs-and-other-processing">limits
 the scope</a> of the proposal in an important way. There are many ways that
-the data in the files could be transformed before being including in the
+the data in the files could be transformed before being included in the
 binary: data compression, TypeScript compilation, image resizing, and so
 on. This design takes a simple approach of just including the raw file
 data:</p>
@@ -332,11 +338,11 @@ href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/fy
 one</a> from "bojanz": "<span>This looks like a great start. Thank you for
 tackling this.</span>" There are a few minor suggestions, such as a <a
 href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/fytj7my/">comment</a>
-by "zikaeroh" in favor of adding a more powerful path matching API that
+by "zikaeroh" in favor of adding a more powerful path-matching API that
 supports double star for recursive path matching, like <tt>glob('**/*.png',
 recursive=True)</tt> <a
 href="https://docs.python.org/3/library/glob.html#glob.glob">in
-Python</a>. "Ekrubnivek" <a
+Python</a>.  Kevin Burke <a
 href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/fytb7z3/">suggested</a>
 also storing a cryptographic hash of each file's content so the developer
 does not have to hash the file at runtime: "<span>This is useful for
@@ -359,9 +365,9 @@ separate syntax in your code file leads them to stuff every additional
 feature into comments, a space shared by human notetaking.</p> 
 </div>
 
-<p>Cox sums up his thinking about this with the following <a
-href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/fywm1ap/">comment</a>
-which compares the syntax with <tt>#pragma</tt> in C:</p>
+<p>Cox summed up his thinking about this with the following <a
+href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/fywm1ap/">comment</a>,
+which compares the syntax with <tt>#pragma</tt> for C:</p>
 
 <div class="BigQuote">
 <p>For what it's worth, we already have <tt>//go:generate</tt> and a few
@@ -378,19 +384,19 @@ signal to people that something special is going on.</p>
 
 <h4>Wrapping up</h4>
 
-<p>There is a good amount of community support for both draft designs,
+<p>There is a fair amount of community support for both draft designs,
 particularly the more user-facing proposal for file embedding. Many
 developers are already using third-party file-embedding libraries to
-simplify their deployments, and these efforts will standardize that
+simplify their deployments and these efforts will standardize that
 tooling. It seems likely that the designs will be refined and turned into
-full <a href="https://research.swtch.com/proposals">proposals</a>. With <a
-href="https://lwn.net/Articles/820217/">Go 1.15</a> coming out in a few
+full proposals. With <a
+href="/Articles/820217/">Go 1.15</a> coming out in a few
 days, it's possible these proposals would be ready for Go 1.16 (due out in
 six months), but if there needs to be another round of feedback &mdash; for
 example, regarding the problems with extension interfaces &mdash; it is
-more likely to be included in Go 1.17.</p>
+more likely to be included in Go 1.17 in a year's time.</p>
 
-<p>In a future article we hope to look at another recent Go draft design
+<p>In a future article, we plan to look at another recent Go draft design
 that aims to <a
 href="https://go.googlesource.com/proposal/+/522400e00c82921a68bed78611cfb0ff3c014140/design/draft-fuzzing.md">standardize
 fuzz testing</a>. That design proposes adding "<a
