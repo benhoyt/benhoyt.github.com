@@ -401,7 +401,7 @@ developers are already using third-party file-embedding libraries to
 simplify their deployments and these efforts will standardize that
 tooling. It seems likely that the designs will be refined and turned into
 full proposals. With <a
-href="/Articles/820217/">Go 1.15</a> due out on August&nbsp;1, it's
+href="https://lwn.net/Articles/820217/">Go 1.15</a> due out on August&nbsp;1, it's
 possible that these proposals would be ready for Go 1.16 (scheduled for 
 six months out), but if there needs to be another round of feedback &mdash; for
 example, regarding the problems with extension interfaces &mdash; it is
