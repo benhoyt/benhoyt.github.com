@@ -36,7 +36,9 @@ href="https://lwn.net/Articles/824716/">covered</a> the one on generics
 back in June. Last week, the Go team published two draft designs related to
 files: one for a new read-only <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-iofs.md">filesystem
-interface</a>, and a second design that proposes a standard way to <a
+interface</a>, which specifies a minimal <a
+href="https://golang.org/doc/effective_go.html#interfaces">interface</a>
+for filesystems, and a second design that proposes a standard way to <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-embed.md">embed
 files</a> into Go binaries (by building on the filesystem interface).
 Embedding files into Go binaries is intended to  simplify deployments
@@ -75,19 +77,18 @@ for these larger discussions the Go team is trying to use <a
 href="https://reddit.com/r/golang">r/golang</a> Reddit threads to scale the
 discussion &mdash; GitHub issues do not have any form of threading, so
 multiple conversations are hard to keep track of. There is a Reddit thread
-for each draft design (the <a
+for each draft—the <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/">filesystem
 interface thread</a> and the <a
 href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/">file-embedding
-thread</a>) with quite a few of comments on each. There is also a lengthy <a
+thread</a>—with quite a few comments on each. There is also a lengthy <a
 href="https://news.ycombinator.com/item?id=23933966">Hacker News thread</a>
 that discusses the file-embedding design.</p>
 
 
 <h4>A filesystem interface</h4>
 
-<p>The crux of the filesystem interface design is a single-method <a
-href="https://golang.org/doc/effective_go.html#interfaces">interface</a>
+<p>The crux of the filesystem interface design is a single-method interface
 named <tt>FS</tt> in a new <tt>io/fs</tt> standard library package:</p>
 
 <pre>
@@ -121,10 +122,14 @@ implements these three methods, so it is a conforming <tt>fs.File</tt>
 implementation.</p>
 
 <p>If a <tt>File</tt> is actually a directory, the file information
-returned by <tt>Stat()</tt> will indicate that, and the value must also
+returned by <tt>Stat()</tt> will indicate that; in that case, the <tt>File</tt> returned from
+<tt>Open()</tt> must also
 implement the <a
-href="https://golang.org/pkg/os/#File.Readdir"><tt>ReadDir()</tt></a>
-method, which returns a list of <tt>os.FileInfo</tt> objects representing
+href="https://golang.org/pkg/os/#File.Readdir"><tt>Readdir()</tt></a>
+method on top of the <tt>File</tt> interface. <tt>Readdir()</tt>
+returns a list of <a
+href="https://golang.org/pkg/os/#FileInfo"><tt>os.FileInfo</tt></a> objects
+representing  
 the files inside the directory.</p>
 
 <p>Filesystem implementations can expose additional functionality using
@@ -149,7 +154,7 @@ extension interface</a>:</p>
 </pre>
 
 <p>Along with the extension interface, the design adds a
-<tt>ReadFile()</tt> helper function that checks the filesystem for the
+<tt>ReadFile()</tt> helper function to the <tt>io/fs</tt> package that checks the filesystem for the
 <tt>ReadFileFS</tt> extension, and uses it if it exists, otherwise it falls
 back to performing the open/read/close sequence. There are various other
 extension interfaces defined in the draft proposal, including <a
@@ -224,14 +229,17 @@ that.</span>".</p>
 
 <p>Another <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fyryjmj/">concern</a>
-came from "TheSwedeheart": "<span>One thing I'm missing to migrate [his
+came from "TheSwedeheart" regarding <a
+href="https://blog.golang.org/context">contexts</a> (the standard way  
+in Go to explicitly propagate timeouts, cancellation signals, and
+request-scoped values down a call chain): "<span>One thing I'm missing to migrate [his
 virtual filesystem] over to this is support for propagating contexts to
 each operation, for cancellation.</span>". Cox <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fys58od/">replied</a>
 that a library author could "<span>probably pass the context to a
 constructor that returns an FS with the context embedded in it, and then
 have that context apply to the calls being made with that specific
-FS.</span>" As "lobster_johnson" pointed out, this goes against the <a
+FS.</span>" As "lobster_johnson" <a href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fyslba8/">pointed out</a>, this goes against the <a
 href="https://golang.org/pkg/context/"><tt>context</tt></a> package's
 guideline to explicitly pass context as the first function argument, not
 store a context inside a struct. However, Cox <a
@@ -247,8 +255,8 @@ href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fyrx5
 variable name, it'll cause many troubles to the users when <tt>io/fs</tt>
 will appear</span>." After some back-and-forth, Cox <a
 href="https://www.reddit.com/r/golang/comments/hv976o/qa_iofs_draft_design/fysxjnp/">stressed</a>
-the need to focus on application developers rather than on the filesystem
-implementers:</p>
+the need for a short name to keep the focus on application developers rather than on the filesystem
+implementers:</p> 
 
 <div class="BigQuote">
 <p>You're focusing on the file system implementers instead of the
@@ -291,8 +299,9 @@ files for various things, including <tt>//&nbsp;+build</tt> tags to include
 certain files only on specific architectures, and <tt>//go:generate</tt>
 comments that tell <tt>go generate</tt> what commands to run for
 code-generation purposes. This file-embedding design proposes a new
-<tt>//go:embed</tt> comment directive that tells <tt>go build</tt> to
-include those files in the resulting binary. Here is a concrete
+<tt>//go:embed</tt> comment directive that goes directly above a variable
+declaration and  tells <tt>go build</tt> to
+include those files in the resulting binary associated with the variable. Here is a concrete
 example:</p>
 
 <pre>
@@ -342,7 +351,9 @@ by "zikaeroh" in favor of adding a more powerful path-matching API that
 supports double star for recursive path matching, like <tt>glob('**/*.png',
 recursive=True)</tt> <a
 href="https://docs.python.org/3/library/glob.html#glob.glob">in
-Python</a>.  Kevin Burke <a
+Python</a>.  Kevin Burke, who is the maintainer of a <a
+href="https://github.com/kevinburke/go-bindata">file-embedding package</a>,
+<a
 href="https://old.reddit.com/r/golang/comments/hv96ny/qa_goembed_draft_design/fytb7z3/">suggested</a>
 also storing a cryptographic hash of each file's content so the developer
 does not have to hash the file at runtime: "<span>This is useful for
@@ -382,7 +393,7 @@ signal to people that something special is going on.</p>
 </div>
 
 
-<h4>Wrapping up</h4>
+<h4>Next up</h4>
 
 <p>There is a fair amount of community support for both draft designs,
 particularly the more user-facing proposal for file embedding. Many
@@ -390,15 +401,8 @@ developers are already using third-party file-embedding libraries to
 simplify their deployments and these efforts will standardize that
 tooling. It seems likely that the designs will be refined and turned into
 full proposals. With <a
-href="/Articles/820217/">Go 1.15</a> coming out in a few
-days, it's possible these proposals would be ready for Go 1.16 (due out in
-six months), but if there needs to be another round of feedback &mdash; for
+href="/Articles/820217/">Go 1.15</a> due out on August&nbsp;1, it's
+possible that these proposals would be ready for Go 1.16 (scheduled for 
+six months out), but if there needs to be another round of feedback &mdash; for
 example, regarding the problems with extension interfaces &mdash; it is
 more likely to be included in Go 1.17 in a year's time.</p>
-
-<p>In a future article, we plan to look at another recent Go draft design
-that aims to <a
-href="https://go.googlesource.com/proposal/+/522400e00c82921a68bed78611cfb0ff3c014140/design/draft-fuzzing.md">standardize
-fuzz testing</a>. That design proposes adding "<a
-href="https://en.wikipedia.org/wiki/Fuzzing">fuzzing</a>" to the <tt>go
-test</tt> command, which currently runs unit tests and benchmarks.</p>
