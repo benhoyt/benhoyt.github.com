@@ -3,7 +3,7 @@ layout: default
 title: "Go filesystems and file embedding"
 permalink: /writings/go-fs-embed/
 description: "A presentation of the Go draft designs for a filesystem interface and a standard way to embed files in a Go binary."
-canonical_url: TODO
+canonical_url: https://lwn.net/Articles/827215/
 ---
 <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 <p class="subtitle">July 2020</p>
