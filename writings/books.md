@@ -13,7 +13,7 @@ These are some of the books I've read over the years. I've only kept track inter
 2020
 ----
 
-*Hillbilly Elegy* by J. D. Vance. TODO
+*Hillbilly Elegy* by J. D. Vance. Eye-opening and provocative. From [my review](/writings/hillbilly-elegy/): The book is an autobiographical account by Vance (who’s only 35) of his journey from a rough, rough upbringing in hillbilly America to a university education ending with Yale Law School. I appreciated the empathetic writing style from the introduction, where he speaks of those he grew up around and identifies with: “Americans call them hillbillies, rednecks, or white trash. I call them neighbors, friends, and family.”
 
 *A Different Shade of Green* by Gordon Wilson. I really enjoyed Wilson's obvious love of creation and little creatures and the like, simply because they're beautiful and God made them. And a book on this subject by a conservative Christian is a much-needed thing. However, I found it a bit simplistic overall, and I found his constant use of the terms "dominion" and "Biblical dominion" a bit tiresome. Could have been more thoughtful and in-depth, and could definitely have used better editing.
 
