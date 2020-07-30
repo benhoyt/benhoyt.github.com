@@ -8,6 +8,22 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Different approaches to HTTP routing in Go</title>
+  <description>Compares routing techniques in Go, including five custom approaches and three using third-party routing libraries.</description>
+  <link>https://benhoyt.com/writings/go-routing/</link>
+  <guid>https://benhoyt.com/writings/go-routing/</guid>
+  <pubDate>Fri, 31 Jul 2020 08:00:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>The sad, slow-motion death of Do Not Track</title>
+  <description>Talks about the valiant but almost-dead 10-year effort to prevent tracking with the Do Not Track header.</description>
+  <link>https://lwn.net/Articles/826575/</link>
+  <guid>https://lwn.net/Articles/826575/</guid>
+  <pubDate>Wed, 22 Jul 2020 11:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>What's new in Lua 5.4</title>
   <description>An overview of the new features in Lua 5.4 (LWN.net).</description>
   <link>https://lwn.net/Articles/826134/</link>
