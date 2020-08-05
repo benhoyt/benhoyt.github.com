@@ -23,7 +23,7 @@ The world editor had a scripting language called ZZT-OOP, where the "O" in OOP r
 
 The original source code for ZZT was lost in a computer crash, but there have been various attempts over the years to recreate the game in other languages, including [C++](https://github.com/inmatarian/freezzt), a partial implementation in [JavaScript](https://github.com/bstreiff/zztjs), and even an accurate reimplementation in [Rust](https://github.com/yokljo/ruzzt). And [Adrian Siekierka](https://github.com/asiekierka) is the author of [Zeta](https://zeta.asie.pl/), a specialized DOS emulator just for running ZZT.
 
-In March 2020, Adrian published his [Reconstruction of ZZT](https://github.com/asiekierka/reconstruction-of-zzt/), a reverse-engineered recreation of the Pascal source code that, when compiled with the original Turbo Pascal 5.5 used by ZZT, compiles to a byte-for-byte identical `.EXE` file. I for one find that an amazing feat! See the [Hacker News discussion](https://news.ycombinator.com/item?id=22609474).
+In March 2020, Adrian published his [Reconstruction of ZZT](https://github.com/asiekierka/reconstruction-of-zzt/), a reverse-engineered recreation of the Pascal source code that, when compiled with the original Turbo Pascal 5.5 used by ZZT, compiles to a byte-for-byte identical `.EXE` file. I for one find that an amazing feat! See the original [Hacker News discussion](https://news.ycombinator.com/item?id=22609474) and the [article Adrian wrote](https://blog.asie.pl/2020/08/reconstructing-zzt/) later about how he did it.
 
 He has since gone further, and created [libzoo](https://github.com/asiekierka/libzoo), a portable C reimplementation of the ZZT game engine with a permissive license for use in other ZZT ports.
 
