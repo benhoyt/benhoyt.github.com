@@ -14,6 +14,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 ## 2020
 
 * [Different approaches to HTTP routing in Go](/writings/go-routing/) compares routing techniques, including five custom approaches and three using third-party routing libraries. (July)
+* [Go filesystems and file embedding](https://lwn.net/Articles/827215/) presents the draft designs for a filesystem interface and a standard way to embed files in a Go binary. (July, LWN.net)
 * [The sad, slow-motion death of Do Not Track](https://lwn.net/Articles/826575/) talks about the valiant but almost-dead 10-year effort to prevent tracking with the "`DNT: 1`" header. (July, LWN.net)
 * [What's new in Lua 5.4](https://lwn.net/Articles/826134/) covers exactly that. (July, LWN.net)
 * [An overview of Hugo](https://lwn.net/Articles/825507/), a flexible static website generator written in Go and optimized for speed. (July, LWN.net)

@@ -16,6 +16,14 @@
  </item>
 
  <item>
+  <title>Go filesystems and file embedding</title>
+  <description>A presentation of the Go draft designs for a filesystem interface and a standard way to embed files in a Go binary (LWN.net).</description>
+  <link>https://lwn.net/Articles/827215/</link>
+  <guid>https://lwn.net/Articles/827215/</guid>
+  <pubDate>Fri, 31 Jul 2020 00:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>The sad, slow-motion death of Do Not Track</title>
   <description>Talks about the valiant but almost-dead 10-year effort to prevent tracking with the Do Not Track header.</description>
   <link>https://lwn.net/Articles/826575/</link>
