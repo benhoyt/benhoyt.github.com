@@ -30,13 +30,21 @@ span {
 
 
 <p><a href="https://about.sourcegraph.com/">Sourcegraph</a> is a tool for
-searching and navigating around large code bases. The open-source core of
+searching and navigating around large code bases.
+Sourcegraph has various search
+methods, including regular-expression search, and "structural search",
+which is
+a relatively new technique that is language-aware.
+The open-source core of
 the tool comes
 with code search, go-to-definition and other "<a
 href="https://docs.sourcegraph.com/user/code_intelligence">code
-intelligence</a>" features, 
-along with browser extensions that integrate with sites like GitHub
-and GitLab.
+intelligence</a>" features, which provide ways for developers to make
+sense of multi-repository code bases.  Sourcegraph's code intelligence can show documentation for
+functions and methods on mouse hover and allow developers to
+quickly jump to definitions or to find all references to a particular
+identifier.</p>
+
 
 <p>
 The Sourcegraph server is mostly written in Go, with the core released
@@ -46,7 +54,7 @@ version of the tool every month, with the <a
 href="https://about.sourcegraph.com/blog/sourcegraph-3.18">latest release
 (3.18)</a> improving C++ support and the <a
 href="https://about.sourcegraph.com/blog/sourcegraph-3.17">3.17 release</a>
-featuring faster and more accurate code intelligence, as well as support
+featuring faster and more accurate code intelligence as well as support
 for <tt>AND</tt> and <tt>OR</tt> search operators.</p>
 
 <h4>Code search</h4>
@@ -86,24 +94,40 @@ of a search query</a>.   The front end starts by looking for a <tt>repo:</tt> fi
 in the query to decide which repositories need to be searched.  The server
 stores its list of
 repositories in a PostgreSQL database, along with most other
-Sourcegraph metadata; Git repositories themselves are stored as
+Sourcegraph metadata; Git repositories are cloned and stored as
 files.
 
 <p>
-Next, the server determines which repositories are indexed and which
-are not: the indexing and indexed searches are handled by <a
+Next, the server determines which repositories are indexed (for a
+specific revision if specified in the search query)
+and which
+are not: both indexing the repositories and indexed searches are handled by <a
 href="https://github.com/google/zoekt">zoekt</a>, which is a trigram-based
 code-search library written in Go. (Those curious about using trigrams for
 searching code may be interested in  Go technical lead Russ Cox's <a
 href="https://swtch.com/~rsc/regexp/regexp4.html">article</a> about
-it). Repositories that are not indexed are handled 
-by a separate, <a
+it).
+
+<p>
+Repository revisions that are not indexed are handled 
+by a separate "<a
+href="https://github.com/sourcegraph/sourcegraph/tree/master/cmd/searcher">searcher</a>"
+process (which is 
+<a
 href="https://en.wikipedia.org/wiki/Scalability#Horizontal_or_Scale_Out">horizontally-scalable</a>
-"searcher" process that fetches a zip archive
-of the repository and iterates through the files in it, matching
+via Kubernetes).
+It fetches a zip archive
+of the repository from Sourcegraph's <a
+href="https://github.com/sourcegraph/sourcegraph/tree/master/cmd/gitserver">gitserver</a>
+and iterates through the files in it, matching 
 using Go's <a href="https://golang.org/pkg/regexp/"><tt>regexp</tt></a> package for
 regular-expression searches or
-the Comby library for structural searches.</p>
+the Comby library for structural searches.
+By default, only a repository's default branch is indexed, but
+Sourcegraph 3.18 <a
+href="https://about.sourcegraph.com/blog/indexed-non-default-branches">added
+the ability</a> to index non-default branches.
+</p>
 
 
 <h4>Code intelligence</h4>
@@ -113,7 +137,8 @@ intelligence": the ability to navigate to the definition of the variable or
 function under the cursor, or to find all references to it. <a
 href="https://docs.sourcegraph.com/user/code_intelligence/basic_code_intelligence">By
 default</a>, the code-intelligence features use "<span>search-based
-heuristics, rather than parsing the code into an AST [abstract syntax tree]</span>", but they seem
+heuristics, rather than parsing the code into an AST [abstract syntax
+tree]</span>", but the heuristics seem
 to be quite accurate in the tests I ran. The tool found definitions in C,
 Python, and Go without a problem, and even found dynamically-assigned
 definitions in Python (such as being able to go to <a
@@ -125,7 +150,8 @@ in my <a href="https://github.com/benhoyt/scandir">scandir project</a>).</p>
 href="https://docs.sourcegraph.com/user/code_intelligence/lsif">more
 precise code intelligence</a> (which uses language-specific parse trees
 rather than search heuristics) using Microsoft's <a href="https://microsoft.github.io/language-server-protocol/specifications/lsif/0.5.0/specification/">Language Server Index
-Format</a> (LSIF), a JSON-based file format that is used to store pre-computed data for
+Format</a> (LSIF), a JSON-based file format that is used to store  data
+extracted by indexers for
 language tooling. Sourcegraph has written or maintains LSIF indexers for <a
 href="https://lsif.dev/#implementations-server">several languages</a>,
 including <a href="https://github.com/sourcegraph/lsif-go">Go</a>, <a
