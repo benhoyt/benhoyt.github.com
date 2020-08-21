@@ -30,19 +30,19 @@ span {
 
 
 <p><a href="https://en.wikipedia.org/wiki/Fuzzing">Fuzzing</a> is a testing
-technique using randomized inputs that is used to find problematic edge
-cases or security issues in libraries that accept user input. <a
-href="https://golang.org/">Go</a> package developers can use fuzzing to
-find bugs with Dmitry Vyukov's popular <a
-href="https://github.com/dvyukov/go-fuzz">go-fuzz</a> tool, which has found
+technique with randomized inputs that is used to find problematic edge
+cases or security problems in code that accepts user input. <a
+href="https://golang.org/">Go</a> package developers can use Dmitry Vyukov's popular <a
+href="https://github.com/dvyukov/go-fuzz">go-fuzz</a> tool for fuzz testing
+their code; it has found
 <a href="https://github.com/dvyukov/go-fuzz#trophies">hundreds</a> of
 obscure bugs in the Go standard library as well as in third-party
 packages. However, this tool is not built in, and is not as simple to use
-as it could be &mdash; to address this, Katie Hockman on the Go team
+as it could be; to address this, Go team member Katie Hockman
 recently published a <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-fuzzing.md">draft
 design</a> that proposes adding fuzz testing as a first-class feature of
-the standard <tt>go test</tt> command.</p> 
+the standard <tt>go&nbsp;test</tt> command.</p> 
 
 <p>Using random test inputs to find bugs has a history that goes back to
 the days of punch cards. Author and long-time programmer Gerald Weinberg <a
@@ -65,7 +65,7 @@ and Vyukov's Go-based <a
 href="https://github.com/google/syzkaller">syzkaller</a> tool.</p> 
 
 <p>The basic idea of fuzz testing is to generate random inputs for a
-function and see if it crashes or raises an exception that is not part of
+function to see if it crashes or raises an exception that is not part of
 the function's API. However, using a naive method to generate random inputs
 is extremely time-consuming, and doesn't find edge cases efficiently. That
 is why most modern fuzzing tools use "coverage-guided fuzzing" to drive the
@@ -74,20 +74,23 @@ paths. Vyukov co-authored a <a
 href="https://docs.google.com/document/u/1/d/1zXR-TFL3BfnceEAWytV8bnzB2Tfp6EPFinWVJ5V4QC8/pub">proposal</a>
 which has a succinct description of how this technique works:</p> 
 
+<div class="BigQuote">
 <pre>
-    start with some (potentially empty) corpus of inputs
-    for {
-        choose a random input from the corpus
-        mutate the input
-        execute the mutated input and collect code coverage
-        if the input gives new coverage, add it to the corpus
-    }
+start with some (potentially empty) corpus of inputs
+for {
+    choose a random input from the corpus
+    mutate the input
+    execute the mutated input and collect code coverage
+    if the input gives new coverage, add it to the corpus
+}
 </pre>
+</div>
 
 <p>Collecting code coverage data and detecting when an input "gives new
-coverage" is not trivial, and requires the tool to instrument code with
-special calls to a coverage recorder. When the instrumented code runs, it
-compares code coverage from one test input with coverage from a new input,
+coverage" is not trivial; it requires a tool to instrument code with
+special calls to a coverage recorder. When the instrumented code runs, the
+fuzzing framework
+compares code coverage from previous test inputs with coverage from a new input,
 and if different code blocks have been executed, it adds that new input to
 the corpus. Obviously this glosses over a lot of details, such as how the
 input is mutated, how exactly the coverage instrumentation works, and so
@@ -101,11 +104,11 @@ listing the huge number of bugs found and fixed.</p>
 <h4>The go-fuzz tool</h4>
 
 <p>AFL is an excellent tool, but it only works for programs written in C,
-C++, or Objective C, and those programs need to be compiled with GCC or
+C++, or Objective C, which need to be compiled with GCC or
 Clang. Vyukov's go-fuzz tool operates in a similar way to AFL, but is
 written specifically for Go. In order to add coverage recording to a Go
 program, a developer first runs the <tt>go-fuzz-build</tt> command (instead
-of <tt>go build</tt>), which uses the built-in <a
+of <tt>go&nbsp;build</tt>), which uses the built-in <a
 href="https://golang.org/pkg/go/ast/">ast</a> package to add <a
 href="https://github.com/dvyukov/go-fuzz/blob/master/go-fuzz-build/cover.go">instrumentation</a>
 to each block in the source code, and sends the result through the regular
@@ -113,7 +116,8 @@ Go compiler. Once the instrumented binary has been built, the
 <tt>go-fuzz</tt> command runs it over and over on multiple CPU cores with
 <a
 href="https://github.com/dvyukov/go-fuzz/blob/master/go-fuzz/mutator.go">randomly
-mutating</a> inputs, recording any crashes (and their stack traces) as it
+mutating</a> inputs, recording any crashes (along with their stack traces
+and the inputs that caused them) as it
 goes.</p> 
 
 <p>Damian Gryski has written a <a
@@ -128,18 +132,19 @@ GoAWK and it found several "crashers".</p>
 
 <h4>Journey to first class</h4>
 
-<p>Go has a built-in command, <tt>go test</tt>, that automatically finds
+<p>Go has a built-in command, <tt>go&nbsp;test</tt>, that automatically finds
 and runs a project's tests (and, optionally, benchmarks). Fuzzing is a type
 of testing, but without built-in tool support it is somewhat cumbersome to
-set up. Back in February 2017 an <a
+set up. Back in February 2017, an <a
 href="https://github.com/golang/go/issues/19109">issue</a> was filed on the
 Go GitHub repository on behalf of Vyukov and <a
 href="https://research.google/people/KonstantinSerebryany/">Konstantin
 Serebryany</a>, proposing that the <tt>go</tt> tool "<span>support fuzzing
 natively, just like it does tests and benchmarks and race detection
 today</span>". The issue notes that "<span>go-fuzz exists but it's not as
-easy as writing tests and benchmarks and running <tt>go test
--race</tt></span>". This issue has garnered a huge amount of support and
+easy as writing tests and benchmarks and running
+<tt>go&nbsp;test&nbsp;-race</tt></span>". This issue has garnered a huge
+amount of support and 
 many comments.</p> 
 
 <p>At some point Vyukov and others added a <a
@@ -153,28 +158,30 @@ you want the new go test fuzz mode to be</span>". In January 2019
 href="https://github.com/golang/go/issues/19109#issuecomment-451871672">shared</a>
 just that &mdash; a tool called <a
 href="https://github.com/thepudds/fzgo">fzgo</a> that implements most of
-the original proposal in a separate tool. This was well received at the
+the original proposal in a separate tool. This was well-received at the
 time, but does not seem to have turned into anything official.</p> 
 
-<p>More recently, however, the Go team has picked this back up, with
+<p>More recently, however, the Go team has picked this idea back up, with
 Hockman writing the recent draft design for first-class fuzzing. The goal
-is similar, to make it easy to run fuzz tests with the standard <tt>go
-test</tt> tool, but the proposed API is slightly more complex to allow
-seeding the initial corpus programmatically, and to support input types
+is similar, to make it easy to run fuzz tests with the standard
+<tt>go&nbsp;test</tt> tool, but the proposed API is slightly more complex
+to allow 
+seeding the initial corpus programmatically and to support input types
 other than byte strings ("slice of byte" or <tt>[]byte</tt> in Go).</p> 
 
-<p>Currently developers can write test functions with the signature
-<tt>TestFoo(t *testing.T)</tt> in a <tt>*_test.go</tt> source file, and
-<tt>go test</tt> will automatically run those functions as unit tests. The
+<p>Currently, developers can write test functions with the signature
+<tt>TestFoo(t&nbsp;*testing.T)</tt> in a <tt>*_test.go</tt> source file, and
+<tt>go&nbsp;test</tt> will automatically run those functions as unit tests. The
 existing <a href="https://golang.org/pkg/testing/#T"><tt>testing.T</tt></a>
 type is passed to test functions to control the test and record
-failures. The new draft design adds the ability to write <tt>FuzzFoo(f
-*testing.F)</tt> fuzz tests in <tt>*_test.go</tt> files in a similar way,
-and then run them using a simple command like <tt>go test -fuzz</tt>. The
+failures. The new draft design adds the ability to write
+<tt>FuzzFoo(f&nbsp;*testing.F)</tt> fuzz tests
+in a similar way
+and then run them using a simple command like <tt>go&nbsp;test&nbsp;-fuzz</tt>. The
 proposed <tt>testing.F</tt> type is used to add inputs to the seed corpus
 and implement the fuzz test itself (using a nested anonymous
 function). Here is an example that might be part of <tt>calc_test.go</tt>
-in a calculator library:</p> 
+for a calculator library:</p> 
 
 <pre>
     func FuzzEval(f *testing.F) {
@@ -237,7 +244,8 @@ types. Other types would also be supported if they implemented the existing
 <a
 href="https://golang.org/pkg/encoding/#BinaryUnmarshaler"><tt>BinaryUnmarshaler</tt></a>
 or <a
-href="https://golang.org/pkg/encoding/#TextUnmarshaler"><tt>TextUnmarshaler</tt></a>.</p> 
+href="https://golang.org/pkg/encoding/#TextUnmarshaler"><tt>TextUnmarshaler</tt></a>
+interfaces.</p> 
 
 <p>By default, the engine would run fuzz tests indefinitely, stopping a
 particular test run when the first crash is found. Users will be able to
@@ -246,7 +254,7 @@ line flag (for use in continuous integration scripts), and tell it to keep
 running after crashes with the <tt>-keepfuzzing</tt> flag. <a
 href="https://go.googlesource.com/proposal/+/master/design/draft-fuzzing.md#crashers">Crash
 reports</a> will be written to files in a <tt>testdata</tt> directory, and
-will contain the inputs that caused the crash, as well as the error message
+will contain the inputs that caused the crash as well as the error message
 or stack trace.</p> 
 
 
@@ -256,7 +264,7 @@ or stack trace.</p>
 href="https://lwn.net/Articles/827215/">filesystems and file embedding</a>,
 official discussion for this design was done using a <a
 href="https://old.reddit.com/r/golang/comments/hvpr96/design_draft_first_class_fuzzing/">Reddit
-thread</a>, and overall the feedback was positive.</p> 
+thread</a>; overall, the feedback was positive.</p> 
 
 <p>There was some discussion about the <tt>testing.F</tt> interface. David
 Crawshaw <a
@@ -265,19 +273,17 @@ that it should implement the existing <a
 href="https://golang.org/pkg/testing/#TB"><tt>testing.TB</tt></a> interface
 for consistency with <tt>testing.T</tt> and <a
 href="https://golang.org/pkg/testing/#B"><tt>testing.B</tt></a> (used for
-benchmarking), and Hockman agreed, <a
+benchmarking); Hockman agreed, <a
 href="https://old.reddit.com/r/golang/comments/hvpr96/design_draft_first_class_fuzzing/g0c0mg0/">updating</a>
 the design to reflect that. Based on a <a
 href="https://old.reddit.com/r/golang/comments/hvpr96/design_draft_first_class_fuzzing/fyusyke/">suggestion</a>
 by "etherealflaim", Hockman also <a
 href="https://old.reddit.com/r/golang/comments/hvpr96/design_draft_first_class_fuzzing/g0c0djh/">updated</a>
 the design to avoid reusing <tt>testing.F</tt> in both the top level and
-the fuzz function.</p> 
-
-<p>There was also some <a
+the fuzz function.  There was also some <a
 href="https://old.reddit.com/r/golang/comments/hvpr96/design_draft_first_class_fuzzing/fyusyke/">bikeshedding</a>
-over whether the command should be spelled <tt>go test -fuzz</tt> or <tt>go
-fuzz</tt>, and "etherealflaim" suggested that reusing <tt>go test</tt>
+over whether the command should be spelled <tt>go&nbsp;test&nbsp;-fuzz</tt> or <tt>go
+fuzz</tt>; etherealflaim suggested that reusing <tt>go&nbsp;test</tt>
 would be a bad idea because the it "<span>has history and lots of folks
 have configured timeouts for it and such</span>".</p> 
 
@@ -294,9 +300,10 @@ there's always going to be the need for more specialized stuff.</p>
 
 <p>Hockman, however, <a
 href="https://old.reddit.com/r/golang/comments/hvpr96/design_draft_first_class_fuzzing/fywtk8u/">responded</a>
-that pluggability "<span>isn't necessary for the MVP</span>".</p> 
+that pluggability is not required in order to add the feature, but might be
+"<span>considered later in the design phase</span>".</p> 
 
-<p>The draft design states upfront that "<span>the goal of circulating this
+<p>The draft design states up front that "<span>the goal of circulating this
 draft design is to collect feedback to shape an intended eventual
 proposal</span>", so it's hard to say exactly what the next steps will be
 and when they will happen. However, it is good to see some official energy
