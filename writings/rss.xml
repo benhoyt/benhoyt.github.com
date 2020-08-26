@@ -8,6 +8,22 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Fuzzing in Go</title>
+  <description>An overview of fuzz testing and the go-fuzz tool, as well as a look at the recent draft design for including fuzz testing in the `go` tool (LWN.net).</description>
+  <link>https://lwn.net/Articles/829242/</link>
+  <guid>https://lwn.net/Articles/829242/</guid>
+  <pubDate>Tue, 25 Aug 2020 08:00:00 +1200</pubDate>
+ </item>
+
+ <item>
+  <title>Searching code with Sourcegraph</title>
+  <description>A look at Sourcegraph, a code search and code intelligence tool (LWN.net).</description>
+  <link>https://lwn.net/Articles/828748/</link>
+  <guid>https://lwn.net/Articles/828748/</guid>
+  <pubDate>Mon, 17 Aug 2020 08:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Different approaches to HTTP routing in Go</title>
   <description>Compares routing techniques in Go, including five custom approaches and three using third-party routing libraries.</description>
   <link>https://benhoyt.com/writings/go-routing/</link>
