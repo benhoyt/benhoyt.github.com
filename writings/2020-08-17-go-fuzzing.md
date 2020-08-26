@@ -194,7 +194,7 @@ for a calculator library:</p>
         f.Fuzz(func(t *testing.T, expr string) {
             t.Parallel()      // allow parallel execution
             _, _ = Eval(expr) // function under test (discard result and error)
-        }
+        })
     }
 </pre>
 
@@ -224,7 +224,7 @@ library (called <tt>calclib</tt> in this example):</p>
             if r1 != r2 {
                 t.Errorf("Eval got %d, calclib got %d", r1, r2)
             }
-        }
+        })
     }
 </pre>
 
@@ -317,4 +317,4 @@ formal proposal and an implementation for a feature this large would be
 ready when the Go 1.16 <a
 href="https://github.com/golang/go/wiki/Go-Release-Cycle">release
 freeze</a> hits in November 2020. Inclusion in Go 1.17, due out in August
-2021, would be more likely.</p> 
+2021, would be more likely.</p>
