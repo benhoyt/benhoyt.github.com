@@ -13,6 +13,8 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 ## 2020
 
+* [Fuzzing in Go](https://lwn.net/Articles/829242/) is an overview of fuzz testing and the go-fuzz tool, as well as a look at the recent draft design for including fuzz testing in the `go` tool. (August, LWN.net)
+* [Searching code with Sourcegraph](https://lwn.net/Articles/828748/) looks at Sourcegraph, a code search and code intelligence tool. (August, LWN.net)
 * [Different approaches to HTTP routing in Go](/writings/go-routing/) compares routing techniques, including five custom approaches and three using third-party routing libraries. (July)
 * [Go filesystems and file embedding](https://lwn.net/Articles/827215/) presents the draft designs for a filesystem interface and a standard way to embed files in a Go binary. (July, LWN.net)
 * [The sad, slow-motion death of Do Not Track](https://lwn.net/Articles/826575/) talks about the valiant but almost-dead 10-year effort to prevent tracking with the "`DNT: 1`" header. (July, LWN.net)
