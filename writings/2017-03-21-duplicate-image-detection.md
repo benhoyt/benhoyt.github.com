@@ -63,7 +63,7 @@ def dhash_row_col(image, size=8):
     return (row_hash, col_hash)
 ```
 
-It's a simple enough algorithm to implement, but there are a few tricky edge cases, and we thought it'd be nice to roll it all together and open source it, so our Python code is available [on GitHub](https://github.com/Jetsetter/dhash) and [from the Python Package Index](https://pypi.python.org/pypi/dhash) -- so it's only a `pip install dhash` away.
+It's a simple enough algorithm to implement, but there are a few tricky edge cases, and we thought it'd be nice to roll it all together and open source it, so our Python code is available [on GitHub](https://github.com/benhoyt/dhash) and [from the Python Package Index](https://pypi.python.org/pypi/dhash) -- so it's only a `pip install dhash` away.
 
 
 Dupe threshold
@@ -115,7 +115,7 @@ However, when we were searching for existing duplicates in our entire image set 
 
 A BK-tree is an *n*-ary tree data structure specifically designed for finding "close" matches fast. For example, finding strings within a certain [edit distance](https://en.wikipedia.org/wiki/Levenshtein_distance) of a given string. Or in our case, finding dHash values within a certain [bit distance](https://en.wikipedia.org/wiki/Hamming_distance) of a given dHash. This turns an O(N) problem into something closer to an O(log N) one.
 
-*Update July 2020: it's actually not O(log N), but a somewhat complicated power law that's between log N and N, depending on the distance threshold. See Maximilian Knespel's [detailed analysis](https://github.com/Jetsetter/pybktree/issues/5).*
+*Update July 2020: it's actually not O(log N), but a somewhat complicated power law that's between log N and N, depending on the distance threshold. See Maximilian Knespel's [detailed analysis](https://github.com/benhoyt/pybktree/issues/5).*
 
 BK-trees are [described by Nick Johnson](http://blog.notdot.net/2007/4/Damn-Cool-Algorithms-Part-1-BK-Trees) in his "Damn Cool Algorithms" blog series. It's dense reading, but the BK-tree structure is actually quite simple, especially in Python where creating trees is very easy with a bunch of nested dictionaries. The `BKTree.add()` code to add an item to a tree:
 
@@ -137,7 +137,7 @@ def add(self, item):
 
 There were a couple of existing BK-tree libraries in Python (and I think more since we added ours), but one of them didn't work for us and was buggy ([ryanfox/bktree](https://github.com/ryanfox/bktree)), and the one that looked good wasn't on PyPI ([ahupp/bktree](https://github.com/ahupp/bktree)), so we rolled our own.
 
-So again, our Python code is available [on GitHub](https://github.com/Jetsetter/pybktree) and [from the Python Package Index](https://pypi.python.org/pypi/pybktree) -- so it's only a `pip install pybktree` away.
+So again, our Python code is available [on GitHub](https://github.com/benhoyt/pybktree) and [from the Python Package Index](https://pypi.python.org/pypi/pybktree) -- so it's only a `pip install pybktree` away.
 
 
 Comments
