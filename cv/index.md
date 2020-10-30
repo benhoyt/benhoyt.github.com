@@ -53,6 +53,8 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 
 ### [Canonical](https://canonical.com/) &ndash; Software Engineer &ndash; September 2020 to now
 
+* Develop features for and help maintain [Juju](https://github.com/juju/juju), a powerful application deployment tool (and one of the largest Go codebases in the world).
+
 ### [Compass](https://www.compass.com/) &ndash; Senior Software Engineer &ndash; March 2018 to August 2020:
 
 * Helped build Go microservices backed by PostgreSQL, including an API integration to a third party CRM. Wrote a code generator to generate Go structs and methods from a Swagger API definition.
