@@ -10,8 +10,17 @@ description: (Some of the) books I’ve read
 These are some of the books I've read over the years. I've only kept track intermittently, so there are some pretty big gaps!
 
 
+2021
+----
+
+*All Things Considered* by G. K. Chesterton. Fabulous collection of essays. Striking one early on in the book called "Running After One's Hat" in which he talks about turning daily domestic annoyances like the wind blowing away one's hat into a joyous romp, or unsticking a jammed drawer into a valiant battle against evil.
+
 2020
 ----
+
+*Dune* by Frank Herbert. I hadn't read this classic before, and read it after cousin Chris said it was the one book his dad picked up and couldn't put down. I can definitely see why it's a classic, and I enjoyed it, though I found it got pretty weird towards the end.
+
+*Living in a Gray World* by Preston Sprinkle. Worthwhile book for teens, clearly explaining what the Bible says about homosexuality, and how to interact with gay people. A little superficial and wishy-washy in places, but overall quite good.
 
 *Gay Girl, Good God* by Jackie Hill Perry. Very good read: she's clear as well as orthodox, and brings a unique perspective as a young black woman. Personal but practical.
 
