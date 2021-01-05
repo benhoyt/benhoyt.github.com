@@ -13,6 +13,10 @@ These are some of the books I've read over the years. I've only kept track inter
 2021
 ----
 
+<!--
+*The Gospel According to Tolkien* by Ralph C. Wood. TODO: haven't finished
+-->
+
 *All Things Considered* by G. K. Chesterton. Fabulous collection of essays. Striking one early on in the book called "Running After One's Hat" in which he talks about turning daily domestic annoyances like the wind blowing away one's hat into a joyous romp, or unsticking a jammed drawer into a valiant battle against evil.
 
 2020
@@ -32,7 +36,9 @@ These are some of the books I've read over the years. I've only kept track inter
 
 *A Different Shade of Green* by Gordon Wilson. I really enjoyed Wilson's obvious love of creation and little creatures and the like, simply because they're beautiful and God made them. And a book on this subject by a conservative Christian is a much-needed thing. However, I found it a bit simplistic overall, and I found his constant use of the terms "dominion" and "Biblical dominion" a bit tiresome. Could have been more thoughtful and in-depth, and could definitely have used better editing.
 
-*Surprised by Hope* by N. T. Wright. TODO
+<!--
+*Surprised by Hope* by N. T. Wright. TODO: haven't finished
+-->
 
 *Come Back, Barbara* by C. John Miller and Barbara Miller Juliana. Compelling true story about the prodigal daughter of minister-missionary "Jack" Miller, and how Jack and his wife learn to let go and stop trying to be the Holy Spirit in the life of their wayward daughter. The amount they had to learn to let go is humbling. Franci and I read this separately and both found it very thought-provoking.
 
