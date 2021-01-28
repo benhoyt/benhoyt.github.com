@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Coming in Go 1.16: ReadDir and DirEntry</title>
+  <description>A look at the new os.ReadDir function and os.DirEntry interface coming in Go 1.16, with a comparison to os.scandir in Python.</description>
+  <link>https://benhoyt.com/writings/go-readdir/</link>
+  <guid>https://benhoyt.com/writings/go-readdir/</guid>
+  <pubDate>Fri, 29 Jan 2021 10:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Fuzzing in Go</title>
   <description>An overview of fuzz testing and the go-fuzz tool, as well as a look at the recent draft design for including fuzz testing in the `go` tool (LWN.net).</description>
   <link>https://lwn.net/Articles/829242/</link>

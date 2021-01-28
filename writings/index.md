@@ -11,6 +11,11 @@ rss_url: /writings/rss.xml
 Below are the programming-related articles I’ve written (see also my [**non-technical writings**](/writings/non-tech/)). The list includes the guest contributions I've written for LWN.net, and tech blog articles for several of the companies I’ve worked for.
 
 
+## 2021
+
+* [Coming in Go 1.16: ReadDir and DirEntry](/writings/go-readdir/): A look at the new `os.ReadDir` function coming in Go 1.16, with a comparison to `os.scandir` in Python. (January)
+
+
 ## 2020
 
 * [Fuzzing in Go](https://lwn.net/Articles/829242/) is an overview of fuzz testing and the go-fuzz tool, as well as a look at the recent draft design for including fuzz testing in the `go` tool. (August, LWN.net)
