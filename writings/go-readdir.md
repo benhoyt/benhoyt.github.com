@@ -17,9 +17,9 @@ In Go it will be called [`os.ReadDir`](https://tip.golang.org/pkg/os/#ReadDir), 
 
 The short answer is: performance.
 
-When you call the system functions to read directory entries, the OS typically returns the file name *and* its type (and on Windows, stat information such as file size and last modified time). However, the original Go and Python interfaces threw away this extra information, often requiring you to make an additional `stat` call per entry. System calls [aren't cheap](https://stackoverflow.com/a/6424772/68707) to begin with, and `stat` may read from disk, or at least the disk cache.
+When you call the system functions to read directory entries, the OS typically returns the file name *and* its type (and on Windows, stat information such as file size and last modified time). However, the original Go and Python interfaces threw away this extra information, requiring you to make an additional `stat` call per entry. System calls [aren't cheap](https://stackoverflow.com/a/6424772/68707) to begin with, and `stat` may read from disk, or at least the disk cache.
 
-When recursively walking a directory tree, you need to know whether an entry is a file or directory so you know whether to recurse in. So even a simple directory tree traversal required reading the directory entries *and* `stat`-ing each entry. But if you use the file type information, you can avoid those calls and traverse a directory several times as fast (even dozens of times as fast on network file systems). See some [benchmarks](https://github.com/benhoyt/scandir#benchmarks) for the Python version.
+When recursively walking a directory tree, you need to know whether an entry is a file or directory so you know whether to recurse in. So even a simple directory tree traversal required reading the directory entries *and* `stat`-ing each entry. But if you use the file type information the OS provides, you can avoid those `stat` calls and traverse a directory several times as fast (even dozens of times as fast on network file systems). See some [benchmarks](https://github.com/benhoyt/scandir#benchmarks) for the Python version.
 
 Both languages, unfortunately, started with a non-optimal design for reading directories that didn't allow you to access the type information without extra calls to `stat`: [`os.listdir`](https://docs.python.org/3/library/os.html#os.listdir) in Python, and [`ioutil.ReadDir`](https://golang.org/pkg/io/ioutil/#ReadDir) in Go.
 
@@ -30,7 +30,7 @@ For Go, I didn't have anything to do with the proposal or implementation, apart 
 
 ## Python vs Go
 
-Let's have a look at how similar the new Python and Go "read directory" interfaces are.
+Let's have a look at the new "read directory" interfaces, particularly how similar they are in Python and Go.
 
 In Python you call `os.scandir(path)`, and it returns an iterator of `os.DirEntry` objects, which are as follows:
 
@@ -150,7 +150,7 @@ As of Python 3.5, where `os.walk` uses `scandir` instead of `listdir` under the 
 
 Go (pre-1.16) has a similar function, [`filepath.Walk`](https://golang.org/pkg/path/filepath/#Walk), but unfortunately the [`FileInfo`](https://golang.org/pkg/os/#FileInfo) interface wasn't designed to allow errors to be reported from its various method calls. As we've seen, these can sometimes perform system calls -- for example, the stat information like `Size` will always require a system call on Linux. So in Go, the methods need to return an error (in Python they raise an exception).
 
-Is was tempting to wave error handling away to try to reuse the `FileInfo` interface, so that existing code would get a magical speed-up. In fact, [issue 41188](https://github.com/golang/go/issues/41188) is a proposal from Russ Cox suggesting just that (with some [data](https://github.com/golang/go/issues/41188#issuecomment-690879673) to show that it's not as terrible an idea as it sounds). However, stat can and does return errors, so there was potential for things like a file size being returned as 0 on error. As a result, there was significant push-back against trying to wedge it into the existing API, and Russ eventually [acknowledged](https://github.com/golang/go/issues/41188#issuecomment-694596908) the lack of consensus and proposed the `DirEntry` interface instead.
+Is was tempting to wave error handling away to try to reuse the `FileInfo` interface, so that existing code would get a magical speed-up. In fact, [issue 41188](https://github.com/golang/go/issues/41188) is a proposal from Russ Cox suggesting just that (with some [data](https://github.com/golang/go/issues/41188#issuecomment-690879673) to show that it's not as terrible an idea as it sounds). However, `stat` can and does return errors, so there was potential for things like a file size being returned as 0 on error. As a result, there was significant push-back against trying to wedge it into the existing API, and Russ eventually [acknowledged](https://github.com/golang/go/issues/41188#issuecomment-694596908) the lack of consensus and proposed the `DirEntry` interface instead.
 
 What this means is that, to get the performance gain, `filepath.Walk` calls need to be changed to [`filepath.WalkDir`](https://tip.golang.org/pkg/path/filepath/#WalkDir) -- very similar, but the walk function receives a `DirEntry` instead of a `FileInfo`.
 
@@ -176,7 +176,7 @@ func ListNonDot(path string) ([]string, error) {
 }
 ```
 
-This will keep working, of course, but if you want the performance benefits you'll have to make some very small changes -- in this case just changing `Walk` to `WalkDir`, and changing `os.FileInfo` to `os.DirEntry`:
+This will keep working in Go 1.16, of course, but if you want the performance benefits you'll have to make some very small changes -- in this case just changing `Walk` to `WalkDir`, and changing `os.FileInfo` to `os.DirEntry`:
 
 ```go
     err := filepath.WalkDir(path, func(p string, info os.DirEntry,
@@ -187,7 +187,7 @@ For what it's worth, running the first function on my home directory on Linux, o
 
 ## Summary
 
-The new `ReadDir` API is easy to use, and nicely integrates with the new file system interface via `fs.ReadDir`. And to speed up your existing `Walk` calls, the tweaks you'll need to make to switch to `WalkDir` are trivial.
+The new `ReadDir` API is easy to use, and integrates nicely with the new file system interface via `fs.ReadDir`. And to speed up your existing `Walk` calls, the tweaks you'll need to make to switch to `WalkDir` are trivial.
 
 API design is hard. Cross-platform, OS-related API design is even harder. Be sure to get this right when designing your next programming language's standard library! :-)
 
