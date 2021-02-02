@@ -8,6 +8,9 @@ description: How I replaced Google tracking with simple log-based analytics on m
 <p class="subtitle">April 2019</p>
 
 
+*Update Feb 2021: the custom GoAccess system I describe below worked well enough, however, I have since switched to [GoatCounter.com](https://www.goatcounter.com/). It's simple (but not too simple), and I like Martin's approach and privacy philosophy.*
+
+
 Google Analytics is a good tool: it's free, easy to implement, and has served me well over the years. However, partly because I'm not in love with Big Brother Google looking over the shoulder of all my website visitors, and partly because I like experiments in minimalism, I decided to replace Google Analytics on [benhoyt.com](https://benhoyt.com/) with a simple analytics setup based on log file parsing.
 
 Log file parsing is an old-skool but effective way of measuring the traffic to your site. It works with or without JavaScript (my version uses a hybrid approach), and doesn't send any data to Google or other tracking companies.
