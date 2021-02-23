@@ -86,7 +86,7 @@ However, **it's not just about raw size,** but about an "ethos of small". Caring
 
 For my personal website, I lovingly crafted each byte of HTML and CSS by hand, like a hipster creating a craft beer. Seriously though, if your focus is good content, it's not hard to create a simple template from scratch -- with just a few lines of HTML and CSS. It will be small and fast, and it'll be yours.
 
-I use GitHub Pages just because it's a free host that supports SSL, and automatically builds your site using the Jekyll static site generator whenever you make a change. Using a static site generator means I can have a standard header and include the same CSS across all pages easily. (Because most people only view one or two articles on my site, I include my CSS inline. With HTTP/2, this doesn't make much difference, but Lighthouse showed around 200ms with inline CSS, 300ms with external CSS.)
+I use GitHub Pages on this site just because it's a free host that supports SSL, and automatically builds your site using the Jekyll static site generator whenever you make a change. Using a static site generator means I can have a standard header and include the same CSS across all pages easily. (Because most people only view one or two articles on my site, I include my CSS inline. With HTTP/2, this doesn't make much difference, but Lighthouse showed around 200ms with inline CSS, 300ms with external CSS.)
 
 This article transfers about TODO 14KB (41KB uncompressed). It's small, fast, and readable on desktop or mobile. Beauty is in the eye of the beholder, but I'm aiming for a minimalist design focussed on the content.
 
@@ -97,26 +97,30 @@ Speaking of hero images, you don't need big irrelevant images at the top of your
 
 ## Emphasis on server-side, not JavaScript
 
-JavaScript is a bane for small websites: it adds to the download size and time, it can be a performance killer, it's bad for accessibility, and if you don't hold it right, it's [bad for search engines](https://benhoyt.com/writings/seo-for-software-engineers/). Plus, if your website is content-heavy, it probably isn't adding much.
+JavaScript is a mixed blessing for websites, and more often than not a bane for *small* websites: it adds to the download size and time, it can be a performance killer, it's bad for accessibility, and if you don't hold it right, it's [bad for search engines](https://benhoyt.com/writings/seo-for-software-engineers/). Plus, if your website is content-heavy, it probably isn't helping much.
 
-Don't get me wrong: JavaScript is sometimes unavoidable, and great where it's great. If you're developing a browser application ("single page application") like Gmail or Google Maps, you should almost certainly use be using JavaScript. But for your next blog, brochure website, or project documentation site, please consider an HTML-only approach.
+Don't get me wrong: JavaScript is sometimes unavoidable, and is great where it's great. If you're developing a browser-based application like Gmail or Google Maps, you should almost certainly use be using JavaScript. But for your next blog, brochure website, or project documentation site, please consider an HTML-and-CSS-only approach.
 
-If your site -- like a lot of sites -- is somewhere in between and contains some light interaction, consider using JavaScript only where necessary. Use it only for the interactive components.
+If your site -- like a lot of sites -- is somewhere in between and contains some light interaction, consider using JavaScript only for parts of the page that need real time updates. Letting the server generate (dynamic) HTML is still an effective way to create fast websites.
 
-* Why? Simpler, faster for many things, lower-bandwidth
-* NoJS for static pages
-* Progressive Enhancement vs Graceful Degredation (but we don't even bother with that anymore!): https://alistapart.com/article/understandingprogressiveenhancement/ - Is it worth it in 2021?
-* https://github.com/turbolinks/turbolinks
-* https://turbo.hotwire.dev/
+[StackOverflow.com](https://stackoverflow.com/) is a case in point. From day one, they've made [performance a feature](https://blog.codinghorror.com/performance-is-a-feature/) by rendering their pages on the server, and by measuring and reducing render time. I'm sure the StackOverflow code has changed quite a lot since the Jeff Atwood days -- it now makes a ton of extra requests for advertising purposes -- but the content still loads fast.
 
-* StackOverflow again
+[Hacker News](https://news.ycombinator.com/) is a server-side classic. With only [one tiny JavaScript file](https://news.ycombinator.com/hn.js) for voting, the HTML generated on the server does the rest.
+
+Around fifteen years ago there was this great idea called [progressive enhancement](https://alistapart.com/article/understandingprogressiveenhancement/). The idea was to serve usable HTML content to everyone, but users with JavaScript enabled or fast internet connections would get a slightly enhanced version with a more streamlined user interface. In fact, Hacker News itself uses progressive enhancement: even in 2021, you can still turn off JavaScript and use the voting buttons. It's a bit clunkier because voting now requires a page reload, but it works fine.
+
+Is progressive enhancement still relevant in 2021? Arguably not, though some die-hards still turn JavaScript off, or at least enable it only for sites they trust. However, I think it's the *mentality* that's most important: it shows the developer cares about performance, size, and alternative users. If Hacker News voting didn't work without JavaScript, I don't think that would be a problem -- but it shows a certain kind of nerdish care that it does work. Plus, the JavaScript they do have is only 5KB (2KB compressed).
+
+Compare that to the 14MB (8MB compressed) that the [Reddit homepage](https://www.reddit.com/) loads. And this across 201 requests -- I kid you not! -- most of which is JavaScript to power all the ads and tracking. Beautiful!
+
+You don't need a "framework" to develop this way, of course, but there are some tools that make this style of server-side development easier. [Turbolinks](https://github.com/turbolinks/turbolinks) from the Basecamp folks was an early one, and it's now been superceded by [Turbo](https://turbo.hotwire.dev/), which is apparently used to power their email service [Hey](https://hey.com/). I haven't used these personally, but the ideas are clever (and surprisingly old-skool): use standard links and form submissions, serve plain HTML, but speed it up with WebSockets and JavaScript if available. If Hey is anything to go by, this technique is fast!
 
 
 ## Static site generators
 
-* Static websites
-* Jekyll, Hugo, home-made
-* Some even drop the generator and write pure HTML+CSS (but really want includes / base template)
+I don't have any numbers, but it seems there's renewed interest in static websites (this used to be called just "a website"), where you upload some static HTML (and CSS and JavaScript) to a web file server, and that's it. If you're hosting a blog or articles or a news site, this is a great way to go. It's content, after all, not an interactive application.
+
+Along with that, there are many "static site generators" available. These are tools that generate a static site from simple templates, so that you don't have to copy your site's header and footer and styling into every HTML file by hand. As mentioned, I use [Jekyll](https://jekyllrb.com/) for this site just because it's what comes with GitHub Pages. I've also used [Hugo](https://gohugo.io/), which is a really fast static site generator written in Go -- it generates even large sites with thousands of pages in a few seconds. And there are [many other options](https://staticsitegenerators.net/) available.
 
 
 ## Fewer dependencies
