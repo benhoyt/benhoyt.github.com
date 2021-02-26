@@ -15,7 +15,7 @@ description: A vision for "the small web", small software, and small architectur
 
 About fifteen years ago, I read E. F. Schumacher's *Small is Beautiful* and, despite not being interested in economics, I was moved by its message. Perhaps even more, I loved the terse poetry of the book's title -- it resonated with my frugal upbringing and my own aesthetic.
 
-I think it's time for a version of that book about technology, with a chapter on web development: *The Small Web is Beautiful: A Study of Web Development as if People Mattered.* Until someone writes that, this meandering article will have to do.
+I think it's time for a version of that book about technology, with a chapter on web development: *The Small Web is Beautiful: A Study of Web Development as if People Mattered.* Until someone writes that, this article will have to do. (Yes, it's ironic to write a big article about small software.)
 
 There are two aspects of this: first, **small teams and companies**. I'm not going to talk much about that here, but [Basecamp](https://basecamp.com/books) and many others have. What I'm going to focus on in this article is **small websites and architectures**.
 
@@ -90,7 +90,7 @@ However, **it's not just about raw size,** but about an "ethos of small". It's c
 
 For this website, I lovingly crafted each byte of HTML and CSS by hand, like a hipster creating a craft beer. Seriously though, if your focus is good content, it's not hard to create a simple template from scratch with just a few lines of HTML and CSS. It will be small and fast, and it'll be yours.
 
-This article transfers about TODO 14KB (41KB uncompressed). It's small, fast, and readable on desktop or mobile. Beauty is in the eye of the beholder, but I'm aiming for a minimalist design focussed on the content.
+Loading this article transfers about 23KB (55KB uncompressed), including the favicon and analytics script. It's small, fast, and readable on desktop or mobile. Beauty is in the eye of the beholder, but I'm aiming for a minimalist design focussed on the content.
 
 In addition to making sure your HTML and CSS are small, be sure to compress your images properly. Two basic things here: don't upload ultra-high resolution images straight from your camera, and use a reasonable amount of JPEG compression for photos (and PNG for screenshots or vector art). Even for large images, you can usually use 80 or 85% compression and still have an image without JPEG noise. For example, the large 1920x775 image on the top of my [side business's homepage](https://giftyweddings.com/) is only 300KB.
 
