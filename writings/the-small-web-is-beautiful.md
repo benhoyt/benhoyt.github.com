@@ -8,16 +8,16 @@ description: A vision for "the small web", small software, and small architectur
 <p class="subtitle">March 2021</p>
 
 
-> Summary: I believe that small websites are compelling aesthetically, but are also important to help us resist selling our souls to large tech companies. In this article I present a vision for "the small web" as well as the small software and architectures that power it. Also, a bonus rant about microservices.
+> Summary: I believe that small websites are compelling aesthetically, but are also important to help us resist selling our souls to large tech companies. In this essay I present a vision for "the small web" as well as the small software and architectures that power it. Also, a bonus rant about microservices.
 >
 > **Go to:** [Software](#small-software) \| [Web](#small-websites) \| [Server-side](#emphasize-server-side-not-javascript) \| [Static sites](#static-sites-and-site-generators) \| [Dependencies](#fewer-dependencies) \| [Analytics](#small-analytics) \| [Microservices](#small-architectures-not-microservices)
 
 
 About fifteen years ago, I read E. F. Schumacher's *Small is Beautiful* and, despite not being interested in economics, I was moved by its message. Perhaps even more, I loved the terse poetry of the book's title -- it resonated with my frugal upbringing and my own aesthetic.
 
-I think it's time for a version of that book about technology, with a chapter on web development: *The Small Web is Beautiful: A Study of Web Development as if People Mattered.* Until someone writes that, this article will have to do. (Yes, it's ironic to write a big article about small software.)
+I think it's time for a version of that book about technology, with a chapter on web development: *The Small Web is Beautiful: A Study of Web Development as if People Mattered.* Until someone writes that, this essay will have to do.
 
-There are two aspects of this: first, **small teams and companies**. I'm not going to talk much about that here, but [Basecamp](https://basecamp.com/books) and many others have. What I'm going to focus on in this article is **small websites and architectures**.
+There are two aspects of this: first, **small teams and companies**. I'm not going to talk much about that here, but [Basecamp](https://basecamp.com/books) and many others have. What I'm going to focus on in this essay is **small websites and architectures**.
 
 I'm not the first to talk about "the small web", but, somewhat surprisingly, only a few people have discussed it using that term. Here are the main web pages I can find that do:
 
@@ -46,7 +46,7 @@ You have to think about every byte, compile with size optimizations enabled, reu
 
 How do you create small programs? I think the main thing is that you have to *care about size*, and most of us don't think we have time for that. Apart from embedded development, there's an entire programming subculture called the [demoscene](https://en.wikipedia.org/wiki/Demoscene) that cares about this. They have competitions for the smallest 4KB demos: who can pack the most graphical punch into 4096 bytes of executable. That's smaller than most favicons! ([Elevated](https://www.youtube.com/watch?v=jB0vBmiTr6o) and [cdak](https://www.youtube.com/watch?v=RCh3Q08HMfs) are two of the highest-rated 4K demos.) Many demosceners go on to become game developers.
 
-It's not just about executable size ... when you're developing your next command line tool, if you use Go or Rust or even C, your program will be much faster, smaller, and use less memory than a Python or Java equivalent. And easier to install. If you don't understand why, please do learn. (It's out of scope for this article, but to summarize: Go, Rust, and C compile to ready-to-execute machine code, don't carry around a virtual machine, and don't have 16 bytes of overhead for even tiny objects like integers.)
+It's not just about executable size ... when you're developing your next command line tool, if you use Go or Rust or even C, your program will be much faster, smaller, and use less memory than a Python or Java equivalent. And easier to install. If you don't understand why, please do learn. (It's out of scope for this essay, but to summarize: Go, Rust, and C compile to ready-to-execute machine code, don't carry around a virtual machine, and don't have 16 bytes of overhead for even tiny objects like integers.)
 
 But why not apply some of the same principles to web development? In the web world, I think the main trick is to be careful what dependencies you include, and also what dependencies *they* pull in. In short, know `node_modules` -- or maybe better, *no* `node_modules`. More about this [below](#fewer-dependencies).
 
@@ -90,7 +90,7 @@ However, **it's not just about raw size,** but about an "ethos of small". It's c
 
 For this website, I lovingly crafted each byte of HTML and CSS by hand, like a hipster creating a craft beer. Seriously though, if your focus is good content, it's not hard to create a simple template from scratch with just a few lines of HTML and CSS. It will be small and fast, and it'll be yours.
 
-Loading this article transfers about 23KB (55KB uncompressed), including the favicon and analytics script. It's small, fast, and readable on desktop or mobile. Beauty is in the eye of the beholder, but I'm aiming for a minimalist design focussed on the content.
+Loading this essay transfers about 23KB (55KB uncompressed), including the favicon and analytics script. It's small, fast, and readable on desktop or mobile. Beauty is in the eye of the beholder, but I'm aiming for a minimalist design focussed on the content.
 
 In addition to making sure your HTML and CSS are small, be sure to compress your images properly. Two basic things here: don't upload ultra-high resolution images straight from your camera, and use a reasonable amount of JPEG compression for photos (and PNG for screenshots or vector art). Even for large images, you can usually use 80 or 85% compression and still have an image without JPEG noise. For example, the large 1920x775 image on the top of my [side business's homepage](https://giftyweddings.com/) is only 300KB.
 
@@ -130,7 +130,7 @@ Along with that, there are many "static site generators" available. These are to
 
 I use [GitHub Pages](https://pages.github.com/) on this site just because it's a free host that supports SSL, and automatically builds your site using the [Jekyll](https://jekyllrb.com/) static site generator whenever you push a change. I have a standard header and include the same CSS across all pages easily, though you can have multiple templates or "layouts" if you want. Because most people only view one or two articles on my site, I include my CSS inline. With HTTP/2, this doesn't make much difference, but Lighthouse showed around 200ms with inline CSS, 300ms with external CSS.
 
-Here's an example of what a simple Jekyll page looks like (the start of this article, in fact):
+Here's an example of what a simple Jekyll page looks like (the start of this essay, in fact):
 
 ```
     ---
@@ -152,7 +152,7 @@ There's nothing that blows up the size of your software (or JavaScript bundle) l
 
 Different languages seem to have different "dependency cultures". JavaScript, of course, is notorious for an "if it can be a library, it should be" attitude, resulting in the [left-pad disaster](https://www.davidhaney.io/npm-left-pad-have-we-forgotten-how-to-program/) as well as other minuscule libraries like the 3-line [`isarray`](https://github.com/juliangruber/isarray/blob/c9b0c5b4f44d366c9f51c7e85e70339bdeaa97b0/index.js#L3-L5). There are also big, heavy packages like [`Moment.js`](https://momentjs.com/), which takes [160KB even when minified](https://momentjs.com/docs/#/use-it/webpack/). There are ways to shrink it down if you don't need all locales, but it's not the default, so most people don't. But you're probably better off choosing a more modular approach like [`date-fns`](https://date-fns.org/).
 
-Go now has good dependency management with the recent [modules tooling](https://golang.org/doc/modules/managing-dependencies), but it also has a culture of "use the standard library if you can". Russ Cox wrote an excellent article about the downsides of not being careful with your dependencies: [Our Software Dependency Problem](https://research.swtch.com/deps). Go co-creator Rob Pike even made this one of his [Go proverbs](https://go-proverbs.github.io/): "A little copying is better than a little dependency." You can probably guess by now, but I like this minimalist approach: apart from reducing the number of points of failure, it makes programs smaller.
+Go now has good dependency management with the recent [modules tooling](https://golang.org/doc/modules/managing-dependencies), but it also has a culture of "use the standard library if you can". Russ Cox wrote an excellent essay about the downsides of not being careful with your dependencies: [Our Software Dependency Problem](https://research.swtch.com/deps). Go co-creator Rob Pike even made this one of his [Go proverbs](https://go-proverbs.github.io/): "A little copying is better than a little dependency." You can probably guess by now, but I like this minimalist approach: apart from reducing the number of points of failure, it makes programs smaller.
 
 Python, Ruby, Java, and C# seem to be somewhere in between: people use a fair number of dependencies, but from what I've seen there's more care taken and it doesn't get as out of hand as `node_modules`. Admittedly it is a little unfair, as Python (and those other languages) have standard libraries that have more in them than JavaScript's.
 
@@ -239,4 +239,4 @@ Companies will do what companies do, and continue to make flashy-looking, bloate
 
 Either way, I believe "the small web" is a compelling term and a compelling aesthetic. Not necessarily in the visual sense, but in the sense that you built it yourself, you understand all of it, and you run it on a single server or static file host.
 
-There are thousands of excellent examples of small websites, and hundreds of ways to create simple architectures -- this article touches on only a few of the ones I'm passionate about. I'd love to hear your own ideas and stories! <!-- Comment over at [Hacker News](TODO) or [programming reddit](TODO). -->
+There are thousands of excellent examples of small websites, and hundreds of ways to create simple architectures -- this essay touches on only a few of the ones I'm passionate about. I'd love to hear your own ideas and stories! <!-- Comment over at [Hacker News](TODO) or [programming reddit](TODO). -->
