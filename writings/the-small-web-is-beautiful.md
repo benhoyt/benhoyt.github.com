@@ -27,7 +27,7 @@ I'm not the first to talk about "the small web", but, somewhat surprisingly, onl
 Why aim small in this era of fast computers with plenty of RAM? A number of reasons, but the ones that are most important to me are:
 
 * Fewer moving parts. It's easier to create more robust systems and to fix things when they do go wrong.
-* Small software is faster. Fewer bits to download and clog your memory.
+* Small software is faster. Fewer bits to download and clog your computer's memory.
 * Reduced power consumption. This is important on a "save the planet" scale, but also on the very local scale of increasing the battery life of your phone and laptop.
 * The clean, frugal aesthetic. That's personal, I know, but as you'll see, I'm not alone.
 
@@ -193,7 +193,7 @@ For this website I use GoatCounter, which is available as a low-cost hosted serv
 
 Small websites are great for users, but small architectures are great for developers. A small, simple codebase is easy to maintain, and will have fewer bugs than a large, sprawling system with lots of interaction points.
 
-I contend that the "microservices everywhere" buzz is a big problem. Microservices may be used successfully at Google and Amazon, but most systems don't need to be built that way. They introduce complexity in the code, API definitions, networking, deployment, server infrastructure, monitoring, database transactions -- just about every aspect of a system is made more complex. Why is that?
+I contend that the "microservices everywhere" buzz is a big problem. Microservices may be used successfully at Google and Amazon, but most companies don't need to build that way. They introduce complexity in the code, API definitions, networking, deployment, server infrastructure, monitoring, database transactions -- just about every aspect of a system is made more complex. Why is that?
 
 * Code: you have lots of little repositories, possibly in different languages, and each has to have some way to talk to the other services (JSON over HTTP, gRPC, etc). With a monolithic system, it's all in one language (much better for a small team), calling other modules is just a function call, and system-wide refactoring is comparatively easy (especially in a statically typed language like Go or Java).
 * API definitions: with many services talking to each other, suddenly you need standardized interfaces for how they communicate. You spend a lot of time setting up gRPC or JSON schema definitions. In a single codebase, a function signature *is* the API definition.
