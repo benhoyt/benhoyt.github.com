@@ -2,13 +2,13 @@
 layout: default
 title: "The small web is beautiful"
 permalink: /writings/the-small-web-is-beautiful/
-description: A vision for "the small web", small software, and small architectures.
+description: A vision for the "small web", small software, and small architectures.
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2021</p>
 
 
-> Summary: I believe that small websites are compelling aesthetically, but are also important to help us resist selling our souls to large tech companies. In this essay I present a vision for "the small web" as well as the small software and architectures that power it. Also, a bonus rant about microservices.
+> Summary: I believe that small websites are compelling aesthetically, but are also important to help us resist selling our souls to large tech companies. In this essay I present a vision for the "small web" as well as the small software and architectures that power it. Also, a bonus rant about microservices.
 >
 > **Go to:** [Software](#small-software) \| [Web](#small-websites) \| [Server-side](#emphasize-server-side-not-javascript) \| [Static sites](#static-sites-and-site-generators) \| [Dependencies](#fewer-dependencies) \| [Analytics](#small-analytics) \| [Microservices](#small-architectures-not-microservices)
 
@@ -19,9 +19,9 @@ I think it's time for a version of that book about technology, with a chapter on
 
 There are two aspects of this: first, **small teams and companies**. I'm not going to talk much about that here, but [Basecamp](https://basecamp.com/books) and many others have. What I'm going to focus on in this essay is **small websites and architectures**.
 
-I'm not the first to talk about "the small web", but, somewhat surprisingly, only a few people have discussed it using that term. Here are the main web pages I can find that do:
+I'm not the first to talk about the "small web", but, somewhat surprisingly, only a few people have discussed it using that term. Here are the main web pages I can find that do:
 
-* [Rediscovering the Small Web](https://neustadt.fr/essays/the-small-web/) by Parimal Satyal: a fabulous article about the joy of small, independent (and sometimes retro) websites in contrast to "the commercial web".
+* [Rediscovering the Small Web](https://neustadt.fr/essays/the-small-web/) by Parimal Satyal: a fabulous article about the joy of small, independent (and sometimes retro) websites in contrast to the "commercial web".
 * [What is the Small Web?](https://ar.al/2020/08/07/what-is-the-small-web/), by Aral Balka of the Small Technology Foundation: more of a manifesto against the surveillance of Big Tech than something concrete, but still interesting.
 
 Why aim small in this era of fast computers with plenty of RAM? A number of reasons, but the ones that are most important to me are:
@@ -29,7 +29,7 @@ Why aim small in this era of fast computers with plenty of RAM? A number of reas
 * Fewer moving parts. It's easier to create more robust systems and to fix things when they do go wrong.
 * Small software is faster. Fewer bits to download and clog your computer's memory.
 * Reduced power consumption. This is important on a "save the planet" scale, but also on the very local scale of increasing the battery life of your phone and laptop.
-* The clean, frugal aesthetic. That's personal, I know, but as you'll see, I'm not alone.
+* The light, frugal aesthetic. That's personal, I know, but as you'll see, I'm not alone.
 
 So let's dive in. I want to cover a bunch of different angles, each with its own subheading.
 
@@ -40,17 +40,17 @@ If we're going to talk about a small web, we need to start with small *software*
 
 As a teen, I learned to program using x86 assembly and [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) -- perhaps odd choices, but my dad was heavily into Forth, and I loved how the language was so simple I could write [my own bootstrapped compiler](https://github.com/benhoyt/third).
 
-In terms of career, I started as an embedded programmer -- not as in "embedded Linux" but as in microcontrollers where 16KB of RAM was generous. My current laptop has 16GB of RAM, and that's not a lot by today's standards. We were building IP-networked products with *one millionth* the amount of RAM. Those kind of micros are as cheap as chips (ahem), and still widely used for small electronic devices, sensors, internet-of-things products, and so on.
+In terms of career, I started as an embedded programmer -- not as in "embedded Linux" but as in microcontrollers where 16KB of RAM was generous. My current laptop has 16GB of RAM, and that's not a lot by today's standards. We were building IP-networked products with *one millionth* the amount of RAM. Those kinds of micros are as cheap as chips (ahem), and still widely used for small electronic devices, sensors, internet-of-things products, and so on.
 
-You have to think about every byte, compile with size optimizations enabled, reuse buffers, and so on. It's a very different thing from modern web development, where a JavaScript app compiles "down" to a 1MB bundle, or a single Python object header is 16 bytes before you've even got any data, or a Go hello-world binary is 2MB even before you've added any real code.
+You have to think about every byte, compile with size optimizations enabled, and reuse buffers. It's a very different thing from modern web development, where a JavaScript app compiles "down" to a 1MB bundle, or a single Python object header is 16 bytes before you've even got any data, or a Go hello-world binary is 2MB even before you've added any real code.
 
-How do you create small programs? I think the main thing is that you have to *care about size*, and most of us don't think we have time for that. Apart from embedded development, there's an entire programming subculture called the [demoscene](https://en.wikipedia.org/wiki/Demoscene) that cares about this. They have competitions for the smallest 4KB demos: who can pack the most graphical punch into 4096 bytes of executable. That's smaller than most favicons! ([Elevated](https://www.youtube.com/watch?v=jB0vBmiTr6o) and [cdak](https://www.youtube.com/watch?v=RCh3Q08HMfs) are two of the highest-rated 4K demos.) Many demosceners go on to become game developers.
+How do you create small programs? I think the main thing is that you have to *care about size*, and most of us don't think we have time for that. Apart from embedded development, there's an entire programming subculture called the [demoscene](https://en.wikipedia.org/wiki/Demoscene) that cares about this. They have competitions for the smallest 4KB demos: who can pack the most graphical punch into 4096 bytes of executable. That's smaller than many favicons! ([Elevated](https://www.youtube.com/watch?v=jB0vBmiTr6o) and [cdak](https://www.youtube.com/watch?v=RCh3Q08HMfs) are two of the highest-rated 4K demos.) Many demosceners go on to become game developers.
 
-It's not just about executable size ... when you're developing your next command line tool, if you use Go or Rust or even C, your program will be much faster, smaller, and use less memory than a Python or Java equivalent. And easier to install. If you don't understand why, please do learn. (It's out of scope for this essay, but to summarize: Go, Rust, and C compile to ready-to-execute machine code, don't carry around a virtual machine, and don't have 16 bytes of overhead for even tiny objects like integers.)
+It's not just about executable size ... when you're developing your next command line tool, if you use Go or Rust or even C, your program will be much faster, smaller, and use less memory than a Python or Java equivalent. And easier to install. If you don't understand why, please do learn. (It's out of scope for this essay, but to summarize: Go, Rust, and C compile to ready-to-execute machine code, don't carry around a virtual machine, and don't have memory overhead for objects like integers.)
 
 But why not apply some of the same principles to web development? In the web world, I think the main trick is to be careful what dependencies you include, and also what dependencies *they* pull in. In short, know `node_modules` -- or maybe better, *no* `node_modules`. More about this [below](#fewer-dependencies).
 
-Niklaus Wirth of Pascal fame wrote a famous paper in 1995 called [A Plea for Lean Software [PDF]](https://cr.yp.to/bib/1995/wirth.pdf). His take is that "a primary cause for the complexity is that software vendors uncritically adopt almost any feature that users want", and "when a system's power is measured by the number of its features, quantity becomes more important than quality". He goes on to describe Oberon, a computer language (which reminds me of Go in several ways) and an operating system that he believes help solve the complexity problem. Definitely wirth a read!
+Niklaus Wirth of Pascal fame wrote a famous paper in 1995 called [A Plea for Lean Software [PDF]](https://cr.yp.to/bib/1995/wirth.pdf). His take is that "a primary cause for the complexity is that software vendors uncritically adopt almost any feature that users want", and "when a system's power is measured by the number of its features, quantity becomes more important than quality". He goes on to describe Oberon, a computer language (which reminds me of Go in several ways) and an operating system that he believes helps solve the complexity problem. Definitely wirth a read!
 
 I've been mulling over this for a number of years -- back in 2008 I wrote a sarcastic dig at how bloated Adobe Reader had become: [Thank you, Adobe Reader 9!](https://blog.brush.co.nz/2008/07/adobe-reader-9/) It was a 33MB download and required 220MB of hard drive space even in 2008 (it's now a 150MB download, and I don't know how much hard drive space it requires, because I don't install it these days).
 
@@ -78,11 +78,20 @@ Some of my favourite small websites are:
 
 [Sourcehut](https://sourcehut.org/): I like the concept behind Drew DeVault's business, but I love how small and anti-fluff the website is. He has set up a mini-site called the [Software Forge Performance Index](https://forgeperf.org/) that tracks size and browser performance of the prominent source code websites -- Sourcehut is far and away the lightest and fastest. Even his homepage is only 81KB, including several screenshot thumbnails.
 
-[SQLite](https://sqlite.org/): Not only is SQLite a small, powerful SQL database engine, the website is fantastically small and content-rich. Even their 7000-word [page about testing](https://sqlite.org/testing.html) is only 70KB. How do they do this? It's not magic: focus on high-quality textual content, minimal CSS, no JavaScript, and very few images (a small logo and some SVGs).
+[SQLite](https://sqlite.org/): not only is SQLite a small, powerful SQL database engine, the website is fantastically small and content-rich. Even their 7000-word [page about testing](https://sqlite.org/testing.html) is only 70KB. How do they do this? It's not magic: focus on high-quality textual content, minimal CSS, no JavaScript, and very few images (a small logo and some SVGs).
 
 [LWN](https://lwn.net/): I'm a little biased, because I've written [articles](https://lwn.net/Archives/GuestIndex/#Hoyt_Ben) for them, but they're an excellent website for Linux and programming news. Extremely high-quality technical content (and a high bar for authors). They're definitely niche, and have a "we focus on quality content, not updating our CSS every year" kind of look -- they've been putting out great content for 23 years! Their homepage only downloads 44KB (90KB uncompressed).
 
-More and more personal blogs and websites have adopted this aesthetic. One of the more hardcore examples is [Dan Luu's blog](https://danluu.com/). Not only is his inline CSS only about 200 bytes (the pages are basically unstyled), his HTML source code doesn't use any linefeed characters. Kind of a fun point, although then he goes on to load 20KB of Google Analytics JavaScript...
+[Dan Luu's blog](https://danluu.com/): this is one of the more hardcore examples. His inline CSS is only about 200 bytes (the pages are basically unstyled), and his HTML source code doesn't use any linefeed characters. Kind of a fun point, although then he goes on to load 20KB of Google Analytics JavaScript...
+
+As a friend pointed out, those websites have something of an "anti-aesthetic aesthetic". I confess to not minding that at all, but on the other hand, small doesn't have to mean ugly. More and more personal blogs and websites have adopted a small web approach but are more typographically appealing:
+
+* [Armin Ronacher's Thoughts and Writings](https://lucumr.pocoo.org/)
+* [Chris Wellons' "Null program" blog](https://nullprogram.com/)
+* [Eric Radman's BSD and SQL blog](http://eradman.com/)
+* [Hugo Tunius' programming blog](https://hugotunius.se/)
+* [James Hague's "Programming in the Twenty-First Century"](https://prog21.dadgum.com/)
+* [Julia Evans' programming blog](https://jvns.ca/)
 
 There are many, many more. Programmer Sijmen Mulder created a nice list of [text-only websites](https://sjmulder.nl/en/textonly.html) -- not quite the same thing as *small*, but it definitely overlaps!
 
@@ -90,7 +99,7 @@ However, **it's not just about raw size,** but about an "ethos of small". It's c
 
 For this website, I lovingly crafted each byte of HTML and CSS by hand, like a hipster creating a craft beer. Seriously though, if your focus is good content, it's not hard to create a simple template from scratch with just a few lines of HTML and CSS. It will be small and fast, and it'll be yours.
 
-Loading this essay transfers about 23KB (55KB uncompressed), including the favicon and analytics script. It's small, fast, and readable on desktop or mobile. Beauty is in the eye of the beholder, but I'm aiming for a minimalist design focussed on the content.
+Loading this essay transfers about 23KB (55KB uncompressed), including the favicon and analytics script. It's small, fast, and readable on desktop or mobile. They say beauty is in the eye of the beholder, but I'm aiming for a minimalist design focussed on the content.
 
 In addition to making sure your HTML and CSS are small, be sure to compress your images properly. Two basic things here: don't upload ultra-high resolution images straight from your camera, and use a reasonable amount of JPEG compression for photos (and PNG for screenshots or vector art). Even for large images, you can usually use 80 or 85% compression and still have an image without JPEG noise. For example, the large 1920x775 image on the top of my [side business's homepage](https://giftyweddings.com/) is only 300KB.
 
@@ -103,7 +112,7 @@ Speaking of hero images, you don't need big irrelevant images at the top of your
 
 JavaScript is a mixed blessing for the web, and more often than not a bane for *small* websites: it adds to the download size and time, it can be a performance killer, it's bad for accessibility, and if you don't hold it right, it's [bad for search engines](https://benhoyt.com/writings/seo-for-software-engineers/). Plus, if your website is content-heavy, it probably isn't adding much.
 
-Don't get me wrong: JavaScript is sometimes unavoidable, and is great where it's great. If you're developing a browser-based application like Gmail or Google Maps, you should almost certainly use be using JavaScript. But for your next blog, brochure website, or project documentation site, please consider an HTML-and-CSS-only approach.
+Don't get me wrong: JavaScript is sometimes unavoidable, and is great where it's great. If you're developing a browser-based application like Gmail or Google Maps, you should almost certainly be using JavaScript. But for your next blog, brochure website, or project documentation site, please consider an HTML-and-CSS-only approach.
 
 If your site -- like a lot of sites -- is somewhere in between and contains some light interaction, consider using JavaScript only for the parts of the page that need it. There's no need to overhaul your whole site to use React and Redux just to add a form. Letting the server generate (possibly dynamic) HTML is still an effective way to create fast websites.
 
@@ -117,7 +126,7 @@ Is progressive enhancement still relevant in 2021? Arguably not, though some die
 
 Compare that to the 8MB (14MB uncompressed) that the [Reddit homepage](https://www.reddit.com/) loads. And this across 201 requests -- I kid you not! -- most of which is JavaScript to power all the ads and tracking. Lovely...
 
-You don't need a "framework" to develop this way, of course, but there are some tools that make this style of server-side development easier. [Turbolinks](https://github.com/turbolinks/turbolinks) from the Basecamp folks was an early one, and it's now been superceded by [Turbo](https://turbo.hotwire.dev/), which is apparently used to power their email service [Hey](https://hey.com/). I haven't used these personally, but the ideas are clever (and surprisingly old-skool): use standard links and form submissions, [serve plain HTML](https://m.signalvnoise.com/html-over-the-wire/), but speed it up with WebSockets and JavaScript if available. Just today, in fact, someone posted a new article on Hacker News which claims ["The Future of Web Software Is HTML-over-WebSockets"](https://alistapart.com/article/the-future-of-web-software-is-html-over-websockets/). If Hey is anything to go by, this technique is fast!
+You don't need a "framework" to develop this way, of course, but there are some tools that make this style of server-side development easier. [Turbolinks](https://github.com/turbolinks/turbolinks) from the Basecamp folks was an early one, and it's now been superseded by [Turbo](https://turbo.hotwire.dev/), which is apparently used to power their email service [Hey](https://hey.com/). I haven't used these personally, but the ideas are clever (and surprisingly old-skool): use standard links and form submissions, [serve plain HTML](https://m.signalvnoise.com/html-over-the-wire/), but speed it up with WebSockets and JavaScript if available. Just today, in fact, someone posted a new article on Hacker News which claims ["The Future of Web Software Is HTML-over-WebSockets"](https://alistapart.com/article/the-future-of-web-software-is-html-over-websockets/). If Hey is anything to go by, this technique is fast!
 
 On the other hand, sometimes you can *reduce* overall complexity by using JavaScript for the whole page if you're going to need it anyway. For example, the registry pages on my wedding registry website are rendered on the client (they actually [use Elm](https://benhoyt.com/writings/learning-elm/), which compiles to JavaScript). I do need the interactivity of JavaScript (it's more "single page application" than mere content), but I don't need server-side rendering or good SEO for these pages. The homepage is a simple server-rendered template, but the registry pages are fully client-rendered.
 
@@ -137,7 +146,7 @@ Here's an example of what a simple Jekyll page looks like (the start of this ess
     layout: default
     title: "The small web is beautiful"
     permalink: /writings/the-small-web-is-beautiful/
-    description: A vision for "the small web", small software, and ...
+    description: A vision for the "small web", small software, and ...
     ---
     Markdown text here.
 ```
@@ -228,7 +237,7 @@ My own side business, [GiftyWeddings.com](https://giftyweddings.com/), only gets
 Speaking of SQLite, there's a growing number of developers who advocate using SQLite to run their websites. SQLite's ["when to use SQLite"](https://sqlite.org/whentouse.html) page says "Any site that gets fewer than 100K hits/day should work fine with SQLite. The 100K hits/day figure is a conservative estimate, not a hard upper bound. SQLite has been demonstrated to work with 10 times that amount of traffic." Here are some other SQLite success stories:
 
 * [Litestream](https://litestream.io/) is an open source tool that provides streaming replication for SQLite. Read author Ben Johnson's article, [Why I Built Litestream](https://litestream.io/blog/why-i-built-litestream/).
-* Go developer David Crawshaw has an article about what he calls ["one process programming"](https://crawshaw.io/blog/one-process-programming-notes) (with Go and SQLite), that can be summed up with his phrase "don't use N computers when 1 will do". He also created a [Go SQLite library](https://github.com/crawshaw/sqlite) that supports more SQLite-specific feature than the other drivers.
+* Go developer David Crawshaw has an article about what he calls ["one process programming"](https://crawshaw.io/blog/one-process-programming-notes) (with Go and SQLite), that can be summed up with his phrase "don't use N computers when 1 will do". He also created a [Go SQLite library](https://github.com/crawshaw/sqlite) that supports more SQLite-specific features than the other drivers.
 * Peewee ORM author Charles Leifer wrote an article ["Five reasons you should use SQLite in 2016"](https://charlesleifer.com/blog/five-reasons-you-should-use-sqlite-in-2016/) that's still very relevant in 2021. It ends with "I hope you'll give SQLite a try. Don't believe the FUD about it not being production-worthy, or not being suitable for use in web-applications."
 * Sam Eaton of [Crave Cookie](https://cravecookie.com/) runs a $200,000 per month side business (wow!) using a single server and SQLite. Read his [Indie Hackers interview](https://www.indiehackers.com/podcast/166-sam-eaton-of-crave-cookie).
 
@@ -237,6 +246,6 @@ Speaking of SQLite, there's a growing number of developers who advocate using SQ
 
 Companies will do what companies do, and continue to make flashy-looking, bloated websites that "convert" well. Maybe you can have an influence at work, and come home to your better half and say "honey, I shrunk the web". Or maybe you'll just focus on the small web for your personal projects. (Disclaimer: I mostly do the latter -- as part of my day job, I work on [Juju](https://jaas.ai/), which is not a small system by most measures.)
 
-Either way, I believe "the small web" is a compelling term and a compelling aesthetic. Not necessarily in the visual sense, but in the sense that you built it yourself, you understand all of it, and you run it on a single server or static file host.
+Either way, I believe the "small web" is a compelling term and a compelling aesthetic. Not necessarily in the visual sense, but in the sense that you built it yourself, you understand all of it, and you run it on a single server or static file host.
 
 There are thousands of excellent examples of small websites, and hundreds of ways to create simple architectures -- this essay touches on only a few of the ones I'm passionate about. I'd love to hear your own ideas and stories! <!-- Comment over at [Hacker News](TODO) or [programming reddit](TODO). -->
