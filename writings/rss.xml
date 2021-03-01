@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>The small web is beautiful</title>
+  <description>A vision for the "small web", small software, and small architectures. Also, a bonus rant about microservices.</description>
+  <link>https://benhoyt.com/writings/the-small-web-is-beautiful/</link>
+  <guid>https://benhoyt.com/writings/the-small-web-is-beautiful/</guid>
+  <pubDate>Tue, 2 Mar 2021 06:50:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Coming in Go 1.16: ReadDir and DirEntry</title>
   <description>A look at the new os.ReadDir function and os.DirEntry interface coming in Go 1.16, with a comparison to os.scandir in Python.</description>
   <link>https://benhoyt.com/writings/go-readdir/</link>

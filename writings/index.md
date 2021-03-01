@@ -13,6 +13,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 ## 2021
 
+* [The small web is beautiful](/writings/the-small-web-is-beautiful/): a vision for the "small web", small software, and small architectures. Also, a bonus rant about microservices. (March)
 * [Coming in Go 1.16: ReadDir and DirEntry](/writings/go-readdir/): A look at the new `os.ReadDir` function coming in Go 1.16, with a comparison to `os.scandir` in Python. (January)
 
 
