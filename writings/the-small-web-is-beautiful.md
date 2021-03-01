@@ -74,7 +74,7 @@ Some of my favourite small websites are:
 
 [Hacker News](https://news.ycombinator.com/news): I personally like the minimalist, almost brutalist design, but I love its lightness even more. I just downloaded the home page, and loading all resources transfers only 21KB (61KB uncompressed). Even pages with huge comment threads only transfer about 100KB of compressed data, and load quickly. Reddit has become such a bloated mess in comparison. Hacker News, never change!
 
-[Lobste.rs](https://lobste.rs/): a similar news-and-voting site, with slightly more "modern" styling. It uses some JavaScript and profile icons, but it's still clean and fast, and the total transfer size for the homepage is only 102KB. You just don't need megabytes to make a good website.
+[Lobsters](https://lobste.rs/): a similar news-and-voting site, with slightly more "modern" styling. It uses some JavaScript and profile icons, but it's still clean and fast, and the total transfer size for the homepage is only 102KB. You just don't need megabytes to make a good website.
 
 [Sourcehut](https://sourcehut.org/): I like the concept behind Drew DeVault's business, but I love how small and anti-fluff the website is. He has set up a mini-site called the [Software Forge Performance Index](https://forgeperf.org/) that tracks size and browser performance of the prominent source code websites -- Sourcehut is far and away the lightest and fastest. Even his homepage is only 81KB, including several screenshot thumbnails.
 
@@ -248,4 +248,4 @@ Companies will do what companies do, and continue to make flashy-looking, bloate
 
 Either way, I believe the "small web" is a compelling term and a compelling aesthetic. Not necessarily in the visual sense, but in the sense that you built it yourself, you understand all of it, and you run it on a single server or static file host.
 
-There are thousands of excellent examples of small websites, and hundreds of ways to create simple architectures -- this essay touches on only a few of the ones I'm passionate about. I'd love to hear your own ideas and stories! <!-- Comment over at [Hacker News](TODO) or [programming reddit](TODO). -->
+There are thousands of excellent examples of small websites, and hundreds of ways to create simple architectures -- this essay touches on only a few of the ones I'm passionate about. I'd love to hear your own ideas and stories! Comment over at [Lobsters](https://lobste.rs/s/d6qwff/small_web_is_beautiful) or [Hacker News](https://news.ycombinator.com/item?id=26305585) or [programming Reddit](https://www.reddit.com/r/programming/comments/lvfdq9/the_small_web_is_beautiful/).
