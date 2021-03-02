@@ -22,7 +22,7 @@ There are two aspects of this: first, **small teams and companies**. I'm not goi
 I'm not the first to talk about the "small web", but, somewhat surprisingly, only a few people have discussed it using that term. Here are the main web pages I can find that do:
 
 * [Rediscovering the Small Web](https://neustadt.fr/essays/the-small-web/) by Parimal Satyal: a fabulous article about the joy of small, independent (and sometimes retro) websites in contrast to the "commercial web".
-* [What is the Small Web?](https://ar.al/2020/08/07/what-is-the-small-web/), by Aral Balka of the Small Technology Foundation: more of a manifesto against the surveillance of Big Tech than something concrete, but still interesting.
+* [What is the Small Web?](https://ar.al/2020/08/07/what-is-the-small-web/), by Aral Balkan of the Small Technology Foundation: more of a manifesto against the surveillance of Big Tech than something concrete, but still interesting.
 
 Why aim small in this era of fast computers with plenty of RAM? A number of reasons, but the ones that are most important to me are:
 
