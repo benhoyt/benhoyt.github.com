@@ -365,7 +365,72 @@ It was a fun exercise, and Go gives you a fair bit of low-level control (and you
 
 ## C++
 
-* TODO: try literal file to solve cin slowness?
+C++ has come a long way since I last used it seriously: lots of goodies in C++11, and then more in C++14, 17, and 20. Features, features everywhere! It's definitely a lot terser than old-school C++, though the error messages are still a mess. Here's the simple version I came up with (with some help from Stack Overflow to make it more idiomatic):
+
+```cpp
+int main() {
+    string word;
+    unordered_map<string, int> counts;
+    while (cin >> word) {
+        transform(word.begin(), word.end(), word.begin(),
+            [](unsigned char c){ return tolower(c); });
+        counts[word]++;
+    }
+
+    vector<pair<string, int>> ordered(counts.begin(), counts.end());
+    sort(ordered.begin(), ordered.end(), [](auto &a, auto &b) {
+        return a.second > b.second;
+    });
+
+    for (auto count : ordered) {
+        cout << count.first << " " << count.second << "\n";
+    }
+    return 0;
+}
+```
+
+When optimizing this, the first thing to do is compile with optimizations enabled (`g++ -O2`). I kind of like the fact that with Go you don't have to worry about this -- optimizations are always on.
+
+I noticed that that I/O was comparatively slow. It turns out there is a magic incantation you can recite at the start of your program to disable synchronizing with the C stdio functions after each I/O operation. This line makes it run almost twice as fast:
+
+```cpp
+ios::sync_with_stdio(false);
+```
+
+GCC can generate a profiling report for use with `gprof`. Here's what a few lines of it looks like -- I kid you not:
+
+```
+index % time    self  children    called     name
+                                  13             frame_dummy [1]
+[1]    100.0    0.01    0.00       0+13      frame_dummy [1]
+                                  13             frame_dummy [1]
+-----------------------------------------------
+                0.00    0.00   32187/32187       std::vector<std::pair\
+<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocat\
+or<char> >, int>, std::allocator<std::pair<std::__cxx11::basic_string<\
+char, std::char_traits<char>, std::allocator<char> >, int> > >::vector\
+<std::__detail::_Node_iterator<std::pair<std::__cxx11::basic_string<ch\
+ar, std::char_traits<char>, std::allocator<char> > const, int>, false,\
+ true>, void>(std::__detail::_Node_iterator<std::pair<std::__cxx11::ba\
+sic_string<char, std::char_traits<char>, std::allocator<char> > const,\
+ int>, false, true>, std::__detail::_Node_iterator<std::pair<std::__cx\
+x11::basic_string<char, std::char_traits<char>, std::allocator<char> >\
+ const, int>, false, true>, std::allocator<std::pair<std::__cxx11::bas\
+ic_string<char, std::char_traits<char>, std::allocator<char> >, int> >\
+ const&) [11]
+[8]      0.0    0.00    0.00   32187         void std::__cxx11::basic_\
+string<char, std::char_traits<char>, std::allocator<char> >::_M_constr\
+uct<char*>(char*, char*, std::forward_iterator_tag) [8]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [17]
+[9]      0.0    0.00    0.00       1         _GLOBAL__sub_I_main [9]
+...
+```
+
+Ah, C++ templates. I really didn't feel like deciphering this output, so I kind of gave up. There's obviously a lot more pushing you could do with C++. However, I suspect it would end up getting more and more low-level and more C-like (at least with my limited knowledge of modern C++), so if you want to see more of that, go to the [C variants](#c).
+
+
+## C
 
 
 ## AWK
@@ -402,8 +467,6 @@ Another "optimization" is to run it using `mawk`, a faster AWK interpreter than 
 
 If you're interested in learning more about AWK, I've written an article about [GoAWK](https://benhoyt.com/writings/goawk/), my AWK interpreter written in Go (it's normally about as fast as Gawk), and also an article for LWN called [The State of the AWK](https://lwn.net/Articles/820829/), which surveys the "AWK landscape" and digs into the new features in Gawk 5.1.
 
-
-## C?
 
 ## Rust?
 
