@@ -1,21 +1,24 @@
 ---
 layout: default
-title: "Performance comparison: counting words in Go, Python, C, C++, and AWK"
+title: "Performance comparison: counting words in Python, Go, C++, C, and AWK"
 permalink: /writings/count-words/
-description: "Performance comparison of counting and sorting word frequencies in various languages (Go, Python, C, C++, and AWK)"
+description: "Performance comparison of counting and sorting word frequencies in various languages (Python, Go, C++, C, and AWK)"
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2021</p>
 
 <!--
-Add other languages?
-* bare bash / unix tools (split into words, sort, uniq -c, sort)
+TODO:
+- some way to skip to Results at top
+- mention McIlroy vs Knuth thing up front
+- spell check, proof, shorten
+- when publishing, add link to https://codereview.stackexchange.com/questions/256910/count-word-frequencies-and-print-them-most-frequent-first
 -->
 
 
 > Summary: I describe a simple interview problem (counting frequencies of unique words), solve it in various languages, and compare performance across them. For each language, I've included a simple, idiomatic solution as well as a more optimized approach via profiling.
 >
-> **Go to:** [Problem](TODO) \| [Python](#python) \| [Go](#go) \| [Numbers](TODO) \| [Learnings](TODO)
+> **Go to:** [Problem](TODO) \| [Python](#python) \| [Go](#go) \| [C++](#c) \| [C](#c-1) \| [AWK](#awk) \| [Unix](#unix-shell) \| [**Results!**](#performance-results) \| [Learnings](TODO)
 
 
 At a previous company I conducted many coding interviews, and one of the questions I liked to ask was this:
@@ -69,7 +72,8 @@ Each program needs to read from standard input or from a file, and print the fre
 * Map: however, it's okay to keep the whole word-count map in memory. We're assuming the input is text in a real language, not full of randomized unique words.
 * Text: assume that the input file is text, with "reasonable" length lines shorter than the buffer size.
 * Safe: even for the optimized variants, don't use unsafe features of the language, nor drop down to C or assembly.
-* Stdlib: only use the language's standard library functions. Writing a custom hash table for the counting may speed things up, but I'm considering it out of scope here. (Though it's not actually too hard -- see my [counter](https://github.com/benhoyt/counter) package.)
+* Hashing: don't roll our own hash table (with the exception of the optimized C version).
+* Stdlib: only use the language's standard library functions.
 
 Our input file will be the text of the King James version of the Bible, copied ten times. I sourced this [from Gutenberg.org](https://www.gutenberg.org/ebooks/10), replaced smart quotes with the ASCII quote character, and used `cat` to multiply it by ten to get the 43MB reference input file.
 
@@ -263,7 +267,7 @@ The results are interesting, though not unexpected -- the operations in the per-
 
 To improve scanning, we'll essentially make a cut-down version of `bufio.Scanner` and `ScanWords` (and do an ACIII to-lower operation in place). To reduce the allocations, we'll use a `map[string]*int` instead of `map[string]int` so we only have to allocate once per unique word, instead of for every increment (Martin Möhrmann gave me this tip on the Gophers Slack #performance channel).
 
-Note that it took me a few iterations and profiling passes to get to this result. One in-between step was to still use `bufio.Scanner` but with a custom split function, `scanWordsASCII`. But it's a bit faster, and not much harder, to avoid `bufio.Scanner` altogether. Another thing I tried was a [custom hash table](https://github.com/benhoyt/counter), but I decided that was out of scope for this article, and it's not much faster than the `map[string]*int` in any case.
+Note that it took me a few iterations and profiling passes to get to this result. One in-between step was to still use `bufio.Scanner` but with a custom split function, `scanWordsASCII`. But it's a bit faster, and not much harder, to avoid `bufio.Scanner` altogether. Another thing I tried was a [custom hash table](https://github.com/benhoyt/counter), but I decided that was out of scope for the Go version, and it's not much faster than the `map[string]*int` in any case.
 
 Here is the optimized code:
 
@@ -365,27 +369,28 @@ It was a fun exercise, and Go gives you a fair bit of low-level control (and you
 
 ## C++
 
-C++ has come a long way since I last used it seriously: lots of goodies in C++11, and then more in C++14, 17, and 20. Features, features everywhere! It's definitely a lot terser than old-school C++, though the error messages are still a mess. Here's the simple version I came up with (with some help from Stack Overflow to make it more idiomatic):
+C++ has come a long way since I last used it seriously: lots of goodies in C++11, and then more in C++14, 17, and 20. Features, features everywhere! It's definitely a lot terser than old-school C++, though the error messages are still a mess. Here's the simple version I came up with (with some [help from Code Review Stack Exchange](https://codereview.stackexchange.com/a/256916/100945) to make it a bit more idiomatic):
+
+TODO: cin error handling per Code Review answer?
 
 ```cpp
 int main() {
-    string word;
-    unordered_map<string, int> counts;
-    while (cin >> word) {
-        transform(word.begin(), word.end(), word.begin(),
-            [](unsigned char c){ return tolower(c); });
-        counts[word]++;
+    std::string word;
+    std::unordered_map<std::string, int> counts;
+    while (std::cin >> word) {
+        std::transform(word.begin(), word.end(), word.begin(),
+            [](unsigned char c){ return std::tolower(c); });
+        ++counts[word];
     }
 
-    vector<pair<string, int>> ordered(counts.begin(), counts.end());
-    sort(ordered.begin(), ordered.end(), [](auto &a, auto &b) {
-        return a.second > b.second;
-    });
+    std::vector<std::pair<std::string, int>> ordered(counts.begin(),
+        counts.end());
+    std::sort(ordered.begin(), ordered.end(),
+        [](auto const& a, auto const& b) { return a.second>b.second; });
 
-    for (auto count : ordered) {
-        cout << count.first << " " << count.second << "\n";
+    for (auto const& count : ordered) {
+        std::cout << count.first << " " << count.second << "\n";
     }
-    return 0;
 }
 ```
 
@@ -427,10 +432,267 @@ uct<char*>(char*, char*, std::forward_iterator_tag) [8]
 ...
 ```
 
-Ah, C++ templates. I really didn't feel like deciphering this output, so I kind of gave up. There's obviously a lot more pushing you could do with C++. However, I suspect it would end up getting more and more low-level and more C-like (at least with my limited knowledge of modern C++), so if you want to see more of that, go to the [C variants](#c).
+Ah, C++ templates. I really didn't feel like deciphering this output, so I kind of gave up. There's obviously a lot more pushing you could do with C++. However, I suspect it would end up getting more and more low-level and more C-like (at least with my limited knowledge of modern C++), so if you want to see more of that, go to the C variants below.
 
 
 ## C
+
+C is a beautiful beast that will never die: fast, unsafe, and simple (for some value of "simple"). I still like it, because (unlike C++) I can understand it, and I can go as low-level as I want. It's also ubiquitous (the Linux kernel, Redis, PostgreSQL, SQLite, many many libraries ... the list is endless), and it's not going away anytime soon. So let's try a C version.
+
+Unfortunately, C doesn't have a hash table data structure in its standard library. However, there is libc, which has the [`hcreate` and `hsearch`](https://linux.die.net/man/3/hsearch) hash table functions, so we'll make a small exception and use those libc-but-not-stdlib functions. (In the optimized version we'll roll our own hash table.)
+
+Here is the code for the "simple" version:
+
+```c
+#define MAX_UNIQUES 60000
+
+typedef struct {
+    char* word;
+    int count;
+} count;
+
+// Comparison function for qsort() ordering by count descending.
+int cmp_count(const void* p1, const void* p2) {
+    int c1 = ((count*)p1)->count;
+    int c2 = ((count*)p2)->count;
+    if (c1 == c2) return 0;
+    if (c1 < c2) return 1;
+    return -1;
+}
+
+int main() {
+    // The hcreate hash table doesn't provide a way to iterate, so
+    // store the words in an array too (also used for sorting).
+    count* words = calloc(MAX_UNIQUES, sizeof(count));
+    int num_words = 0;
+
+    // Allocate hash table.
+    if (hcreate(MAX_UNIQUES) == 0) {
+        fprintf(stderr, "error creating hash table\n");
+        return 1;
+    }
+
+    char word[101]; // 100-char word plus NUL byte
+    while (scanf("%100s", word) != EOF) {
+        // Convert word to lower case in place.
+        for (char* p = word; *p; p++) {
+            *p = tolower(*p);
+        }
+
+        // Search for word in hash table.
+        ENTRY item = {word, NULL};
+        ENTRY* found = hsearch(item, FIND);
+        if (found != NULL) {
+            // Word already in table, increment count.
+            int* pn = (int*)found->data;
+            (*pn)++;
+        } else {
+            // Word not in table, insert it with count 1.
+            item.key = strdup(word); // need to copy word
+            if (item.key == NULL) {
+                fprintf(stderr, "out of memory in strdup\n");
+                return 1;
+            }
+            int* pn = malloc(sizeof(int));
+            if (pn == NULL) {
+                fprintf(stderr, "out of memory in malloc\n");
+                return 1;
+            }
+            *pn = 1;
+            item.data = pn;
+            ENTRY* entered = hsearch(item, ENTER);
+            if (entered == NULL) {
+                fprintf(stderr, "table full, increase MAX_UNIQUES\n");
+                return 1;
+            }
+
+            // And add to words list for iterating.
+            words[num_words].word = item.key;
+            num_words++;
+        }
+    }
+
+    // Iterate once to add counts to words list, then sort.
+    for (int i = 0; i < num_words; i++) {
+        ENTRY item = {words[i].word, NULL};
+        ENTRY* found = hsearch(item, FIND);
+        if (found == NULL) { // shouldn't happen
+            fprintf(stderr, "key not found: %s\n", item.key);
+            return 1;
+        }
+        words[i].count = *(int*)found->data;
+    }
+    qsort(&words[0], num_words, sizeof(count), cmp_count); 
+
+    // Iterate again to print output.
+    for (int i = 0; i < num_words; i++) {
+        printf("%s %d\n", words[i].word, words[i].count);
+    }
+
+    return 0;
+}
+```
+
+There's a fair bit of boilerplate (mostly for memory allocation and error checking), but as far as C goes, I don't think it's too bad. The tricky stuff is mostly hidden -- tokenization behind `scanf`, and hash table operations behind `hsearch`. It's also quite fast out of the box, and very small (a 17KB executable on Linux).
+
+In any case, here's where we'll go a bit crazy with optimization. I want to focus on three things:
+
+* Read the file in chunks, like we did in Go and Python.
+* Process the bytes only once, or at least as few times as possible -- I'll be converting to lowercase and calculating the hash as we're tokenizing into words.
+* Implement our own hash table using the fast [FNV-1 hash function](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function).
+
+Let's see what that looks like:
+
+```c
+#define BUF_SIZE 65536
+#define HASH_LEN 65536  // must be a power of 2
+#define FNV_OFFSET 14695981039346656037UL
+#define FNV_PRIME 1099511628211UL
+
+// Used both for hash table buckets and array for sorting.
+typedef struct {
+    char* word;
+    int word_len;
+    int count;
+} count;
+
+// Comparison function for qsort() ordering by count descending.
+int cmp_count(const void* p1, const void* p2) {
+    int c1 = ((count*)p1)->count;
+    int c2 = ((count*)p2)->count;
+    if (c1 == c2) return 0;
+    if (c1 < c2) return 1;
+    return -1;
+}
+
+count* table;
+int num_unique = 0;
+
+// Increment count of word in hash table (or insert new word).
+void increment(char* word, int word_len, uint64_t hash) {
+    // Make 64-bit hash in range for items slice.
+    int index = (int)(hash & (uint64_t)(HASH_LEN-1));
+
+    // Look up key, using direct match and linear probing if not found.
+    while (1) {
+        if (table[index].word == NULL) {
+            // Found empty slot, add new item (copying key).
+            char* word_copy = malloc(word_len);
+            if (word_copy == NULL) {
+                fprintf(stderr, "out of memory\n");
+                exit(1);
+            }
+            memmove(word_copy, word, word_len);
+            table[index].word = word_copy;
+            table[index].word_len = word_len;
+            table[index].count = 1;
+            num_unique++;
+            return;
+        }
+        if (table[index].word_len == word_len &&
+                memcmp(table[index].word, word, word_len) == 0) {
+            // Found matching slot, increment existing count.
+            table[index].count++;
+            return;
+        }
+        // Slot already holds another key, try next slot (linear probe).
+        index++;
+        if (index >= HASH_LEN) {
+            index = 0;
+        }
+    }
+}
+
+int main() {
+    // Allocate hash table buckets.
+    table = calloc(HASH_LEN, sizeof(count));
+    if (table == NULL) {
+        fprintf(stderr, "out of memory\n");
+        return 1;
+    }
+
+    char buf[BUF_SIZE];
+    int offset = 0;
+    while (1) {
+        // Read file in chunks, processing one chunk at a time.
+        size_t num_read = fread(buf+offset, 1, BUF_SIZE-offset, stdin);
+        if (num_read == 0) {
+            break;
+        }
+
+        // Find last space or linefeed in buf and process up to there.
+        int space;
+        for (space = offset+num_read-1; space>=0; space--) {
+            char c = buf[space];
+            if (c == ' ' || c == '\n') {
+                break;
+            }
+        }
+        int num_process = (space >= 0) ? space : (int)num_read+offset;
+
+        // Scan chars to process: tokenize, lowercase, and hash as we go.
+        int i = 0;
+        while (1) {
+            // Skip whitespace before word.
+            for (; i < num_process; i++) {
+                char c = buf[i];
+                if (c != ' ' && c != '\n') {
+                    break;
+                }
+            }
+            // Look for end of word, lowercase and hash as we go.
+            uint64_t hash = FNV_OFFSET;
+            int start = i;
+            for (; i < num_process; i++) {
+                char c = buf[i];
+                if (c == ' ' || c == '\n') {
+                    break;
+                }
+                if (c >= 'A' && c <= 'Z') {
+                    c += ('a' - 'A');
+                    buf[i] = c;
+                }
+                hash *= FNV_PRIME;
+                hash ^= (uint64_t)c;
+            }
+            if (i <= start) {
+                break;
+            }
+            // Got a word, increment count in hash table.
+            increment(buf+start, i-start, hash);
+        }
+
+        // Move down remaining partial word.
+        if (space >= 0) {
+            offset = (offset+num_read-1) - space;
+            memmove(buf, buf+space+1, offset);
+        } else {
+            offset = 0;
+        }
+    }
+
+    count* ordered = calloc(num_unique, sizeof(count));
+    for (int i=0, i_unique=0; i<HASH_LEN; i++) {
+        if (table[i].word != NULL) {
+            ordered[i_unique++] = table[i];
+        }
+    }
+    qsort(ordered, num_unique, sizeof(count), cmp_count);
+    for (int i=0; i<num_unique; i++) {
+        printf("%s %d\n", ordered[i].word, ordered[i].count);
+    }
+
+    return 0;
+}
+```
+
+TODO: try using valgrind to profile (C++ too?)
+
+At 137 TODO lines (including blanks and comments), it's definitely the biggest program yet, but not too bad! As you can see, rolling your own hash table with linear probing is fairly straight-forward. It's not great to have a fixed size table, but adding dynamic resizing is just busy-work, and doesn't slow down the running time significantly, so I've left that as an exercise for the reader.
+
+It's still only a 17KB executable (that's what I love about C). And, unsurprisingly, this is the fastest version -- a little bit faster than the optimized Go version, because we've rolled our own custom hash table, and we're processing fewer bytes.
+
+One thing I'm a little bit proud of is that it's about 15% faster than `wc` on the same input, and `wc` just has to tokenize words, not count unique words, so it doesn't need a hash table. This program is not as fast as the incredible GNU `grep`, of course -- somewhat unintuitively, [`grep` doesn't have to process every byte](https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html).
 
 
 ## AWK
@@ -473,7 +735,7 @@ If you're interested in learning more about AWK, I've written an article about [
 ## Ruby?
 
 
-## Unix command line
+## Unix shell
 
 TODO: mention Knuth and McIlroy thing up front -- very similar! https://franklinchen.com/blog/2011/12/08/revisiting-knuth-and-mcilroys-word-count-programs/
 
@@ -496,7 +758,7 @@ The output is not quite the same as the others, because the format is "space-pre
 We could fix that with something like `awk '{ print $2, $1 }'`, but then we're using AWK anyway, and we might as well use the more efficient AWK program above.
 
 
-## Performance numbers
+## Performance results
 
 TODO
 
