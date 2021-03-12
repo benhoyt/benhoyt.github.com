@@ -859,12 +859,12 @@ It's not for nothing that Forth has a reputation for being write-only. I used to
 
 Thankfully hash tables are present via `wordlist`. This is really intended for definitions, but with Gforth's `execute-parsing` extension it works pretty well for hash tables. And `skip` and `scan` work well for the whitespace parsing (thanks [comp.lang.forth](https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI) folks for your help).
 
+For optimizing, it turns out you can run `gforth-fast` instead of `gforth` to magically speed things up, so that's my first optimization. It looks like `gforth-fast` avoids call overhead but doesn't produce good stack traces on error.
+
 TODO: optimize and read in chunks? shouldn't be too hard
 TODO: also, SKIP and SCAN vs PARSE-WORD
 
-For optimizing, it turns out you can run `gforth-fast` instead of `gforth` to magically speed things up, so that's my first optimization. It looks like `gforth-fast` avoids call overhead but doesn't produce good stack traces on error.
-
-TODO - remove. I'm not going to try to optimize the Forth version -- I'm far from proficient in Forth, now, and I don't really know where to start with profiling in Gforth (it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it).
+I'm far from proficient in Forth these days, and I don't really know where to start with profiling in Gforth (though it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it). So I think I'll stop there.
 
 
 ## C#, Java, JavaScript, Ruby, Rust?
@@ -897,7 +897,7 @@ We could fix that with something like `awk '{ print $2, $1 }'`, but then we're u
 
 Below are the performance numbers of running these programs on my laptop (64-bit Linux with an SSD). The times are in seconds, so lower is better. I'm running each test five times and taking the minimum time as the final result.
 
-TODO: update
+TODO: update results
 
 Language | Simple | Optimized
 -------- | ------ | ---------
