@@ -9,7 +9,7 @@ description: "Performance comparison of counting and sorting word frequencies in
 
 <!--
 TODO:
-- compress images using TinyPNG
+- pin GitHub.com file versions in case of updates?
 - spell check, proof, shorten
 - when publishing, add link to https://codereview.stackexchange.com/questions/256910/count-word-frequencies-and-print-them-most-frequent-first
 - also comp.lang.forth thread: https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI
@@ -204,8 +204,6 @@ I also found that with the Python solution, reading and processing `bytes` vs `s
 
 I tried various other ways to improve performance, but this was about the best I could manage with standard Python. Trying to optimize at the byte level just makes no sense in Python (or leads to a 10-100x slowdown) -- any per-character processing has to be done in C. Let me know if you find a better approach.
 
-On my machine, the simple version runs in TODO seconds, the optimized version in TODO seconds.
-
 
 ## Go
 
@@ -392,6 +390,10 @@ int main() {
         std::transform(word.begin(), word.end(), word.begin(),
             [](unsigned char c){ return std::tolower(c); });
         ++counts[word];
+    }
+    if (std::cin.bad()) {
+        std::cerr << "error reading stdin\n";
+        return 1;
     }
 
     std::vector<std::pair<std::string, int>> ordered(counts.begin(),
@@ -715,7 +717,7 @@ int main() {
 }
 ```
 
-At 137 TODO lines (including blanks and comments), it's definitely the biggest program yet, but not too bad! As you can see, rolling your own hash table with linear probing is not a lot of code. It's not great to have a fixed size table (like `hcreate`), but adding dynamic resizing is just busy-work, and doesn't slow down the running time significantly, so I've left that as an exercise for the reader.
+At around 150 lines (including blanks and comments), it's definitely the biggest program yet, but not too bad! As you can see, rolling your own hash table with linear probing is not a lot of code. It's not great to have a fixed size table (like `hcreate`), but adding dynamic resizing is just busy-work, and doesn't slow down the running time significantly, so I've left that as an exercise for the reader.
 
 It's still only a 17KB executable (that's what I love about C). And, unsurprisingly, this is the fastest version -- a little bit faster than the optimized Go version, because we've rolled our own custom hash table, and we're processing fewer bytes.
 
@@ -760,6 +762,8 @@ We can run this using `gawk -b`, which puts Gawk into "bytes" mode so it uses AS
 
 Another "optimization" is to run it using `mawk`, a faster AWK interpreter than `gawk`. In this case it's about 1.7 times as fast as `gawk -b`.
 
+Interestingly, the Gawk manual has a [page](https://www.gnu.org/software/gawk/manual/html_node/Word-Sorting.html) on this problem, with an example of how to strip out punctuation using AWK's `gsub` function.
+
 If you're interested in learning more about AWK, I've written an article about [GoAWK](https://benhoyt.com/writings/goawk/), my AWK interpreter written in Go (it's normally about as fast as Gawk), and also an article for LWN called [The State of the AWK](https://lwn.net/Articles/820829/), which surveys the "AWK landscape" and digs into the new features in Gawk 5.1.
 
 
@@ -771,14 +775,14 @@ If you're interested in learning more about AWK, I've written an article about [
 
 ```
 200 constant max-line
-create line max-line allot        \ Buffer for read-line
-wordlist constant counts          \ Hash table of words to count
+create line max-line allot  \ Buffer for read-line
+wordlist constant counts    \ Hash table of words to count
 variable num-uniques  0 num-uniques !
 
 \ Allocate space for new string and copy bytes, return new string.
 : copy-string ( addr u -- addr' u )
-    dup >r dup allocate throw
-    dup >r swap move r> r> ;
+    dup >r  dup allocate throw
+    dup >r  swap move  r> r> ;
 
 \ Convert character to lowercase.
 : to-lower ( C -- c )
@@ -796,7 +800,7 @@ variable num-uniques  0 num-uniques !
 : count-word ( addr u -- )
     2dup counts search-wordlist if
         \ Increment existing word
-        execute 1 swap +!
+        >body 1 swap +!
         2drop
     else
         \ Insert new (copied) word with count 1
@@ -806,84 +810,46 @@ variable num-uniques  0 num-uniques !
         1 num-uniques +!
     then ;
 
-\ Scan till space and return remaining string and word.
-: scan-word ( addr u -- rem-addr rem addr word-len )
-    2dup bl scan
-    2tuck rot swap - nip ;
-
-\ Process a line by splitting into words.
-: process-line ( addr u -- )
+\ Process text in the source buffer (one line).
+: process-input ( -- )
     begin
-        bl skip    \ Skip spaces
-        scan-word  \ Scan till space (or end)
-        dup if
-            count-word
-        else
-            2drop
-        then
-    dup 0= until
+        parse-name dup
+    while
+        count-word
+    repeat
     2drop ;
-
-\ Add word from wordlist to array at given offset.
-: add-word ( addr offset nt -- addr offset+cell true )
-    >r 2dup + r> swap !
-    cell+ true ;
 
 \ Less-than for words (true if count is *greater* for reverse sort).
 : count< ( nt1 nt2 -- )
-    >r name>string counts search-wordlist drop execute @
-    r> name>string counts search-wordlist drop execute @
+    >r name>interpret >body @
+    r> name>interpret >body @
     > ;
 
-\ In-place merge sort taken from Rosetta Code:
-\ https://rosettacode.org/wiki/Sorting_algorithms/Merge_sort#Forth
-: merge-step ( right mid left -- right mid+ left+ )
-    over @ over @ count< if
-        over @ >r
-        2dup - over dup cell+ rot move
-        r> over !
-        >r cell+ 2dup = if  rdrop dup  else  r>  then
-    then
-    cell+ ;
+\ ... Definition of "sort" elided ...
 
-: merge ( right mid left -- right left )
-    dup >r begin
-        2dup >
-    while
-        merge-step
-    repeat
-    2drop r> ;
-
-: mid ( l r -- mid )
-    over - 2/ cell negate and + ;
-
-: mergesort ( right left -- right left )
-    2dup cell+ <= if
-        exit
-    then
-    swap 2dup mid recurse rot recurse merge ;
- 
-: sort ( addr len -- )
-    cells over + swap mergesort 2drop ;
+\ Append word from wordlist to array at given offset.
+: append-word ( addr offset nt -- addr offset+cell true )
+    >r 2dup + r> swap !
+    cell+ true ;
 
 \ Show "word count" line for each word (unsorted).
 : show-words ( -- )
     num-uniques @ cells allocate throw
-    0 ['] add-word counts traverse-wordlist drop
+    0 ['] append-word counts traverse-wordlist drop
     dup num-uniques @ sort
     num-uniques @ 0 ?do
         dup i cells + @
         dup name>string type space
-        name>interpret execute @ . cr
+        name>interpret >body @ . cr
     loop
     drop ;
 
 : main ( -- )
-    counts set-current
+    counts set-current  \ Define into counts wordlist
     begin
         line max-line stdin read-line throw
     while
-        line swap process-line
+        line swap ['] process-input execute-parsing
     repeat
     drop
     show-words ;
@@ -893,7 +859,12 @@ It's not for nothing that Forth has a reputation for being write-only. I used to
 
 Thankfully hash tables are present via `wordlist`. This is really intended for definitions, but with Gforth's `execute-parsing` extension it works pretty well for hash tables. And `skip` and `scan` work well for the whitespace parsing (thanks [comp.lang.forth](https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI) folks for your help).
 
-I'm not going to try to optimize the Forth version -- I'm far from proficient in Forth, now, and I don't really know where to start with profiling in Gforth (it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it).
+TODO: optimize and read in chunks? shouldn't be too hard
+TODO: also, SKIP and SCAN vs PARSE-WORD
+
+For optimizing, it turns out you can run `gforth-fast` instead of `gforth` to magically speed things up, so that's my first optimization. It looks like `gforth-fast` avoids call overhead but doesn't produce good stack traces on error.
+
+TODO - remove. I'm not going to try to optimize the Forth version -- I'm far from proficient in Forth, now, and I don't really know where to start with profiling in Gforth (it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it).
 
 
 ## C#, Java, JavaScript, Ruby, Rust?
@@ -909,7 +880,7 @@ Let's try a version with only basic Unix command line tools -- this is essential
 tr 'A-Z' 'a-z' | tr -s ' ' '\n' | sort | uniq -c | sort -nr
 ```
 
-At TODO seconds, it's quite slow, because it has to sort the entire file at once rather than using a hash table for counting (which goes against the constraints I've imposed). So this is fine for relatively small files, but if I wanted a one-liner I'd probably reach for AWK instead.
+It's quite slow (algorithmically and in practice), because it has to sort the entire file at once rather than using a hash table for counting (which actually goes against the constraints I've imposed). So this is fine for relatively small files, but if I wanted a one-liner I'd probably reach for AWK instead.
 
 The output is not quite the same as the others, because the format is "space-prefixed-count word" rather than "word count", like so:
 
@@ -938,17 +909,17 @@ AWK      |   4.09 |      1.42*
 Forth    |   4.37 |          
 Shell    |  16.85 |          
 
-As I noted above, the optimized C++ version isn't really very optimized -- look at the C version instead. Also, the optimized AWK version is run using `mawk`.
+Notes (\*): the optimized C++ version isn't really very optimized -- look at the C version instead. Also, the optimized AWK version is run using `mawk`.
 
 What can we learn from all this? Here are a few thoughts:
 
-* It's the simple, idiomatic versions that are the most telling. These are the versions programmers are actually likely to write in real life.
-* You almost certainly shouldn't write the optimized C version, unless you're writing a GNU `wordfreq` tool or something.
-* If you just need a quick solution (likely), Python and AWK are amazing for this kind of work.
-* C++ templates produce such horrible error messages and names in the profiler, making them almost unreadable.
-* I still think this interview question is a good one for a coding question. Obviously
-* We usually think of I/O as expensive, but I/O isn't the bottleneck. In the case of benchmarks, the file is probably cached, but still, hard drive read speeds are incredibly fast these days. The tokenization and hash table operations are the bottleneck.
+* I think it's the simple, idiomatic versions that are the most telling. This is the code programmers are likely to write in real life.
+* You almost certainly shouldn't write the optimized C version, unless you're writing a new GNU `wordfreq` tool or something. It's just too easy to get wrong. If you want a fast version in a safe language, I'd recommend Go or Rust.
+* If you just need a quick solution (which is likely), Python and AWK are amazing for this kind of text processing.
+* C++ templates produce such horrible error messages and function names in the profiler, making them almost unreadable.
+* I still think this interview question is a good one for a coding question, though obviously I wouldn't expect a candidate to write one of the optimized solutions on the whiteboard.
+* We usually think of I/O as expensive, but I/O isn't the bottleneck here. In the case of benchmarks, the file is probably cached, but even if not, hard drive read speeds are incredibly fast these days. The tokenization and hash table operations are the bottleneck.
 
-This was definitely a fun exercise! I learned a good amount about optimization, using Valgrind, TODO
+This was definitely a fun exercise! I learned a good amount about optimization hot-spots, using the Valgrind profiler, and I wrote some Forth code for the first time in years.
 
-Let me know your thoughts: TODO
+Let me know your thoughts or feedback, or send ideas for improvements. You're welcome to contribute to [benhoyt/countwords](github.com/benhoyt/countwords) -- I'd especially welcome pull requests to add C#, Java, JavaScript, Ruby, or Rust.
