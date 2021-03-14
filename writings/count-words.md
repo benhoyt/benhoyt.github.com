@@ -1,14 +1,18 @@
 ---
 layout: default
-title: "Performance comparison: counting words in Python, Go, C++, C, AWK, and Forth"
+title: "Performance comparison: counting words in Python, Go, Rust, C++, C, AWK, and Forth"
 permalink: /writings/count-words/
-description: "Performance comparison of counting and sorting word frequencies in various languages (Python, Go, C++, C, AWK, and Forth)"
+description: "Performance comparison of counting and sorting word frequencies in various languages (Python, Go, Rust, C++, C, AWK, and Forth)"
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2021</p>
 
 <!--
 TODO:
+- add Anton Ertl's optimized Forth version
+- format Rust code so it fits
+- run test.sh one last time
+- ensure code in this file is synced to latest versions
 - pin GitHub.com file versions in case of updates?
 - spell check, proof, shorten
 - when publishing, add link to https://codereview.stackexchange.com/questions/256910/count-word-frequencies-and-print-them-most-frequent-first
@@ -18,7 +22,7 @@ TODO:
 
 > Summary: I describe a simple interview problem (counting frequencies of unique words), solve it in various languages, and compare performance across them. For each language, I've included a simple, idiomatic solution as well as a more optimized approach via profiling.
 >
-> **Go to:** [Problem](#problem-statement-and-constraints) \| [Python](#python) \| [Go](#go) \| [C++](#c) \| [C](#c-1) \| [AWK](#awk) \| [Forth](#forth) \| [Others](#c-java-javascript-ruby-rust) \| [Unix](#unix-shell) \| [**Results!**](#performance-results-and-learnings)
+> **Go to:** [Problem](#problem-statement-and-constraints) \| [Python](#python) \| [Go](#go) \| [C++](#c) \| [C](#c-1) \| [AWK](#awk) \| [Forth](#forth) \| [Rust](#rust) \| [Others](#c-java-javascript-ruby-rust) \| [Unix](#unix-shell) \| [**Results!**](#performance-results-and-learnings)
 
 
 At a previous company I conducted many coding interviews, and one of the questions I liked to ask was this:
@@ -721,9 +725,11 @@ At around 150 lines (including blanks and comments), it's definitely the biggest
 
 It's still only a 17KB executable (that's what I love about C). And, unsurprisingly, this is the fastest version -- a little bit faster than the optimized Go version, because we've rolled our own custom hash table, and we're processing fewer bytes.
 
-One thing I'm a little bit proud of is that it's about 15% faster than `wc` on the same input, and `wc` just has to tokenize words, not count unique words, so it doesn't need a hash table. This program is not as fast as the incredible GNU `grep`, of course -- somewhat unintuitively, [`grep` doesn't have to process every byte](https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html).
+As shown in the results, this version is only about 15% slower than `wc -w` on the same input (with `LC_ALL=C` to allow ASCII-only whitespace handling). The `wc` utility just has to tokenize words, not count unique words, so it doesn't need a hash table.
 
-I'm sure there's much further you could go with this: investigate memory-mapped I/O, avoid processing byte-at-a-time, use a fancier data structure for counting, etc. But this is quite enough for now!
+This program is significantly slower than the incredible GNU `grep`, of course. There's a semi-famous mailing list message from 2010 by Mike Haertel, original author of GNU grep, on [why GNU grep is fast](https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html). It's fascinating reading -- however, as Andrew Gallant (author of [ripgrep](https://github.com/BurntSushi/ripgrep)) pointed out to me, that post is somewhat out of date. Mike's general advice is good, but these days GNU grep is fast not so much due to skipping bytes with the Boyer-Moore algorithm, but because it uses a fast, vectorized implementation of `memchr` in glibc.
+
+I'm sure there's further you could go with the C version: investigate memory-mapped I/O, avoid processing byte-at-a-time, use a fancier data structure for counting, etc. But this is quite enough for now!
 
 
 ## AWK
@@ -867,9 +873,140 @@ TODO: also, SKIP and SCAN vs PARSE-WORD
 I'm far from proficient in Forth these days, and I don't really know where to start with profiling in Gforth (though it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it). So I think I'll stop there.
 
 
-## C#, Java, JavaScript, Ruby, Rust?
+## Rust
 
-I'd love readers to send pull requests to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages, and I'll link them here. I'm not familiar enough with them to do them justice anyway.
+I'm a heavy user of Andrew Gallant's excellent [ripgrep](https://github.com/BurntSushi/ripgrep) code search tool, and I knew he was pretty big into Rust (and optimization!), so before publishing this article I asked him if he'd be willing to do a Rust version.
+
+He more than delivered! He wrote simple and optimized versions, which are similar to the Go variants (and very close in speed). But then he wrote three additional versions (some of which use external dependencies):
+
+* [A "bonus" version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/bonus/main.rs) that is similar to the simple version but does Unicode-aware word segmentation and has a few other goodies. Andrew said this is how he'd write it if someone asked for a versatile version.
+* [A custom hash table version]((https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-customhashmap/main.rs)). It's an approximate port of the C version, and almost as fast.
+* [A trie version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-trie/main.rs) that uses a [trie data structure](https://en.wikipedia.org/wiki/Trie) instead of a hash table. Andrew (like me) thought this might be faster, but it turns out to be slower.
+
+His simple version doesn't use any external dependencies, and is similar to the simple Go and C++ versions:
+
+[**rust/simple/main.rs**](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/simple/main.rs)
+
+```rust
+fn main() {
+    // We don't return Result from main because it prints the debug
+    // representation of the error. The code below prints the "display" or
+    // human readable representation of the error.
+    if let Err(err) = try_main() {
+        eprintln!("{}", err);
+        std::process::exit(1);
+    }
+}
+
+fn try_main() -> Result<(), Box<dyn Error>> {
+    let stdin = io::stdin();
+    let stdin = io::BufReader::new(stdin.lock());
+    let mut counts: HashMap<String, u64> = HashMap::new();
+    for result in stdin.lines() {
+        let line = result?;
+        for word in line.split_whitespace() {
+            let canon = word.to_lowercase();
+            *counts.entry(canon).or_insert(0) += 1;
+        }
+    }
+
+    let mut ordered: Vec<(String, u64)> = counts.into_iter().collect();
+    ordered.sort_by(|&(_, cnt1), &(_, cnt2)| cnt1.cmp(&cnt2).reverse());
+    for (word, count) in ordered {
+        writeln!(io::stdout(), "{} {}", word, count)?;
+    }
+    Ok(())
+}
+```
+
+I definitely like what I've seen and heard about Rust, and I'd learn it over modern C++ any day (though I understand it's got a fairly steep learning curve ... and quite a few `!?&|<>` sigils).
+
+For the optimized version, I'll include his comments here (and copy the code from `try_main` on):
+
+> This version is an approximate port of the optimized Go program. Its buffer
+> handling is slightly simpler: we don't bother with dealing with the last
+> newline character. (This may appear to save work, but it only saves work
+> once per 64KB buffer, so is likely negligible. It's just simpler IMO.)
+>
+> There's nothing particularly interesting here other than swapping out std's
+> default hashing algorithm for one that isn't cryptographically secure.
+>
+> std uses a cryptographically secure hashing algorithm by default, which is
+> a bit slower. In this particular program, fxhash and fnv seem to perform
+> similarly, with fxhash being a touch faster in my ad hoc benchmarks. If
+> we wanted to really enforce the "no external crate" rule, we could just
+> hand-roll an fnv hash impl ourselves very easily.
+
+[**rust/optimized/main.rs**](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized/main.rs)
+
+```rust
+fn try_main() -> Result<(), Box<dyn Error>> {
+    let stdin = io::stdin();
+    let mut stdin = stdin.lock();
+    let mut counts: HashMap<Vec<u8>, u64> = HashMap::default();
+    let mut buf = vec![0; 64 * (1<<10)];
+    let mut offset = 0;
+    let mut start = None;
+    loop {
+        let nread = stdin.read(&mut buf[offset..])?;
+        if nread == 0 {
+            if offset > 0 {
+                increment(&mut counts, &buf[..offset+1]);
+            }
+            break;
+        }
+        let buf = &mut buf[..offset+nread];
+
+        for i in (0..buf.len()).skip(offset) {
+            let b = buf[i];
+            if b'A' <= b && b <= b'Z' {
+                buf[i] += b'a' - b'A';
+            }
+            if b == b' ' || b == b'\n' {
+                if let Some(start) = start.take() {
+                    increment(&mut counts, &buf[start..i]);
+                }
+            } else if start.is_none() {
+                start = Some(i);
+            }
+        }
+        if let Some(ref mut start) = start {
+            offset = buf.len() - *start;
+            buf.copy_within(*start.., 0);
+            *start = 0;
+        } else {
+            offset = 0;
+        }
+    }
+
+    let mut ordered: Vec<(Vec<u8>, u64)> = counts.into_iter().collect();
+    ordered.sort_by(|&(_, cnt1), &(_, cnt2)| cnt1.cmp(&cnt2).reverse());
+
+    for (word, count) in ordered {
+        writeln!(io::stdout(), "{} {}", std::str::from_utf8(&word)?, count)?;
+    }
+    Ok(())
+}
+
+fn increment(counts: &mut HashMap<Vec<u8>, u64>, word: &[u8]) {
+    // using 'counts.entry' would be more idiomatic here, but doing so requires
+    // allocating a new Vec<u8> because of its API. Instead, we do two hash
+    // lookups, but in the exceptionally common case (we see a word we've
+    // already seen), we only do one and without any allocs.
+    if let Some(count) = counts.get_mut(word) {
+        *count += 1;
+        return;
+    }
+    counts.insert(word.to_vec(), 1);
+}
+```
+
+Thanks, Andrew!
+
+
+## C#, Java, JavaScript, Ruby
+
+I'd love readers to send pull requests to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages, and I'll link them here. Apart from JavaScript, I'm not familiar enough with them to do them justice anyway.
 
 
 ## Unix shell
@@ -880,7 +1017,9 @@ Let's try a version with only basic Unix command line tools -- this is essential
 tr 'A-Z' 'a-z' | tr -s ' ' '\n' | sort | uniq -c | sort -nr
 ```
 
-It's quite slow (algorithmically and in practice), because it has to sort the entire file at once rather than using a hash table for counting (which actually goes against the constraints I've imposed). So this is fine for relatively small files, but if I wanted a one-liner I'd probably reach for AWK instead.
+With the default locale, it's quite slow, in part because it has to sort the entire file at once rather than using a hash table for counting (reading the entire file into memory actually goes against the constraints I've imposed). So this is fine for relatively small files, but if I wanted a one-liner I'd probably reach for AWK instead.
+
+Surprisingly (to me), if you change to the C locale (effectively ASCII-only), the above is quite fast considering the "sort the entire file" algorithm! It just shows how much the GNU utilities are optimized, especially for the ASCII-only case.
 
 The output is not quite the same as the others, because the format is "space-prefixed-count word" rather than "word count", like so:
 
@@ -895,21 +1034,23 @@ We could fix that with something like `awk '{ print $2, $1 }'`, but then we're u
 
 ## Performance results and learnings
 
-Below are the performance numbers of running these programs on my laptop (64-bit Linux with an SSD). The times are in seconds, so lower is better. I'm running each test five times and taking the minimum time as the final result.
+Below are the performance numbers of running these programs on my laptop (64-bit Linux with an SSD). I'm running each test five times and taking the minimum time as the final result (see [benchmark.py](https://github.com/benhoyt/countwords/blob/master/benchmark.py)). Each run is basically equivalent to `time $COMMAND <kjvbible_x10.txt >/dev/null`. The times are in seconds, so lower is better.
 
 TODO: update results
 
-Language | Simple | Optimized
--------- | ------ | ---------
-C        |   1.20 |      0.34
-Go       |   1.46 |      0.43
-C++      |   2.17 |      1.22*
-Python   |   2.32 |      1.37
-AWK      |   4.09 |      1.42*
-Forth    |   4.37 |          
-Shell    |  16.85 |          
-
-Notes (\*): the optimized C++ version isn't really very optimized -- look at the C version instead. Also, the optimized AWK version is run using `mawk`.
+Language      | Simple | Optimized | Notes
+------------- | ------ | --------- |
+`grep foobar` |   0.07 |      0.05 | `grep` reference; optimized sets `LC_ALL=C`
+`wc -w`       |   0.31 |      0.21 | `wc` reference; optimized sets `LC_ALL=C`
+C             |   1.21 |      0.26 | 
+Go            |   1.48 |      0.40 | 
+Rust A        |   1.60 |      0.38 | by Andrew Gallant
+Rust B        |   1.62 |      0.31 | also by Andrew: bonus and custom hash
+C++           |   2.34 |      1.06 | "optimized" isn't very optimized
+Python        |   2.41 |      1.59 | 
+AWK           |   3.83 |      1.28 | optimized uses `mawk`
+Forth         |   4.49 |      2.59 | 
+Shell         |  16.01 |      3.25 | optimized sets `LC_ALL=C`
 
 What can we learn from all this? Here are a few thoughts:
 
