@@ -445,6 +445,8 @@ I really didn't feel like deciphering this output, so I kind of gave up and spen
 
 I used the Valgrind profiler (Callgrind) in the C version -- see the section below for notes on that. Andrew Gallant pointed out that I could try the Linux [`perf`](https://perf.wiki.kernel.org/index.php/Main_Page) tool (specifically `perf record` and `perf report`) -- it does look better than `gprof`.
 
+Update: [Jussi Pakkanen](https://github.com/jpakkane) optimized the C++ version in [this PR](https://github.com/benhoyt/countwords/pull/30). Thanks!
+
 
 ## C
 
@@ -704,7 +706,8 @@ int main() {
     }
     qsort(ordered, num_unique, sizeof(count), cmp_count);
     for (int i=0; i<num_unique; i++) {
-        printf("%s %d\n", ordered[i].word, ordered[i].count);
+        printf("%.*s %d\n",
+                ordered[i].word_len, ordered[i].word, ordered[i].count);
     }
 
     return 0;
