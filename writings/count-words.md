@@ -9,7 +9,6 @@ description: "Performance comparison of counting and sorting word frequencies in
 
 <!--
 TODO:
-- add Anton Ertl's optimized Forth version
 - run test.sh and benchmark.py one last time
 - when publishing, add link to https://codereview.stackexchange.com/questions/256910/count-word-frequencies-and-print-them-most-frequent-first
 - also comp.lang.forth thread: https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI
@@ -777,18 +776,13 @@ If you're interested in learning more about AWK, I've written an article about [
 
 [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) was the first programming language I learned (it's an amazing and mind-expanding language), so I decided to try a Forth version using [Gforth](https://gforth.org/). I haven't written anything in the language for years, but here goes (though I'm not sure it's valid to call this *simple*!):
 
-[**simple.fs**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/simple.fs)
+[**simple.fs**](https://github.com/benhoyt/countwords/blob/9d81d13711e56c25068893880a648ac96d0fa92e/simple.fs)
 
 ```
 200 constant max-line
 create line max-line allot  \ Buffer for read-line
 wordlist constant counts    \ Hash table of words to count
 variable num-uniques  0 num-uniques !
-
-\ Allocate space for new string and copy bytes, return new string.
-: copy-string ( addr u -- addr' u )
-    dup >r  dup allocate throw
-    dup >r  swap move  r> r> ;
 
 \ Convert character to lowercase.
 : to-lower ( C -- c )
@@ -809,8 +803,7 @@ variable num-uniques  0 num-uniques !
         >body 1 swap +!
         2drop
     else
-        \ Insert new (copied) word with count 1
-        copy-string
+        \ Insert new word with count 1
         2dup lower-in-place
         ['] create execute-parsing 1 ,
         1 num-uniques +!
@@ -838,7 +831,7 @@ variable num-uniques  0 num-uniques !
     >r 2dup + r> swap !
     cell+ true ;
 
-\ Show "word count" line for each word (unsorted).
+\ Show "word count" line for each word, most frequent first.
 : show-words ( -- )
     num-uniques @ cells allocate throw
     0 ['] append-word counts traverse-wordlist drop
@@ -867,12 +860,104 @@ Thankfully hash tables are present via `wordlist`. This is really intended for d
 
 For optimizing, it turns out you can run `gforth-fast` instead of `gforth` to magically speed things up, so that's my first optimization (though in the benchmarks, I use `gforth-fast` for both versions). It looks like `gforth-fast` avoids call overhead but doesn't produce good stack traces on error.
 
-I'm far from proficient in Forth these days, and I didn't really know where to start with profiling in Gforth (though it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it). Anton Ertl was very helpful on my comp.lang.forth posting, and spent some time trying to optimize this -- read the [full thread](https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI) for more information. I've hacked together a combination of my program and his optimizations below:
+I'm far from proficient in Forth these days, and I didn't really know where to start with profiling in Gforth (though it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it).
 
-[**optimized.fs**](https://github.com/benhoyt/countwords/blob/master/optimized.fs-TODO)
+Anton Ertl was very helpful on my comp.lang.forth post, and spent some time trying to optimize this -- read the [full thread](https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI) for more information. I've hacked together a combination of my program and his optimizations below (modified to read in chunks of 64KB):
+
+[**optimized.fs**](https://github.com/benhoyt/countwords/blob/9d81d13711e56c25068893880a648ac96d0fa92e/optimized.fs)
 
 ```
-TODO
+\ Start hash table at larger size
+15 :noname to hashbits hashdouble ; execute
+
+65536 constant buf-size
+create buf buf-size allot  \ Buffer for read-file
+wordlist constant counts   \ Hash table of words to count
+variable num-uniques  0 num-uniques !
+
+\ Convert character to lowercase.
+: to-lower ( C -- c )
+    dup [char] A [ char Z 1+ ] literal within if
+        32 +
+    then ;
+
+\ Convert string to lowercase in place.
+: lower-in-place ( addr u -- )
+    over + swap ?do
+        i c@ to-lower i c!
+    loop ;
+
+\ Count given word in hash table.
+: count-word ( c-addr u -- )
+    2dup counts find-name-in dup if
+        ( name>interpret ) >body 1 swap +! 2drop
+    else
+        drop nextname create 1 ,
+        1 num-uniques +!
+    then ;
+
+\ Process text in the buffer.
+: process-string ( -- )
+    begin
+        parse-name dup
+    while
+        count-word
+    repeat
+    2drop ;
+
+\ Less-than for words (true if count is *greater* for reverse sort).
+: count< ( nt1 nt2 -- )
+    >r name>interpret >body @
+    r> name>interpret >body @
+    > ;
+
+\ ... Definition of "sort" elided ...
+
+\ Append word from wordlist to array at given offset.
+: append-word ( addr offset nt -- addr offset+cell true )
+    dup name>string lower-in-place
+    >r  2dup + r> swap !
+    cell+ true ;
+
+\ Show "word count" line for each word, most frequent first.
+: show-words ( -- )
+    num-uniques @ cells allocate throw
+    0 ['] append-word counts traverse-wordlist drop
+    dup num-uniques @ sort
+    num-uniques @ 0 ?do
+        dup i cells + @
+        dup name>string type space
+        name>interpret >body @ . cr
+    loop
+    drop ;
+
+\ Find last LF character in string, or return -1.
+: find-eol ( addr u -- eol-offset|-1 )
+    begin
+        1- dup 0>=
+    while
+        2dup + c@ 10 = if
+            nip exit
+        then
+    repeat
+    nip ;
+
+: main ( -- )
+    counts set-current  \ Define into counts wordlist
+    0 >r  \ offset after remaining bytes
+    begin
+        \ Read from remaining bytes till end of buffer
+        buf r@ + buf-size r@ - stdin read-file throw dup
+    while
+        \ Process till last LF
+        buf over r@ + find-eol
+        dup buf swap ['] process-string execute-parsing
+        \ Move leftover bytes to start of buf, update offset
+        dup buf + -rot  buf -rot  - r@ +
+        r> drop dup >r  move
+    repeat
+    drop r> drop
+    show-words ;
 ```
 
 I might still consider using Forth for fun or on tiny embedded systems, but I don't think it has the ergonomics or the libraries to write programs for general use. For a much richer, more modern take on a Forth-like language, check out [Factor](https://factorcode.org/).
