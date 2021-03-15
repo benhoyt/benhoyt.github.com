@@ -7,14 +7,6 @@ description: "Performance comparison of counting and sorting word frequencies in
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2021</p>
 
-<!--
-TODO:
-- run test.sh and benchmark.py one last time
-- when publishing, add link to https://codereview.stackexchange.com/questions/256910/count-word-frequencies-and-print-them-most-frequent-first
-- also comp.lang.forth thread: https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI
-- also send to Ben Post, maybe family and Ed
--->
-
 
 > Summary: I describe a simple interview problem (counting frequencies of unique words), solve it in various languages, and compare performance across them. For each language, I've included a simple, idiomatic solution as well as a more optimized approach via profiling.
 >
@@ -1166,22 +1158,20 @@ time $PROGRAM <kjvbible_x10.txt >/dev/null
 
 The times are in seconds, so lower is better, and the list is ordered by the execution time of the simple version, fastest first.
 
-TODO: update results
-
 Language      | Simple | Optimized | Notes
-------------- | ------ | --------- |
-`grep` |   0.04 |      0.05 | `grep` reference; optimized sets `LC_ALL=C`
-`wc -w`       |   0.30 |      0.20 | `wc` reference; optimized sets `LC_ALL=C`
-C             |   1.03 |      0.24 | 
-Go            |   1.18 |      0.40 | 
-Rust A        |   1.47 |      0.37 | by Andrew Gallant
-Rust B        |   1.54 |      0.29 | also by Andrew: bonus and custom hash
-C++           |   1.87 |      1.01 | "optimized" isn't very optimized
-Python        |   2.22 |      1.37 | 
-C#            |   3.36 |           | original by John Taylor
-AWK           |   3.72 |      1.16 | optimized uses `mawk`
-Forth         |   4.48 |      2.48 | 
-Shell         |  15.54 |      2.07 | optimized does `LC_ALL=C sort -S 2G`
+------------- | ------ | --------- | -----
+`grep`        |   0.04 |      0.04 | `grep` reference; optimized sets `LC_ALL=C`
+`wc -w`       |   0.29 |      0.20 | `wc` reference; optimized sets `LC_ALL=C`
+C             |   0.97 |      0.23 | 
+Go            |   1.14 |      0.38 | 
+Rust A        |   1.41 |      0.35 | by Andrew Gallant
+Rust B        |   1.48 |      0.28 | also by Andrew: bonus and custom hash
+C++           |   1.75 |      0.98 | "optimized" isn't very optimized
+Python        |   2.07 |      1.27 | 
+C#            |   3.43 |           | original by John Taylor
+AWK           |   3.52 |      1.13 | optimized uses `mawk`
+Forth         |   4.21 |      1.44 | 
+Shell         |  14.67 |      1.86 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
 
