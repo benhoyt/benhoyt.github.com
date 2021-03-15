@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Performance comparison: counting words in Python, Go, Rust, C++, C, AWK, and Forth"
+title: "Performance comparison: counting words in Python, Go, C++, C, AWK, Forth, and Rust"
 permalink: /writings/count-words/
-description: "Performance comparison of counting and sorting word frequencies in various languages (Python, Go, Rust, C++, C, AWK, and Forth)"
+description: "Performance comparison of counting and sorting word frequencies in various languages (Python, Go, C++, C, AWK, Forth, and Rust)"
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2021</p>
@@ -10,24 +10,21 @@ description: "Performance comparison of counting and sorting word frequencies in
 <!--
 TODO:
 - add Anton Ertl's optimized Forth version
-- format Rust code so it fits
-- run test.sh one last time
-- ensure code in this file is synced to latest versions
-- pin GitHub.com file versions in case of updates?
-- spell check, proof, shorten
+- run test.sh and benchmark.py one last time
 - when publishing, add link to https://codereview.stackexchange.com/questions/256910/count-word-frequencies-and-print-them-most-frequent-first
 - also comp.lang.forth thread: https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI
+- also send to Ben Post, maybe family and Ed
 -->
 
 
 > Summary: I describe a simple interview problem (counting frequencies of unique words), solve it in various languages, and compare performance across them. For each language, I've included a simple, idiomatic solution as well as a more optimized approach via profiling.
 >
-> **Go to:** [Problem](#problem-statement-and-constraints) \| [Python](#python) \| [Go](#go) \| [C++](#c) \| [C](#c-1) \| [AWK](#awk) \| [Forth](#forth) \| [Rust](#rust) \| [Others](#c-java-javascript-ruby-rust) \| [Unix](#unix-shell) \| [**Results!**](#performance-results-and-learnings)
+> **Go to:** [Constraints](#problem-statement-and-constraints) \| [Python](#python) [Go](#go) [C++](#c) [C](#c-1) [AWK](#awk) [Forth](#forth) [Rust](#rust) [Shell](#unix-shell) [Others](#other-languages) \| [**Results!**](#performance-results-and-learnings)
 
 
-At a previous company I conducted many coding interviews, and one of the questions I liked to ask was this:
+I've conducted many coding interviews over the past few years, and one of the questions I like to ask is this:
 
-> Write a program to count the frequencies of unique words, and then print them out with their frequencies, ordered most frequent first. For example, given this input:
+> Write a program to count the frequencies of unique words from standard input, then print them out with their frequencies, ordered most frequent first. For example, given this input:
 >
 >     The foo the foo the
 >     defenestration the
@@ -38,11 +35,11 @@ At a previous company I conducted many coding interviews, and one of the questio
 >     foo 2
 >     defenestration 1
 
-The reason I think this is a good interview question is that it's somewhat harder to solve than [FizzBuzz](https://blog.codinghorror.com/why-cant-programmers-program/), yet it doesn't suffer from the "invert a binary tree on this whiteboard" issue. It's the kind of thing a programmer might have to write a script for in real life, and it shows whether they understand file I/O, hash tables (maps), and how to use their language's `sort` function. There's a little bit of trickiness in the sorting part, because most hash data structures aren't ordered, and if they are, it's by key or insertion order and not by value.
+I think this is a good interview question because it's somewhat harder to solve than [FizzBuzz](https://blog.codinghorror.com/why-cant-programmers-program/), but it doesn't suffer from the "invert a binary tree on this whiteboard" issue. It's the kind of thing a programmer might have to write a script for in real life, and it shows whether they understand file I/O, hash tables (maps), and how to use their language's sort function. There's a little bit of trickiness in the sorting part, because most hash tables aren't ordered, and if they are, it's by key or insertion order and not by value.
 
 After the candidate has a basic solution, you can push it in all sorts of different directions: what about capitalization? punctuation? how does it order two words with the same frequency? what's the performance bottleneck likely to be? how does it fare in terms of big-O? what's the memory usage? roughly how long would your program take to process a 1GB file? would your solution still work for 1TB? and so on. Or you can take it in a "software engineering" direction and talk about error handling, testability, turning it into a hardened command line utility, etc.
 
-A basic solution reads the file line-by-line, converts to lowercase, splits each line into words, and counts the frequencies in a hash table. When it's done that, it converts the hash table to a list of key-value pairs, sorts by value (largest first), and finally prints them out.
+A basic solution reads the file line-by-line, converts to lowercase, splits each line into words, and counts the frequencies in a hash table. When that's done, it converts the hash table to a list of word-count pairs, sorts by count (largest first), and prints them out.
 
 In Python, one obvious solution using a plain `dict` might look like this (imports elided):
 
@@ -58,42 +55,42 @@ for word, count in pairs:
     print(word, count)
 ```
 
-If the candidate was a Pythonista, they might use `collections.defaultdict` or even `collections.Counter` -- see below for code using the latter. In that case I'd ask them how it worked under the hood, or how they might do it with a plain dictionary. I'm including large snippets of code in the article, but full source for each version is in my [benhoyt/countwords](https://github.com/benhoyt/countwords) repository. Or you can cheat and jump straight to the [performance numbers](#performance-results-and-learnings).
+If the candidate was a Pythonista, they might use [`collections.defaultdict`](https://docs.python.org/3/library/collections.html#collections.defaultdict) or even [`collections.Counter`](https://docs.python.org/3/library/collections.html#collections.Counter) -- see below for code using the latter. In that case I'd ask them how it worked under the hood, or how they might solve it with a plain dictionary.
 
-Incidentally, this problem [set the scene](http://www.leancrew.com/all-this/2011/12/more-shell-less-egg/) for a great computer science wizard duel several decades ago. In 1986, Jon Bentley asked Donald Knuth to show off "literate programming" with a solution to this problem, and he came up with an exquisite, ten-page Knuth masterpiece. Then Doug McIlroy (the inventor of Unix pipelines) replied with a one-liner [Unix shell version](#unix-shell) using `tr`, `sort`, and `uniq`.
+Incidentally, this problem [set the scene](http://www.leancrew.com/all-this/2011/12/more-shell-less-egg/) for a wizard duel between two computer scientists several decades ago. In 1986, Jon Bentley asked Donald Knuth to show off "literate programming" with a solution to this problem, and he came up with an exquisite, ten-page Knuthian masterpiece. Then Doug McIlroy (the inventor of Unix pipelines) replied with a one-liner [Unix shell version](#unix-shell) using `tr`, `sort`, and `uniq`.
 
 ![Knuth vs McIlroy](/images/count-words-knuth-vs-mcilroy.png)
 
 *Image credit [comic.browserling.com/97](https://comic.browserling.com/97).*
 
-In any case, I've been playing with this problem for a while now, and I wanted to see what the performance would be like in various languages, both with a simple idiomatic solution and with a more optimized version.
+In any case, I've been playing with this problem for a while now, and I wanted to see what the program would look like in various languages, and how fast they would run, both with a simple idiomatic solution and with a more optimized version. I'm including large snippets of code in the article, but full source for each version is in my [benhoyt/countwords](https://github.com/benhoyt/countwords) repository. Or you can cheat and jump straight to the [performance results](#performance-results-and-learnings).
 
 
 ## Problem statement and constraints
 
-Each program must read from standard input or from a file, and print the frequencies of unique, space-separated words in the file, in order from most frequent to least frequent. To keep our solutions simple and consistent, here are the (self-imposed) constraints I'm working against:
+Each program must read from standard input and print the frequencies of unique, space-separated words, in order from most frequent to least frequent. To keep our solutions simple and consistent, here are the (self-imposed) constraints I'm working against:
 
-* Normalize: the program must normalize words to lowercase, so "The the" should appear as "the 2" in the output.
-* Words: anything separated by whitespace -- ignore punctuation. This does make the program less useful, but I don't want to this to become a tokenization battle.
+* Case: the program must normalize words to lowercase, so "The the THE" should appear as "the 3" in the output.
+* Words: anything separated by whitespace -- ignore punctuation. This does make the program less useful, but I don't want this to become a tokenization battle.
 * ASCII: it's okay to only support ASCII for the whitespace handling and lowercase operation. Most of the optimized variants do this.
-* Ordering: if the frequency of two words is the same, their order in the output doesn't matter.
-* Threading: it should run in a single thread on a single machine (though I discuss concurrency in my interviews).
+* Ordering: if the frequency of two words is the same, their order in the output doesn't matter. I use a [normalization script](https://github.com/benhoyt/countwords/blob/master/normalize.py) to ensure the output is correct.
+* Threading: it should run in a single thread on a single machine (though I often discuss concurrency in my interviews).
 * Memory: don't read whole file into memory. Buffering it line-by-line is okay, or in chunks with a maximum buffer size of 64KB. That said, it's okay to keep the whole word-count map in memory (we're assuming the input is text in a real language, not full of randomized unique words).
 * Text: assume that the input file is text, with "reasonable" length lines shorter than the buffer size.
 * Safe: even for the optimized variants, try not to use unsafe language features, and don't drop down to assembly.
 * Hashing: don't roll our own hash table (with the exception of the optimized C version).
 * Stdlib: only use the language's standard library functions.
 
-Our input file will be the text of the King James version of the Bible, copied ten times. I sourced this [from Gutenberg.org](https://www.gutenberg.org/ebooks/10), replaced smart quotes with the ASCII quote character, and used `cat` to multiply it by ten to get the 43MB reference input file.
+Our [test input file](https://github.com/benhoyt/countwords/blob/master/kjvbible.txt) will be the text of the King James Bible, concatenated ten times. I sourced this [from Gutenberg.org](https://www.gutenberg.org/ebooks/10), replaced smart quotes with the ASCII quote character, and used `cat` to multiply it by ten to get the 43MB reference input file.
 
 So let's get coding! The solutions below are in the order I solved them.
 
 
 ## Python
 
-An idiomatic Python version would probably use `collections.Counter` (Python's collections library is really nice -- thanks Raymond Hettinger!). It's about as simple as you can get:
+An idiomatic Python version would probably use `collections.Counter`. Python's [collections](https://docs.python.org/3/library/collections.html) library is really nice -- thanks Raymond Hettinger! It's about as simple as you can get:
 
-[**simple.py**](https://github.com/benhoyt/countwords/blob/master/simple.py)
+[**simple.py**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/simple.py)
 
 ```python
 counts = collections.Counter()
@@ -105,7 +102,7 @@ for word, count in counts.most_common():
     print(word, count)
 ```
 
-This is Unicode-friendly and is probably what I'd write in "real life". It's actually quite efficient, because all the low-level stuff is really done in C: reading the file, converting to lowercase and splitting on whitespace, updating the counter, and the sorting that `Counter.most_common` does.
+This is Unicode-aware and is probably what I'd write in "real life". It's actually quite efficient, because all the low-level stuff is really done in C: reading the file, converting to lowercase and splitting on whitespace, updating the counter, and the sorting that [`Counter.most_common`](https://docs.python.org/3/library/collections.html#collections.Counter.most_common) does.
 
 But let's try to optimize! Python comes with a [profiling module](https://docs.python.org/3/library/profile.html) called `cProfile`. It's easy to use -- simply run your program using `python3 -m cProfile`. I've commented out the final `print` call to avoid the profiling output mixing with the program's output -- it's fairly negligible anyway. Here's the output (`-s tottime` sorts by total time in each function):
 
@@ -146,7 +143,7 @@ We can see a number of things here:
 
 The main thing we need to do is reduce the number of times around the main Python loop, and hence reduce the number of calls to all those functions. So let's read it in 64KB chunks:
 
-[**optimized.py**](https://github.com/benhoyt/countwords/blob/master/optimized.py)
+[**optimized.py**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.py)
 
 ```python
 counts = collections.Counter()
@@ -156,7 +153,7 @@ while True:
     if not chunk:
         break
     chunk = remaining + chunk
-    last_lf = chunk.rfind('\n')
+    last_lf = chunk.rfind('\n')  # process to last LF character
     if last_lf == -1:
         remaining = ''
     else:
@@ -168,7 +165,7 @@ for word, count in counts.most_common():
     print(word, count)
 ```
 
-Instead of our main loop processing 42 characters at a time (the average line length), we're processing 65,536 at a time. We're still reading and processing the same number of bytes, but we're now doing most of it in C rather than in the Python loop. Many of the optimized solutions use this basic approach -- in short, process things in bigger chunks.
+Instead of our main loop processing 42 characters at a time (the average line length), we're processing 65,536 at a time (less the partial line at the end). We're still reading and processing the same number of bytes, but we're now doing most of it in C rather than in the Python loop. Many of the optimized solutions use this basic approach -- process things in bigger chunks.
 
 The profiling output looks much better now. The `_count_elements` and `str.split` functions are still taking most of the time, but they're only being called 662 times instead 998170 (on roughly 64KB at a time rather than 42 bytes):
 
@@ -204,16 +201,16 @@ $ python3 -m cProfile -s tottime optimized.py <kjvbible_x10.txt
         1    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
 ```
 
-I also found that with the Python solution, reading and processing `bytes` vs `str` doesn't make a noticeable difference (the `utf_8_decode` is relatively far down the list). In addition, any buffer size above about 2KB is not much slower than 64KB -- I've noticed many systems have a default buffer size of 4KB, which seems very reasonable.
+I also found that with the Python solution, reading and processing `bytes` vs `str` doesn't make a noticeable difference (the `utf_8_decode` is relatively far down the list). In addition, any buffer size above about 2KB is not much slower than 64KB -- I've noticed many systems have a default buffer size of 4KB, which seems very reasonable in light of that.
 
-I tried various other ways to improve performance, but this was about the best I could manage with standard Python. Trying to optimize at the byte level just makes no sense in Python (or leads to a 10-100x slowdown) -- any per-character processing has to be done in C. Let me know if you find a better approach.
+I tried various other ways to improve performance, but this was about the best I could manage with standard Python. (I tried running it using the [PyPy](https://www.pypy.org/) optimizing compiler, but it's significantly slower for some reason.) Trying to optimize at the byte level just makes no sense in Python (or leads to a 10-100x slowdown) -- any per-character processing has to be done in C. Let me know if you find a better approach.
 
 
 ## Go
 
-A simple, idiomatic Go version would probably use `bufio.Scanner` with `ScanWords` as the split function. Go doesn't have anything like Python's `collection.Counter`, so you need to use a `map[string]int` for counting, and a slice of word-count pairs for the sort operation:
+A simple, idiomatic Go version would probably use [`bufio.Scanner`](https://golang.org/pkg/bufio/#Scanner) with [`ScanWords`](https://golang.org/pkg/bufio/#ScanWords) as the split function. Go doesn't have anything like Python's `collection.Counter`, but it's easy to use a `map[string]int` for counting, and a slice of word-count pairs for the sort operation:
 
-[**simple.go**](https://github.com/benhoyt/countwords/blob/master/simple.go)
+[**simple.go**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/simple.go)
 
 ```go
 func main() {
@@ -276,13 +273,13 @@ Serving web UI on http://localhost:7777
 ![Go simple - profiling results](/images/count-words-go-simple-1400.png)
 </a>
 
-The results are interesting, though not unexpected -- the operations in the per-word hot loop take all the time. A good chunk of the time is spent in the scanner, and another chunk is spent allocating strings to insert into the map, so let's try to optimize both of those parts
+The results are interesting, though not unexpected -- the operations in the per-word hot loop take all the time. A good chunk of the time is spent in the scanner, and another chunk is spent allocating strings to insert into the map, so let's try to optimize both of those parts.
 
 To improve scanning, we'll essentially make a cut-down version of `bufio.Scanner` and `ScanWords` (and do an ACIII to-lower operation in place). To reduce the allocations, we'll use a `map[string]*int` instead of `map[string]int` so we only have to allocate once per unique word, instead of for every increment (Martin Möhrmann gave me this tip on the Gophers Slack #performance channel).
 
-Note that it took me a few iterations and profiling passes to get to this result. One in-between step was to still use `bufio.Scanner` but with a custom split function, `scanWordsASCII`. But it's a bit faster, and not much harder, to avoid `bufio.Scanner` altogether. Another thing I tried was a [custom hash table](https://github.com/benhoyt/counter), but I decided that was out of scope for the Go version, and it's not much faster than the `map[string]*int` in any case.
+Note that it took me a few iterations and profiling passes to get to this result. One in-between step was to still use `bufio.Scanner` but with a custom split function, `scanWordsASCII`. However, it's a bit faster, and not much harder, to avoid `bufio.Scanner` altogether. Another thing I tried was a [custom hash table](https://github.com/benhoyt/counter), but I decided that was out of scope for the Go version, and it's not much faster than the `map[string]*int` in any case.
 
-[**optimized.go**](https://github.com/benhoyt/countwords/blob/master/optimized.go)
+[**optimized.go**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.go)
 
 ```go
 func main() {
@@ -319,14 +316,14 @@ func main() {
             }
             if start >= 0 {
                 // In a word, look for end of word (whitespace).
-                if c == ' ' || c == '\n' {
+                if c <= ' ' {
                     // Count this word!
                     increment(counts, toProcess[start:i])
                     start = -1
                 }
             } else {
                 // In whitespace, look for start of word (non-space).
-                if c != ' ' && c != '\n' {
+                if c > ' ' {
                     start = i
                 }
             }
@@ -384,7 +381,7 @@ It was a fun exercise, and Go gives you a fair bit of low-level control (and you
 
 C++ has come a long way since I last used it seriously: lots of goodies in C++11, and then more in C++14, 17, and 20. Features, features everywhere! It's definitely a lot terser than old-school C++, though the error messages are still a mess. Here's the simple version I came up with (with some [help from Code Review Stack Exchange](https://codereview.stackexchange.com/a/256916/100945) to make it a bit more idiomatic):
 
-[**simple.cpp**](https://github.com/benhoyt/countwords/blob/master/simple.cpp)
+[**simple.cpp**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/simple.cpp)
 
 ```cpp
 int main() {
@@ -413,13 +410,13 @@ int main() {
 
 When optimizing this, the first thing to do is compile with optimizations enabled (`g++ -O2`). I kind of like the fact that with Go you don't have to worry about this -- optimizations are always on.
 
-I noticed that that I/O was comparatively slow. It turns out there is a magic incantation you can recite at the start of your program to disable synchronizing with the C stdio functions after each I/O operation. This line makes it run almost twice as fast:
-
-[**optimized.cpp**](https://github.com/benhoyt/countwords/blob/master/optimized.cpp)
+I noticed that I/O was comparatively slow. It turns out there is a magic incantation you can recite at the start of your program to disable synchronizing with the C stdio functions after each I/O operation. This line makes it run almost twice as fast:
 
 ```cpp
 ios::sync_with_stdio(false);
 ```
+
+See [**optimized.cpp**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.cpp).
 
 GCC can generate a profiling report for use with `gprof`. Here's what a few lines of it looks like -- I kid you not:
 
@@ -453,18 +450,20 @@ uct<char*>(char*, char*, std::forward_iterator_tag) [8]
 
 Ah, C++ templates. Call me old-school, but I do prefer the names `malloc` and `scanf` over `std::basic_istream<char, std::char_traits<char> >& std::operator>><char, std::char_traits<char>, std::allocator<char> >(std::basic_istream<char, std::char_traits<char> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)`.
 
-I really didn't feel like deciphering this output, so I kind of gave up. There's obviously a lot more pushing you could do with C++. However, I suspect it would end up getting more and more low-level and more C-like (at least with my limited knowledge of modern C++), so if you want to see more of that, go to the C variants below. I also used the Valgrind profiler (Callgrind) in the C version.
+I really didn't feel like deciphering this output, so I kind of gave up and spent my energy on the optimized C version. There's obviously a lot more pushing you could do with C++. However, I suspect it would end up getting more and more low-level and more C-like (at least with my limited knowledge of modern C++), so if you want to see more of that, go to the C variants below.
+
+I used the Valgrind profiler (Callgrind) in the C version -- see the section below for notes on that. Andrew Gallant pointed out that I could try the Linux [`perf`](https://perf.wiki.kernel.org/index.php/Main_Page) tool (specifically `perf record` and `perf report`) -- it does look better than `gprof`.
 
 
 ## C
 
 C is a beautiful beast that will never die: fast, unsafe, and simple (for some value of "simple"). I still like it, because (unlike C++) I can understand it, and I can go as low-level as I want. It's also ubiquitous (the Linux kernel, Redis, PostgreSQL, SQLite, many many libraries ... the list is endless), and it's not going away anytime soon. So let's try a C version.
 
-Unfortunately, C doesn't have a hash table data structure in its standard library. However, there is libc, which has the [`hcreate` and `hsearch`](https://linux.die.net/man/3/hsearch) hash table functions, so we'll make a small exception and use those libc-but-not-stdlib functions. (In the optimized version we'll roll our own hash table.)
+Unfortunately, C doesn't have a hash table data structure in its standard library. However, there is libc, which has the [`hcreate` and `hsearch`](https://linux.die.net/man/3/hsearch) hash table functions, so we'll make a small exception and use those libc-but-not-stdlib functions. In the optimized version we'll roll our own hash table.
 
 One minor annoyance with `hcreate` is you have to specify the maximum table size up-front. I know the number of unique words is about 30,000, so we'll make it 60,000 for now.
 
-[**simple.c**](https://github.com/benhoyt/countwords/blob/master/simple.c)
+[**simple.c**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/simple.c)
 
 ```c
 #define MAX_UNIQUES 60000
@@ -576,7 +575,7 @@ Not surprisingly, it shows that `scanf` is the major culprit, followed by `hsear
 * Process the bytes only once, or at least as few times as possible -- I'll be converting to lowercase and calculating the hash as we're tokenizing into words.
 * Implement our own hash table using the fast [FNV-1 hash function](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function).
 
-[**optimized.c**](https://github.com/benhoyt/countwords/blob/master/optimized.c)
+[**optimized.c**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.c)
 
 ```c
 #define BUF_SIZE 65536
@@ -659,7 +658,7 @@ int main() {
         int space;
         for (space = offset+num_read-1; space>=0; space--) {
             char c = buf[space];
-            if (c == ' ' || c == '\n') {
+            if (c <= ' ') {
                 break;
             }
         }
@@ -671,7 +670,7 @@ int main() {
             // Skip whitespace before word.
             for (; i < num_process; i++) {
                 char c = buf[i];
-                if (c != ' ' && c != '\n') {
+                if (c > ' ') {
                     break;
                 }
             }
@@ -680,7 +679,7 @@ int main() {
             int start = i;
             for (; i < num_process; i++) {
                 char c = buf[i];
-                if (c == ' ' || c == '\n') {
+                if (c <= ' ') {
                     break;
                 }
                 if (c >= 'A' && c <= 'Z') {
@@ -721,11 +720,11 @@ int main() {
 }
 ```
 
-At around 150 lines (including blanks and comments), it's definitely the biggest program yet, but not too bad! As you can see, rolling your own hash table with linear probing is not a lot of code. It's not great to have a fixed size table (like `hcreate`), but adding dynamic resizing is just busy-work, and doesn't slow down the running time significantly, so I've left that as an exercise for the reader.
+At around 150 lines (including blanks and comments), it's definitely the biggest program yet, but not too bad! As you can see, rolling your own hash table with linear probing is not a lot of code. It's not great to have a fixed size table, but adding dynamic resizing is just busy-work, and doesn't slow down the running time significantly, so I've left that as an exercise for the reader.
 
 It's still only a 17KB executable (that's what I love about C). And, unsurprisingly, this is the fastest version -- a little bit faster than the optimized Go version, because we've rolled our own custom hash table, and we're processing fewer bytes.
 
-As shown in the results, this version is only about 15% slower than `wc -w` on the same input (with `LC_ALL=C` to allow ASCII-only whitespace handling). The `wc` utility just has to tokenize words, not count unique words, so it doesn't need a hash table.
+As shown in the [results](#performance-results-and-learnings), this version is only about 15% slower than `wc -w` on the same input (with `LC_ALL=C` to allow ASCII-only whitespace handling). And all the `wc` utility has to do is tokenize words, not count unique words, so it doesn't need a hash table.
 
 This program is significantly slower than the incredible GNU `grep`, of course. There's a semi-famous mailing list message from 2010 by Mike Haertel, original author of GNU grep, on [why GNU grep is fast](https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html). It's fascinating reading -- however, as Andrew Gallant (author of [ripgrep](https://github.com/BurntSushi/ripgrep)) pointed out to me, that post is somewhat out of date. Mike's general advice is good, but these days GNU grep is fast not so much due to skipping bytes with the Boyer-Moore algorithm, but because it uses a fast, vectorized implementation of `memchr` in glibc.
 
@@ -736,7 +735,7 @@ I'm sure there's further you could go with the C version: investigate memory-map
 
 AWK is actually a great tool for this job: reading lines and parsing into space-separated words are what it eats for breakfast. One thing AWK can't do (without resorting to Gawk-specific features) is the sorting, so I'm using the AWK pipe operator to send the output through `sort`. Here's the beautifully simple code:
 
-[**simple.awk**](https://github.com/benhoyt/countwords/blob/master/simple.awk)
+[**simple.awk**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/simple.awk)
 
 ```awk
 {
@@ -750,11 +749,11 @@ END {
 }
 ```
 
-I don't know of an easy way to profile this at a low level (Gawk does have a [profiling mode](https://www.gnu.org/software/gawk/manual/html_node/Profiling.html), but it just shows how many times each line was executed). I also don't know how to read the file in chunks in AWK or Gawk.
+I don't know of an easy way to profile this at a low level (Gawk does have a [profiling mode](https://www.gnu.org/software/gawk/manual/html_node/Profiling.html), but it just shows how many times each line was executed). I also don't know how to read the input in chunks using AWK or Gawk.
 
 One small tweak I made for the optimized version was to call `tolower` once per line instead of for every word. The main loop becomes:
 
-[**optimized.awk**](https://github.com/benhoyt/countwords/blob/master/optimized.awk)
+[**optimized.awk**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.awk)
 
 ```awk
 {
@@ -762,22 +761,23 @@ One small tweak I made for the optimized version was to call `tolower` once per 
     for (i = 1; i <= NF; i++)
         counts[$i]++
 }
+...
 ```
 
 We can run this using `gawk -b`, which puts Gawk into "bytes" mode so it uses ASCII instead of UTF-8. This "optimized" version using `gawk -b` is about 1.6x as fast as the simple version using straight `gawk`.
 
-Another "optimization" is to run it using `mawk`, a faster AWK interpreter than `gawk`. In this case it's about 1.7 times as fast as `gawk -b`.
+Another "optimization" is to run it using `mawk`, a faster AWK interpreter than `gawk`. In this case it's about 1.7 times as fast as `gawk -b`. I'm using `mawk` in the benchmarks for the optimized version.
 
-Interestingly, the Gawk manual has a [page](https://www.gnu.org/software/gawk/manual/html_node/Word-Sorting.html) on this problem, with an example of how to strip out punctuation using AWK's `gsub` function.
+Interestingly, the Gawk manual has a [page](https://www.gnu.org/software/gawk/manual/html_node/Word-Sorting.html) on this word-frequency problem, with an example of how to strip out punctuation using AWK's `gsub` function.
 
 If you're interested in learning more about AWK, I've written an article about [GoAWK](https://benhoyt.com/writings/goawk/), my AWK interpreter written in Go (it's normally about as fast as Gawk), and also an article for LWN called [The State of the AWK](https://lwn.net/Articles/820829/), which surveys the "AWK landscape" and digs into the new features in Gawk 5.1.
 
 
 ## Forth
 
-[Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) was the first programming language I learned (it's an amazing language), so I decided to try a Forth version using [Gforth](https://gforth.org/). I haven't written anything in the language for years, but here goes (though I'm not sure it's valid to call this *simple*!):
+[Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) was the first programming language I learned (it's an amazing and mind-expanding language), so I decided to try a Forth version using [Gforth](https://gforth.org/). I haven't written anything in the language for years, but here goes (though I'm not sure it's valid to call this *simple*!):
 
-[**simple.fs**](https://github.com/benhoyt/countwords/blob/master/simple.fs)
+[**simple.fs**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/simple.fs)
 
 ```
 200 constant max-line
@@ -861,37 +861,42 @@ variable num-uniques  0 num-uniques !
     show-words ;
 ```
 
-It's not for nothing that Forth has a reputation for being write-only. I used to love the idea of no local variables, but in practice it just means a lot of `dup over swap rot`. In addition, even Gforth (which has a lot more than ANS standard Forth) doesn't have fairly basic tools like `to-lower` or `sort`, so we have to roll those ourselves (the in-place merge sort was taken from Rosetta Code).
+It's not for nothing that Forth has a reputation for being write-only. I used to love the idea of no local variables, but in practice it just means a lot of `dup over swap rot`. In addition, even Gforth (which has a lot more than ANS standard Forth) doesn't have fairly basic tools like `to-lower` or `sort`, so we have to roll those ourselves (the in-place merge sort was [taken from Rosetta Code](https://rosettacode.org/wiki/Sorting_algorithms/Merge_sort#Forth)).
 
-Thankfully hash tables are present via `wordlist`. This is really intended for definitions, but with Gforth's `execute-parsing` extension it works pretty well for hash tables. And `skip` and `scan` work well for the whitespace parsing (thanks [comp.lang.forth](https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI) folks for your help).
+Thankfully hash tables are present via `wordlist`. This is really intended for defining new Forth words, but with Gforth's `execute-parsing` extension it works pretty well for hash tables. And `skip` and `scan` work well for the whitespace parsing (thanks [comp.lang.forth](https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI) folks for your help).
 
-For optimizing, it turns out you can run `gforth-fast` instead of `gforth` to magically speed things up, so that's my first optimization. It looks like `gforth-fast` avoids call overhead but doesn't produce good stack traces on error.
+For optimizing, it turns out you can run `gforth-fast` instead of `gforth` to magically speed things up, so that's my first optimization (though in the benchmarks, I use `gforth-fast` for both versions). It looks like `gforth-fast` avoids call overhead but doesn't produce good stack traces on error.
 
-TODO: optimize and read in chunks? shouldn't be too hard
-TODO: also, SKIP and SCAN vs PARSE-WORD
+I'm far from proficient in Forth these days, and I didn't really know where to start with profiling in Gforth (though it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it). Anton Ertl was very helpful on my comp.lang.forth posting, and spent some time trying to optimize this -- read the [full thread](https://groups.google.com/u/1/g/comp.lang.forth/c/8ugTFxGXdaI) for more information. I've hacked together a combination of my program and his optimizations below:
 
-I'm far from proficient in Forth these days, and I don't really know where to start with profiling in Gforth (though it [looks like](https://github.com/forthy42/gforth/blob/master/engine/profile.c) they have some kind of support for it). So I think I'll stop there.
+[**optimized.fs**](https://github.com/benhoyt/countwords/blob/master/optimized.fs-TODO)
+
+```
+TODO
+```
+
+I might still consider using Forth for fun or on tiny embedded systems, but I don't think it has the ergonomics or the libraries to write programs for general use. For a much richer, more modern take on a Forth-like language, check out [Factor](https://factorcode.org/).
 
 
 ## Rust
 
-I'm a heavy user of Andrew Gallant's excellent [ripgrep](https://github.com/BurntSushi/ripgrep) code search tool, and I knew he was pretty big into Rust (and optimization!), so before publishing this article I asked him if he'd be willing to do a Rust version.
+I'm a heavy user of Andrew Gallant's excellent [ripgrep](https://github.com/BurntSushi/ripgrep) code search tool, and I knew he was pretty big into Rust (and optimization), so before publishing this article I asked him if he'd be willing to do a Rust version.
 
 He more than delivered! He wrote simple and optimized versions, which are similar to the Go variants (and very close in speed). But then he wrote three additional versions (some of which use external dependencies):
 
 * [A "bonus" version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/bonus/main.rs) that is similar to the simple version but does Unicode-aware word segmentation and has a few other goodies. Andrew said this is how he'd write it if someone asked for a versatile version.
-* [A custom hash table version]((https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-customhashmap/main.rs)). It's an approximate port of the C version, and almost as fast.
-* [A trie version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-trie/main.rs) that uses a [trie data structure](https://en.wikipedia.org/wiki/Trie) instead of a hash table. Andrew (like me) thought this might be faster, but it turns out to be slower.
+* [A custom hash table version]((https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-customhashmap/main.rs)). It's an approximate port of my C version, and almost as fast.
+* [A trie version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-trie/main.rs) that uses a [trie data structure](https://en.wikipedia.org/wiki/Trie) instead of a hash table. Andrew (like me) thought this might be faster, but it turns out to be slightly slower.
 
-His simple version doesn't use any external dependencies, and is similar to the simple Go and C++ versions:
+His simple version doesn't use any external dependencies, and is similar to the simple Go and C++ versions (his comments included)
 
 [**rust/simple/main.rs**](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/simple/main.rs)
 
 ```rust
 fn main() {
     // We don't return Result from main because it prints the debug
-    // representation of the error. The code below prints the "display" or
-    // human readable representation of the error.
+    // representation of the error. The code below prints the "display"
+    // or human readable representation of the error.
     if let Err(err) = try_main() {
         eprintln!("{}", err);
         std::process::exit(1);
@@ -919,7 +924,7 @@ fn try_main() -> Result<(), Box<dyn Error>> {
 }
 ```
 
-I definitely like what I've seen and heard about Rust, and I'd learn it over modern C++ any day (though I understand it's got a fairly steep learning curve ... and quite a few `!?&|<>` sigils).
+I definitely like what I've seen and heard about Rust, and I'd learn it over modern C++ any day, though I understand it's got a fairly steep learning curve ... and quite a few `!?&|<>` sigils.
 
 For the optimized version, I'll include his comments here (and copy the code from `try_main` on):
 
@@ -983,16 +988,17 @@ fn try_main() -> Result<(), Box<dyn Error>> {
     ordered.sort_by(|&(_, cnt1), &(_, cnt2)| cnt1.cmp(&cnt2).reverse());
 
     for (word, count) in ordered {
-        writeln!(io::stdout(), "{} {}", std::str::from_utf8(&word)?, count)?;
+        writeln!(io::stdout(), "{} {}", std::str::from_utf8(&word)?,
+                 count)?;
     }
     Ok(())
 }
 
 fn increment(counts: &mut HashMap<Vec<u8>, u64>, word: &[u8]) {
-    // using 'counts.entry' would be more idiomatic here, but doing so requires
-    // allocating a new Vec<u8> because of its API. Instead, we do two hash
-    // lookups, but in the exceptionally common case (we see a word we've
-    // already seen), we only do one and without any allocs.
+    // using 'counts.entry' would be more idiomatic here, but doing so
+    // requires allocating a new Vec<u8> because of its API. Instead, we
+    // do two hash lookups, but in the exceptionally common case (we see
+    // a word we've already seen), we only do one and without any allocs.
     if let Some(count) = counts.get_mut(word) {
         *count += 1;
         return;
@@ -1004,11 +1010,6 @@ fn increment(counts: &mut HashMap<Vec<u8>, u64>, word: &[u8]) {
 Thanks, Andrew!
 
 
-## C#, Java, JavaScript, Ruby
-
-I'd love readers to send pull requests to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages, and I'll link them here. Apart from JavaScript, I'm not familiar enough with them to do them justice anyway.
-
-
 ## Unix shell
 
 Let's try a version with only basic Unix command line tools -- this is essentially [Doug McIlroy's solution](http://www.leancrew.com/all-this/2011/12/more-shell-less-egg/):
@@ -1017,9 +1018,16 @@ Let's try a version with only basic Unix command line tools -- this is essential
 tr 'A-Z' 'a-z' | tr -s ' ' '\n' | sort | uniq -c | sort -nr
 ```
 
-With the default locale, it's quite slow, in part because it has to sort the entire file at once rather than using a hash table for counting (reading the entire file into memory actually goes against the constraints I've imposed). So this is fine for relatively small files, but if I wanted a one-liner I'd probably reach for AWK instead.
+It's quite slow, in part because it has to sort the entire file at once rather than using a hash table for counting (reading the entire file into memory actually goes against the constraints I've imposed). However, I was surprised at how much it speeds up if you set the locale of the first `sort` to C (ASCII-only) -- that speeds it up by a factor of 5, which is faster than the algorithmically-better approaches in other languages!
 
-Surprisingly (to me), if you change to the C locale (effectively ASCII-only), the above is quite fast considering the "sort the entire file" algorithm! It just shows how much the GNU utilities are optimized, especially for the ASCII-only case.
+And we can get a bit more performance out of it by using `sort -S 2GB` to give it a larger buffer (while we're breaking constraints, we might as well break them properly). Interestingly, sort's `--parallel` option doesn't help at this scale. So the optimized version is as follows:
+
+```bash
+tr 'A-Z' 'a-z' | tr -s ' ' '\n' | LC_ALL=C sort -S 2G | uniq -c | \
+    sort -nr
+```
+
+This is fine for relatively small files. If I wanted to process huge files and not read the entire thing into memory to sort, I'd probably reach for the AWK or Python versions.
 
 The output is not quite the same as the others, because the format is "space-prefixed-count word" rather than "word count", like so:
 
@@ -1032,25 +1040,63 @@ The output is not quite the same as the others, because the format is "space-pre
 We could fix that with something like `awk '{ print $2, $1 }'`, but then we're using AWK anyway, and we might as well use the more efficient [AWK program](#awk) above.
 
 
+## Other languages
+
+I'd love readers to send pull requests to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages like Java, JavaScript, Ruby, Kotlin, or Swift, and I'll link them here. I'm not familiar enough with most of those to do them justice anyway.
+
+
+### C#
+
+John Taylor [sent in](https://github.com/benhoyt/countwords/pull/5) a C# simple version, which I modified a little. I like the C# version a lot, particularly how clear and simple the sorting is -- it's on a par with Python in terms of readability, but statically typed. It's fairly slow (a little slower than the Python version), though not being a C# developer, there may be obvious things I'm missing.
+
+[**simple.cs**](https://github.com/benhoyt/countwords/blob/8d94bc5b7be307172cf649248ffc824dbfb0e2d2/simple.cs)
+
+```c#
+var counts = new Dictionary<string, int>();
+string line;
+while ((line = Console.ReadLine()) != null)
+{
+    line = line.ToLower();
+    var words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    foreach (string word in words)
+    {
+        counts[word] = counts.GetValueOrDefault(word, 0) + 1;
+    }
+}
+var ordered = counts.OrderByDescending(pair => pair.Value);
+foreach (var entry in ordered)
+{
+    Console.WriteLine("{0} {1}", entry.Key, entry.Value);
+}
+```
+
+
 ## Performance results and learnings
 
-Below are the performance numbers of running these programs on my laptop (64-bit Linux with an SSD). I'm running each test five times and taking the minimum time as the final result (see [benchmark.py](https://github.com/benhoyt/countwords/blob/master/benchmark.py)). Each run is basically equivalent to `time $COMMAND <kjvbible_x10.txt >/dev/null`. The times are in seconds, so lower is better.
+Below are the performance numbers of running these programs on my laptop (64-bit Linux with an SSD). I'm running each test five times and taking the minimum time as the result (see [benchmark.py](https://github.com/benhoyt/countwords/blob/master/benchmark.py)). Each run is basically equivalent to the following command:
+
+```
+time $PROGRAM <kjvbible_x10.txt >/dev/null
+```
+
+The times are in seconds, so lower is better, and the list is ordered by the execution time of the simple version, fastest first.
 
 TODO: update results
 
 Language      | Simple | Optimized | Notes
 ------------- | ------ | --------- |
-`grep foobar` |   0.07 |      0.05 | `grep` reference; optimized sets `LC_ALL=C`
-`wc -w`       |   0.31 |      0.21 | `wc` reference; optimized sets `LC_ALL=C`
-C             |   1.21 |      0.26 | 
-Go            |   1.48 |      0.40 | 
-Rust A        |   1.60 |      0.38 | by Andrew Gallant
-Rust B        |   1.62 |      0.31 | also by Andrew: bonus and custom hash
-C++           |   2.34 |      1.06 | "optimized" isn't very optimized
-Python        |   2.41 |      1.59 | 
-AWK           |   3.83 |      1.28 | optimized uses `mawk`
-Forth         |   4.49 |      2.59 | 
-Shell         |  16.01 |      3.25 | optimized sets `LC_ALL=C`
+`grep` |   0.04 |      0.05 | `grep` reference; optimized sets `LC_ALL=C`
+`wc -w`       |   0.30 |      0.20 | `wc` reference; optimized sets `LC_ALL=C`
+C             |   1.03 |      0.24 | 
+Go            |   1.18 |      0.40 | 
+Rust A        |   1.47 |      0.37 | by Andrew Gallant
+Rust B        |   1.54 |      0.29 | also by Andrew: bonus and custom hash
+C++           |   1.87 |      1.01 | "optimized" isn't very optimized
+Python        |   2.22 |      1.37 | 
+C#            |   3.36 |           | original by John Taylor
+AWK           |   3.72 |      1.16 | optimized uses `mawk`
+Forth         |   4.48 |      2.48 | 
+Shell         |  15.54 |      2.07 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
 
@@ -1059,8 +1105,8 @@ What can we learn from all this? Here are a few thoughts:
 * If you just need a quick solution (which is likely), Python and AWK are amazing for this kind of text processing.
 * C++ templates produce such horrible error messages and function names in the profiler, making them almost unreadable.
 * I still think this interview question is a good one for a coding question, though obviously I wouldn't expect a candidate to write one of the optimized solutions on the whiteboard.
-* We usually think of I/O as expensive, but I/O isn't the bottleneck here. In the case of benchmarks, the file is probably cached, but even if not, hard drive read speeds are incredibly fast these days. The tokenization and hash table operations are the bottleneck.
+* We usually think of I/O as expensive, but I/O isn't the bottleneck here. In the case of benchmarks, the file is probably cached, but even if not, hard drive read speeds are incredibly fast these days. The tokenization and hash table operations are the bottleneck by a long shot.
 
 This was definitely a fun exercise! I learned a good amount about optimization hot-spots, using the Valgrind profiler, and I wrote some Forth code for the first time in years.
 
-Let me know your thoughts or feedback, or send ideas for improvements. You're welcome to contribute to [benhoyt/countwords](github.com/benhoyt/countwords) -- I'd especially welcome pull requests to add C#, Java, JavaScript, Ruby, or Rust.
+Let me know your thoughts or feedback, or send ideas for improvements. You're welcome to contribute to [benhoyt/countwords](github.com/benhoyt/countwords) -- I'd especially welcome pull requests to add C# (an optimized version), Java, JavaScript, Ruby, Kotlin, or Swift.
