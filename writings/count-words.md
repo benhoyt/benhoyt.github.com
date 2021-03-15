@@ -238,7 +238,7 @@ type Count struct {
 
 The simple Go version is significantly faster than the simple Python version, but only a little bit faster than the optimized Python version (and almost double the number of lines of code -- there's definitely more boilerplate and low-level concerns).
 
-To use Go's profiler, you have to add a few lines of code to the start of your program:
+To use Go's profiler, you have to add a few lines of code to the start of your program (in addition to `import "runtime/pprof"`):
 
 ```go
 f, err := os.Create("cpuprofile")
