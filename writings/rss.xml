@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Performance comparison: counting words in Python, Go, C++, C, AWK, Forth, and Rust</title>
+  <description>Performance comparison of counting and sorting word frequencies in various languages (Python, Go, C++, C, AWK, Forth, Rust, and others)</description>
+  <link>https://benhoyt.com/writings/writings/count-words/</link>
+  <guid>https://benhoyt.com/writings/writings/count-words/</guid>
+  <pubDate>Mon, 15 Mar 2021 20:30:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>The small web is beautiful</title>
   <description>A vision for the "small web", small software, and small architectures. Also, a bonus rant about microservices.</description>
   <link>https://benhoyt.com/writings/the-small-web-is-beautiful/</link>

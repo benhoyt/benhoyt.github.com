@@ -407,7 +407,7 @@ I noticed that I/O was comparatively slow. It turns out there is a magic incanta
 ios::sync_with_stdio(false);
 ```
 
-See [**optimized.cpp**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.cpp).
+See [**optimized.cpp**](https://github.com/benhoyt/countwords/blob/06a7a509b102be45487ac152d2c521e617bf59b7/optimized.cpp) (which isn't really optimized -- it just adds that call).
 
 GCC can generate a profiling report for use with `gprof`. Here's what a few lines of it looks like -- I kid you not:
 
@@ -1156,17 +1156,17 @@ Below are the performance numbers of running these programs on my laptop (64-bit
 time $PROGRAM <kjvbible_x10.txt >/dev/null
 ```
 
-The times are in seconds, so lower is better, and the list is ordered by the execution time of the simple version, fastest first.
+The times are in seconds, so lower is better, and the list is ordered by the execution time of the simple version, fastest first. (Note that `grep` and `wc` don't actually solve the word counting problem, they're just here for comparison.)
 
 Language      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
-`grep`        |   0.04 |      0.04 | `grep` reference; optimized sets `LC_ALL=C`
-`wc -w`       |   0.29 |      0.20 | `wc` reference; optimized sets `LC_ALL=C`
+`grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
+`wc -w`       |   0.29 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
 C             |   0.97 |      0.23 | 
 Go            |   1.14 |      0.38 | 
 Rust A        |   1.41 |      0.35 | by Andrew Gallant
 Rust B        |   1.48 |      0.28 | also by Andrew: bonus and custom hash
-C++           |   1.75 |      0.98 | "optimized" isn't very optimized
+C++           |   1.75 |      0.98 | "optimized" isn't really optimized
 Python        |   2.07 |      1.27 | 
 C#            |   3.43 |           | original by John Taylor
 AWK           |   3.52 |      1.13 | optimized uses `mawk`
