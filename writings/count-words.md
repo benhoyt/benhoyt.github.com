@@ -1184,4 +1184,4 @@ What can we learn from all this? Here are a few thoughts:
 
 This was definitely a fun exercise! I learned a good amount about optimization hot-spots, using the Valgrind profiler, and I wrote some Forth code for the first time in years.
 
-Let me know your thoughts or feedback, or send ideas for improvements. You're welcome to contribute to [benhoyt/countwords](github.com/benhoyt/countwords) -- I'd especially welcome pull requests to add C# (an optimized version), Java, JavaScript, Ruby, Kotlin, or Swift.
+Let me know your thoughts or feedback, or send ideas for improvements. You're welcome to contribute to [benhoyt/countwords](https://github.com/benhoyt/countwords) -- I'd especially welcome pull requests to add C# (an optimized version), Java, JavaScript, Ruby, Kotlin, or Swift.
