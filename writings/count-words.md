@@ -445,7 +445,7 @@ I really didn't feel like deciphering this output, so I kind of gave up and spen
 
 I used the Valgrind profiler (Callgrind) in the C version -- see the section below for notes on that. Andrew Gallant pointed out that I could try the Linux [`perf`](https://perf.wiki.kernel.org/index.php/Main_Page) tool (specifically `perf record` and `perf report`) -- it does look better than `gprof`.
 
-Update: [Jussi Pakkanen](https://github.com/jpakkane) optimized the C++ version in [this PR](https://github.com/benhoyt/countwords/pull/30). Thanks!
+Update: [Jussi Pakkanen](https://github.com/jpakkane) and [Adev](https://github.com/adevress) optimized the C++ version. Thanks!
 
 
 ## C
@@ -1124,31 +1124,20 @@ We could fix that with something like `awk '{ print $2, $1 }'`, but then we're u
 
 I'd love readers to send pull requests to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages like Java, JavaScript, Ruby, Kotlin, or Swift, and I'll link them here. I'm not familiar enough with most of those to do them justice anyway.
 
+Update: many readers sent in solutions -- thank you! Here's the list:
 
-### C#
-
-John Taylor [sent in](https://github.com/benhoyt/countwords/pull/5) a C# simple version, which I modified a little. I like the C# version a lot, particularly how clear and simple the sorting is -- it's on a par with Python in terms of readability, but statically typed. It's fairly slow (a little slower than the Python version), though not being a C# developer, there may be obvious things I'm missing.
-
-[**simple.cs**](https://github.com/benhoyt/countwords/blob/8d94bc5b7be307172cf649248ffc824dbfb0e2d2/simple.cs)
-
-```c#
-var counts = new Dictionary<string, int>();
-string line;
-while ((line = Console.ReadLine()) != null)
-{
-    line = line.ToLower();
-    var words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-    foreach (string word in words)
-    {
-        counts[word] = counts.GetValueOrDefault(word, 0) + 1;
-    }
-}
-var ordered = counts.OrderByDescending(pair => pair.Value);
-foreach (var entry in ordered)
-{
-    Console.WriteLine("{0} {1}", entry.Key, entry.Value);
-}
-```
+* C#: [John Taylor](https://github.com/jftuga) and [Yuriy Ostapenko](https://github.com/uncleyo)
+* C++ optimized version: [Jussi Pakkanen](https://github.com/jpakkane) and [Adev](https://github.com/adevress)
+* Crystal: [Andrea Manzini](https://github.com/ilmanzo)
+* D: [Ross Lonstein](https://github.com/rlonstein)
+* JavaScript: [Dani Biró](https://github.com/Daninet)
+* Julia: [Alessandro Melis](https://github.com/alemelis)
+* Nim: [csterritt](https://github.com/csterritt) and [euantorano](https://github.com/euantorano)
+* Perl: [Charles Randall](https://github.com/charles-randall)
+* PHP: [Max Semenik](https://github.com/MaxSem)
+* Ruby: [Bill Mill](https://github.com/llimllib), with input from [Niklas](https://github.com/nhh)
+* Rust: [Andrew Gallant](https://github.com/BurntSushi)
+* Swift: [Daniel Müllenborn](https://github.com/damuellen)
 
 
 ## Performance results and learnings
