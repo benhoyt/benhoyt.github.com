@@ -1124,13 +1124,19 @@ I'd love readers to send pull requests to the [`benhoyt/countwords`](https://git
 
 Update: many readers sent in solutions -- thank you! Here's the list:
 
+* Bash: [Jesse Hathaway](https://github.com/lollipopman) - not included in benchmarks as it takes over 2 minutes
 * C#: [John Taylor](https://github.com/jftuga) and [Yuriy Ostapenko](https://github.com/uncleyo)
+* C# (LINQ): [Osman Turan](https://github.com/osman-turan) - not run in benchmarks
 * C++ optimized version: [Jussi Pakkanen](https://github.com/jpakkane) and [Adev](https://github.com/adevress)
 * Crystal: [Andrea Manzini](https://github.com/ilmanzo)
 * D: [Ross Lonstein](https://github.com/rlonstein)
-* JavaScript: [Dani Biró](https://github.com/Daninet)
-* Julia: [Alessandro Melis](https://github.com/alemelis) - note that Julia's large startup time means this benchmark isn't very meaningful, so I've excluded it
+* F#: [Yuriy Ostapenko](https://github.com/uncleyo)
+* JavaScript: [Dani Biró](https://github.com/Daninet) and [Flo Hinze](https://github.com/laubsauger)
+* Julia: [Alessandro Melis](https://github.com/alemelis)
+* Kotlin: [Kazik Pogoda](https://github.com/morisil)
+* Lua: [Flemming Madsen](https://github.com/themadsens)
 * Nim: [csterritt](https://github.com/csterritt) and [euantorano](https://github.com/euantorano)
+* OCaml: [doesntgolf](https://github.com/doesntgolf)
 * Perl: [Charles Randall](https://github.com/charles-randall)
 * PHP: [Max Semenik](https://github.com/MaxSem)
 * Ruby: [Bill Mill](https://github.com/llimllib), with input from [Niklas](https://github.com/nhh)
@@ -1151,25 +1157,28 @@ The times are in seconds, so lower is better, and the list is ordered by the exe
 Language      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
 `grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
-`wc -w`       |   0.28 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
-Nim           |   0.79 |           | by csterritt and euantorano
-C             |   0.99 |      0.23 | 
-Go            |   1.13 |      0.38 | 
-Crystal       |   1.31 |           | by Andrea Manzini
-PHP           |   1.34 |           | by Max Semenik
-Rust A        |   1.39 |      0.34 | by Andrew Gallant
-Rust B        |   1.46 |      0.29 | also by Andrew: bonus and custom hash
-C#            |   1.50 |      1.19 | by John Taylor and Yuriy Ostapenko
-C++           |   1.69 |      0.41 | optimized by Jussi Pakkanen
-Perl          |   1.94 |           | by Charles Randall
-Python        |   2.05 |      1.23 | 
-JavaScript    |   2.73 |      2.05 | by Dani Biro
-Ruby          |   3.06 |      2.41 | by Bill Mill
-AWK           |   3.55 |      1.13 | optimized uses `mawk`
-D             |   4.12 |      1.83 | by Ross Lonstein
-Swift         |   4.18 |           | by Daniel Muellenborn
-Forth         |   4.23 |      1.45 | 
-Shell         |  14.59 |      1.87 | optimized does `LC_ALL=C sort -S 2G`
+`wc -w`       |   0.30 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
+Nim           |   0.77 |           | by csterritt and euantorano
+C             |   0.95 |      0.23 | 
+Go            |   1.18 |      0.38 | 
+Crystal       |   1.28 |           | by Andrea Manzini
+PHP           |   1.35 |           | by Max Semenik
+Rust          |   1.43 |      0.34 | by Andrew Gallant
+C#            |   1.50 |      0.98 | by John Taylor and Yuriy Ostapenko
+C++           |   1.73 |      0.41 | optimized by Jussi Pakkanen
+F#            |   1.82 |      1.60 | by Yuriy Ostapenko
+Perl          |   1.86 |           | by Charles Randall
+Kotlin        |   1.88 |           | by Kazik Pogoda
+Python        |   2.05 |      1.39 | 
+OCaml         |   2.07 |           | by Nate Dobbins
+Lua           |   2.49 |      1.97 | by themadsens; runs under `luajit`
+JavaScript    |   2.53 |      2.04 | by Dani Biro and Flo Hinze
+Ruby          |   3.07 |      2.52 | by Bill Mill
+AWK           |   3.53 |      1.12 | optimized uses `mawk`
+D             |   4.17 |      1.02 | by Ross Lonstein
+Forth         |   4.18 |      1.44 | 
+Swift         |   4.20 |           | by Daniel Muellenborn
+Shell         |  14.72 |      1.81 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
 
