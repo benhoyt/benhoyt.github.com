@@ -1152,18 +1152,27 @@ The times are in seconds, so lower is better, and the list is ordered by the exe
 
 Language      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
-`grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
-`wc -w`       |   0.29 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
-C             |   0.97 |      0.23 | 
-Go            |   1.14 |      0.38 | 
-Rust A        |   1.41 |      0.35 | by Andrew Gallant
-Rust B        |   1.48 |      0.28 | also by Andrew: bonus and custom hash
-C++           |   1.75 |      0.98 | "optimized" isn't really optimized
-Python        |   2.07 |      1.27 | 
-C#            |   3.43 |           | original by John Taylor
-AWK           |   3.52 |      1.13 | optimized uses `mawk`
-Forth         |   4.21 |      1.44 | 
-Shell         |  14.67 |      1.86 | optimized does `LC_ALL=C sort -S 2G`
+`grep`        |   0.05 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
+`wc -w`       |   0.36 |      0.22 | `wc` baseline; optimized sets `LC_ALL=C`
+Nim           |   0.76 |           | by csterritt and euantorano
+C             |   1.17 |      0.28 | 
+Crystal       |   1.34 |           | by Andrea Manzini
+PHP           |   1.36 |           | by Max Semenik
+Go            |   1.37 |      0.45 | 
+Rust B        |   1.60 |      0.31 | also by Andrew: bonus and custom hash
+Rust A        |   1.70 |      0.38 | by Andrew Gallant
+C#            |   1.74 |      1.24 | by John Taylor and Yuriy Ostapenko
+Perl          |   2.09 |           | by Charles Randall
+C++           |   2.11 |      0.46 | optimized by Jussi Pakkanen
+Python        |   2.41 |      1.43 | 
+JavaScript    |   2.74 |      2.06 | by Dani Biro
+Ruby          |   3.37 |      2.62 | by Bill Mill
+AWK           |   3.74 |      1.23 | optimized uses `mawk`
+D             |   4.08 |      1.87 | by Ross Lonstein
+Julia         |   4.21 |           | by Alessandro Melis
+Swift         |   4.40 |           | by Daniel Muellenborn
+Forth         |   4.49 |      1.51 | 
+Shell         |  15.34 |      1.81 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
 
