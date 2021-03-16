@@ -48,7 +48,7 @@ for word, count in pairs:
 
 If the candidate was a Pythonista, they might use [`collections.defaultdict`](https://docs.python.org/3/library/collections.html#collections.defaultdict) or even [`collections.Counter`](https://docs.python.org/3/library/collections.html#collections.Counter) -- see below for code using the latter. In that case I'd ask them how it worked under the hood, or how they might solve it with a plain dictionary.
 
-Incidentally, this problem [set the scene](http://www.leancrew.com/all-this/2011/12/more-shell-less-egg/) for a wizard duel between two computer scientists several decades ago. In 1986, Jon Bentley asked Donald Knuth to show off "literate programming" with a solution to this problem, and he came up with an exquisite, ten-page Knuthian masterpiece. Then Doug McIlroy (the inventor of Unix pipelines) replied with a one-liner [Unix shell version](#unix-shell) using `tr`, `sort`, and `uniq`.
+Incidentally, this problem [set the scene](http://www.leancrew.com/all-this/2011/12/more-shell-less-egg/) for a wizard duel between two computer scientists several decades ago. In 1986, Jon Bentley asked Donald Knuth to show off "literate programming" with a solution to this problem, and he came up with an exquisite, [ten-page Knuthian masterpiece](https://www.cs.tufts.edu/~nr/cs257/archive/don-knuth/pearls-2.pdf). Then Doug McIlroy (the inventor of Unix pipelines) replied with a one-liner [Unix shell version](#unix-shell) using `tr`, `sort`, and `uniq`.
 
 ![Knuth vs McIlroy](/images/count-words-knuth-vs-mcilroy.png)
 
