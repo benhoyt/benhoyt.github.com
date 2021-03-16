@@ -1131,7 +1131,7 @@ Update: many readers sent in solutions -- thank you! Here's the list:
 * Crystal: [Andrea Manzini](https://github.com/ilmanzo)
 * D: [Ross Lonstein](https://github.com/rlonstein)
 * JavaScript: [Dani Biró](https://github.com/Daninet)
-* Julia: [Alessandro Melis](https://github.com/alemelis)
+* Julia: [Alessandro Melis](https://github.com/alemelis) - note that Julia's large startup time means this benchmark isn't very meaningful, so I've excluded it
 * Nim: [csterritt](https://github.com/csterritt) and [euantorano](https://github.com/euantorano)
 * Perl: [Charles Randall](https://github.com/charles-randall)
 * PHP: [Max Semenik](https://github.com/MaxSem)
@@ -1169,7 +1169,6 @@ JavaScript    |   2.74 |      2.06 | by Dani Biro
 Ruby          |   3.37 |      2.62 | by Bill Mill
 AWK           |   3.74 |      1.23 | optimized uses `mawk`
 D             |   4.08 |      1.87 | by Ross Lonstein
-Julia         |   4.21 |           | by Alessandro Melis
 Swift         |   4.40 |           | by Daniel Muellenborn
 Forth         |   4.49 |      1.51 | 
 Shell         |  15.34 |      1.81 | optimized does `LC_ALL=C sort -S 2G`
