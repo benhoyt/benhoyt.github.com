@@ -407,8 +407,6 @@ I noticed that I/O was comparatively slow. It turns out there is a magic incanta
 ios::sync_with_stdio(false);
 ```
 
-See [**optimized.cpp**](https://github.com/benhoyt/countwords/blob/06a7a509b102be45487ac152d2c521e617bf59b7/optimized.cpp) (which isn't really optimized -- it just adds that call).
-
 GCC can generate a profiling report for use with `gprof`. Here's what a few lines of it looks like -- I kid you not:
 
 ```
@@ -445,7 +443,7 @@ I really didn't feel like deciphering this output, so I kind of gave up and spen
 
 I used the Valgrind profiler (Callgrind) in the C version -- see the section below for notes on that. Andrew Gallant pointed out that I could try the Linux [`perf`](https://perf.wiki.kernel.org/index.php/Main_Page) tool (specifically `perf record` and `perf report`) -- it does look better than `gprof`.
 
-Update: [Jussi Pakkanen](https://github.com/jpakkane) and [Adev](https://github.com/adevress) optimized the C++ version. Thanks!
+Update: [Jussi Pakkanen](https://github.com/jpakkane) and [Adev](https://github.com/adevress) and others optimized the C++ version. Thanks!
 
 
 ## C
