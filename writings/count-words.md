@@ -1164,7 +1164,7 @@ Go            |   1.18 |      0.38 |
 Crystal       |   1.28 |           | by Andrea Manzini
 PHP           |   1.35 |           | by Max Semenik
 Rust          |   1.43 |      0.34 | by Andrew Gallant
-C#            |   1.50 |      0.98 | by John Taylor and Yuriy Ostapenko
+C#            |   1.50 |      0.88 | by J Taylor, Y Ostapenko, O Turan
 C++           |   1.73 |      0.41 | optimized by Jussi Pakkanen
 F#            |   1.82 |      1.60 | by Yuriy Ostapenko
 Perl          |   1.86 |           | by Charles Randall
@@ -1172,7 +1172,7 @@ Kotlin        |   1.88 |           | by Kazik Pogoda
 Python        |   2.05 |      1.39 | 
 OCaml         |   2.07 |           | by Nate Dobbins
 Lua           |   2.49 |      1.97 | by themadsens; runs under `luajit`
-JavaScript    |   2.53 |      2.04 | by Dani Biro and Flo Hinze
+JavaScript    |   2.53 |      1.96 | by Dani Biro and Flo Hinze
 Ruby          |   3.07 |      2.52 | by Bill Mill
 AWK           |   3.53 |      1.12 | optimized uses `mawk`
 D             |   4.17 |      1.02 | by Ross Lonstein
