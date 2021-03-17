@@ -1120,12 +1120,10 @@ We could fix that with something like `awk '{ print $2, $1 }'`, but then we're u
 
 ## Other languages
 
-I'd love readers to send pull requests to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages like Java, JavaScript, Ruby, Kotlin, or Swift, and I'll link them here. I'm not familiar enough with most of those to do them justice anyway.
-
-Update: many readers sent in solutions -- thank you! Here's the list:
+I asked readers to send pull requests to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages, and they certainly delivered! Here's the list:
 
 * Bash: [Jesse Hathaway](https://github.com/lollipopman) - not included in benchmarks as it takes over 2 minutes
-* C#: [John Taylor](https://github.com/jftuga) and [Yuriy Ostapenko](https://github.com/uncleyo)
+* C#: [John Taylor](https://github.com/jftuga), [Yuriy Ostapenko](https://github.com/uncleyo) and [Osman Turan](https://github.com/osman-turan)
 * C# (LINQ): [Osman Turan](https://github.com/osman-turan) - not run in benchmarks
 * C++ optimized version: [Jussi Pakkanen](https://github.com/jpakkane) and [Adev](https://github.com/adevress)
 * Crystal: [Andrea Manzini](https://github.com/ilmanzo)
@@ -1142,6 +1140,7 @@ Update: many readers sent in solutions -- thank you! Here's the list:
 * Ruby: [Bill Mill](https://github.com/llimllib), with input from [Niklas](https://github.com/nhh)
 * Rust: [Andrew Gallant](https://github.com/BurntSushi)
 * Swift: [Daniel Müllenborn](https://github.com/damuellen)
+* Zig: [ifreund](https://github.com/ifreund) and [matu3ba](https://github.com/matu3ba)
 
 
 ## Performance results and learnings
@@ -1157,28 +1156,29 @@ The times are in seconds, so lower is better, and the list is ordered by the exe
 Language      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
 `grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
-`wc -w`       |   0.30 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
-Nim           |   0.77 |           | by csterritt and euantorano
-C             |   0.95 |      0.23 | 
-Go            |   1.18 |      0.38 | 
-Crystal       |   1.28 |           | by Andrea Manzini
-PHP           |   1.35 |           | by Max Semenik
-Rust          |   1.43 |      0.34 | by Andrew Gallant
-C#            |   1.50 |      0.88 | by J Taylor, Y Ostapenko, O Turan
-C++           |   1.73 |      0.41 | optimized by Jussi Pakkanen
-F#            |   1.82 |      1.60 | by Yuriy Ostapenko
-Perl          |   1.86 |           | by Charles Randall
-Kotlin        |   1.88 |           | by Kazik Pogoda
-Python        |   2.05 |      1.39 | 
-OCaml         |   2.07 |           | by Nate Dobbins
-Lua           |   2.49 |      1.97 | by themadsens; runs under `luajit`
-JavaScript    |   2.53 |      1.96 | by Dani Biro and Flo Hinze
-Ruby          |   3.07 |      2.52 | by Bill Mill
-AWK           |   3.53 |      1.12 | optimized uses `mawk`
-D             |   4.17 |      1.02 | by Ross Lonstein
-Forth         |   4.18 |      1.44 | 
-Swift         |   4.20 |           | by Daniel Muellenborn
-Shell         |  14.72 |      1.81 | optimized does `LC_ALL=C sort -S 2G`
+`wc -w`       |   0.29 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
+Zig           |   0.54 |           | by ifreund and matu3ba
+Nim           |   0.76 |      0.58 | by csterritt and euantorano
+C             |   0.97 |      0.23 | 
+Go            |   1.14 |      0.39 | 
+Crystal       |   1.29 |           | by Andrea Manzini
+PHP           |   1.36 |           | by Max Semenik
+Rust          |   1.43 |      0.38 | by Andrew Gallant
+C#            |   1.51 |      0.82 | by J Taylor, Y Ostapenko, O Turan
+OCaml         |   1.72 |           | by Nate Dobbins and Pavlo Khrystenko
+C++           |   1.73 |      0.42 | optimized by Jussi Pakkanen
+Perl          |   1.81 |           | by Charles Randall
+F#            |   1.82 |      1.59 | by Yuriy Ostapenko
+Kotlin        |   1.86 |           | by Kazik Pogoda
+Python        |   2.07 |      1.30 | 
+Lua           |   2.50 |      1.97 | by themadsens; runs under luajit
+JavaScript    |   2.52 |      1.90 | by Dani Biro and Flo Hinze
+Ruby          |   3.13 |      2.43 | by Bill Mill
+AWK           |   3.55 |      1.13 | optimized uses `mawk`
+D             |   4.16 |      1.01 | by Ross Lonstein
+Swift         |   4.23 |           | by Daniel Muellenborn
+Forth         |   4.26 |      1.46 | 
+Shell         |  14.60 |      1.85 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
 
@@ -1191,4 +1191,4 @@ What can we learn from all this? Here are a few thoughts:
 
 This was definitely a fun exercise! I learned a good amount about optimization hot-spots, using the Valgrind profiler, and I wrote some Forth code for the first time in years.
 
-Let me know your thoughts or feedback, or send ideas for improvements (see the discussions on [Hacker News](https://news.ycombinator.com/item?id=26463967), [programming Reddit](https://www.reddit.com/r/programming/comments/m5gvxz/performance_comparison_counting_words_in_python/), and [Lobsters](https://lobste.rs/s/3byl7t/performance_comparison_counting_words)). You're welcome to contribute to [benhoyt/countwords](https://github.com/benhoyt/countwords) -- I'd especially welcome pull requests to add C# (an optimized version), Java, JavaScript, Ruby, Kotlin, or Swift.
+Let me know your thoughts or feedback, or send ideas for improvements (see the discussions on [Hacker News](https://news.ycombinator.com/item?id=26463967), [programming Reddit](https://www.reddit.com/r/programming/comments/m5gvxz/performance_comparison_counting_words_in_python/), and [Lobsters](https://lobste.rs/s/3byl7t/performance_comparison_counting_words)).
