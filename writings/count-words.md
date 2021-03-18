@@ -1125,10 +1125,11 @@ I asked readers to send pull requests to the [`benhoyt/countwords`](https://gith
 * Bash: [Jesse Hathaway](https://github.com/lollipopman) - not included in benchmarks as it takes over 2 minutes
 * C#: [John Taylor](https://github.com/jftuga), [Yuriy Ostapenko](https://github.com/uncleyo) and [Osman Turan](https://github.com/osman-turan)
 * C# (LINQ): [Osman Turan](https://github.com/osman-turan) - not run in benchmarks
-* C++ optimized version: [Jussi Pakkanen](https://github.com/jpakkane) and [Adev](https://github.com/adevress)
+* C++ optimized version: [Jussi Pakkanen](https://github.com/jpakkane), [Adev](https://github.com/adevress), [Nathan Myers](https://github.com/ncm)
 * Crystal: [Andrea Manzini](https://github.com/ilmanzo)
 * D: [Ross Lonstein](https://github.com/rlonstein)
 * F#: [Yuriy Ostapenko](https://github.com/uncleyo)
+* Java: [Iulian Pleșoianu](https://github.com/bit-twit)
 * JavaScript: [Dani Biró](https://github.com/Daninet) and [Flo Hinze](https://github.com/laubsauger)
 * Julia: [Alessandro Melis](https://github.com/alemelis)
 * Kotlin: [Kazik Pogoda](https://github.com/morisil)
@@ -1156,29 +1157,30 @@ The times are in seconds, so lower is better, and the list is ordered by the exe
 Language      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
 `grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
-`wc -w`       |   0.29 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
-Zig           |   0.54 |           | by ifreund and matu3ba
-Nim           |   0.76 |      0.58 | by csterritt and euantorano
-C             |   0.97 |      0.23 | 
-Go            |   1.14 |      0.39 | 
-Crystal       |   1.29 |           | by Andrea Manzini
+`wc -w`       |   0.29 |      0.19 | `wc` baseline; optimized sets `LC_ALL=C`
+Zig           |   0.53 |           | by ifreund and matu3ba
+Nim           |   0.77 |      0.49 | by csterritt and euantorano
+C             |   0.98 |      0.24 | 
+Go            |   1.14 |      0.38 | 
+Crystal       |   1.33 |           | by Andrea Manzini
 PHP           |   1.36 |           | by Max Semenik
-Rust          |   1.43 |      0.38 | by Andrew Gallant
-C#            |   1.51 |      0.82 | by J Taylor, Y Ostapenko, O Turan
-OCaml         |   1.72 |           | by Nate Dobbins and Pavlo Khrystenko
-C++           |   1.73 |      0.42 | optimized by Jussi Pakkanen
+Java          |   1.39 |      1.32 | by Iulian Plesoianu
+Rust          |   1.41 |      0.38 | by Andrew Gallant
+C#            |   1.50 |      0.82 | by J Taylor, Y Ostapenko, O Turan
+C++           |   1.70 |      0.28 | optimized by Jussi P, Adev, Nathan M
+OCaml         |   1.73 |           | by Nate Dobbins and Pavlo Khrystenko
+F#            |   1.81 |      1.60 | by Yuriy Ostapenko
 Perl          |   1.81 |           | by Charles Randall
-F#            |   1.82 |      1.59 | by Yuriy Ostapenko
-Kotlin        |   1.86 |           | by Kazik Pogoda
-Python        |   2.07 |      1.30 | 
-Lua           |   2.50 |      1.97 | by themadsens; runs under luajit
-JavaScript    |   2.52 |      1.90 | by Dani Biro and Flo Hinze
+Kotlin        |   1.87 |           | by Kazik Pogoda
+D             |   1.99 |      0.67 | by Ross Lonstein
+Python        |   2.06 |      1.28 | 
+Lua           |   2.43 |      1.97 | by themadsens; runs under luajit
+JavaScript    |   2.52 |      1.70 | by Dani Biro and Flo Hinze
 Ruby          |   3.13 |      2.43 | by Bill Mill
-AWK           |   3.55 |      1.13 | optimized uses `mawk`
-D             |   4.16 |      1.01 | by Ross Lonstein
-Swift         |   4.23 |           | by Daniel Muellenborn
-Forth         |   4.26 |      1.46 | 
-Shell         |  14.60 |      1.85 | optimized does `LC_ALL=C sort -S 2G`
+AWK           |   3.48 |      1.11 | optimized uses `mawk`
+Swift         |   4.17 |           | by Daniel Muellenborn
+Forth         |   4.23 |      1.46 | 
+Shell         |  14.65 |      1.89 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
 
