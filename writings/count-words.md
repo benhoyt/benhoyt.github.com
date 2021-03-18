@@ -266,20 +266,28 @@ Serving web UI on http://localhost:7777
 
 The results are interesting, though not unexpected -- the operations in the per-word hot loop take all the time. A good chunk of the time is spent in the scanner, and another chunk is spent allocating strings to insert into the map, so let's try to optimize both of those parts.
 
-To improve scanning, we'll essentially make a cut-down version of `bufio.Scanner` and `ScanWords` (and do an ACIII to-lower operation in place). To reduce the allocations, we'll use a `map[string]*int` instead of `map[string]int` so we only have to allocate once per unique word, instead of for every increment (Martin Möhrmann gave me this tip on the Gophers Slack #performance channel).
+To improve scanning, we'll do the word scanning and convert to ACIII lowercase as we go. To reduce the allocations, we'll use a `map[string]*int` instead of `map[string]int` so we only have to allocate once per unique word, instead of for every increment (Martin Möhrmann gave me this tip on the Gophers Slack #performance channel).
 
-Note that it took me a few iterations and profiling passes to get to this result. One in-between step was to still use `bufio.Scanner` but with a custom split function, `scanWordsASCII`. However, it's a bit faster, and not much harder, to avoid `bufio.Scanner` altogether. Another thing I tried was a [custom hash table](https://github.com/benhoyt/counter), but I decided that was out of scope for the Go version, and it's not much faster than the `map[string]*int` in any case.
+Note that it took me a few iterations and profiling passes to get to this result. One in-between step was to still use `bufio.Scanner` but with a custom split function, `scanWordsASCII`. However, it's a bit faster, and not any harder, to avoid `bufio.Scanner` altogether. Another thing I tried was a [custom hash table](https://github.com/benhoyt/counter), but I decided that was out of scope for the Go version, and it's not much faster than the `map[string]*int` in any case.
 
-[**optimized.go**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.go)
+My [original optimized code](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.go) had a subtle bug which resulted in incorrect output *some* of the time: if `Read` did a partial read (which happens but is not common) and the bytes read didn't include a linefeed character, the code would split the last word in the middle and count it as two words. This just goes to show how easy it is to break things when optimizing (and how subtle the semantics of Go's [`io.Reader`](https://golang.org/pkg/io/#Reader) are).
+
+In fact, in the original version of this article I'd prophesied that this might happen:
+
+> It's trickier code, and there is lots of potential for off-by-one errors (I'd be surprised if there isn't some bug already).
+
+In any case, it's fixed now. Thanks to Miguel Angel for [noticing the issue](https://github.com/benhoyt/countwords/pull/81) and simplifying the code.
+
+[**optimized.go**](https://github.com/benhoyt/countwords/blob/8c05595ac632b53d189ce263cf943cae29dc6c14/optimized.go)
 
 ```go
 func main() {
-    offset := 0
+    var word []byte
     buf := make([]byte, 64*1024)
     counts := make(map[string]*int)
     for {
         // Read input in 64KB blocks till EOF.
-        n, err := os.Stdin.Read(buf[offset:])
+        n, err := os.Stdin.Read(buf)
         if err != nil && err != io.EOF {
             fmt.Fprintln(os.Stderr, err)
             os.Exit(1)
@@ -287,63 +295,45 @@ func main() {
         if n == 0 {
             break
         }
-        // Offset remaining from last time plus number of bytes read.
-        chunk := buf[:offset+n]
 
-        // Find last end-of-line character in block read.
-        lastLF := bytes.LastIndexByte(chunk, '\n')
-        toProcess := chunk
-        if lastLF != -1 {
-            toProcess = chunk[:lastLF]
-        }
+        // Count words in the buffer.
+        for i := 0; i < n; i++ {
+            c := buf[i]
 
-        // Loop through toProcess slice and count words.
-        start := -1 // start -1 means in whitespace run
-        for i, c := range toProcess {
-            // Convert to ASCII lowercase in place as we go.
+            // Found a whitespace char, count last word.
+            if c <= ' ' {
+                if len(word) > 0 {
+                    increment(counts, word)
+                    word = word[:0] // reset word buffer
+                }
+                continue
+            }
+
+            // Convert to ASCII lowercase as we go.
             if c >= 'A' && c <= 'Z' {
                 c = c + ('a' - 'A')
-                toProcess[i] = c
             }
-            if start >= 0 {
-                // In a word, look for end of word (whitespace).
-                if c <= ' ' {
-                    // Count this word!
-                    increment(counts, toProcess[start:i])
-                    start = -1
-                }
-            } else {
-                // In whitespace, look for start of word (non-space).
-                if c > ' ' {
-                    start = i
-                }
-            }
-        }
-        // Count last word, if any.
-        if start >= 0 && start < len(toProcess) {
-            increment(counts, toProcess[start:])
-        }
 
-        // Copy remaining bytes (incomplete line) to start of buffer.
-        if lastLF != -1 {
-            remaining := chunk[lastLF+1:]
-            copy(buf, remaining)
-            offset = len(remaining)
-        } else {
-            offset = 0
+            // Add non-space char to word buffer.
+            word = append(word, c)
         }
     }
 
-    var ordered []Count
+    // Count last word, if any.
+    if len(word) > 0 {
+        increment(counts, word)
+    }
+
+    // Convert to slice of Count, sort by count descending, print.
+    ordered := make([]Count, 0, len(counts))
     for word, count := range counts {
         ordered = append(ordered, Count{word, *count})
     }
     sort.Slice(ordered, func(i, j int) bool {
         return ordered[i].Count > ordered[j].Count
     })
-
     for _, count := range ordered {
-        fmt.Println(string(count.Word), count.Count)
+        fmt.Println(count.Word, count.Count)
     }
 }
 
@@ -365,7 +355,7 @@ The profiling results are now very flat -- almost everything's in the main loop 
 ![Go simple - profiling results](/images/count-words-go-optimized-1400.png)
 </a>
 
-It was a fun exercise, and Go gives you a fair bit of low-level control (and you could go quite a lot further -- memory mapped I/O, a custom hash table, etc). However, programmer time is valuable, and the optimized version above is not something I'd want to test or maintain. It's tricky code, and there is lots of potential for off-by-one errors (I'd be surprised if there isn't some bug already). In practice I'd probably stick with a `bufio.Scanner` with `ScanWords`, `bytes.ToLower`, and the `map[string]*int` trick.
+It was a fun exercise, and Go gives you a fair bit of low-level control (and you could go quite a lot further -- memory mapped I/O, a custom hash table, etc). However, programmer time is valuable, so it's always a trade-off. In practice I'd probably stick with a `bufio.Scanner` with `ScanWords`, `bytes.ToLower`, and the `map[string]*int` trick.
 
 
 ## C++
@@ -1129,6 +1119,7 @@ I asked readers to send pull requests to the [`benhoyt/countwords`](https://gith
 * Crystal: [Andrea Manzini](https://github.com/ilmanzo)
 * D: [Ross Lonstein](https://github.com/rlonstein)
 * F#: [Yuriy Ostapenko](https://github.com/uncleyo)
+* Go: [Miguel Angel](https://github.com/ntrrg) - simplifying the Go optimized version
 * Java: [Iulian Pleșoianu](https://github.com/bit-twit)
 * JavaScript: [Dani Biró](https://github.com/Daninet) and [Flo Hinze](https://github.com/laubsauger)
 * Julia: [Alessandro Melis](https://github.com/alemelis)
