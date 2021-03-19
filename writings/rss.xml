@@ -10,8 +10,8 @@
  <item>
   <title>Performance comparison: counting words in Python, Go, C++, C, AWK, Forth, and Rust</title>
   <description>Performance comparison of counting and sorting word frequencies in various languages (Python, Go, C++, C, AWK, Forth, Rust, and others)</description>
-  <link>https://benhoyt.com/writings/writings/count-words/</link>
-  <guid>https://benhoyt.com/writings/writings/count-words/</guid>
+  <link>https://benhoyt.com/writings/count-words/</link>
+  <guid>https://benhoyt.com/writings/count-words/</guid>
   <pubDate>Mon, 15 Mar 2021 20:30:00 +1300</pubDate>
  </item>
 
