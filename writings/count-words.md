@@ -1120,7 +1120,7 @@ Many readers contributed to the [`benhoyt/countwords`](https://github.com/benhoy
 * Crystal: [Andrea Manzini](https://github.com/ilmanzo)
 * D: [Ross Lonstein](https://github.com/rlonstein)
 * F#: [Yuriy Ostapenko](https://github.com/uncleyo)
-* Go: [Miguel Angel](https://github.com/ntrrg) - simplifying the Go optimized version
+* Go: [Miguel Angel](https://github.com/ntrrg) - simplifying the Go optimized version; [Joshua Corbin](https://github.com/jcorbin) - adding a [parallel Go version](https://github.com/benhoyt/countwords/blob/9db2ab6808921e649fc5212c00712e61edf6fa1c/parallel.go) for demonstration
 * Java: [Iulian Pleșoianu](https://github.com/bit-twit)
 * JavaScript: [Dani Biró](https://github.com/Daninet) and [Flo Hinze](https://github.com/laubsauger)
 * Julia: [Alessandro Melis](https://github.com/alemelis)
@@ -1146,34 +1146,34 @@ time $PROGRAM <kjvbible_x10.txt >/dev/null
 
 The times are in seconds, so lower is better, and the list is ordered by the execution time of the simple version, fastest first. (Note that `grep` and `wc` don't actually solve the word counting problem, they're just here for comparison.)
 
-Language      | Simple | Optimized | Notes
+anguage      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
 `grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
-`wc -w`       |   0.29 |      0.19 | `wc` baseline; optimized sets `LC_ALL=C`
-Zig           |   0.53 |           | by ifreund and matu3ba
-Nim           |   0.77 |      0.49 | by csterritt and euantorano
-C             |   0.98 |      0.24 | 
-Go            |   1.14 |      0.38 | 
+`wc -w`       |   0.29 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
+Zig           |   0.54 |           | by ifreund and matu3ba
+Nim           |   0.78 |      0.51 | by csterritt and euantorano
+C             |   0.97 |      0.24 | 
+Go            |   1.15 |      0.40 | 
+OCaml         |   1.19 |           | by Nate Dobbins and Pavlo Khrystenko
 Crystal       |   1.33 |           | by Andrea Manzini
-PHP           |   1.36 |           | by Max Semenik
+PHP           |   1.37 |           | by Max Semenik
 Java          |   1.39 |      1.32 | by Iulian Plesoianu
-Rust          |   1.41 |      0.38 | by Andrew Gallant
-C#            |   1.50 |      0.82 | by J Taylor, Y Ostapenko, O Turan
-C++           |   1.70 |      0.28 | optimized by Jussi P, Adev, Nathan M
-OCaml         |   1.73 |           | by Nate Dobbins and Pavlo Khrystenko
-F#            |   1.81 |      1.60 | by Yuriy Ostapenko
-Perl          |   1.81 |           | by Charles Randall
-Kotlin        |   1.87 |           | by Kazik Pogoda
-D             |   1.99 |      0.67 | by Ross Lonstein
-Python        |   2.06 |      1.28 | 
-Lua           |   2.43 |      1.97 | by themadsens; runs under luajit
-JavaScript    |   2.52 |      1.70 | by Dani Biro and Flo Hinze
-Ruby          |   3.13 |      2.43 | by Bill Mill
-AWK           |   3.48 |      1.11 | optimized uses `mawk`
-Swift         |   4.17 |           | by Daniel Muellenborn
-Forth         |   4.23 |      1.46 | 
-Common Lisp   |   4.71 |           | by Brad Svercl
-Shell         |  14.65 |      1.89 | optimized does `LC_ALL=C sort -S 2G`
+Rust          |   1.42 |      0.40 | by Andrew Gallant
+C#            |   1.53 |      0.84 | by J Taylor, Y Ostapenko, O Turan
+C++           |   1.74 |      0.28 | optimized by Jussi P, Adev, Nathan M
+F#            |   1.81 |      1.61 | by Yuriy Ostapenko
+Perl          |   1.88 |           | by Charles Randall
+Kotlin        |   1.90 |           | by Kazik Pogoda
+D             |   2.04 |      0.68 | by Ross Lonstein
+Python        |   2.10 |      1.31 | 
+JavaScript    |   2.42 |      1.78 | by Dani Biro and Flo Hinze
+Lua           |   2.46 |      1.97 | by themadsens; runs under luajit
+Ruby          |   3.12 |      2.45 | by Bill Mill
+AWK           |   3.57 |      1.13 | optimized uses `mawk`
+Swift         |   4.26 |           | by Daniel Muellenborn
+Forth         |   4.28 |      1.48 | 
+Common Lisp   |   5.02 |           | by Brad Svercl
+Shell         |  14.92 |      1.90 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
 
