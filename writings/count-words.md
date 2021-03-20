@@ -1116,6 +1116,7 @@ Many readers contributed to the [`benhoyt/countwords`](https://github.com/benhoy
 * C#: [John Taylor](https://github.com/jftuga), [Yuriy Ostapenko](https://github.com/uncleyo) and [Osman Turan](https://github.com/osman-turan)
 * C# (LINQ): [Osman Turan](https://github.com/osman-turan) - not run in benchmarks
 * C++ optimized version: [Jussi Pakkanen](https://github.com/jpakkane), [Adev](https://github.com/adevress), [Nathan Myers](https://github.com/ncm)
+* Common Lisp: [Brad Svercl](https://github.com/bradms)
 * Crystal: [Andrea Manzini](https://github.com/ilmanzo)
 * D: [Ross Lonstein](https://github.com/rlonstein)
 * F#: [Yuriy Ostapenko](https://github.com/uncleyo)
@@ -1171,6 +1172,7 @@ Ruby          |   3.13 |      2.43 | by Bill Mill
 AWK           |   3.48 |      1.11 | optimized uses `mawk`
 Swift         |   4.17 |           | by Daniel Muellenborn
 Forth         |   4.23 |      1.46 | 
+Common Lisp   |   4.71 |           | by Brad Svercl
 Shell         |  14.65 |      1.89 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
