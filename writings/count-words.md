@@ -1166,7 +1166,7 @@ Perl          |   1.88 |           | by Charles Randall
 Kotlin        |   1.90 |           | by Kazik Pogoda
 D             |   2.04 |      0.68 | by Ross Lonstein
 Python        |   2.10 |      1.31 | 
-JavaScript    |   2.42 |      1.78 | by Dani Biro and Flo Hinze
+JavaScript    |   2.11 |      1.15 | by Dani Biro and Flo Hinze
 Lua           |   2.46 |      1.97 | by themadsens; runs under luajit
 Ruby          |   3.12 |      2.45 | by Bill Mill
 AWK           |   3.57 |      1.13 | optimized uses `mawk`
