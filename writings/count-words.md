@@ -1133,7 +1133,7 @@ Many readers contributed to the [`benhoyt/countwords`](https://github.com/benhoy
 * Ruby: [Bill Mill](https://github.com/llimllib), with input from [Niklas](https://github.com/nhh)
 * Rust: [Andrew Gallant](https://github.com/BurntSushi)
 * Swift: [Daniel Müllenborn](https://github.com/damuellen)
-* Zig: [ifreund](https://github.com/ifreund) and [matu3ba](https://github.com/matu3ba)
+* Zig: [ifreund](https://github.com/ifreund) and [matu3ba](https://github.com/matu3ba) and [ansingh](https://github.com/ansingh)
 
 
 ## Performance results and learnings
@@ -1150,7 +1150,7 @@ anguage      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
 `grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
 `wc -w`       |   0.29 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
-Zig           |   0.54 |           | by ifreund and matu3ba
+Zig           |   0.54 |      0.25 | by ifreund and matu3ba and ansingh
 Nim           |   0.78 |      0.51 | by csterritt and euantorano
 C             |   0.97 |      0.24 | 
 Go            |   1.15 |      0.40 | 
