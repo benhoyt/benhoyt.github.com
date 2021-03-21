@@ -1138,7 +1138,7 @@ Many readers contributed to the [`benhoyt/countwords`](https://github.com/benhoy
 
 ## Performance results and learnings
 
-Below are the performance numbers of running these programs on my laptop (64-bit Linux with an SSD). I'm running each test five times and taking the minimum time as the result (see [benchmark.py](https://github.com/benhoyt/countwords/blob/master/benchmark.py)). Each run is basically equivalent to the following command:
+Below are the performance numbers of running these programs on my laptop (64-bit Linux with an SSD using these [versions](https://github.com/benhoyt/countwords/blob/master/versions.txt)). I'm running each test five times and taking the minimum time as the result (see [benchmark.py](https://github.com/benhoyt/countwords/blob/master/benchmark.py)). Each run is basically equivalent to the following command:
 
 ```
 time $PROGRAM <kjvbible_x10.txt >/dev/null
