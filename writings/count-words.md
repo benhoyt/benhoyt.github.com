@@ -1146,7 +1146,7 @@ time $PROGRAM <kjvbible_x10.txt >/dev/null
 
 The times are in seconds, so lower is better, and the list is ordered by the execution time of the simple version, fastest first. (Note that `grep` and `wc` don't actually solve the word counting problem, they're just here for comparison.)
 
-anguage      | Simple | Optimized | Notes
+Language      | Simple | Optimized | Notes
 ------------- | ------ | --------- | -----
 `grep`        |   0.04 |      0.04 | `grep` baseline; optimized sets `LC_ALL=C`
 `wc -w`       |   0.29 |      0.20 | `wc` baseline; optimized sets `LC_ALL=C`
