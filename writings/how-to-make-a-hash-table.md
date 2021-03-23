@@ -147,15 +147,15 @@ A hash function turns a key into a random-looking number, and it must always ret
 
 <!-- TODO: calculate hashes: https://play.golang.org/p/bik3FSiGVJJ -->
 
-| Key | Hash | Hash modulo 16 |
-| --- | ---- | ----------- |
-| `bar` | 15625701906442958976 | 0 |
-| `bazz` | 2813642004701319010 | 2 |
-| `bob` | 15625704105466215482 | 10 |
-| `buzz` | 2825191274841776574 | 14 |
-| `foo` | 15621798640163566899 | 3 |
-| `jane` | 16328289176863632041 | 9 |
-| `x` | 12638153115695167399 | 7 |
+| Key    | Hash                 | Hash modulo 16 |
+| ------ | -------------------- | -------------- |
+| `bar`  | 15625701906442958976 | 0              |
+| `bazz` | 2813642004701319010  | 2              |
+| `bob`  | 15625704105466215482 | 10             |
+| `buzz` | 2825191274841776574  | 14             |
+| `foo`  | 15621798640163566899 | 3              |
+| `jane` | 16328289176863632041 | 9              |
+| `x`    | 12638153115695167399 | 7              |
 
 The reason I've shown the hash modulo 16 is because we're going to start with an array of 16 elements, so we need to limit the hash to the number of elements in the array -- the [modulo](https://en.wikipedia.org/wiki/Modulo_operation) operation divides by 16 and gives the remainder, limiting the hash to the range 0 through 15.
 
@@ -181,15 +181,382 @@ Here's what the hash table array looks like after adding "collision" `bill` (wit
 | **Key**   | `bar` | `.` | `bazz` | `foo` | `.` | `.` | `.` | `x` | `.` | `jane` | `bob` | `.` | `.` | `.` | `buzz` | **`bill`** |
 | **Value** | 42    | `.` | 36     | 10    | `.` | `.` | `.` | 200 | `.` | 100    | 11    | `.` | `.` | `.` | 7      | **25**     |
 
-When the hash table gets too full, we need to allocate a larger array and move the items over. This is absolutely required when the number of items in the hash table has reached the size of the array, but usually you want to do it when the table is half full, or 75% full. If you don't resize it early enough, collisions will become more and more common, and lookups and inserts will get slower and slower. If you wait till it's almost full, you're essentially back to linear search.
+When the hash table gets too full, we need to allocate a larger array and move the items over. This is absolutely required when the number of items in the hash table has reached the size of the array, but usually you want to do it when the table is half or three-quarters full. If you don't resize it early enough, collisions will become more and more common, and lookups and inserts will get slower and slower. If you wait till it's almost full, you're essentially back to linear search.
 
 This kind of hash table requires an average of one operation per lookup, plus the time to hash the key (but often the keys are relatively short string).
 
-And that's it! There's a huge amount more you can do here, and this just scratches the surface. I'm not going to go into a scientific analysis of [big O notation](https://en.wikipedia.org/wiki/Big_O_notation), optimal array sizes, different kinds of probing, and so on. Buy Donald Knuth's [TAOCP](https://www-cs-faculty.stanford.edu/~knuth/taocp.html) if you want that level of detail!
+And that's it! There's a huge amount more you can do here, and this just scratches the surface. I'm not going to go into a scientific analysis of [big O notation](https://en.wikipedia.org/wiki/Big_O_notation), optimal array sizes, different kinds of probing, and so on. Read Donald Knuth's [TAOCP](https://www-cs-faculty.stanford.edu/~knuth/taocp.html) if you want that level of detail!
 
 
 ## Hash table implementation
 
-TODO: potential optimizations: store some of key in array, don't multiply size by 2 (1.25 or 1.5)
+### API design
 
-TODO: look at number of collisions
+First let's consider what API we want: we need a way to create and destroy a hash table, get the value for a given key, set a value for a given key, get the number of items, and iterate over the items. I'm not aiming for a maximum-efficiency API, but one that is reasonably fast and fairly simple to use:
+
+After a couple of iterations, I settled on the following (see [ht.h](https://github.com/benhoyt/ht/blob/master/ht.h)):
+
+```c
+// Create new hash table and return pointer to it, or NULL if out of
+// memory.
+ht* ht_create(void);
+
+// Free memory allocated for hash table, including allocated keys.
+void ht_destroy(ht* table);
+
+// Get item with given key (NUL-terminated) from hash table. Return
+// value (which was set with ht_set), or NULL if key not found.
+void* ht_get(ht* table, const char* key);
+
+// Set item with given key (NUL-terminated) to value (which must not
+// be NULL). If not already present in table, key is copied to newly
+// allocated memory (keys are freed automatically when ht_destroy is
+// called). Return address of copied key, or NULL if out of memory.
+const char* ht_set(ht* table, const char* key, void* value);
+
+// Return number of items in hash table.
+size_t ht_length(ht* table);
+
+// Return new hash table iterator (for use with ht_next).
+hti ht_iterator(ht* table);
+
+// Move iterator to next item in hash table, update iterator's key
+// and value to current item, and return true. If there are no more
+// items, return false. Don't call ht_set during iteration.
+bool ht_next(hti* it);
+
+// Hash table entry (this is not actually part of the public API).
+typedef struct {
+    char* key;
+    void* value;
+} _ht_entry;
+
+// Hash table structure: create with ht_create, free with ht_destroy.
+typedef struct {
+    // Don't use these fields directly.
+    _ht_entry* _entries; // hash buckets (entry.key != NULL if populated)
+    size_t _capacity;    // size of _entries array
+    size_t _length;      // number of items in hash table
+} ht;
+
+// Hash table iterator: create with ht_iterator, iterate with ht_next.
+typedef struct {
+    char* key;      // current key
+    void* value;    // current value
+
+    // Don't use these fields directly.
+    ht* _table;     // reference to hash table being iterated
+    size_t _index;  // current index into ht._entries
+} hti;
+```
+
+A few notes about this API design:
+
+* For simplicity, we use C-style NUL-terminated strings. I know there are more efficient approaches to string handling, but this fits with C's standard library.
+* The `ht_set` function allocates and copies the key (if inserting for the first time). Usually you don't want the caller to have to worry about this, or ensuring the key memory stays around. Note that `ht_set` returns a pointer to the duplicated key. This is mainly used as an "out of memory" error signal -- it returns NULL on failure.
+* Values can't be NULL. This makes the signature of `ht_get` slightly simpler.
+* The `ht_length` function isn't strictly necessary, as you can find the length by iterating the table. However, that's a bit of a pain (and slow), so it's useful to have `ht_length`.
+* There are various ways I could have done iteration. Using an explicit iterator type with a while loop seems simple and natural in C (see the example below). The value returned from `ht_iterator` is a value, not a pointer, both for efficiency and so the caller doesn't have to free anything.
+* There's no `ht_remove` to remove an item from the hash table. It wouldn't be hard to write, but I don't often need to remove items when using a hash table, so for simplicity I've left it out.
+
+### Demo program
+
+Below is a simple program ([demo.c](https://github.com/benhoyt/ht/blob/master/samples/demo.c)) that demonstration using all the functions of the API. It counts the frequencies of unique, space-separated words from standard input, and prints the results (in an arbitrary order, because the iteration order of our hash table is undefined). It ends by printing the total number of unique words.
+
+```c
+// Example:
+// $ echo 'foo bar the bar bar bar the' | ./demo
+// bar 4
+// foo 1
+// the 2
+// 3
+
+void exit_nomem(void) {
+    fprintf(stderr, "out of memory\n");
+    exit(1);
+}
+
+int main(void) {
+    ht* counts = ht_create();
+    if (counts == NULL) {
+        exit_nomem();
+    }
+
+    // Read next word from stdin (at most 100 chars long).
+    char word[101];
+    while (scanf("%100s", word) != EOF) {
+        // Look up word.
+        void* value = ht_get(counts, word);
+        if (value != NULL) {
+            // Already exists, increment int that value points to.
+            int* pcount = (int*)value;
+            (*pcount)++;
+            continue;
+        }
+
+        // Word not found, allocate space for new int and set to 1.
+        int* pcount = malloc(sizeof(int));
+        if (pcount == NULL) {
+            exit_nomem();
+        }
+        *pcount = 1;
+        if (ht_set(counts, word, pcount) == NULL) {
+            exit_nomem();
+        }
+    }
+
+    // Print out words and frequencies, freeing values as we go.
+    hti it = ht_iterator(counts);
+    while (ht_next(&it)) {
+        printf("%s %d\n", it.key, *(int*)it.value);
+        free(it.value);
+    }
+
+    // Show the number of unique words.
+    printf("%d\n", (int)ht_length(counts));
+
+    ht_destroy(counts);
+    return 0;
+}
+```
+
+Now, let's turn to the implementation.
+
+### Create and destroy
+
+Allocating a new hash table is fairly straight-forward. We start with an initial size of 8 -- which means 16 slots in our `_entries` array (this size is stored in `_capacity`). There are two allocations, one for the hash table struct itself, and one for the entries array. Note that we use `calloc` for the entries array, to ensure all the keys are NULL to start with, meaning all slots are empty.
+
+The `ht_destroy` function frees this memory, but also frees memory from the duplicated keys that were allocated along the way (more on that below).
+
+```c
+#define INITIAL_SIZE 8
+
+ht* _ht_create(size_t size) {
+    // Allocate space for hash table struct.
+    ht* table = malloc(sizeof(ht));
+    if (table == NULL) {
+        return NULL;
+    }
+    table->_length = 0;
+    table->_capacity = size * 2;
+
+    // Allocate (zero'd) space for entry buckets.
+    table->_entries = calloc(table->_capacity, sizeof(_ht_entry));
+    if (table->_entries == NULL) {
+        free(table); // error, free table before we return!
+        return NULL;
+    }
+    return table;
+}
+
+ht* ht_create(void) {
+    return _ht_create(INITIAL_SIZE);
+}
+
+void ht_destroy(ht* table) {
+    // First free allocated keys.
+    for (size_t i = 0; i < table->_capacity; i++) {
+        if (table->_entries[i].key != NULL) {
+            free(table->_entries[i].key);
+        }
+    }
+
+    // Then free entries array and table itself.
+    free(table->_entries);
+    free(table);
+}
+```
+
+### Hash function
+
+Next we define our hash function, which is a straight-forward C implementation of the [FNV-1 hash algorithm](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash). Note that FNV is not a randomized or cryptographic hash function, so it's possible for an attacker to create keys with a lot of collisions and cause lookups to essentially be linear search -- Python [switched away](https://www.python.org/dev/peps/pep-0456/) from FNV for this reason. For our use case, however, FNV is simple and fast.
+
+As far as the algorithm goes, FNV simply starts the hash with an "offset" constant, and for each byte in the string, multiplies the hash by a big prime number and then XORs it with the current byte. The offset and prime are carefully chosen by people with PhDs.
+
+We're using the 64-bit variant, because, well, most computers are 64-bit these days and it seemed like a good idea. You can tell I don't have one of those PhDs. :-) Seriously, though, it seemed better than using the 32-bit version in case we have a very large hash table.
+
+```c
+#define FNV_OFFSET 14695981039346656037UL
+#define FNV_PRIME 1099511628211UL
+
+// Return 64-bit FNV-1 hash for key (NUL-terminated). See description at:
+// https://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function
+static uint64_t _hash(const char* key) {
+    uint64_t hash = FNV_OFFSET;
+    for (const char* p = key; *p; p++) {
+        hash *= FNV_PRIME;
+        hash ^= (uint64_t)(*p);
+    }
+    return hash;
+}
+```
+
+## Get
+
+Next let's look at the `ht_get` function. First it calculates the hash, modulo the `_capacity` (the size of the entries array), which is done by ANDing with `_capacity - 1`. This is only possible because, as we'll see below, we're ensuring our array size is always a power of two, for simplicity.
+
+Then we loop till we find an empty slot, in which case we didn't find the key. For each non-empty slot, we use `strcmp` to check whether the key at this slot is the one we're looking for (it'll be the first one unless there was a collision). If not, we move along one slot.
+
+```c
+void* ht_get(ht* table, const char* key) {
+    // AND hash with capacity-1 to ensure it's within entries array.
+    uint64_t hash = _hash(key);
+    size_t index = (size_t)(hash & (uint64_t)(table->_capacity - 1));
+
+    // Loop till we find an empty entry.
+    while (table->_entries[index].key != NULL) {
+        if (strcmp(key, table->_entries[index].key) == 0) {
+            // Found key, return value.
+            return table->_entries[index].value;
+        }
+        // Key wasn't in this slot, move to next (linear probing).
+        index++;
+        if (index >= table->_capacity) {
+            // At end of entries array, wrap around.
+            index = 0;
+        }
+    }
+    return NULL;
+}
+```
+
+## Set
+
+The `ht_set` function is slightly more complicated, because it has to expand the table if there are too many elements. In our implementation, we double the capacity whenever it gets to be half full. This is a little wasteful of memory, but it keeps things very simple.
+
+First, the `ht_set` function -- apart from the call to `_ht_expand`, it's very similar in structure to `ht_get`:
+
+```c
+const char* ht_set(ht* table, const char* key, void* value) {
+    assert(value != NULL);
+    if (value == NULL) {
+        return NULL;
+    }
+
+    // AND hash with capacity-1 to ensure it's within entries array.
+    uint64_t hash = _hash(key);
+    size_t index = (size_t)(hash & (uint64_t)(table->_capacity - 1));
+
+    // If length will exceed half of current capacity, expand it.
+    if (table->_length >= table->_capacity / 2) {
+        if (!_ht_expand(table)) {
+            return NULL;
+        }
+        // Recalculate index as capacity has changed.
+        index = (size_t)(hash & (uint64_t)(table->_capacity - 1));
+    }
+
+    // Loop till we find an empty entry.
+    while (table->_entries[index].key != NULL) {
+        if (strcmp(key, table->_entries[index].key) == 0) {
+            // Found key (it already exists), update value.
+            table->_entries[index].value = value;
+            return table->_entries[index].key;
+        }
+        // Key wasn't in this slot, move to next (linear probing).
+        index++;
+        if (index >= table->_capacity) {
+            // At end of entries array, wrap around.
+            index = 0;
+        }
+    }
+
+    // Didn't find key, allocate/copy key and insert it.
+    char* key_copy = strdup(key);
+    if (key_copy == NULL) {
+        return NULL;
+    }
+    table->_entries[index].key = key_copy;
+    table->_entries[index].value = value;
+    table->_length++; // be sure to update length
+    return key_copy;
+}
+```
+
+Note the `strdup` at the end, to allocate space for and copy the key. We also increment `_length` to record that we've inserted a new item (this allows the `ht_length` implementation to trivially return `ht->_length`).
+
+What about the `_ht_expand` helper function? It does a bit of a trick: it uses `ht_create` to create a new hash table with twice the capacity, so that we can insert all the table's items into the new table. However, the trick is we then use the new table `_entries` array for the existing table, but throw away the new table struct itself. This is slightly inefficient, but allows us to reuse `ht_set` to insert the keys (the second call to `ht_set` will never call `_ht_expand`, because we've just doubled the capacity). Here is the code:
+
+```c
+// Expand hash table to twice its current size. Return true on success,
+// false if out of memory.
+static bool _ht_expand(ht* table) {
+    // Creating new table so we can use ht_set to move items into it.
+    ht* new_table = _ht_create(table->_capacity);
+    if (new_table == NULL) {
+        return false;
+    }
+
+    // Iterate entries, move all non-empty ones to new table's entries.
+    for (size_t i = 0; i < table->_capacity; i++) {
+        _ht_entry entry = table->_entries[i];
+        if (entry.key != NULL) {
+            const char* key = ht_set(new_table, entry.key, entry.value);
+            if (key == NULL) {
+                ht_destroy(new_table);
+                return false;
+            }
+        }
+    }
+
+    // Free old entries array and update this table's details.
+    free(table->_entries);
+    table->_entries = new_table->_entries;
+    table->_capacity = new_table->_capacity;
+
+    // Free new table structure (we've updated the existing one).
+    free(new_table);
+    return true;
+}
+```
+
+### Length and iteration
+
+The `ht_length` function in trivial -- we update the number of items in `_length` as we go, so just return that:
+
+```c
+size_t ht_length(ht* table) {
+    return table->_length;
+}
+```
+
+Iteration is the final piece. To create an iterator, a user will call `ht_iterator`, and to move to the next item, call `ht_next` in a loop while it returns `true`. Here's how they're defined:
+
+```c
+hti ht_iterator(ht* table) {
+    hti it;
+    it._table = table;
+    it._index = 0;
+    return it;
+}
+
+bool ht_next(hti* it) {
+    // Loop till we've hit end of entries array.
+    ht* table = it->_table;
+    while (it->_index < table->_capacity) {
+        size_t i = it->_index;
+        it->_index++;
+        if (table->_entries[i].key != NULL) {
+            // Found next non-empty item, update iterator key and value.
+            _ht_entry entry = table->_entries[i];
+            it->key = entry.key;
+            it->value = entry.value;
+            return true;
+        }
+    }
+    return false;
+}
+```
+
+
+## Discussion
+
+That's it -- the implementation ([ht.c](https://github.com/benhoyt/ht/blob/master/ht.c)) is less than 200 lines of code, including blank lines and comments.
+
+As this is a teaching tool and not a library, it's not very well tested. I would advise against using it without a bunch of further testing, checking edge cases, etc. Remember, this is unsafe C we're dealing with. Even while writing this I realized I'd used `malloc` instead of `calloc` to allocate the entries array, which may not have set the keys to NULL.
+
+As I mentioned, I wanted to keep the implementation simple, and wasn't too worried about performance. However, a quick performance comparison with Go's `map` implementation shows that it fares pretty well -- it's about X times as fast (TODO). Speaking of Go and hash tables, it's even easier to write custom hash tables in Go, because you don't have to worry about memory allocation and freeing. I recently wrote a [counter](https://github.com/benhoyt/counter) package in Go which implements a similar kind of hash table.
+
+There's obviously a lot more you could do with the C version. You could focus on safety and reliability by doing various kinds of testing. You could focus on performance, and reduce memory allocations, use a ["bump allocator"](https://os.phil-opp.com/allocator-designs/#bump-allocator) for the duplicated keys, store short keys inside each item struct, and so on. You could improve the memory usage, and tune `_ht_expand` to not double in size every time. Or you could add features like item removal.
+
+In any case, I hope you've enjoyed this, and maybe even learned something. If you can spot any bugs or have any feedback, please let me know!
