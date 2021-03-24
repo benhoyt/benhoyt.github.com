@@ -7,24 +7,25 @@ description: "An explanation of how to make a simple hash table data structure, 
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2021</p>
 
+**WORK-IN-PROGRESS DRAFT**
+
 <!--
 TODO:
 - shrink horizontal spacing on tables?
-- point to Go benhoyt/counter? avoids memory allocation boilerplate
-- benchmarks for linear vs binary search vs hash?
-- update code snippets from samples/
+- ensure code snippets are up to date
+- stats: average probe length, etc
 -->
 
-> Summary: An explanation of how to make a simple hash table data structure, with code examples in the C programming language. My goal is to show that hash tables are awesome, and (simple ones) are simple to build.
+> Summary: An explanation of how to make a simple hash table data structure using the C programming language. My goal is to show that hash tables -- apart from being a great data structure -- are simple to build from scratch.
 
-Recently I [compared](/writings/count-words/) a simple program that counts word frequencies across various languages, and one of the things that came up was how C doesn't have a hash table data structure in its standard library.
+Recently I wrote an [article that compared](/writings/count-words/) a simple program that counts word frequencies across various languages, and one of the things that came up was how C doesn't have a hash table data structure in its standard library.
 
-There are many things you can do when you realize this: use linear search, use binary search, grab someone else's hash table implementation, or write your own hash table. We're going to take a quick look at linear and binary search, and then learn how to write our own hash table.
+There are many things you can do when you realize this: use linear search, use binary search, grab someone else's hash table implementation, or write your own hash table. Or switch to a richer language. We're going to take a quick look at linear and binary search, and then learn how to write our own hash table. This is often necessary in C, but it can also be useful if you need a custom hash table when using another language.
 
 
 ## Linear search
 
-The simplest option is to use [linear search](https://en.wikipedia.org/wiki/Linear_search) to scan through an array. This is actually not a bad strategy if you've only got a few items (less than about 30 (TODO)), and it allows you to append to the end of the array. With this approach you're searching an average of N/2 items.
+The simplest option is to use [linear search](https://en.wikipedia.org/wiki/Linear_search) to scan through an array. This is actually not a bad strategy if you've only got a few items -- in my [simple tests](https://github.com/benhoyt/ht/blob/master/samples/perflbh.c) it's faster than a hash table lookup up to about 7 items (but unless your program is very performance-sensitive, it's probably fine up to 20 or 30 items). Linear search also allows you to append new items to the end of the array. With this type of search you're comparing an average of N/2 items.
 
 Let's say you're searching for the key `bob` in the following array (each item is a key string with an associated integer value):
 
@@ -72,7 +73,7 @@ int main(void) {
 
 Also quite simple is to put the items in an array which is sorted by key, and use [binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm) to reduce the number of comparisons. This is kind of how we might look something up in a (paper!) dictionary.
 
-C even has a `bsearch` function in its standard library, and this technique is fast up to about 1000 items (TODO), but it doesn't allow you to insert items without copying the rest down. With this approach you're searching an average of log(N) items.
+C even has a `bsearch` function in its standard library. Binary search is reasonably fast even for hundreds of items (though not as fast as a hash table), because you're only comparing an average of log(N) items. However, it doesn't allow you to insert items without copying the rest down, so insertions require N operations.
 
 This time the array must be pre-sorted. Assume we're looking up `bob` again:
 
@@ -145,7 +146,7 @@ If you don't know how a hash table works, here's a quick refresher. A hash table
 
 A hash function turns a key into a random-looking number, and it must always return the same number for the same key. For example, with the hash function we're going to use (64-bit [FNV-1](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash)), the hashes of the keys above are as follows:
 
-<!-- TODO: calculate hashes: https://play.golang.org/p/bik3FSiGVJJ -->
+<!-- To calculate hashes, see: https://play.golang.org/p/bik3FSiGVJJ -->
 
 | Key    | Hash                 | Hash modulo 16 |
 | ------ | -------------------- | -------------- |
@@ -391,7 +392,7 @@ static uint64_t _hash(const char* key) {
 }
 ```
 
-## Get
+### Get
 
 Next let's look at the `ht_get` function. First it calculates the hash, modulo the `_capacity` (the size of the entries array), which is done by ANDing with `_capacity - 1`. This is only possible because, as we'll see below, we're ensuring our array size is always a power of two, for simplicity.
 
@@ -420,7 +421,7 @@ void* ht_get(ht* table, const char* key) {
 }
 ```
 
-## Set
+### Set
 
 The `ht_set` function is slightly more complicated, because it has to expand the table if there are too many elements. In our implementation, we double the capacity whenever it gets to be half full. This is a little wasteful of memory, but it keeps things very simple.
 
@@ -553,10 +554,12 @@ bool ht_next(hti* it) {
 
 That's it -- the implementation ([ht.c](https://github.com/benhoyt/ht/blob/master/ht.c)) is less than 200 lines of code, including blank lines and comments.
 
-As this is a teaching tool and not a library, it's not very well tested. I would advise against using it without a bunch of further testing, checking edge cases, etc. Remember, this is unsafe C we're dealing with. Even while writing this I realized I'd used `malloc` instead of `calloc` to allocate the entries array, which may not have set the keys to NULL.
+Beware: this is a teaching tool and not a library, so it's not very well tested. I would advise against using it without a bunch of further testing, checking edge cases, etc. Remember, this is unsafe C we're dealing with. Even while writing this I realized I'd used `malloc` instead of `calloc` to allocate the entries array, which may not set the keys to NULL.
 
-As I mentioned, I wanted to keep the implementation simple, and wasn't too worried about performance. However, a quick performance comparison with Go's `map` implementation shows that it fares pretty well -- it's about X times as fast (TODO). Speaking of Go and hash tables, it's even easier to write custom hash tables in Go, because you don't have to worry about memory allocation and freeing. I recently wrote a [counter](https://github.com/benhoyt/counter) package in Go which implements a similar kind of hash table.
+As I mentioned, I wanted to keep the implementation simple, and wasn't too worried about performance. However, a quick, non-scientific performance comparison with Go's `map` implementation shows that it fares pretty well -- with one million items, this C version is about [30% faster for lookup](https://github.com/benhoyt/ht/blob/master/samples/perfget.c) and [20% slower for insertion](https://github.com/benhoyt/ht/blob/master/samples/perfset.c).
 
-There's obviously a lot more you could do with the C version. You could focus on safety and reliability by doing various kinds of testing. You could focus on performance, and reduce memory allocations, use a ["bump allocator"](https://os.phil-opp.com/allocator-designs/#bump-allocator) for the duplicated keys, store short keys inside each item struct, and so on. You could improve the memory usage, and tune `_ht_expand` to not double in size every time. Or you could add features like item removal.
+Speaking of Go and hash tables, it's even easier to write custom hash tables in languages like Go, because you don't have to worry so much about memory allocation and freeing. I recently wrote a [counter](https://github.com/benhoyt/counter) package in Go which implements a similar kind of hash table.
 
-In any case, I hope you've enjoyed this, and maybe even learned something. If you can spot any bugs or have any feedback, please let me know!
+There's obviously a lot more you could do with the C version. You could focus on safety and reliability by doing various kinds of testing. You could focus on performance, and reduce memory allocations, use a ["bump allocator"](https://os.phil-opp.com/allocator-designs/#bump-allocator) for the duplicated keys, store short keys inside each item struct, and so on. You could improve the memory usage, and tune `_ht_expand` to not double in size every time. Or you could add features such as item removal.
+
+In any case, I hope you've enjoyed this, and maybe even learned something. If you spot any bugs or have any feedback, please let me know!
