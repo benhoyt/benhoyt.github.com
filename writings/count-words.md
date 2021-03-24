@@ -1110,7 +1110,9 @@ We could fix that with something like `awk '{ print $2, $1 }'`, but then we're u
 
 ## Other languages
 
-Many readers contributed to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages -- thank you! Here's the list:
+Many readers contributed to the [`benhoyt/countwords`](https://github.com/benhoyt/countwords) repository to add other popular languages -- thank you! (Note that I'm no longer taking new contributions.)
+
+Here's the list:
 
 * Bash: [Jesse Hathaway](https://github.com/lollipopman) - not included in benchmarks as it takes over 2 minutes
 * C#: [John Taylor](https://github.com/jftuga), [Yuriy Ostapenko](https://github.com/uncleyo) and [Osman Turan](https://github.com/osman-turan)
