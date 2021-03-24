@@ -1,22 +1,27 @@
 ---
 layout: default
-title: "How to make a hash table (in C)"
-permalink: /writings/how-to-make-a-hash-table/
-description: "An explanation of how to make a simple hash table data structure, with code examples in the C programming language."
+title: "How to implement a hash table (in C)"
+permalink: /writings/hash-table-in-c/
+description: "An explanation of how to implement a simple hash table data structure, with code examples in the C programming language."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2021</p>
 
-**WORK-IN-PROGRESS DRAFT**
-
 <!--
 TODO:
-- shrink horizontal spacing on tables?
+- if I got help from codereview, link to:
+  https://codereview.stackexchange.com/questions/257634/hash-table-implemented-in-c-with-open-addressing
 - ensure code snippets are up to date
-- stats: average probe length, etc
 -->
 
-> Summary: An explanation of how to make a simple hash table data structure using the C programming language. My goal is to show that hash tables -- apart from being a great data structure -- are simple to build from scratch.
+<style>
+th, td { padding-right: 0.9em; }
+</style>
+
+> Summary: An explanation of how to implement a simple hash table data structure using the C programming language. I briefly demonstrate linear and binary search, and then design and implement a hash table. My goal is to show that hash table internals are not scary, but -- within certain constraints -- are simple to build from scratch.
+>
+> **Go to:** [Linear search](#linear-search) \| [Binary search](#binary-search) \| [Hash tables](#hash-tables) \| [Implementation](#hash-table-implementation) \| [Discussion](#discussion)
+
 
 Recently I wrote an [article that compared](/writings/count-words/) a simple program that counts word frequencies across various languages, and one of the things that came up was how C doesn't have a hash table data structure in its standard library.
 
@@ -25,16 +30,16 @@ There are many things you can do when you realize this: use linear search, use b
 
 ## Linear search
 
-The simplest option is to use [linear search](https://en.wikipedia.org/wiki/Linear_search) to scan through an array. This is actually not a bad strategy if you've only got a few items -- in my [simple tests](https://github.com/benhoyt/ht/blob/master/samples/perflbh.c) it's faster than a hash table lookup up to about 7 items (but unless your program is very performance-sensitive, it's probably fine up to 20 or 30 items). Linear search also allows you to append new items to the end of the array. With this type of search you're comparing an average of N/2 items.
+The simplest option is to use [linear search](https://en.wikipedia.org/wiki/Linear_search) to scan through an array. This is actually not a bad strategy if you've only got a few items -- in my [simple comparison](https://github.com/benhoyt/ht/blob/master/samples/perflbh.c) using strings, it's faster than a hash table lookup up to about 7 items (but unless your program is very performance-sensitive, it's probably fine up to 20 or 30 items). Linear search also allows you to append new items to the end of the array. With this type of search you're comparing an average of N/2 items.
 
-Let's say you're searching for the key `bob` in the following array (each item is a key string with an associated integer value):
+Let's say you're searching for the key `bob` in the following array (each item is a string key with an associated integer value):
 
 | --------- | ----- | ----- | ------ | ------ | ----- | ------ | --- |
 | **Index** | 0     |     1 |      2 |      3 |     4 |      5 |   6 |
 | **Key**   | `foo` | `bar` | `bazz` | `buzz` | `bob` | `jane` | `x` |
 | **Value** | 10    | 42    | 36     | 7      | 11    | 100    | 200 |
 
-You simply start at the beginning (`foo`) and compare each key. If they key matches what you're looking for, you've found it. If not, you move to the next slot. Searching for `bob` takes five steps (indexes 0 through 4) and then you're done.
+You simply start at the beginning (`foo` at index 0) and compare each key. If the key matches what you're looking for, you're done. If not, you move to the next slot. Searching for `bob` takes five steps (indexes 0 through 4).
 
 Here is the algorithm in C (assuming each array item is a string key and integer value):
 
@@ -84,7 +89,7 @@ This time the array must be pre-sorted. Assume we're looking up `bob` again:
 
 With binary search, we start in the middle (`buzz`), and if the key there is greater than what we're looking for, we repeat the process with the lower half, if it's greater, we repeat the process with the higher half. In this case it results in three steps, at indexes 3, 1, 2, and then we have it.
 
-Here's how you'd do it in C (with and without `bsearch`):
+Here's how you'd do it in C (with and without `bsearch`). The definition of the `item` struct is the same as above.
 
 ```c
 int cmp(const void* a, const void* b) {
@@ -96,9 +101,8 @@ int cmp(const void* a, const void* b) {
 item* binary_search(item* items, size_t size, const char* key) {
     size_t low = 0;
     size_t high = size;
-
     while (low < high) {
-        size_t mid = (low+high) / 2;
+        size_t mid = (low + high) / 2;
         int c = strcmp(items[mid].key, key);
         if (c == 0) {
             return &items[mid];
@@ -123,13 +127,13 @@ int main(void) {
 
     item key = {"bob", 0};
     item* found = bsearch(&key, items, num_items, sizeof(item), cmp);
-    if (!found) {
+    if (found == NULL) {
         return 1;
     }
     printf("bsearch: value of 'bob' is %d\n", found->value);
 
     found = binary_search(items, num_items, "bob");
-    if (!found) {
+    if (found == NULL) {
         return 1;
     }
     printf("binary_search: value of 'bob' is %d\n", found->value);
@@ -138,13 +142,13 @@ int main(void) {
 ```
 
 
-## Hash tables (with linear probing)
+## Hash tables
 
 [Hash tables](https://en.wikipedia.org/wiki/Hash_table) can seem quite scary: there are a lot of different types, and a ton of different optimizations you can do. However, if you use a simple hash function with what's called "linear probing" you can create a decent hash table quite easily.
 
-If you don't know how a hash table works, here's a quick refresher. A hash tables is a container data structure that allows you to quickly look up a key (usually a string) to find its corresponding value (any data type). Under the hood, they're arrays that are indexed by a hash function of the key.
+If you don't know how a hash table works, here's a quick refresher. A hash tables is a container data structure that allows you to quickly look up a key (often a string) to find its corresponding value (any data type). Under the hood, they're arrays that are indexed by a hash function of the key.
 
-A hash function turns a key into a random-looking number, and it must always return the same number for the same key. For example, with the hash function we're going to use (64-bit [FNV-1](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash)), the hashes of the keys above are as follows:
+A hash function turns a key into a random-looking number, and it must always return the same number given the same key. For example, with the hash function we're going to use (64-bit [FNV-1](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash)), the hashes of the keys above are as follows:
 
 <!-- To calculate hashes, see: https://play.golang.org/p/bik3FSiGVJJ -->
 
@@ -160,42 +164,44 @@ A hash function turns a key into a random-looking number, and it must always ret
 
 The reason I've shown the hash modulo 16 is because we're going to start with an array of 16 elements, so we need to limit the hash to the number of elements in the array -- the [modulo](https://en.wikipedia.org/wiki/Modulo_operation) operation divides by 16 and gives the remainder, limiting the hash to the range 0 through 15.
 
-When we insert a value into the hash table, we calculate its hash, modulo by 16, and use that as the array index. So with an array of size 16, we'd insert `bar` at index 0, `bazz` at 2, `bob` at 10, and so on. Let's see what our hash table array looks like once those keys and values have been added:
+When we insert a value into the hash table, we calculate its hash, modulo by 16, and use that as the array index. So with an array of size 16, we'd insert `bar` at index 0, `bazz` at 2, `bob` at 10, and so on. Let's see what our hash table array looks like once those keys and values have been added -- note that their order has been shuffled around:
 
-| - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| **Index** | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 |
-| **Key**   | `bar` | `.` | `bazz` | `foo` | `.` | `.` | `.` | `x` | `.` | `jane` | `bob` | `.` | `.` | `.` | `buzz` | `.` |
-| **Value** | 42    | `.` | 36     | 10    | `.` | `.` | `.` | 200 | `.` | 100    | 11    | `.` | `.` | `.` | 7      | `.` |
+| --------- | ----- | - | ------ | ----- | - | - | - | --- | - | ------ | ----- | -- | -- | -- | ------ | -- |
+| **Index** | 0     | 1 | 2      | 3     | 4 | 5 | 6 | 7   | 8 | 9      | 10    | 11 | 12 | 13 | 14     | 15 |
+| **Key**   | `bar` | . | `bazz` | `foo` | . | . | . | `x` | . | `jane` | `bob` | .  | .  | .  | `buzz` | .  |
+| **Value** | 42    | . | 36     | 10    | . | . | . | 200 | . | 100    | 11    | .  | .  | .  | 7      | .  |
 
 To look up a value, we simply fetch `array[hash(key) % 16]`.
 
-But what if two keys hash to the same value (after the modulo 16)? Depending on the size of the array, this is fairly common. For example, if we try to add `bill` to the array above, its hash modulo 16 is 14. But we already have `buzz` at index 14, so we get a *collision*.
+But what if two keys hash to the same value (after the modulo 16)? Depending on the hash function and the size of the array, this is fairly common. For example, if we try to add `bill` to the array above, its hash modulo 16 is 14. But we already have `buzz` at index 14, so we get a *collision*.
 
-There are various ways of handling collisions. Traditionally you'd create a hash array of a certain size, and if there was a collision, you'd use a [linked list](https://en.wikipedia.org/wiki/Linked_list) to store the values that hashed to the same index. However, linked lists normally require an extra memory allocation when you add an item, and traversing them means following pointers around your memory, which is [relatively slow](https://baptiste-wicht.com/posts/2012/11/cpp-benchmark-vector-vs-list.html) on modern CPUs.
+There are various ways of handling collisions. Traditionally you'd create a hash array of a certain size, and if there was a collision, you'd use a [linked list](https://en.wikipedia.org/wiki/Linked_list) to store the values that hashed to the same index. However, linked lists normally require an extra memory allocation when you add an item, and traversing them means following pointers scattered around in memory, which is [relatively slow](https://baptiste-wicht.com/posts/2012/11/cpp-benchmark-vector-vs-list.html) on modern CPUs.
 
-A simpler and faster way of dealing with collisions is *linear probing*: if we're trying to insert an item but there's one already there, simply move to the next slot, wrapping around to the beginning if you hit the end. If the next slot is full too, move along again, until you find an empty one. (There are [other ways](https://en.wikipedia.org/wiki/Open_addressing) of probing than just moving to the next slot, but that's beyond the scope of this article.) This technique is a lot faster than linked lists, because your CPU's cache has probably fetched the next items already.
+A simpler and faster way of dealing with collisions is *linear probing*: if we're trying to insert an item but there's one already there, simply move to the next slot. If the next slot is full too, move along again, until you find an empty one, wrapping around to the beginning if you hit the end of the array. (There are [other ways](https://en.wikipedia.org/wiki/Open_addressing) of probing than just moving to the next slot, but that's beyond the scope of this article.) This technique is a lot faster than linked lists, because your CPU's cache has probably fetched the next items already.
 
 Here's what the hash table array looks like after adding "collision" `bill` (with value 25). We try index 14 first, but that's holding `buzz`, so we move to index 15, and that's empty, so we insert it there:
 
-| - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| **Index** | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | **15** |
-| **Key**   | `bar` | `.` | `bazz` | `foo` | `.` | `.` | `.` | `x` | `.` | `jane` | `bob` | `.` | `.` | `.` | `buzz` | **`bill`** |
-| **Value** | 42    | `.` | 36     | 10    | `.` | `.` | `.` | 200 | `.` | 100    | 11    | `.` | `.` | `.` | 7      | **25**     |
+| --------- | ----- | - | ------ | ----- | - | - | - | --- | - | ------ | ----- | -- | -- | -- | ------ | ---------- |
+| **Index** | 0     | 1 | 2      | 3     | 4 | 5 | 6 | 7   | 8 | 9      | 10    | 11 | 12 | 13 | 14     | **15**     |
+| **Key**   | `bar` | . | `bazz` | `foo` | . | . | . | `x` | . | `jane` | `bob` | .  | .  | .  | `buzz` | **`bill`** |
+| **Value** | 42    | . | 36     | 10    | . | . | . | 200 | . | 100    | 11    | .  | .  | .  | 7      | **25**     |
 
 When the hash table gets too full, we need to allocate a larger array and move the items over. This is absolutely required when the number of items in the hash table has reached the size of the array, but usually you want to do it when the table is half or three-quarters full. If you don't resize it early enough, collisions will become more and more common, and lookups and inserts will get slower and slower. If you wait till it's almost full, you're essentially back to linear search.
 
-This kind of hash table requires an average of one operation per lookup, plus the time to hash the key (but often the keys are relatively short string).
+With a good hash function, this kind of hash table requires an average of one operation per lookup, plus the time to hash the key (but often the keys are relatively short string).
 
 And that's it! There's a huge amount more you can do here, and this just scratches the surface. I'm not going to go into a scientific analysis of [big O notation](https://en.wikipedia.org/wiki/Big_O_notation), optimal array sizes, different kinds of probing, and so on. Read Donald Knuth's [TAOCP](https://www-cs-faculty.stanford.edu/~knuth/taocp.html) if you want that level of detail!
 
 
 ## Hash table implementation
 
+You can find the code for this implementation in the [benhoyt/ht](https://github.com/benhoyt/ht) repo on GitHub, in [ht.h](https://github.com/benhoyt/ht/blob/master/ht.h) and [ht.c](https://github.com/benhoyt/ht/blob/master/ht.c). For what it's worth, all the code is released under a permissive MIT license.
+
 ### API design
 
-First let's consider what API we want: we need a way to create and destroy a hash table, get the value for a given key, set a value for a given key, get the number of items, and iterate over the items. I'm not aiming for a maximum-efficiency API, but one that is reasonably fast and fairly simple to use:
+First let's consider what API we want: we need a way to create and destroy a hash table, get the value for a given key, set a value for a given key, get the number of items, and iterate over the items. I'm not aiming for a maximum-efficiency API, but one that fairly simple to implement.
 
-After a couple of iterations, I settled on the following (see [ht.h](https://github.com/benhoyt/ht/blob/master/ht.h)):
+After a couple of iterations, I settled on the following functions and structs (see [ht.h](https://github.com/benhoyt/ht/blob/master/ht.h)):
 
 ```c
 // Create new hash table and return pointer to it, or NULL if out of
@@ -255,7 +261,8 @@ A few notes about this API design:
 
 * For simplicity, we use C-style NUL-terminated strings. I know there are more efficient approaches to string handling, but this fits with C's standard library.
 * The `ht_set` function allocates and copies the key (if inserting for the first time). Usually you don't want the caller to have to worry about this, or ensuring the key memory stays around. Note that `ht_set` returns a pointer to the duplicated key. This is mainly used as an "out of memory" error signal -- it returns NULL on failure.
-* Values can't be NULL. This makes the signature of `ht_get` slightly simpler.
+* However, `ht_set` does not copy the value. It's up to the caller to ensure that the value pointer is valid for the lifetime of the hash table.
+* Values can't be NULL. This makes the signature of `ht_get` slightly simpler, as you don't have to distinguish between a NULL value and one that hasn't been set at all.
 * The `ht_length` function isn't strictly necessary, as you can find the length by iterating the table. However, that's a bit of a pain (and slow), so it's useful to have `ht_length`.
 * There are various ways I could have done iteration. Using an explicit iterator type with a while loop seems simple and natural in C (see the example below). The value returned from `ht_iterator` is a value, not a pointer, both for efficiency and so the caller doesn't have to free anything.
 * There's no `ht_remove` to remove an item from the hash table. It wouldn't be hard to write, but I don't often need to remove items when using a hash table, so for simplicity I've left it out.
@@ -321,18 +328,18 @@ int main(void) {
 }
 ```
 
-Now, let's turn to the implementation.
+Now let's turn to the hash table implementation ([ht.c](https://github.com/benhoyt/ht/blob/master/ht.c)).
 
 ### Create and destroy
 
-Allocating a new hash table is fairly straight-forward. We start with an initial size of 8 -- which means 16 slots in our `_entries` array (this size is stored in `_capacity`). There are two allocations, one for the hash table struct itself, and one for the entries array. Note that we use `calloc` for the entries array, to ensure all the keys are NULL to start with, meaning all slots are empty.
+Allocating a new hash table is fairly straight-forward. We start with an initial size of 8 -- which means 16 slots in our `_entries` array (this is stored in `_capacity`). There are two allocations, one for the hash table struct itself, and one for the entries array. Note that we use `calloc` for the entries array, to ensure all the keys are NULL to start with, meaning all slots are empty.
 
 The `ht_destroy` function frees this memory, but also frees memory from the duplicated keys that were allocated along the way (more on that below).
 
 ```c
 #define INITIAL_SIZE 8
 
-ht* _ht_create(size_t size) {
+static ht* _ht_create(size_t size) {
     // Allocate space for hash table struct.
     ht* table = malloc(sizeof(ht));
     if (table == NULL) {
@@ -370,7 +377,7 @@ void ht_destroy(ht* table) {
 
 ### Hash function
 
-Next we define our hash function, which is a straight-forward C implementation of the [FNV-1 hash algorithm](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash). Note that FNV is not a randomized or cryptographic hash function, so it's possible for an attacker to create keys with a lot of collisions and cause lookups to essentially be linear search -- Python [switched away](https://www.python.org/dev/peps/pep-0456/) from FNV for this reason. For our use case, however, FNV is simple and fast.
+Next we define our hash function, which is a straight-forward C implementation of the [FNV-1 hash algorithm](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1_hash). Note that FNV is not a randomized or cryptographic hash function, so it's possible for an attacker to create keys with a lot of collisions and cause lookups to slow way down -- Python [switched away](https://www.python.org/dev/peps/pep-0456/) from FNV for this reason. For our use case, however, FNV is simple and fast.
 
 As far as the algorithm goes, FNV simply starts the hash with an "offset" constant, and for each byte in the string, multiplies the hash by a big prime number and then XORs it with the current byte. The offset and prime are carefully chosen by people with PhDs.
 
@@ -396,7 +403,7 @@ static uint64_t _hash(const char* key) {
 
 Next let's look at the `ht_get` function. First it calculates the hash, modulo the `_capacity` (the size of the entries array), which is done by ANDing with `_capacity - 1`. This is only possible because, as we'll see below, we're ensuring our array size is always a power of two, for simplicity.
 
-Then we loop till we find an empty slot, in which case we didn't find the key. For each non-empty slot, we use `strcmp` to check whether the key at this slot is the one we're looking for (it'll be the first one unless there was a collision). If not, we move along one slot.
+Then we loop till we find an empty slot, in which case we didn't find the key. For each non-empty slot, we use `strcmp` to check whether the key at this slot is the one we're looking for (it'll be the first one unless there had been a collision). If not, we move along one slot.
 
 ```c
 void* ht_get(ht* table, const char* key) {
@@ -425,7 +432,7 @@ void* ht_get(ht* table, const char* key) {
 
 The `ht_set` function is slightly more complicated, because it has to expand the table if there are too many elements. In our implementation, we double the capacity whenever it gets to be half full. This is a little wasteful of memory, but it keeps things very simple.
 
-First, the `ht_set` function -- apart from the call to `_ht_expand`, it's very similar in structure to `ht_get`:
+First, the `ht_set` function. Apart from the call to `_ht_expand`, it's very similar in structure to `ht_get`:
 
 ```c
 const char* ht_set(ht* table, const char* key, void* value) {
@@ -476,7 +483,7 @@ const char* ht_set(ht* table, const char* key, void* value) {
 
 Note the `strdup` at the end, to allocate space for and copy the key. We also increment `_length` to record that we've inserted a new item (this allows the `ht_length` implementation to trivially return `ht->_length`).
 
-What about the `_ht_expand` helper function? It does a bit of a trick: it uses `ht_create` to create a new hash table with twice the capacity, so that we can insert all the table's items into the new table. However, the trick is we then use the new table `_entries` array for the existing table, but throw away the new table struct itself. This is slightly inefficient, but allows us to reuse `ht_set` to insert the keys (the second call to `ht_set` will never call `_ht_expand`, because we've just doubled the capacity). Here is the code:
+What about the `_ht_expand` helper function? It does a bit of a trick: it uses `ht_create` to create a new hash table with twice the capacity, so that we can insert all the table's items into the new table. However, the trick is we then use the new table's `_entries` array for the existing table, but throw away the new table struct itself. This is slightly inefficient, but allows us to reuse `ht_set` to insert the keys (the second call to `ht_set` will never call `_ht_expand`, because we've just doubled the capacity). Here is the code:
 
 ```c
 // Expand hash table to twice its current size. Return true on success,
@@ -513,7 +520,7 @@ static bool _ht_expand(ht* table) {
 
 ### Length and iteration
 
-The `ht_length` function in trivial -- we update the number of items in `_length` as we go, so just return that:
+The `ht_length` function is trivial -- we update the number of items in `_length` as we go, so just return that:
 
 ```c
 size_t ht_length(ht* table) {
@@ -552,14 +559,18 @@ bool ht_next(hti* it) {
 
 ## Discussion
 
-That's it -- the implementation ([ht.c](https://github.com/benhoyt/ht/blob/master/ht.c)) is less than 200 lines of code, including blank lines and comments.
+That's it -- the implementation in [ht.c](https://github.com/benhoyt/ht/blob/master/ht.c) is less than 200 lines of code, including blank lines and comments.
 
-Beware: this is a teaching tool and not a library, so it's not very well tested. I would advise against using it without a bunch of further testing, checking edge cases, etc. Remember, this is unsafe C we're dealing with. Even while writing this I realized I'd used `malloc` instead of `calloc` to allocate the entries array, which may not set the keys to NULL.
+Beware: this is a teaching tool and not a library, so it's not very well tested. I would advise against using it without a bunch of further testing, checking edge cases, etc. Remember, this is unsafe C we're dealing with. Even while writing this I realized I'd used `malloc` instead of `calloc` to allocate the entries array, which meant the keys may not have been initialized to NULL.
 
-As I mentioned, I wanted to keep the implementation simple, and wasn't too worried about performance. However, a quick, non-scientific performance comparison with Go's `map` implementation shows that it fares pretty well -- with one million items, this C version is about [30% faster for lookup](https://github.com/benhoyt/ht/blob/master/samples/perfget.c) and [20% slower for insertion](https://github.com/benhoyt/ht/blob/master/samples/perfset.c).
+As I mentioned, I wanted to keep the implementation simple, and wasn't too worried about performance. However, a quick, non-scientific performance comparison with Go's `map` implementation shows that it fares pretty well -- with half a million English words, this C version is [about the same speed for lookup](https://github.com/benhoyt/ht/blob/master/samples/perfget.c) and [40% faster for insertion](https://github.com/benhoyt/ht/blob/master/samples/perfset.c).
 
-Speaking of Go and hash tables, it's even easier to write custom hash tables in languages like Go, because you don't have to worry so much about memory allocation and freeing. I recently wrote a [counter](https://github.com/benhoyt/counter) package in Go which implements a similar kind of hash table.
+Speaking of Go and hash tables, it's even easier to write custom hash tables in a language like Go, because you don't have to worry about handling memory allocation errors or freeing allocated memory. I recently wrote a [counter](https://github.com/benhoyt/counter) package in Go which implements a similar kind of hash table.
+
+I won't be doing a detailed analysis here, but I have included a little [statistics program](https://github.com/benhoyt/ht/blob/master/samples/stats.c) that prints the average probe length of the hash table created from the unique words in the input. The FNV-1 hash algorithm we're using seems to work pretty well on the list of English words (average probe length 1.4), but not so well with a lot of very similar keys (average probe length 5.0) -- I tested the latter by [generating](https://github.com/benhoyt/ht/blob/master/samples/gensimilar.py) a file with the same number of similar "words" like `word1`, `word2`, `word3`, and so on.
 
 There's obviously a lot more you could do with the C version. You could focus on safety and reliability by doing various kinds of testing. You could focus on performance, and reduce memory allocations, use a ["bump allocator"](https://os.phil-opp.com/allocator-designs/#bump-allocator) for the duplicated keys, store short keys inside each item struct, and so on. You could improve the memory usage, and tune `_ht_expand` to not double in size every time. Or you could add features such as item removal.
 
-In any case, I hope you've enjoyed this, and maybe even learned something. If you spot any bugs or have any feedback, please let me know!
+After I'd finished writing this, I remembered that Bob Nystrom's excellent [*Crafting Intepreters*](https://craftinginterpreters.com/) book has a [chapter on hash tables](https://craftinginterpreters.com/hash-tables.html). He makes some similar design choices, though his chapter is significantly more in-depth than this article. If I'd remembered his book before I started, I probably wouldn't have written this one! Put another way, if you liked this, you'll definitely appreciate Bob's chapter (and book).
+
+In any case, I hope you've found this useful or interesting. If you spot any bugs or have any feedback, please let me know!
