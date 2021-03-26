@@ -8,8 +8,16 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>How to implement a hash table (in C)</title>
+  <description>An explanation of how to implement a simple hash table data structure, with code and examples in the C programming language.</description>
+  <link>https://benhoyt.com/writings/hash-table-in-c/</link>
+  <guid>https://benhoyt.com/writings/hash-table-in-c/</guid>
+  <pubDate>Fri, 26 Mar 2021 20:30:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Performance comparison: counting words in Python, Go, C++, C, AWK, Forth, and Rust</title>
-  <description>Performance comparison of counting and sorting word frequencies in various languages (Python, Go, C++, C, AWK, Forth, Rust, and others)</description>
+  <description>Performance comparison of counting and sorting word frequencies in various languages (Python, Go, C++, C, AWK, Forth, Rust, and others).</description>
   <link>https://benhoyt.com/writings/count-words/</link>
   <guid>https://benhoyt.com/writings/count-words/</guid>
   <pubDate>Mon, 15 Mar 2021 20:30:00 +1300</pubDate>
