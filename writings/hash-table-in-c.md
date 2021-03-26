@@ -141,7 +141,7 @@ int main(void) {
 
 ## Hash tables
 
-[Hash tables](https://en.wikipedia.org/wiki/Hash_table) can seem quite scary: there are a lot of different types, and a ton of different optimizations you can do. However, if you use a simple hash function with what's called "linear probing" you can create a decent hash table quite easily.
+[Hash tables](https://en.wikipedia.org/wiki/Hash_table) can seem quite scary: there are a lot of different types, and a ton of different optimizations you can do. However, if you use a simple hash function together with what's called "linear probing" you can create a decent hash table quite easily.
 
 If you don't know how a hash table works, here's a quick refresher. A hash table is a container data structure that allows you to quickly look up a key (often a string) to find its corresponding value (any data type). Under the hood, they're arrays that are indexed by a hash function of the key.
 
@@ -227,12 +227,12 @@ size_t ht_length(ht* table);
 
 // Hash table iterator: create with ht_iterator, iterate with ht_next.
 typedef struct {
-    char* key;      // current key
-    void* value;    // current value
+    const char* key;  // current key
+    void* value;      // current value
 
     // Don't use these fields directly.
-    ht* _table;     // reference to hash table being iterated
-    size_t _index;  // current index into ht._entries
+    ht* _table;       // reference to hash table being iterated
+    size_t _index;    // current index into ht._entries
 } hti;
 
 // Return new hash table iterator (for use with ht_next).
@@ -326,7 +326,7 @@ The `ht_destroy` function frees this memory, but also frees memory from the dupl
 ```c
 // Hash table entry (slot may be filled or empty).
 typedef struct {
-    char* key;  // key is NULL if this slot is empty
+    const char* key;  // key is NULL if this slot is empty
     void* value;
 } ht_entry;
 
@@ -361,7 +361,7 @@ void ht_destroy(ht* table) {
     // First free allocated keys.
     for (size_t i = 0; i < table->capacity; i++) {
         if (table->entries[i].key != NULL) {
-            free(table->entries[i].key);
+            free((void*)table->entries[i].key);
         }
     }
 
@@ -579,4 +579,4 @@ There's obviously a lot more you could do with the C version. You could focus on
 
 After I'd finished writing this, I remembered that Bob Nystrom's excellent [*Crafting Intepreters*](https://craftinginterpreters.com/) book has a [chapter on hash tables](https://craftinginterpreters.com/hash-tables.html). He makes some similar design choices, though his chapter is significantly more in-depth than this article. If I'd remembered his chapter before I started, I probably wouldn't have written this one!
 
-In any case, I hope you've found this useful or interesting. If you spot any bugs or have any feedback, please let me know.
+In any case, I hope you've found this useful or interesting. If you spot any bugs or have any feedback, please let me know. You can also go to the discussions on [Hacker News](https://news.ycombinator.com/item?id=26590234), [programming Reddit](https://www.reddit.com/r/programming/comments/mdkzli/how_to_implement_a_hash_table_in_c/), and [Lobsters](https://lobste.rs/s/6v0vxq/how_implement_hash_table_c).
