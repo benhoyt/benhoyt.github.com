@@ -136,6 +136,8 @@ int main(void) {
 }
 ```
 
+Note: in `binary_search`, it would be slightly better to avoid the up-front "half size overflow check" and allow the entire range of `size_t`. This would mean changing the `mid` calculation to `low + (high-low)/2`. However, I'm going to leave the code stand for educational purposes -- with the initial overflow check, I don't think there's a bug, but it is non-ideal that I'm only allowing half the range of `size_t`. Not that I'll be searching a 16 exabyte array on my 64-bit system anytime soon! For further reading, see the article [*Nearly All Binary Searches and Mergesorts are Broken*](https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html). Thanks Seth Arnold and Olaf Seibert for the feedback.
+
 
 ## Hash tables
 
