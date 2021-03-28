@@ -569,7 +569,7 @@ bool ht_next(hti* it) {
 
 That's it -- the implementation in [ht.c](https://github.com/benhoyt/ht/blob/master/ht.c) is only about 200 lines of code, including blank lines and comments.
 
-Beware: this is a teaching tool and not a library, so it's not very well tested. I would advise against using it without a bunch of further testing, checking edge cases, etc. Remember, this is unsafe C we're dealing with. Even while writing this I realized I'd used `malloc` instead of `calloc` to allocate the entries array, which meant the keys may not have been initialized to NULL.
+Beware: this is a teaching tool and not a library, so I encourage you to play with it and let me know about any bugs I haven't found! I would advise against using it without a bunch of further testing, checking edge cases, etc. Remember, this is unsafe C we're dealing with. Even while writing this I realized I'd used `malloc` instead of `calloc` to allocate the entries array, which meant the keys may not have been initialized to NULL.
 
 As I mentioned, I wanted to keep the implementation simple, and wasn't too worried about performance. However, a quick, non-scientific [performance comparison](https://github.com/benhoyt/ht/blob/master/samples/perftest.sh) with Go's `map` implementation shows that it compares pretty well -- with half a million English words, this C version is about 50% slower for [lookups](https://github.com/benhoyt/ht/blob/master/samples/perfget.c) and 40% faster for [insertion](https://github.com/benhoyt/ht/blob/master/samples/perfset.c).
 
