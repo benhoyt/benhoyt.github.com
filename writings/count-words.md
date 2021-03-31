@@ -134,16 +134,15 @@ We can see a number of things here:
 
 The main thing we need to do is reduce the number of times around the main Python loop, and hence reduce the number of calls to all those functions. So let's read it in 64KB chunks:
 
-[**optimized.py**](https://github.com/benhoyt/countwords/blob/c66dd01d868aa83dc30a9c95226575df1e5e1c5a/optimized.py)
+[**optimized.py**](https://github.com/benhoyt/countwords/blob/5318b1acdd5bd313039d480af535cf79565c2e62/optimized.py)
 
 ```python
 counts = collections.Counter()
 remaining = ''
 while True:
-    chunk = sys.stdin.read(64*1024)
+    chunk = remaining + sys.stdin.read(64*1024)
     if not chunk:
         break
-    chunk = remaining + chunk
     last_lf = chunk.rfind('\n')  # process to last LF character
     if last_lf == -1:
         remaining = ''
@@ -631,7 +630,7 @@ int main() {
     while (1) {
         // Read file in chunks, processing one chunk at a time.
         size_t num_read = fread(buf+offset, 1, BUF_SIZE-offset, stdin);
-        if (num_read == 0) {
+        if (num_read+offset == 0) {
             break;
         }
 
