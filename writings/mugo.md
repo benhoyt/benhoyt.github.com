@@ -7,15 +7,11 @@ description: "Mugo is a single-pass compiler for a tiny subset of the Go program
 <h1>{{ page.title }}</h1>
 <p class="subtitle">April 2021</p>
 
-<!--
-TODO:
-* proof, link check
-* make GitHub repo public and update README: https://github.com/benhoyt/mugo
--->
 
 > Summary: This article presents Mugo, a single-pass compiler for a tiny subset of the Go programming language. It outputs (very naive) x86-64 assembly, and supports just enough of the language to implement a Mugo compiler: `int` and `string` types, slices, functions, locals, globals, and basic expressions and statements.
 >
 > **Go to:** [Which subset?](#which-subset-of-go) \| [Codegen](#code-generation) \| [Lexer and Parser](#lexer-and-parser) \| [Performance](#performance) \| [Related projects](#related-projects)
+
 
 I've been fascinated with compilers since I started coding. One of my first programming projects was ["Third"](https://github.com/benhoyt/third), a self-hosted [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) compiler for 8086 DOS. Forth is incredibly easy to compile: there are no expressions or statements, and each space-separated token gets compiled directly to a call instruction -- often via techniques like [direct threading](https://en.wikipedia.org/wiki/Threaded_code#Direct_threading).
 
@@ -57,7 +53,7 @@ I consulted the nice and concise [Go language spec](https://golang.org/ref/spec)
 
 ## Code generation
 
-Mugo is a single-pass compiler that outputs x86-64 assembly from the parser as it goes. There's no in-memory abstract syntax tree -- it would be tricky to build that with only slices in any case.
+Mugo is a single-pass compiler that outputs x86-64 assembly from the parser as it goes. (It's written for Linux, but it wouldn't be hard to get it working on macOS or Windows.) There's no in-memory abstract syntax tree -- it would be tricky to build that with only slices in any case.
 
 It's also very naive. There's no optimization -- I basically turn my powerful register-based CPU into a dumb stack machine, and `push` and `pop` intermediate values and return values to and from the stack. Probably half the complexity of a real compiler is in the code generation -- the other half is in the type checking -- and both of those things are incredibly simplified in Mugo.
 
@@ -356,36 +352,39 @@ But Mugo doesn't support structs, or slices of slices, so I had to stuff these f
 
 ## Performance
 
-With no optimization, Mugo is obviously going to be a lot slower than Go, so I'm not going to do extensive performance testing. But just for fun, I wrote a [little program](https://github.com/benhoyt/mugo/blob/master/examples/perfloop.go) to test the performance of a basic loop with some integer arithmetic -- it sums the numbers from zero up to one billion:
+Because it does no optimization, Mugo is obviously going to be a lot slower than Go, so I'm not going to do extensive performance testing. But just for fun, I wrote a [little program](https://github.com/benhoyt/mugo/blob/master/examples/perfloop.go) to test the performance of a basic loop with some integer arithmetic -- it sums the numbers from zero up to one billion:
 
 ```go
 var (
-    sum int // global so Go doesn't optimize it out TODO - hmm, it doesn't
+    result int
 )
 
 func main() {
+    sum := 0
     i := 0
     for i < 1000000000 {
         sum = sum + i
         i = i + 1
     }
+    result = sum // so Go doesn't optimize it out
 }
 ```
 
-On my machine, the Go version of this runs in 1.78 seconds. The Mugo version runs in 5.81 seconds -- just over three times as long. Not bad for some of the worst assembly code I've ever seen ... I guess modern x86 chips do pretty well with sequences of `push` and `pop` instructions!
+On my machine, the Go version of this runs in 0.34 seconds. The Mugo version runs in 5.7 seconds -- about 17 times as long. I guess it's not bad for some of the worst assembly code ever produced. For reference, a [Python version](https://github.com/benhoyt/mugo/blob/master/examples/perfloop.py) of this same loop runs in 1 minute and 38 seconds ... a dynamically-typed bytecode interpreter is not a good choice for heavy integer arithmetic.
 
-Another interesting thing about Mugo is code size: the executables it builds are *much* smaller than those built with Go. The Mugo binary built with Go is 1.6MB. Mugo built with Mugo is only 56KB -- about 1/29th as big! Of course, it's not exactly a fair fight -- Mugo doesn't build in a goroutine scheduler, garbage collector, or runtime type information. (See the [Go FAQ question](https://golang.org/doc/faq#Why_is_my_trivial_program_such_a_large_binary) on why trivial Go binaries are so large.)
+Interestingly, if I make `sum` itself a global variable instead of a local, the Mugo version is unchanged, but the Go version runs in 1.7 seconds instead of 0.34. I suspect a big part of the reason Mugo is so much slower is it's doing everything in memory on the stack -- even if the stack is in the CPU cache, registers are always going to be faster.
+
+Another aspect of performance is code size: the executables Mugo builds are *much* smaller than those built with Go. The Mugo binary built with Go is 1.6MB. Mugo built with Mugo is only 56KB -- about 1/29th the size! Of course, it's not exactly a fair fight -- Mugo doesn't build in a goroutine scheduler, garbage collector, or runtime type information. (See the [Go FAQ question](https://golang.org/doc/faq#Why_is_my_trivial_program_such_a_large_binary) on why trivial Go binaries are so large.)
 
 
 ## Related projects
 
-I hope you enjoyed this article -- I definitely had fun creating Mugo. Feel free to send me feedback! <!-- TODO: You can also go to the discussions on Hacker News, programming Reddit, and Lobsters. -->
+As I mentioned, I've been interested in interpreters and compilers for a long time. If you enjoyed this article, here are some of my related projects:
 
-And as I mentioned, I've been interested in compilers (at a very basic level) for a long time. If you enjoyed this article, here are some of my related projects:
-
-* [Third](https://github.com/benhoyt/third): the Forth compiler for 8086 DOS that I wrote when I was a teenager.
+* [Third](https://github.com/benhoyt/third): the Forth compiler for 8086 DOS that I wrote when I was a teenager. See also [Richard Jones' `jonesforth.S`](https://github.com/nornagon/jonesforth/blob/master/jonesforth.S) for a tutorial on how to build a Forth compiler.
 * [pyast64](/writings/pyast64/): turns Python syntax into x86-64 assembly using the [`ast`](https://docs.python.org/3/library/ast.html) module.
-* [Littlelang](/writings/littlelang/): a dynamically-typed language I designed and wrote an interpreter for in Go (and in littlelang itself).
 * [LoxLox](/writings/loxlox/): an interpreter for [*Crafting Interpreters'*](https://craftinginterpreters.com/) Lox programming language written in Lox itself (are you starting to notice a theme?). 
 * [GoAWK](/writings/goawk/): a POSIX-compatible AWK interpreter written in Go.
-* [ZZT in Go](/writings/zzt-in-go/): describes the Pascal-to-Go converter I wrote to help port Adrian Siekierka's "Reconstruction of ZZT" to Go.
+* [ZZT in Go](/writings/zzt-in-go/): describes the Pascal-to-Go converter I wrote to kick off my Go port of Adrian Siekierka's [Reconstruction of ZZT](https://github.com/asiekierka/reconstruction-of-zzt/).
+
+I hope you enjoyed this article -- I definitely had fun creating Mugo. Feel free to send me feedback! <!-- TODO: You can also go to the discussions on Hacker News, programming Reddit, and Lobsters. -->
