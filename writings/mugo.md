@@ -336,10 +336,10 @@ var (
 )
 ```
 
-The first four are pretty self-explanatory, but the `funcSigs` slice is a bit, well, funky. It's really a slice of structs. In real Go code you'd probably write something like this:
+The first four are pretty self-explanatory, but the `funcSigs` slice is a bit, well, funky. It's really a slice of structs. In real Go code you'd probably define a `funcSig` struct and roll all three of those "func" slices into a map of function name to struct:
 
 ```go
-var funcSigs []funcSig
+var funcSigs map[string]funcSig
 
 type funcSig struct {
     retType  int
@@ -347,7 +347,7 @@ type funcSig struct {
 }
 ```
 
-But Mugo doesn't support structs, or slices of slices, so I had to stuff these fields into a flat slice of `int`. Then `funcSigIndexes[i]` points to the start of the pseudo-struct in the `funcSigs` slice (for the function at index `i`).
+But Mugo doesn't support structs or maps, so I had to stuff these fields into a flat slice of `int`, with `funcSigIndexes[i]` pointing to the start of the pseudo-struct in the `funcSigs` slice (for the function at index `i`).
 
 
 ## Performance
