@@ -9,7 +9,7 @@ In addition to my [**technical writing**](/writings/), I also occassionally writ
 
 * [Review of *Hillbilly Elegy*](/writings/hillbilly-elegy/) contains some of my thoughts on J.&nbsp;D.&nbsp;Vance's eye-opening and thought-provoking book. (Jul&nbsp;2020)
 * [Hacker Christianity](http://aliensintheapple.com/2013/12/22/hacker-christianity/), some thoughts on the intersection between Christianity and hacker culture, as well as a retelling of the Christian story in hacker terms. (Dec&nbsp;2013)
-* [Plain English Westminster](/writings/pew/) is a version of the Westminster Confession of Faith for us in the <span class="sc">pew</span>. (Nov&nbsp;2013)
+* [Plain English Westminster](/writings/pew/) is a version of the Westminster Confession of Faith for us in the <span class="smallcaps">pew</span>. (Nov&nbsp;2013)
 * [Quotes and notes on *The Autobiography of Benjamin Franklin*.](http://aliensintheapple.com/2011/12/23/the-autobiography-of-benjamin-franklin/) (Dec&nbsp;2011)
 * [Book review of *The Biblical Mandate for Caring for Creation*](http://aliensintheapple.com/2011/12/02/caring-for-creation/), a book by Dick Tripp and published by my friend Matthew Bartlett. (Dec&nbsp;2011)
 * [Luth3r hacks iChurch](http://aliensintheapple.wordpress.com/2011/08/30/luth3r-hacks-ichurch-makes-bible-open-source/) describes how the iconoclast hacker Mart1n Luth3r hacked iChurch and proceeded to make the Bible open source. (Aug&nbsp;2011)
