@@ -164,7 +164,7 @@ mugo3:
     diff build/mugo2.asm build/mugo3.asm  # ensure output matches!
 ```
 
-There's also a make target to produce a coverage report from a simple test that runs the compiler on itself:
+There's also a make target to produce a coverage report from a [simple test](https://github.com/benhoyt/mugo/blob/master/mugo_test.go) that runs the compiler on itself. The test simply calls Mugo's `main()`, so we run the test binary with a coverage profile turned on, and send `mugo.go` to the process's standard input. The "test" is to compile the full source code of the compiler and record what coverage we get:
 
 ```
 coverage:
