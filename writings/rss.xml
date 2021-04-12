@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Mugo, a toy compiler for a subset of Go that can compile itself</title>
+  <description>An overview of Mugo, a single-pass compiler for a tiny subset of the Go programming language -- just enough to compile itself.</description>
+  <link>https://benhoyt.com/writings/mugo/</link>
+  <guid>https://benhoyt.com/writings/mugo/</guid>
+  <pubDate>Mon, 12 Apr 2021 20:30:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>How to implement a hash table (in C)</title>
   <description>An explanation of how to implement a simple hash table data structure, with code and examples in the C programming language.</description>
   <link>https://benhoyt.com/writings/hash-table-in-c/</link>
