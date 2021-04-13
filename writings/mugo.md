@@ -59,6 +59,8 @@ It's also very naive. There's no optimization -- I basically turn my powerful re
 
 One of the tricks I had to play was for local variable declarations (with Go's `:=` syntax). Because there's only one pass, you don't know how many locals you'll have or what their types are until you've finished parsing the function. So my function prologue, apart from the usual `rbp` frame pointer dance, subtracts 64 bytes from the stack pointer to allow space for up to 8 cells of local variables (the most used in Mugo is 7 cells).
 
+Update: "a1369209993" on Hacker News [pointed out](https://news.ycombinator.com/item?id=26786259) that I could have referenced an assembler constant that was defined at the end of the function, once we know the size. I'm letting the assembler handle that for forward jumps in `if` and `else` already. Thanks!
+
 Here's the full output for an integer `add` function:
 
 ```
