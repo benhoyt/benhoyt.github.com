@@ -401,4 +401,4 @@ As I mentioned, I've been interested in interpreters and compilers for a long ti
 * [GoAWK](/writings/goawk/): a POSIX-compatible AWK interpreter written in Go.
 * [ZZT in Go](/writings/zzt-in-go/): describes the Pascal-to-Go converter I wrote to kick off my Go port of Adrian Siekierka's [Reconstruction of ZZT](https://github.com/asiekierka/reconstruction-of-zzt/).
 
-I hope you enjoyed this article -- I definitely had fun creating Mugo. Feel free to send me feedback! <!-- TODO: You can also go to the discussions on Hacker News, programming Reddit, and Lobsters. -->
+I hope you enjoyed this article -- I definitely had fun creating Mugo. Feel free to send me feedback! You can also read the [discussion on Hacker News](https://news.ycombinator.com/item?id=26777705).
