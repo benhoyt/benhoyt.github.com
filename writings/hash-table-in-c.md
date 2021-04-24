@@ -385,7 +385,7 @@ We're using the 64-bit variant, because, well, most computers are 64-bit these d
 
 // Return 64-bit FNV-1a hash for key (NUL-terminated). See description:
 // https://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function
-static uint64_t _hash(const char* key) {
+static uint64_t hash_key(const char* key) {
     uint64_t hash = FNV_OFFSET;
     for (const char* p = key; *p; p++) {
         hash ^= (uint64_t)(unsigned char)(*p);
