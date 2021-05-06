@@ -1122,6 +1122,7 @@ Here's the list:
 * D: [Ross Lonstein](https://github.com/rlonstein)
 * F#: [Yuriy Ostapenko](https://github.com/uncleyo)
 * Go: [Miguel Angel](https://github.com/ntrrg) - simplifying the Go optimized version; [Joshua Corbin](https://github.com/jcorbin) - adding a [parallel Go version](https://github.com/benhoyt/countwords/blob/9db2ab6808921e649fc5212c00712e61edf6fa1c/parallel.go) for demonstration
+* Haskell: [Adrien Glauser](https://github.com/why-not-try-calmer)
 * Java: [Iulian Pleșoianu](https://github.com/bit-twit)
 * JavaScript: [Dani Biró](https://github.com/Daninet) and [Flo Hinze](https://github.com/laubsauger)
 * Julia: [Alessandro Melis](https://github.com/alemelis)
@@ -1178,6 +1179,7 @@ Forth         |   4.22 |      1.45 |
 Swift         |   4.23 |           | by Daniel Muellenborn
 Common Lisp   |   4.97 |           | by Brad Svercl
 Tcl           |   6.82 |           | by William Ross
+Haskell       |  12.81 |           | by Adrien Glauser
 Shell         |  14.81 |      1.83 | optimized does `LC_ALL=C sort -S 2G`
 
 What can we learn from all this? Here are a few thoughts:
