@@ -1,0 +1,50 @@
+---
+layout: default
+title: Review of "The Penguin History of New Zealand" by Michael King
+permalink: /writings/nz-history/
+description: A review of Michael King's excellent "The Penguin History of New Zealand".
+---
+<h1>The Penguin History of New Zealand</h1>
+<p class="subtitle">June 2021</p>
+
+<!--
+* get Marica to review
+* send to Bryan, Matt, Tim for feedback
+* publish!
+-->
+
+<img src="/images/penguin-history-of-new-zealand.jpg" class="right">
+
+My parents are American, and although I was born in Tennessee, when I was a baby they moved the family to New Zealand. I grew up and went to school in small-town New Zealand and consider myself a Kiwi at heart. However, the school I attended didn't teach much NZ history (not that I would have paid much attention if it had), and with my parents being from the States I didn't really learn any at home either.
+
+I had imbibed the very basic outline of our country's history: first came the Maori, then came the Europeans (Pakeha), there were a few skirmishes, some early mission work, somewhere in there the Treaty of Waitangi, at some point we formed a government separate from England, and, well, that was about the extent of my knowledge. Additionally, most of what I knew about Maori culture was from Maori kids at the town pools, and from the news -- which, to me growing up, seemed like it was mostly about land claims from the distant past.
+
+Not really being a history person, I never had much inclination to fill in the gaps. Then, this past Christmas, my niece gave me [*The Penguin History of New Zealand*](https://www.penguin.co.nz/books/the-penguin-history-of-new-zealand-9780143567578), and I'm really grateful. I highly recommend it, particularly if you, like me, don't remember much New Zealand history from growing up.
+
+I had a brush with *The Penguin History* many years ago when I wrote an article about the [Wellington waterfront strikes of 1913](/prism-magazine/issue5/history1.html). I remember being fascinated at the time that "something actually happened" in our history. But for whatever reason -- I think because I was borrowing the book at the time -- I only read the chapter on the waterfront strikes, and not the rest of the book. But the rest of the book is even better.
+
+The main thing I appreciated was how well-researched and balanced the book was. Michael King (who died in 2004, just a year after the book was published) was a prolific New Zealand historian, has obviously done his homework, and had a particular interest in Maori culture and Maori-Pakeha relations. The "further reading and acknowledgements" section at the end of the book shows just how much research he did, and he himself has published over 40 books on different aspects of New Zealand life and history.
+
+*The Penguin History* gave me an appreciation not just of Pakeha history, but of Maori history and culture in a way which the modern news media does not. Today we see headlines and stories which often amount to "Maori good, colonists bad" (or the opposite, from your racially insensitive uncle, "Maori bad, European good"). The truth, as King shows in detail, is rather different: significantly more nuanced, and, frankly, more interesting. In addition, simply making people feel guilty about their own people and history isn't a great way to help them understand and appreciate other cultures. Providing the history, telling stories, and showing how we got where we are -- those do help.
+
+The book starts with the arrival of the first Polynesians to New Zealand in the 14th century, explaining not just how courageous they must have been to come in small boats, but also how relatively advanced their seamanship was. We don't have direct written records of this period, of course, but scientists and historians can tell roughly when the first settlers arrived, what animals they brought with them, and that they likely made many voyages to (and back from!) New Zealand.
+
+Neither does King shy away from discussing facts that portray Maori in a less favourable light: the fact that they killed all the large, flightless [Moa](https://en.wikipedia.org/wiki/Moa) in a couple of generations after arriving (it was easy food, and they needed to eat), as well as discussing their inter-tribal warfare and cannibalism. Similarly, King describes the varied and complex British motives and approaches, and again doesn't hesitate to discuss what they did well, as well as what they did poorly -- for example, the unfair land grabs, the patronizing and racially-insensitive attitudes over the years, and the hasty obliteration of tens of thousands of seals and other animals.
+
+One of the things that fascinated me was the history of the Moriori people. I think many of us learned that "the Moriori people got here first, and then the Maori arrived and wiped them out". It turns out this is a myth that grew out of a half-truth. The Moriori are simply early Maori that settled on the Chatham Islands in the 16th century. They developed a highly peaceable culture there, in contrast to the more war-like "mainland" Maori. However, in 1835, some disenchanted Maori from the Taranaki region commandeered a British ship, sailed to the Chatham Islands, and killed about 300 Moriori and enslaved the others -- an enslavement that lasted almost 30 years.
+
+That is partly where the myth that "Moriori were here first and Maori wiped them out" came from. In reality it only happened on the Chatham Islands and even there it didn't wipe them out -- though it vastly reduced their numbers and set them back a lot. The Social Darwinism of the early 20th century saw this story as almost positive or at least inevitable: a weaker race taken over by a stronger, more advanced one (and no doubt soothing the consciences of the European colonists who had pushed Maori aside). The "Moriori were here first" story was turned into a myth-like tale and published in several New Zealand School Journals, and that was what a couple of generations of New Zealanders learned as fact. It was widely disproved over the years by historians, but the myth has stuck around for a long time -- I heard it many times growing up in the 80's and 90's, and I've heard it more recently as well.
+
+Another thing that struck me was just how quickly British immigrants came. In 1830 there were about 300 European settlers in New Zealand. Just fifty years later, in 1880, there were around 400,000. Their number surpassed the Maori population (around 70,000) by about 1860. So when the Treaty of Waitangi was written in 1840, Maori sentiment was along the lines of "sure, you seem like decent folks, we'll sign" (my paraphrase), but little did they realize the *massive* number of Europeans that would settle in the country over the next few years and how much they would change the landscape, both figuratively and literally. In my mind, those numbers in that short a timeframe goes a long way to explaining the roots of Maori-Pakeha tension.
+
+The graph below, [from Te Ara, the Encyclopedia of New Zealand](https://teara.govt.nz/en/graph/36364/maori-and-european-population-numbers-1840-1881), shows this huge population growth visually:
+
+<img src="/images/maori-pakeha-population-1800s.png">
+
+It was interesting to me that Maori, up until relatively recently, didn't consider themselves one people, but saw themselves as individual tribal groups. Culture developed tribally, family connections formed this way, feuds happened between tribes, and so on. Ironically, lumping all the tribes into one "Maori" people group was (at least at first) a lens the Europeans put on. Today, for various reasons King goes into, Maori do identify themselves more as belonging to one group, but tribal identity is still important (in the South Island we hear a lot about Ngai Tahu, for example).
+
+In any case, King's book goes into a lot of depth about the whole subject of Maori-Pakeha tension over the years, the haste in which the Treaty was translated, the land rivalries (greed, misunderstandings, battles), the huge Maori move from country to city in the 1950s, '60s, and '70s that amped things up again, the change in the 1990s that allowed Treaty land cases to be debated right back to 1840, and so on. He also shows how good a foundation we do actually have for working together in this country (especially compared to countries like the U.S. with a history of race-based slavery and institutional segregation). A lot of this was new to me, and I found it very insightful and helpful.
+
+I realize I've written many paragraphs here about the parts of the book that address Maori culture and Maori-Pakeha interaction, because that's the area I knew least about, but King's book covers much other ground, too. For example, Captain Cook, his incredible legacy, and the respect contemporary Europeans and Maori had for him. King also touches on the early missionary work by Samuel Marsden and Henry Williams (though, as a Christian, I would have liked to read more about that). He talks about the early development of rugged Kiwi male culture in the mid-1800's, when there were twice as many male immigrants as female -- and how various government programmes tried to address the imbalance. He talks at length about New Zealand's involvement in both World Wars. He discusses feminism, the sexual revolution, Asian immigration, the Great Depression, politics, the formation of the National and Labour parties ... the list goes.
+
+King's book is an amazing tour of our country's history, Maori and Pakeha. It sounds like our higher-ups are talking about reworking the schools' New Zealand history curriculum as I write this: if *The Penguin History of New Zealand* is used as a base, I don't think we'd be doing too badly. Do read it! If you live in Christchurch, you're welcome to get in touch and borrow my copy.
