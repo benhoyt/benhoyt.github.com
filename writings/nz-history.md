@@ -7,12 +7,6 @@ description: A review of Michael King's excellent "The Penguin History of New Ze
 <h1>The Penguin History of New Zealand</h1>
 <p class="subtitle">June 2021</p>
 
-<!--
-* get Marica to review
-* send to Bryan, Matt, Tim for feedback
-* publish!
--->
-
 <img src="/images/penguin-history-of-new-zealand.jpg" class="right">
 
 My parents are American, and although I was born in Tennessee, when I was a baby they moved the family to New Zealand. I grew up and went to school in small-town New Zealand and consider myself a Kiwi at heart. However, the school I attended didn't teach much New Zealand history (not that I would have paid much attention if it had), and with my parents being from the States I didn't really learn any at home either.
