@@ -11,6 +11,8 @@ description: "A critical but informative look at the new structural pattern matc
 >
 > **Go to:** [What it is](#what-it-is) \| [Where it shines](#where-it-shines) \| [My code](#using-it-in-my-code) \| [Other projects](#using-it-in-other-projects) \| [Problems](#some-problems-with-the-feature) \| [Wrapping up](#wrapping-up)
 
+TODO: ensure all code examples are tested
+
 
 At a recent local Python meetup, a friend was presenting some of the new features in Python 3.8 and 3.9, and we then got to talking about the pattern matching feature in Python 3.10. I went on a bit of rant about how I thought Python had lost the plot: first [assignment expressions using `:=`](https://www.python.org/dev/peps/pep-0572/), and now this rather sprawling feature.
 
@@ -205,7 +207,7 @@ else:
     raise ValueError(f"Unrecognized event: {e}")
 ```
 
-To me this one seems more border-line. It's definitely a bit nicer with pattern matching, but not by much.
+To me this one seems more border-line. It's definitely a bit nicer with pattern matching, but not by much. The `match` has the advantage of the `case`s all lining up; the `if ... elif` has the advantage that the event types are grouped more strongly, and we avoid repeating the types.
 
 Despite my skepticism, I'm trying to be fair: these examples do look nice, and even if you haven't read the pattern matching spec, it's reasonably clear what they do -- with the possible exception of the `__match_args__` magic.
 
@@ -532,24 +534,326 @@ Maybe I just don't write much of the kind of code that would benefit from this f
 
 ## Using it in other projects
 
-TODO: dive into a few popular repos
+Let's try the same thing for a few well-known repositories on the net. I'm going to pick examples from three different types of code: library code (from the [standard library](https://github.com/python/cpython/tree/main/Lib)), framework code (from the [Django](https://github.com/django/django) web framework), and application code (from the [Warehouse](https://github.com/pypa/warehouse) server that powers the Python Package Index).
+
+In an effort to be fair, I tried to find examples that would really benefit from `match` and were more than a glorified `switch` (there were a lot of those, but they're not using the *structural* part of pattern matching, so converting them doesn't seem like a huge win). I was looking for `elif` blocks which looked like they tested the structure of the data. There might be some good uses of `match` in code which just uses `if` without `elif`, but I think that would be rare, so let's look for the obvious ones first.
+
+### The standard library
+
+Python's standard library has about 709,000 lines of code, including tests (measured using [scc](https://github.com/boyter/scc)). The [ripgrep](https://github.com/BurntSushi/ripgrep) search tool (`rg --type=py 'elif ' | wc`) tells us that 2529 of those lines are `elif` statements, or 0.4%. I realize this would find “elif&nbsp;” in comments, but presumably that's rare.
+
+The first good use case I found was, not surprisingly, in the `ast` module, inside `literal_eval`'s [`_convert`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/ast.py#L82-L107) helper:
+
+```python
+def _convert(node):
+    if isinstance(node, Constant):
+        return node.value
+    elif isinstance(node, Tuple):
+        return tuple(map(_convert, node.elts))
+    elif isinstance(node, List):
+        return list(map(_convert, node.elts))
+    elif isinstance(node, Set):
+        return set(map(_convert, node.elts))
+    elif (isinstance(node, Call) and isinstance(node.func, Name) and
+          node.func.id == 'set' and node.args == node.keywords == []):
+        return set()
+    elif isinstance(node, Dict):
+        if len(node.keys) != len(node.values):
+            _raise_malformed_node(node)
+        return dict(zip(map(_convert, node.keys),
+                        map(_convert, node.values)))
+    elif isinstance(node, BinOp) and isinstance(node.op, (Add, Sub)):
+        left = _convert_signed_num(node.left)
+        right = _convert_num(node.right)
+        if isinstance(left, (int, float)) and isinstance(right, complex):
+            if isinstance(node.op, Add):
+                return left + right
+            else:
+                return left - right
+    return _convert_signed_num(node)
+```
+
+Converting that to use `match`:
+
+```python
+def _convert(node):
+    match node:
+        case Constant(value):
+            return value
+        case Tuple(elts):
+            return tuple(map(_convert, elts))
+        case List(elts):
+            return list(map(_convert, elts))
+        case Set(elts):
+            return set(map(_convert, elts))
+        case Call(Name('set'), args=[], keywords=[]):
+            return set()
+        case Dict(keys, values):
+            if len(keys) != len(values):
+                _raise_malformed_node(node)
+            return dict(zip(map(_convert, keys),
+                            map(_convert, values)))
+        case BinOp(left, (Add() | Sub()) as op, right):
+            left = _convert_signed_num(left)
+            right = _convert_num(right)
+            match (op, left, right):
+                case (Add(), int() | float(), complex()):
+                    return left + right
+                case (Sub(), int() | float(), complex()):
+                    return left - right
+    return _convert_signed_num(node)
+```
+
+Definitely a win! Syntax tree processing seems like the ideal use case for `match`. In Python 3.10, the `ast` module's node types already have `__match_args__` set, so that makes it even cleaner. We could have used `as` assignments in the `BinOp` case, but the pattern gets a bit noisy.
+
+Still, I want to find one outside the `ast` module. There's a nice long `if ... elif` chain in [`curses/textpad.py:do_command`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/curses/textpad.py#L95): it's mostly a simple switch, but it would benefit from `match ... case` with a few `if` guards.
+
+What about this, from [`dataclasses.py:_asdict_inner`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/dataclasses.py#L1235):
+
+```python
+def _asdict_inner(obj, dict_factory):
+    if _is_dataclass_instance(obj):
+        result = []
+        for f in fields(obj):
+            value = _asdict_inner(getattr(obj, f.name), dict_factory)
+            result.append((f.name, value))
+        return dict_factory(result)
+    elif isinstance(obj, tuple) and hasattr(obj, '_fields'):
+        return type(obj)(*[_asdict_inner(v, dict_factory) for v in obj])
+    elif isinstance(obj, (list, tuple)):
+        return type(obj)(_asdict_inner(v, dict_factory) for v in obj)
+    elif isinstance(obj, dict):
+        return type(obj)((_asdict_inner(k, dict_factory),
+                          _asdict_inner(v, dict_factory))
+                         for k, v in obj.items())
+    else:
+        return copy.deepcopy(obj)
+```
+
+Let's try converting that to `match`:
+
+```python
+def _asdict_inner(obj, dict_factory):
+    match obj:
+        case _ if _is_dataclass_instance(obj):
+            result = []
+            for f in fields(obj):
+                value = _asdict_inner(getattr(obj, f.name), dict_factory)
+                result.append((f.name, value))
+            return dict_factory(result)
+        case tuple(_fields=_):
+            return type(obj)(*[_asdict_inner(v, dict_factory) for v in obj])
+        case list() | tuple():
+            return type(obj)(_asdict_inner(v, dict_factory) for v in obj)
+        case {}:
+            return type(obj)((_asdict_inner(k, dict_factory),
+                              _asdict_inner(v, dict_factory))
+                             for k, v in obj.items())
+        case _:
+            return copy.deepcopy(obj)
+```
+
+A nice little improvement, though the first `case _` with the `if` guard is a bit weird. It may be able to be moved to a regular `if` statement inside the final `case _`, but I don't know the code well enough to know if that ordering would still do what we want.
+
+Here's a quite different example from [`email/_parseaddr.py:_parsedate_tz`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/email/_parseaddr.py#L57):
+
+```python
+def _parsedate_tz(data):
+    ...
+    tm = tm.split(':')
+    if len(tm) == 2:
+        [thh, tmm] = tm
+        tss = '0'
+    elif len(tm) == 3:
+        [thh, tmm, tss] = tm
+    elif len(tm) == 1 and '.' in tm[0]:
+        # Some non-compliant MUAs use '.' to separate time elements.
+        tm = tm[0].split('.')
+        if len(tm) == 2:
+            [thh, tmm] = tm
+            tss = 0
+        elif len(tm) == 3:
+            [thh, tmm, tss] = tm
+    else:
+        return None
+    # use thh, tmm, tss
+```
+
+Interestingly, while testing this I found that this code has a bug that raises an `UnboundLocalError` on invalid user input: if you pass a time with more than 3 dotted segments like `12.34.56.78`, the `thh`/`tmm`/`tss` variables won't be defined for the following code. Check this out:
+
+```
+$ python3.10 -c 'import email.utils; \
+    email.utils.parsedate_tz("Wed, 3 Apr 2002 12.34.56.78+0800")'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.10/email/_parseaddr.py", line 50, in parsedate_tz
+    res = _parsedate_tz(data)
+  File "/usr/local/lib/python3.10/email/_parseaddr.py", line 134, in _parsedate_tz
+    thh = int(thh)
+UnboundLocalError: local variable 'thh' referenced before assignment
+```
+
+All it needs is another `else: return None` in the dot case. I've opened an [issue](https://bugs.python.org/issue45239) and a [pull request](https://github.com/python/cpython/pull/28452) that adds a test case for this and fixes the bug.
+
+Anyway, let's have a shot at converting that (we'll fix the bug as well):
+
+```python
+def _parsedate_tz(tm):
+    ...
+    match tm.split(':'):
+        case [thh, tmm]:
+            tss = '0'
+        case [thh, tmm, tss]:
+            pass
+        case [s] if '.' in s:
+            match s.split('.'):
+                case [thh, tmm]:
+                    tss = 0
+                case [thh, tmm, tss]:
+                    pass
+                case _:
+                    return None
+        case _:
+            return None
+    # use thh, tmm, tss
+```
+
+This is definitely a good bit cleaner. It's always a bit of a pain when you use `str.split()` to have to test the length before unpacking the tuple (you could also catch the `ValueError` exception, but it's not as clear, and the nesting levels get a bit much).
+
+Side note: the `str.partition()` method is often useful in cases like this, but only when you have two items with a separator in between.
+
+### Django
+
+Django has 327,000 lines of code, including tests. Of these, there are 905 uses of `elif`, or 0.3%.
+
+Here's one from [`_check_fieldsets_item`](https://github.com/django/django/blob/ca9872905559026af82000e46cde6f7dedc897b6/django/contrib/admin/checks.py#L302-L323) that looks interesting:
+
+```python
+def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
+    if not isinstance(fieldset, (list, tuple)):
+        return must_be('a list or tuple', option=label, obj=obj, id='admin.E008')
+    elif len(fieldset) != 2:
+        return must_be('of length 2', option=label, obj=obj, id='admin.E009')
+    elif not isinstance(fieldset[1], dict):
+        return must_be('a dictionary', option='%s[1]' % label, obj=obj, id='admin.E010')
+    elif 'fields' not in fieldset[1]:
+        return [
+            checks.Error(
+                "The value of '%s[1]' must contain the key 'fields'." % label,
+                obj=obj.__class__,
+                id='admin.E011',
+            )
+        ]
+    elif not isinstance(fieldset[1]['fields'], (list, tuple)):
+        return must_be('a list or tuple', option="%s[1]['fields']" % label, obj=obj, id='admin.E008')
+
+    seen_fields.extend(flatten(fieldset[1]['fields']))
+    ...
+```
+
+This is interesting: it's doing a lot of nested structural matching, which seems like a great fit. Let's see about converting it:
+
+```python
+def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
+    match fieldset:
+        case (_, {'fields': [*fields]}):
+            pass
+        case _:
+            return must_be('a list or tuple of length 2 with a fields dict')
+
+    seen_fields.extend(flatten(fields))
+    ...
+```
+
+If the specific error messages don't matter, that's really nice! However, in this case they probably do, otherwise it wouldn't be carefully broken out the way it is. To fix that, we need to specify all the cases, but in the opposite order from the original, so that the most specific is matched first:
+
+```python
+def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
+    match fieldset:
+        case [_, {'fields': [*fields]}]:
+            pass  # valid, fall through
+        case [_, {'fields': _}]:
+            return must_be('a list or tuple', option="%s[1]['fields']" % label, obj=obj, id='admin.E008')
+        case [_, {}]:
+            return [
+                checks.Error(
+                    "The value of '%s[1]' must contain the key 'fields'." % label,
+                    obj=obj.__class__,
+                    id='admin.E011',
+                )
+            ]
+        case [_, _]:
+            return must_be('a dictionary', option='%s[1]' % label, obj=obj, id='admin.E010')
+        case [*_]:
+            return must_be('of length 2', option=label, obj=obj, id='admin.E009')
+        case _:
+            return must_be('a list or tuple', option=label, obj=obj, id='admin.E008')
+
+    seen_fields.extend(flatten(fields))
+    ...
+```
+
+Is it clearer? Arguably. It's a little strange repeating yourself, getting less and less specific. It also seems less obvious to me with the cases "backwards", falling through to the looser matches. And `[_, _]` followed by `[*_]` to mean "not of length 2" is not exactly explicit.
+
+This example highlights one of the problems I see with `match`: it adds another way to do things. The [Zen of Python](https://www.python.org/dev/peps/pep-0020/) says, "There should be one -- and preferably only one -- obvious way to do it." In reality, Python has always had many different ways to do things. But now there's one that adds a fair bit of cognitive load to developers: in a case like the above, we may often need to try both with and without `match`, and still be left debating which is more "obvious".
+
+## Warehouse
+
+Warehouse, PyPI's server code, has 59,000 lines of Python code, including tests. There are 35 uses of `elif`, or 0.06%. Interestingly, that's an order of magnitude less than either the standard library or Django, which matches with my conjecture that `match` won't pay off as much in "regular" code. I only found one example that looked like it would benefit from `match`, in [`sync_bigquery_release_files`](https://github.com/pypa/warehouse/blob/ae9fc472cfdf4ef8838f917644ca93150f68a97a/warehouse/packaging/tasks.py#L194-L208):
+
+```python
+for sch in table_schema:
+    if hasattr(file, sch.name):
+        field_data = getattr(file, sch.name)
+    elif hasattr(release, sch.name) and sch.name == "description":
+        field_data = getattr(release, sch.name).raw
+    elif sch.name == "description_content_type":
+        field_data = getattr(release, "description").content_type
+    elif hasattr(release, sch.name):
+        field_data = getattr(release, sch.name)
+    elif hasattr(project, sch.name):
+        field_data = getattr(project, sch.name)
+    else:
+        field_data = None
+```
+
+However, on closer inspection, these structural tests are being done on three different values (`file`, `release`, and `project`), and the structure they're being tested for is dynamic. At first I was thinking `object(name=name)` would do what we want, but the code is actually matching on an attribute with a name of whatever `sch.name`'s value is. Tricky!
+
+Hmmm, it seems Warehouse wasn't exactly crying out for `match`. I decided to keep it here anyway, as I think it's a good counterpoint.
+
+Let's look at one other large application: TODO
 
 
 ## Some problems with the feature
 
-TODO: magic matching, especially class matching; syntax meaning two different things (name vs binding, class matching vs calling), `__match_args__` magic (and order may differ from class initializer!), etc
+As I've shown, pattern matching does make code clearer in a few cases, but there are a number of concerns I have with this feature. Obviously the ship has already sailed -- Python 3.10 is due out in a few days! -- but I think it's valuable to consider them for future designs.
 
-* don't love how it introduces two nesting levels, but that's minor
+There's some trivial stuff like how `match ... case` requires two indentation levels: the PEP authors [considered](https://www.python.org/dev/peps/pep-0635/#the-match-statement) various alternatives, and I believe they chose the right route -- that's only a minor annoyance. But what about larger problems?
+
+**Learning curve and surface area.** As you can see from the size of the spec PEP, there is a lot too this feature, with about 10 sub-features packed into one. Python has always been an easy-to-learn language, and this feature, while it looks good on the page, has a lot of complexity in its semantics.
+
+**Only useful in rarer domains.** As shown above, there are cases where `match` really shines. But they are few and far between, mostly when handling syntax trees and writing parsers. The other cases that benefit are essentially plain `switch`, and `if ... elif` works almost as well for those.
+
+My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Python core developers) regularly write the kind of code that does benefit from pattern matching, but most application developers and script writers will need `match` far less often. Guido van Rossum in particular has been working on the [Mypy](http://mypy-lang.org/) type checker for a while, and now he's working on speeding up CPython -- compiler-like work involving ASTs.
+
+**Syntax works differently.** There are at least two parts of this feature where syntax that looks like one thing in "normal Python" acts differently inside a pattern:
+
+1. Variable names: a variable in a `case` clause doesn't return its value like in ordinary code, it binds it as a name. This means `case RED` doesn't work as you expect -- it will set a new variable named `RED`, not match your colour constant. To match on constants, they have to have a dot in them -- so `case Colors.RED` works. In writing some of the code above I actually made this mistake: I wrote `case ('commit' | 'tree' | 'blob', mode)`, expecting it to match if the tuple's second item was equal to `mode`, but of course it would have set `mode` to the second item.
+2. Class patterns: these look like function calls, but they're really `isinstance` and `hasattr` tests. It looks nice, but it's sometimes confusing. It also means you can't match on the result of an actual function call -- that would have to be in an `if` guard.
+
+**The __match_args__ magic.** In my opinion the `__match_args__` feature is too magical, and requires developers to decide which of a class's attributes should be position-matchable, if any. It's also strange that the `__match_args__` order could be different from the order of the class's `__init__` parameters (though in practice you'd try not to do that). I can see why they've included this feature, as it makes the likes of AST node matching really nice, but it's not very explicit.
+
+**Cost for other implementations.** CPython is by far the most commonly-used Python interpreter, but there are also others, such as PyPy and Micropython, that will have to decide whether or not to implement this feature. Other interpreters are always playing catch-up anyway, but a feature of this size at this stage in the game will make it even harder for other implementations to keep up.
 
 
 ## Wrapping up
 
-TODO: some comment about Python always having been a pragmatic and not a pure language. There are languages which people love, and those people use (Bjarne quote)
+I do like some aspects of pattern matching, and certain code is definitely cleaner with `match ... case` than with `if ... elif`. But does the feature provide enough value to justify the complexity, not to mention the cognitive burden it places on people learning Python or reading Python code?
 
-All in all, I do like some aspects of the feature, and some code is definitely cleaner with `match ... case` than with `if ... elif` blocks. But does it provide enough value to justify the complexity and cognitive burden it places on people learning Python or reading Python code?
+That said, Python has always been a pragmatic programming language, not a purist's dream. As Bjarne Stroustrup, the creator of C++, said, "There are only two kinds of languages: the ones people complain about and the ones nobody uses." I have always liked Python, and I've used it successfully for many years. I'll almost certainly continue to use it for many tasks. It's not perfect, but if it were, no one would use it.
 
-I've been using Go a lot recently, and there's definitely something good about how slowly the language changes (by design). That said, Go will have its own large new feature in a few months with [generics coming in Go 1.18](https://go.dev/blog/generics-proposal).
+I've also been using Go a lot recently, and there's definitely something good about how slowly the language changes (by design). Most of the release notes start with "there are no changes to the language" -- for example, in [Go 1.16](https://golang.org/doc/go1.16) all the changes were in the tooling and standard library. That said, Go will have its own large new feature in a few months with [generics coming in Go 1.18](https://go.dev/blog/generics-proposal).
 
-So overall I'm a bit pessimistic about this structural pattern matching in Python. It's just a big feature to add so late in the game (Python is 30 years old this year). Is the language starting to implode under its own weight?
+Overall I'm a bit pessimistic about structural pattern matching in Python. It's just a big feature to add so late in the game (Python is 30 years old this year). Is the language starting to implode under its own weight?
 
-Or, as my friend predicted, is it one of those features that will be over-used for everything at first, and then the community will settle down a bit and only use it where it really improves the code. We shall see!
+Or, as my friend predicted, is it one of those features that will be over-used for everything for a couple of years, and then the community will settle down and only use it where it really improves the code? We shall see!
