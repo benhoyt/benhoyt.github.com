@@ -7,11 +7,15 @@ description: "A critical but informative look at the new structural pattern matc
 <h1>{{ page.title }}</h1>
 <p class="subtitle">September 2021</p>
 
+<!--
+TODO:
+- proof, spell check, test code examples
+- run past Menno (link to his GitHub profile?)
+-->
+
 > Summary: Python 3.10, which is due out in early October 2021, will include a large new language feature called *structural pattern matching*. This article is a critical but hopefully informative presentation of the feature, with examples based on real-world code.
 >
 > **Go to:** [What it is](#what-it-is) \| [Where it shines](#where-it-shines) \| [My code](#using-it-in-my-code) \| [Other projects](#using-it-in-other-projects) \| [Problems](#some-problems-with-the-feature) \| [Wrapping up](#wrapping-up)
-
-TODO: ensure all code examples are tested
 
 
 At a recent local Python meetup, a friend was presenting some of the new features in Python 3.8 and 3.9, and we then got to talking about the pattern matching feature in Python 3.10. I went on a bit of rant about how I thought Python had lost the plot: first [assignment expressions using `:=`](https://www.python.org/dev/peps/pep-0572/), and now this rather sprawling feature.
