@@ -109,9 +109,9 @@ One thing to note is that `match` and `case` are not real keywords but "soft key
 
 ## Where it shines
 
-As I mentioned, I don't think it pays off if you're just using it as a glorified `switch`. So where does it pay off?
+As I mentioned, I don't think `match` pays off if you're just using it as a glorified `switch`. So where does it pay off?
 
-In the tutorial PEP there are several examples that make it shine (I guess it's fair enough when showing off a new feature): matching commands and their arguments in a simple text-based game. I've merged some of those examples and copied them below:
+In the tutorial PEP there are several examples that make it shine: matching commands and their arguments in a simple text-based game. I've merged some of those examples together and copied them below:
 
 ```python
 command = input("What are you doing next? ")
@@ -134,7 +134,7 @@ match command.split():
         print(f"Sorry, I couldn't understand {command!r}")
 ```
 
-Let's do a quick rewrite of that snippet without pattern matching. You'd almost certainly use a bunch of `if ... elif` blocks. I'm going to set a new variable `fields` to the pre-split fields, and `n` to the number of fields to make the boolean expressions simpler:
+As a comparison, let's do a quick rewrite of that snippet without pattern matching, old-school style. You'd almost certainly use a bunch of `if ... elif` blocks. I'm going to set a new variable `fields` to the pre-split fields, and `n` to the number of fields, to make the conditions simpler:
 
 ```python
 command = input("What are you doing next? ")
@@ -163,7 +163,7 @@ else:
     print(f"Sorry, I couldn't understand {command!r}")
 ```
 
-Apart from being a bit shorter, I think it's fair to say that the structural matching version is significantly easier to read, and the variable binding avoids the manual indexing like `fields[1]`. In pure readability terms, this example seems like a clear win for pattern matching.
+Apart from being a bit shorter, I think it's fair to say that the structural matching version is easier to read, and the variable binding avoids the manual indexing like `fields[1]`. In pure readability terms, this example seems like a clear win for pattern matching.
 
 The tutorial also provides examples of class-based matching, in what is presumably part of the game's event loop:
 
@@ -236,7 +236,7 @@ def eval_expr(expr):
             raise ValueError(f"Invalid expression value: {repr(expr)}")
 ```
 
-What would that look like with `if ... elif`? Once again, you'd probably structure it slightly differently, with all the `BinaryOp`s together. Note that that doesn't actually increase the indentation level, due to the double nesting required for the `case` clauses in a `match`:
+What would that look like with `if ... elif`? Once again, you'd probably structure it slightly differently, with all the `BinaryOp` cases together. Note that the nested `if` blocks don't actually increase the indentation level, due to the double nesting required for the `case` clauses in a `match`:
 
 ```python
 def eval_expr(expr):
@@ -264,9 +264,9 @@ def eval_expr(expr):
     raise ValueError(f"Invalid expression value: {repr(expr)}")
 ```
 
-It's two more lines due to the manual attribute unpacking for the `BinaryOp` and `UnaryOp` fields. Maybe it's just me, but I find this one just as easy to read as the `match` version, and a bit more obvious and explicit.
+It's two more lines due to the manual attribute unpacking for the `BinaryOp` and `UnaryOp` fields. Maybe it's just me, but I find this one just as easy to read as the `match` version, and more explicit.
 
-Another place `match` might be useful is when validating the structure of arbitrary JSON from user input, for example:
+Another place `match` might be useful is when validating the structure of JSON from an HTTP request (this is my own made-up example):
 
 ```python
 try:
@@ -293,9 +293,9 @@ This is quite nice. However, one drawback is that it doesn't give you good valid
 
 ## Using it in my code
 
-Let's look at converting some real-world code to use the new feature. I'm basically scanning for `if ... elif` blocks to see if it makes sense to convert them. I'll start with a few examples of code I've written.
+Let's look at converting some existing code to use the new feature. I'm basically scanning for `if ... elif` blocks to see if it makes sense to convert them. I'll start with a few examples of code I've written.
 
-The first couple of examples are from [pygit](https://benhoyt.com/writings/pygit/), a toy subset of `git` that's just enough enough of a Git client to create a repo, commit, and push itself to GitHub ([full source code](https://github.com/benhoyt/pygit/blob/master/pygit.py)).
+The first couple of examples are from [pygit](https://benhoyt.com/writings/pygit/), a toy subset of `git` that's just enough of a Git client to create a repo, commit, and push itself to GitHub ([full source code](https://github.com/benhoyt/pygit/blob/master/pygit.py)).
 
 Here's a snippet from `find_object`:
 
@@ -335,14 +335,14 @@ However, one thing that's not great is how the "success case" ends up sandwiched
     match objects:
         case []:
             raise ValueError('object {!r} not found'.format(sha1_prefix))
-        case [_,_,*_]:
+        case [_, _, *_]:
             raise ValueError('multiple objects ({}) with prefix {!r}'
                 .format(len(objects), sha1_prefix))
         case [obj]:
             return os.path.join(obj_dir, obj)
 ```
 
-Overall I think rewriting this to use `match` is over-use of the feature, and we should keep it as is.
+Overall I think rewriting that to use `match` is over-use of the feature, and we should keep it as is.
 
 Here's another example, from the `cat_file` function:
 
@@ -417,9 +417,9 @@ def cat_file(mode, sha1_prefix):
                 mode, obj_type))
 ```
 
-Now I think it's more streamlined than the original, though arguably no more clear!
+Now it's more streamlined than the original, though arguably no more clear!
 
-The other case in pygit where it would make sense to use `match` is when switching on the CLI sub-command, but again it would a simple switch, not making use of the *structural* features:
+The other case in pygit where it would make sense to use `match` is when switching on the CLI sub-command, but again it would be a simple switch, not making use of the *structural* features:
 
 ```python
 args = parser.parse_args()
@@ -493,17 +493,17 @@ def add_layer(self, label, layer, *, combine=False):
     # use layer_yaml
 ```
 
-At first I thought it was weird how the variables bound (and assigned) in a `case` block outlive the entire `match` block. But as shown in the above, it makes sense -- you'll often want to use the variables in the code below the `match`.
+Is the `match` version clearer? It's less noisy, but I kind of like the explicitness of the `isinstance()` calls. In addition, the empty parentheses in the various cases are a bit weird -- they look unnecessary with no positional arguments or attributes, but without them `match` would bind new variables named `str` or `dict`.
 
-Is the `match` version clearer? It's less noisy, but I like the explicitness of the `isinstance()` calls. In addition, the empty parentheses in the various cases are a bit weird -- they look unnecessary without position arguments or attributes, but without them you'd be binding new variables `str` or `dict`.
+At first I thought it was weird how the variables bound (and assigned) in a `case` block outlive the entire `match` block. But as shown in the above, it makes sense -- you'll often want to use the variables in the code below the `match`.
 
 Here's another example from the same code base, from code I'm [working on](https://github.com/canonical/operator/blob/da244446532d8c98323c6af96e2901b539c5579f/ops/pebble.py#L1647-L1663) now:
 
 ```python
 def exec(command, stdin=None, encoding='utf-8', ...):
     if isinstance(command, (bytes, str)):
-        raise TypeError('command must be a list of str, not {}'.format(
-            type(command).__name__))
+        raise TypeError('command must be a list of str, not {}'
+            .format(type(command).__name__))
     if len(command) < 1:
         raise ValueError('command must contain at least one item')
 
@@ -550,18 +550,18 @@ def exec(command, stdin=None, encoding='utf-8', ...):
 
 I'd argue this is no clearer. The `case None` is awkward -- we could avoid it by wrapping the whole thing in `if stdin is not None:` like the original code did, but that adds a third nesting level, which is less than ideal.
 
-The default case with a guard, `case _ if not hasattr(stdin, 'read')`, is also a bit more obscure than the original `elif` version. You could of course just use `case _:` and then nest the `if not hasattr`.
+The default case with a guard, `case _ if not hasattr(stdin, 'read')`, is also a bit more obscure than the original `elif` version. You could of course just use `case _` and then nest the `if not hasattr`.
 
-Maybe I just don't write much of the kind of code that would benefit from this feature. My guess is that there are a lot of people that fall into this camp. However, let's scan code from a couple of popular Python projects to see what we can find.
+Maybe I just don't write much of the kind of code that would benefit from this feature, but my guess is that there are a lot of people that fall into this camp. However, let's scan code from a couple of popular Python projects to see what we can find.
 
 
 ## Using it in other projects
 
 > **Go to:** [Standard library](#the-standard-library) \| [Django](#django) \| [Warehouse](#warehouse) \| [Mercurial](#mercurial) \| [Ansible](#ansible)
 
-Let's try the same thing for a few well-known repositories on the net. I'm going to pick examples from three different types of code: library code (from the [standard library](https://github.com/python/cpython/tree/main/Lib)), framework code (from the [Django](https://github.com/django/django) web framework), and application code (from the [Warehouse](https://github.com/pypa/warehouse) server that powers the Python Package Index).
+Let's try the same thing for a few well-known repositories on the net. I'm going to pick examples from three different types of code: library code (from the standard library), framework code (from the Django web framework), and application code (from Warehouse, the server that powers the Python Package Index, from Mercurial, and from Ansible).
 
-In an effort to be fair, I tried to find examples that would really benefit from `match` and were more than a glorified `switch` (there were a lot of those, but they're not using the *structural* part of pattern matching, so converting them doesn't seem like a huge win). I was looking for `elif` blocks which looked like they tested the structure of the data. There might be some good uses of `match` in code which just uses `if` without `elif`, but I think that would be rare, so let's look for the obvious ones first.
+In an effort to be fair, I tried to find examples that would really benefit from `match` and were more than a glorified `switch` (there were a lot of those, but they're not using the *structural* part of pattern matching, so converting them isn't a huge win). I went looking for `elif` blocks which look like they test the structure of the data. There might be some good uses of `match` in code which just uses `if` without `elif`, but I think that would be rare.
 
 ### The standard library
 
@@ -629,9 +629,9 @@ def _convert(node):
     return _convert_signed_num(node)
 ```
 
-Definitely a win! Syntax tree processing seems like the ideal use case for `match`. In Python 3.10, the `ast` module's node types already have `__match_args__` set, so that makes it even cleaner. We could have used `as` assignments in the `BinOp` case, but the pattern gets a bit noisy.
+Definitely a win! Syntax tree processing seems like the ideal use case for `match`. In Python 3.10, the `ast` module's node types already have `__match_args__` set, so that makes it even cleaner by avoiding `Constant(value=value)` type of repetition.
 
-Still, I want to find one outside the `ast` module. There's a nice long `if ... elif` chain in [`curses/textpad.py:do_command`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/curses/textpad.py#L95): it's mostly a simple switch, but it would benefit from `match ... case` with a few `if` guards.
+Still, I want to find one outside the `ast` module. I won't copy it here, but there's a nice long `if ... elif` chain in [`curses/textpad.py:do_command`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/curses/textpad.py#L95): it's mostly a simple switch, but it would benefit from `match ... case` with a few `if` guards.
 
 What about this, from [`dataclasses.py:_asdict_inner`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/dataclasses.py#L1235):
 
@@ -678,7 +678,7 @@ def _asdict_inner(obj, dict_factory):
             return copy.deepcopy(obj)
 ```
 
-A nice little improvement, though the first `case _` with the `if` guard is a bit weird. It may be able to be moved to a regular `if` statement inside the final `case _`, but I don't know the code well enough to know if that ordering would still do what we want.
+A nice little improvement, though the first `case _` with the `if` guard is a bit weird. It may be able to be moved to a regular `if` statement inside the final `case _`, but I don't know the code well enough to know if that ordering would still do what's required.
 
 Here's a quite different example from [`email/_parseaddr.py:_parsedate_tz`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/email/_parseaddr.py#L57):
 
@@ -720,7 +720,7 @@ UnboundLocalError: local variable 'thh' referenced before assignment
 
 All it needs is another `else: return None` in the dot case. I've opened an [issue](https://bugs.python.org/issue45239) and a [pull request](https://github.com/python/cpython/pull/28452) that adds a test case for this and fixes the bug.
 
-Anyway, let's have a shot at converting that (we'll fix the bug as well):
+Anyway, let's have a shot at converting it to use `match` (we'll fix the bug as well):
 
 ```python
 def _parsedate_tz(tm):
@@ -743,13 +743,13 @@ def _parsedate_tz(tm):
     # use thh, tmm, tss
 ```
 
-This is definitely a good bit cleaner. It's always a bit of a pain when you use `str.split()` to have to test the length before unpacking the tuple (you could also catch the `ValueError` exception, but it's not as clear, and the nesting levels get a bit much).
+This is definitely a good bit cleaner. It's always a bit of a pain when you use `str.split()` to have to test the length before unpacking a tuple (you could also catch the `ValueError` exception, but it's not as clear, and the nesting levels get a bit much).
 
 Side note: the `str.partition()` method is often useful in cases like this, but only when you have two items with a separator in between.
 
 ### Django
 
-Django has 327,000 lines of code, including tests. Of these, there are 905 uses of `elif`, or 0.3%.
+[Django](https://github.com/django/django) has 327,000 lines of code, including tests. Of these, there are 905 uses of `elif`, or 0.3%.
 
 Here's one from [`_check_fieldsets_item`](https://github.com/django/django/blob/ca9872905559026af82000e46cde6f7dedc897b6/django/contrib/admin/checks.py#L302-L323) that looks interesting:
 
@@ -776,7 +776,7 @@ def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
     ...
 ```
 
-This is interesting: it's doing a lot of nested structural matching, which seems like a great fit. Let's see about converting it:
+This is interesting: it's doing a lot of nested structural matching, which seems like a great fit. Let's see about converting it. This *kind of* does the job:
 
 ```python
 def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
@@ -818,13 +818,13 @@ def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
     ...
 ```
 
-Is it clearer? Arguably. It's a little strange repeating yourself, getting less and less specific. It also seems less obvious to me with the cases "backwards", falling through to the looser matches. And `[_, _]` followed by `[*_]` to mean "not of length 2" is not exactly explicit.
-
-This example highlights one of the problems I see with `match`: it adds another way to do things. The [Zen of Python](https://www.python.org/dev/peps/pep-0020/) says, "There should be one -- and preferably only one -- obvious way to do it." In reality, Python has always had many different ways to do things. But now there's one that adds a fair bit of cognitive load to developers: in a case like the above, we may often need to try both with and without `match`, and still be left debating which is more "obvious".
+Is it clearer? Not really. It's a little strange repeating yourself, getting less and less specific. It also seems less obvious to me with the cases "backwards", falling through to the looser matches. And `[_, _]` followed by `[*_]` to mean "not of length 2" is not exactly explicit.
 
 ### Warehouse
 
-Warehouse, PyPI's server code, has 59,000 lines of Python code, including tests. There are 35 uses of `elif`, or 0.06%. Interestingly, that's an order of magnitude less than either the standard library or Django, which matches with my conjecture that `match` won't pay off as much in "regular" code. I only found one example that looked like it would benefit from `match`, in [`sync_bigquery_release_files`](https://github.com/pypa/warehouse/blob/ae9fc472cfdf4ef8838f917644ca93150f68a97a/warehouse/packaging/tasks.py#L194-L208):
+[Warehouse](https://github.com/pypa/warehouse), PyPI's server code, has 59,000 lines of Python code, including tests. There are 35 uses of `elif`, or 0.06%. Interestingly, that's an order of magnitude less than either the standard library or Django, which fits with my conjecture that `match` won't pay off as much in "regular" code.
+
+I only found one example that (at first) looked like it would benefit from `match`, in [`sync_bigquery_release_files`](https://github.com/pypa/warehouse/blob/ae9fc472cfdf4ef8838f917644ca93150f68a97a/warehouse/packaging/tasks.py#L194-L208):
 
 ```python
 for sch in table_schema:
@@ -844,9 +844,7 @@ for sch in table_schema:
 
 However, on closer inspection, these structural tests are being done on three different values (`file`, `release`, and `project`), and the structure they're being tested for is dynamic. At first I was thinking `object(name=name)` would do what we want, but the code is actually matching on an attribute with a name of whatever `sch.name`'s value is. Tricky!
 
-It seems Warehouse wasn't exactly crying out for `match`. I decided to keep it here anyway, as I think it's a good counterpoint.
-
-Let's find a couple more examples by skimming through two other large application: Mercurial and Ansible.
+It seems Warehouse wasn't exactly crying out for `match`. I decided to keep it here anyway, as I think it's a good counterpoint. Let's find a couple more examples by skimming through two other large applications: Mercurial and Ansible.
 
 ### Mercurial
 
@@ -887,11 +885,11 @@ def ancestor(self, c2, warn=False):
     return self._repo[anc]
 ```
 
-There are quite a few cases like this where it's not a big win, but it is a small "quality of life" improvement for developers.
+There are quite a few cases like this where it might not be a huge win, but it is a small "quality of life" improvement for developers.
 
 ### Ansible
 
-[Ansible](https://www.ansible.com/) is a widely-used configuration management system written in Python. It has 217,000 lines of Python code, including tests. There are 1594 uses of `elif`, which again is 0.7%.
+[Ansible](https://github.com/ansible/ansible) is a widely-used configuration management system written in Python. It has 217,000 lines of Python code, including tests. There are 1594 uses of `elif`, which again is 0.7%.
 
 Here are a couple of cases I saw which might benefit from pattern matching. First, from [`module_utils/basic.py:_return_formatted`](https://github.com/ansible/ansible/blob/61f5c225510ca82ed43582540c9b9570ef676d7f/lib/ansible/module_utils/basic.py#L1476):
 
@@ -909,7 +907,7 @@ def _return_formatted(self, kwargs):
     ...
 ```
 
-Using `match` with some light structural patterns gives us a small win -- though I'm not sure the best way to handle the other types in `SEQUENCETYPE`:
+Using `match` with some light structural patterns gives us a small readability improvement -- though I'm not sure the best way to handle the other types in `SEQUENCETYPE`:
 
 ```python
 def _return_formatted(self, kwargs):
@@ -969,6 +967,8 @@ As I've shown, pattern matching does make code clearer in a few cases, but there
 There's some trivial stuff like how `match ... case` requires two indentation levels: the PEP authors [considered](https://www.python.org/dev/peps/pep-0635/#the-match-statement) various alternatives, and I believe they chose the right route -- that's only a minor annoyance. But what about larger problems?
 
 **Learning curve and surface area.** As you can see from the size of the spec PEP, there is a lot too this feature, with about 10 sub-features packed into one. Python has always been an easy-to-learn language, and this feature, while it looks good on the page, has a lot of complexity in its semantics.
+
+**Another way to do things.** The [Zen of Python](https://www.python.org/dev/peps/pep-0020/) says, "There should be one -- and preferably only one -- obvious way to do it." In reality, Python has always had many different ways to do things. But now there's one that adds a fair bit of cognitive load to developers: as shown in many of the examples, developers may often need to try both with and without `match`, and still be left debating which is more "obvious".
 
 **Only useful in rarer domains.** As shown above, there are cases where `match` really shines. But they are few and far between, mostly when handling syntax trees and writing parsers. A lot of code does have `if ... elif` chains, but these are often either plain switch-on-value, and `if ... elif` works almost as well for those, or the conditions they're testing are a more complex combination of tests that don't fit into `case` patterns (unless you use awkward `case _ if cond` clauses, but then you might as well use `elif`).
 
