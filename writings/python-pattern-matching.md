@@ -67,7 +67,7 @@ But here's where the *structural* part comes in: the `case` patterns don't just 
 * Capture sub-patterns with `as`
 * Include an `if` "guard" clause
 
-Wow! That's a lot of features. Let's see if we can use them all in one go, to see what they look like in a very contrived example:
+Wow! That's a lot of features. Let's see if we can use them all in one go, to see what they look like in a very contrived example (for a more gradual introduction, read the [tutorial](https://www.python.org/dev/peps/pep-0636/)):
 
 ```python
 class Car:
@@ -206,7 +206,7 @@ else:
     raise ValueError(f"Unrecognized event: {e}")
 ```
 
-To me this one seems more border-line. It's definitely a bit nicer with pattern matching, but not by much. The `match` has the advantage of the `case`s all lining up; the `if ... elif` has the advantage that the event types are grouped more strongly, and we avoid repeating the types.
+To me this one seems more borderline. It's definitely a bit nicer with pattern matching, but not by much. The `match` has the advantage of the `case`s all lining up; the `if ... elif` has the advantage that the event types are grouped more strongly, and we avoid repeating the types.
 
 Despite my skepticism, I'm trying to be fair: these examples do look nice, and even if you haven't read the pattern matching spec, it's reasonably clear what they do -- with the possible exception of the `__match_args__` magic.
 
@@ -962,7 +962,7 @@ In all of these projects, there are many more cases that *could* be converted to
 
 ## Some problems with the feature
 
-As I've shown, pattern matching does make code clearer in a few cases, but there are a number of concerns I have with this feature. Obviously the ship has already sailed -- Python 3.10 is due out in a few days! -- but I think it's valuable to consider the problems for future designs.
+As I've shown, pattern matching does make code clearer in a few cases, but there are a number of concerns I have with this feature. Obviously the ship has already sailed -- Python 3.10 is due out in a few days! -- but I think it's valuable to consider the problems for future designs. (Python definitely doesn't ship every feature people want: the [rejected PEPs](https://www.python.org/dev/peps/#abandoned-withdrawn-and-rejected-peps) are interesting to peruse.)
 
 There's some trivial stuff like how `match ... case` requires two indentation levels: the PEP authors [considered](https://www.python.org/dev/peps/pep-0635/#the-match-statement) various alternatives, and I believe they chose the right route -- that's only a minor annoyance. But what about larger problems?
 
