@@ -7,22 +7,18 @@ description: "A critical but informative look at the new structural pattern matc
 <h1>{{ page.title }}</h1>
 <p class="subtitle">September 2021</p>
 
-<!--
-TODO:
-- proof, spell check, test code examples
-- run past Menno (link to his GitHub profile?)
--->
-
-> Summary: Python 3.10, which is due out in early October 2021, will include a large new language feature called *structural pattern matching*. This article is a critical but hopefully informative presentation of the feature, with examples based on real-world code.
+> Summary: Python 3.10, which is due out in early October 2021, will include a large new language feature called *structural pattern matching*. This article is a critical but (hopefully) informative presentation of the feature, with examples based on real-world code.
 >
 > **Go to:** [What it is](#what-it-is) \| [Where it shines](#where-it-shines) \| [My code](#using-it-in-my-code) \| [Other projects](#using-it-in-other-projects) \| [Problems](#some-problems-with-the-feature) \| [Wrapping up](#wrapping-up)
 
 
-At a recent local Python meetup, a friend was presenting some of the new features in Python 3.8 and 3.9, and we then got to talking about the pattern matching feature in Python 3.10. I went on a bit of rant about how I thought Python had lost the plot: first [assignment expressions using `:=`](https://www.python.org/dev/peps/pep-0572/), and now this rather sprawling feature.
+At a recent local Python meetup, a friend was presenting some of the new features in Python 3.8 and 3.9, and afterwards we got to talking about the pattern matching feature coming in Python 3.10. I went on a mild rant about how I thought Python had lost the plot: first [assignment expressions using `:=`](https://www.python.org/dev/peps/pep-0572/), and now this rather sprawling feature.
 
-My friend interpreted my rant rather generously, and soon decided "it sounds like you want to give a talk about it at our next meetup". Well, why not! In the meantime, I thought I'd write up my thoughts and some code examples in article form. As you can gather, I'm rather biased, but I'll try to present some positives as well as just criticism.
+My friend interpreted my rant rather generously, and soon said, "it sounds like you want to give a talk about it at our next meetup". Okay ... well, why not!
 
-This feature has no fewer than three PEPs (Python Enhancement Proposals) to describe it:
+In the meantime, I thought I'd get to know the feature better by writing up my thoughts and some code examples in article form. As you can gather, I'm rather biased, but I'll try to present the positives as well as just criticism.
+
+The pattern matching feature has no fewer than three PEPs (Python Enhancement Proposals) to describe it:
 
 * [PEP 634](https://www.python.org/dev/peps/pep-0634/): the specification
 * [PEP 635](https://www.python.org/dev/peps/pep-0635/): motivation and rationale
@@ -30,16 +26,16 @@ This feature has no fewer than three PEPs (Python Enhancement Proposals) to desc
 
 The tutorial in particular provides a good overview of the feature, so if you just want to read one of the PEPs, read that one. I'll also demo the features below.
 
-The cynical side of me notes that the rationale is by far the longest (clocking in at 8500 words). *Methinks thou dost protest too much?* To be fair, however, it looks like they just moved the usual "Rejected Ideas" section of the PEP to its own PEP due to the length.
+The cynical side of me noticed that the rationale is by far the longest (clocking in at 8500 words). *Methinks thou dost protest too much?* To be fair, however, it looks like they just moved the usual "Rejected Ideas" section of the PEP to its own PEP due to the length.
 
-I think what's missing here is an evaluation of the costs versus the benefits. The costs are significant new language semantics for developers to learn, as well as the cost of implementation (for CPython and other Python implementations). The benefits need to be discussed in light of real-world code, the kind of code people use Python for on a day-to-day basis (not just the fairly contrived examples in the "Motivation" section). Part of what I want to do here is evaluate some real code and see how much (or little) pattern matching improves it.
+But I think what's missing in the PEPs is an evaluation of the costs versus the benefits. The costs are significant new language semantics for developers to learn, as well as the cost of implementation (for CPython and other Python implementations). The benefits need to be discussed in light of real-world code: the kind of code people use Python for on a day-to-day basis, not just the fairly contrived examples in the "Motivation" section of the PEP.
 
-But first, let's take a brief look at what structural pattern matching in Python looks like.
+Part of what I want to do here is evaluate some real code and see how much (or little) pattern matching improves it. But first, let's take a brief look at what structural pattern matching in Python looks like.
 
 
 ## What it is
 
-You can think of pattern matching as a `switch` statement on steriods. Many people have asked for a `switch` in Python over the years, and I can see why it has never been added. It just doesn't provide enough value over a bunch of `if ... elif` statements to pay for itself. The new `match ... case` feature provides the features of `switch`, plus the "structural" matching part -- and some.
+You can think of pattern matching as a `switch` statement on steroids. Many people have asked for a `switch` in Python over the years, and I can see why it has never been added. It just doesn't provide enough value over a bunch of `if ... elif` statements to pay for itself. The new `match ... case` feature provides the features of `switch`, plus the "structural" matching part -- and some.
 
 The basic syntax is shown in the following switch-like example (imagine we're rolling our own `git` CLI):
 
@@ -271,6 +267,30 @@ def eval_expr(expr):
 
 It's two more lines due to the manual attribute unpacking for the `BinaryOp` and `UnaryOp` fields. Maybe it's just me, but I find this one just as easy to read as the `match` version, and a bit more obvious and explicit.
 
+Another place `match` might be useful is when validating the structure of arbitrary JSON from user input, for example:
+
+```python
+try:
+    obj = json.loads(request.body)
+except ValueError:
+    raise HTTPBadRequest(f'invalid JSON: {request.body!r}')
+
+match obj:
+    case {
+        'action': 'sign-in',
+        'username': str(username),
+        'password': str(password),
+        'details': {'email': email, **other_details},
+    } if username and password:
+        sign_in(username, password, email=email, **other_details)
+    case {'action': 'sign-out'}:
+        sign_out()
+    case _:
+        raise HTTPBadRequest(f'invalid JSON structure: {obj}')
+```
+
+This is quite nice. However, one drawback is that it doesn't give you good validation errors: ideally an API would tell the caller what fields were missing, or what types were incorrect.
+
 
 ## Using it in my code
 
@@ -441,7 +461,7 @@ elif cmd == 'commit':
 ...
 ```
 
-Here's an example from [`pebble.py`](https://github.com/canonical/operator/blob/master/ops/pebble.py) that I wrote for work, part of Canonical's Python Operator Framework. It handles the various types allowed for the `layer` parameter:
+Here's an example from Canonical's Python Operator Framework, in [`pebble.py`](https://github.com/canonical/operator/blob/master/ops/pebble.py), which I wrote for work. It handles the various types allowed for the `layer` parameter:
 
 ```python
 def add_layer(self, label, layer, *, combine=False):
@@ -476,9 +496,9 @@ def add_layer(self, label, layer, *, combine=False):
 
 At first I thought it was weird how the variables bound (and assigned) in a `case` block outlive the entire `match` block. But as shown in the above, it makes sense -- you'll often want to use the variables in the code below the `match`.
 
-Is the `match` version clearer? It's less noisy, but I like the explicitness of the `isinstance()` calls. In addition, the empty parens in the various cases are a bit weird -- they look unnecessary without position arguments or attributes, but without them you'd be binding new variables `str` or `dict`.
+Is the `match` version clearer? It's less noisy, but I like the explicitness of the `isinstance()` calls. In addition, the empty parentheses in the various cases are a bit weird -- they look unnecessary without position arguments or attributes, but without them you'd be binding new variables `str` or `dict`.
 
-Here's another example from the same codebase, from code I'm [working on](https://github.com/canonical/operator/blob/da244446532d8c98323c6af96e2901b539c5579f/ops/pebble.py#L1647-L1663) now:
+Here's another example from the same code base, from code I'm [working on](https://github.com/canonical/operator/blob/da244446532d8c98323c6af96e2901b539c5579f/ops/pebble.py#L1647-L1663) now:
 
 ```python
 def exec(command, stdin=None, encoding='utf-8', ...):
@@ -537,6 +557,8 @@ Maybe I just don't write much of the kind of code that would benefit from this f
 
 
 ## Using it in other projects
+
+> **Go to:** [Standard library](#the-standard-library) \| [Django](#django) \| [Warehouse](#warehouse) \| [Mercurial](#mercurial) \| [Ansible](#ansible)
 
 Let's try the same thing for a few well-known repositories on the net. I'm going to pick examples from three different types of code: library code (from the [standard library](https://github.com/python/cpython/tree/main/Lib)), framework code (from the [Django](https://github.com/django/django) web framework), and application code (from the [Warehouse](https://github.com/pypa/warehouse) server that powers the Python Package Index).
 
@@ -801,7 +823,7 @@ Is it clearer? Arguably. It's a little strange repeating yourself, getting less 
 
 This example highlights one of the problems I see with `match`: it adds another way to do things. The [Zen of Python](https://www.python.org/dev/peps/pep-0020/) says, "There should be one -- and preferably only one -- obvious way to do it." In reality, Python has always had many different ways to do things. But now there's one that adds a fair bit of cognitive load to developers: in a case like the above, we may often need to try both with and without `match`, and still be left debating which is more "obvious".
 
-## Warehouse
+### Warehouse
 
 Warehouse, PyPI's server code, has 59,000 lines of Python code, including tests. There are 35 uses of `elif`, or 0.06%. Interestingly, that's an order of magnitude less than either the standard library or Django, which matches with my conjecture that `match` won't pay off as much in "regular" code. I only found one example that looked like it would benefit from `match`, in [`sync_bigquery_release_files`](https://github.com/pypa/warehouse/blob/ae9fc472cfdf4ef8838f917644ca93150f68a97a/warehouse/packaging/tasks.py#L194-L208):
 
@@ -823,9 +845,122 @@ for sch in table_schema:
 
 However, on closer inspection, these structural tests are being done on three different values (`file`, `release`, and `project`), and the structure they're being tested for is dynamic. At first I was thinking `object(name=name)` would do what we want, but the code is actually matching on an attribute with a name of whatever `sch.name`'s value is. Tricky!
 
-Hmmm, it seems Warehouse wasn't exactly crying out for `match`. I decided to keep it here anyway, as I think it's a good counterpoint.
+It seems Warehouse wasn't exactly crying out for `match`. I decided to keep it here anyway, as I think it's a good counterpoint.
 
-Let's look at one other large application: TODO
+Let's find a couple more examples by skimming through two other large application: Mercurial and Ansible.
+
+### Mercurial
+
+[Mercurial](https://www.mercurial-scm.org/), the version control system, has 268,000 lines of Python code, including tests. There are 1941 uses of `elif`, or 0.7% -- the highest ratio yet.
+
+Here's a simple example from [`context.py:ancestor`](https://www.mercurial-scm.org/repo/hg/file/4e6f27230aee/mercurial/context.py#l723):
+
+```python
+def ancestor(self, c2, warn=False):
+    n2 = c2._node
+    if n2 is None:
+        n2 = c2._parents[0]._node
+    cahs = self._repo.changelog.commonancestorsheads(self._node, n2)
+    if not cahs:
+        anc = self._repo.nodeconstants.nullid
+    elif len(cahs) == 1:
+        anc = cahs[0]
+    else:
+        anc = ...
+    return self._repo[anc]
+```
+
+Changing that to use `match`:
+
+```python
+def ancestor(self, c2, warn=False):
+    n2 = c2._node
+    if n2 is None:
+        n2 = c2._parents[0]._node
+    cahs = self._repo.changelog.commonancestorsheads(self._node, n2)
+    match cahs:
+        case []:
+            anc = self._repo.nodeconstants.nullid
+        case [anc]:
+            pass
+        case _:
+            anc = ...
+    return self._repo[anc]
+```
+
+There are quite a few cases like this where it's not a big win, but it is a small "quality of life" improvement for developers.
+
+### Ansible
+
+[Ansible](https://www.ansible.com/) is a widely-used configuration management system written in Python. It has 217,000 lines of Python code, including tests. There are 1594 uses of `elif`, which again is 0.7%.
+
+Here are a couple of cases I saw which might benefit from pattern matching. First, from [`module_utils/basic.py:_return_formatted`](https://github.com/ansible/ansible/blob/61f5c225510ca82ed43582540c9b9570ef676d7f/lib/ansible/module_utils/basic.py#L1476):
+
+```python
+def _return_formatted(self, kwargs):
+    ...
+    for d in kwargs['deprecations']:
+        if isinstance(d, SEQUENCETYPE) and len(d) == 2:
+            self.deprecate(d[0], version=d[1])
+        elif isinstance(d, Mapping):
+            self.deprecate(d['msg'], version=d.get('version'), date=d.get('date'),
+                           collection_name=d.get('collection_name'))
+        else:
+            self.deprecate(d)
+    ...
+```
+
+Using `match` with some light structural patterns gives us a small win -- though I'm not sure the best way to handle the other types in `SEQUENCETYPE`:
+
+```python
+def _return_formatted(self, kwargs):
+    ...
+    for d in kwargs['deprecations']:
+        match d:
+            case (msg, version):
+                self.deprecate(msg, version=version)
+            case {'msg': msg}:
+                self.deprecate(msg, version=d.get('version'), date=d.get('date'),
+                               collection_name=d.get('collection_name'))
+            case _:
+                self.deprecate(d)
+    ...
+```
+
+From some version comparison code in [`utils/version.py:_Alpha.__lt__`](https://github.com/ansible/ansible/blob/61f5c225510ca82ed43582540c9b9570ef676d7f/lib/ansible/utils/version.py#L65):
+
+```python
+class _Alpha:
+    ...
+    def __lt__(self, other):
+        if isinstance(other, _Alpha):
+            return self.specifier < other.specifier
+        elif isinstance(other, str):
+            return self.specifier < other
+        elif isinstance(other, _Numeric):
+            return False
+        raise ValueError
+```
+
+Once again, it's a little bit nicer with `match`:
+
+```python
+class _Alpha:
+    __match_args__ = ('specifier',)
+    ...
+    def __lt__(self, other):
+        match other:
+            case _Alpha(specifier):
+                return self.specifier < specifier
+            case str():
+                return self.specifier < other
+            case _Numeric():
+                return False
+            case _:
+                raise ValueError
+```
+
+In all of these projects, there are many more cases that *could* be converted to use `match`, but I've tried to pick out a few different kinds of code where it made sense to at least try.
 
 
 ## Some problems with the feature
@@ -836,7 +971,7 @@ There's some trivial stuff like how `match ... case` requires two indentation le
 
 **Learning curve and surface area.** As you can see from the size of the spec PEP, there is a lot too this feature, with about 10 sub-features packed into one. Python has always been an easy-to-learn language, and this feature, while it looks good on the page, has a lot of complexity in its semantics.
 
-**Only useful in rarer domains.** As shown above, there are cases where `match` really shines. But they are few and far between, mostly when handling syntax trees and writing parsers. The other cases that benefit are essentially plain `switch`, and `if ... elif` works almost as well for those.
+**Only useful in rarer domains.** As shown above, there are cases where `match` really shines. But they are few and far between, mostly when handling syntax trees and writing parsers. A lot of code does have `if ... elif` chains, but these are often either plain switch-on-value, and `if ... elif` works almost as well for those, or the conditions they're testing are a more complex combination of tests that don't fit into `case` patterns (unless you use awkward `case _ if cond` clauses, but then you might as well use `elif`).
 
 My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Python core developers) regularly write the kind of code that does benefit from pattern matching, but most application developers and script writers will need `match` far less often. Guido van Rossum in particular has been working on the [Mypy](http://mypy-lang.org/) type checker for a while, and now he's working on speeding up CPython -- compiler-like work involving ASTs.
 
@@ -847,7 +982,11 @@ My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Pytho
 
 **The __match_args__ magic.** In my opinion the `__match_args__` feature is too magical, and requires developers to decide which of a class's attributes should be position-matchable, if any. It's also strange that the `__match_args__` order could be different from the order of the class's `__init__` parameters (though in practice you'd try not to do that). I can see why they've included this feature, as it makes the likes of AST node matching really nice, but it's not very explicit.
 
-**Cost for other implementations.** CPython is by far the most commonly-used Python interpreter, but there are also others, such as PyPy and Micropython, that will have to decide whether or not to implement this feature. Other interpreters are always playing catch-up anyway, but a feature of this size at this stage in the game will make it even harder for other implementations to keep up.
+**Cost for other implementations.** CPython is by far the most commonly-used Python interpreter, but there are also others, such as PyPy and MicroPython, that will have to decide whether or not to implement this feature. Other interpreters are always playing catch-up anyway, but a feature of this size at this stage in the game will make it even harder for other implementations to keep up.
+
+Originally I was also concerned that `match` class patterns don't play well with Python's use of [duck typing](https://en.wikipedia.org/wiki/Duck_typing), where you just access attributes and call methods on an object, *without* checking its type first (for example, when using [file-like objects](https://docs.python.org/3/glossary.html#term-file-object)).
+
+With class patterns, however, you specify the type, and it performs an `isinstance` check. Duck typing is still possible using `object()`, but it's a bit strange. However, now that I've used the feature, I think this is mostly a theoretical concern -- the places you'd use class patterns don't really overlap with the places you'd use duck typing.
 
 
 ## Wrapping up
