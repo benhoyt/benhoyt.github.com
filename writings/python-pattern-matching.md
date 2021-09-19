@@ -35,9 +35,9 @@ Part of what I want to do here is evaluate some real code and see how much (or l
 
 ## What it is
 
-You can think of pattern matching as a `switch` statement on steroids. Many people have asked for a `switch` in Python over the years, and I can see why it has never been added. It just doesn't provide enough value over a bunch of `if ... elif` statements to pay for itself. The new `match ... case` feature provides the features of `switch`, plus the "structural" matching part -- and some.
+You can think of pattern matching as a `switch` statement on steroids. Many people have asked for a `switch` in Python over the years, though I can see why it has never been added. It just doesn't provide enough value over a bunch of `if ... elif` statements to pay for itself. The new `match ... case` feature provides the features of `switch`, plus the "structural" matching part -- and some.
 
-The basic syntax is shown in the following switch-like example (imagine we're rolling our own `git` CLI):
+The basic syntax is shown in the following switch-like example (imagine we're rolling our own Git CLI):
 
 ```python
 parser = argparse.ArgumentParser()
@@ -50,10 +50,10 @@ match args.command:
     case 'pull':
         print('pulling')
     case _:
-        parser.error(f'{args.command!r} command not yet implemented')
+        parser.error(f'{args.command!r} not yet implemented')
 ```
 
-Python evaluates the `match` expression, and then tries each `case` from the top, executing the first one that matches, or the `_` default case if none match.
+Python evaluates the `match` expression, and then tries each `case` from the top, executing the first one that matches, or the `_` default case if no others match.
 
 But here's where the *structural* part comes in: the `case` patterns don't just have to be literals. The patterns can also:
 
@@ -62,17 +62,16 @@ But here's where the *structural* part comes in: the `case` patterns don't just 
 * Match mappings using dict syntax
 * Use `*` to match the rest of a list
 * Use `**` to match other keys in a dict
-* Match objects using class syntax
+* Match objects and their attributes using class syntax
 * Include "or" patterns with `|`
 * Capture sub-patterns with `as`
 * Include an `if` "guard" clause
 
-Wow! That's a lot of features. Let's see if we can use them all in one go, in a very contrived example this time:
+Wow! That's a lot of features. Let's see if we can use them all in one go, to see what they look like in a very contrived example:
 
 ```python
 class Car:
     __match_args__ = ('key', 'name')
-
     def __init__(self, key, name):
         self.key = key
         self.name = name
@@ -80,9 +79,9 @@ class Car:
 expr = eval(input('Expr: '))
 match expr:
     case (0, x):              # seq of 2 elems with first 0
-        print(f'(0, {x})')
-    case ['a', b, 'c']:       # seq of 3 elems: 'a', anything, 'c'
-        print(f"'a', {b!r}, 'c'")
+        print(f'(0, {x})')    # (new variable x set to second elem)
+    case ['a', x, 'c']:       # seq of 3 elems: 'a', anything, 'c'
+        print(f"'a', {x!r}, 'c'")
     case {'foo': bar}:        # dict with key 'foo' (may have others)
         print(f"{% raw %}{{'foo': {bar}}}{% endraw %}")
     case [1, 2, *rest]:       # seq of: 1, 2, ... other elements
@@ -91,7 +90,7 @@ match expr:
         print(f"{% raw %}{{'x': {x}, **{kw}}}{% endraw %}")
     case Car(key=key, name='Tesla'):  # Car with name 'Tesla' (any key)
         print(f"Car({key!r}, 'TESLA!')")
-    case Car(key, name):      # similar to above, but uses __match_args__
+    case Car(key, name):      # similar to above, but use __match_args__
         print(f"Car({key!r}, {name!r})")
     case 1 | 'one' | 'I':     # int 1 or str 'one' or 'I'
         print('one')
@@ -103,7 +102,7 @@ match expr:
         print('no match')
 ```
 
-As you can see, it's complex but also powerful. The exact details of how matching is done are provided in the spec. Much of it is fairly self-explanatory, though the `__match_args__` attribute requires an explanation: if position arguments are used in a class pattern, the items in the class's `__match_args__` tuple provide the names of the attributes. This is a (rather magical!) shorthand to avoid specifying the attribute names in the class pattern.
+As you can see, it's complex but also powerful. The exact details of how matching is done are provided in the spec. Thankfully, much of the above is fairly self-explanatory, though the `__match_args__` attribute requires an explanation: if position arguments are used in a class pattern, the items in the class's `__match_args__` tuple provide the names of the attributes. This is a shorthand to avoid specifying the attribute names in the class pattern.
 
 One thing to note is that `match` and `case` are not real keywords but "soft keywords", meaning they only operate as keywords in a `match ... case` block. This is by design, because people use `match` as a variable name all the time -- I almost always use a variable named `match` as the result of a regex match.
 
