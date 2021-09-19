@@ -962,17 +962,17 @@ In all of these projects, there are many more cases that *could* be converted to
 
 ## Some problems with the feature
 
-As I've shown, pattern matching does make code clearer in a few cases, but there are a number of concerns I have with this feature. Obviously the ship has already sailed -- Python 3.10 is due out in a few days! -- but I think it's valuable to consider them for future designs.
+As I've shown, pattern matching does make code clearer in a few cases, but there are a number of concerns I have with this feature. Obviously the ship has already sailed -- Python 3.10 is due out in a few days! -- but I think it's valuable to consider the problems for future designs.
 
 There's some trivial stuff like how `match ... case` requires two indentation levels: the PEP authors [considered](https://www.python.org/dev/peps/pep-0635/#the-match-statement) various alternatives, and I believe they chose the right route -- that's only a minor annoyance. But what about larger problems?
 
-**Learning curve and surface area.** As you can see from the size of the spec PEP, there is a lot too this feature, with about 10 sub-features packed into one. Python has always been an easy-to-learn language, and this feature, while it looks good on the page, has a lot of complexity in its semantics.
+**Learning curve and surface area.** As you can see from the size of the spec PEP, there is a lot to this feature, with about 10 sub-features packed into one. Python has always been an easy-to-learn language, and this feature, while it can look good on the page, has a lot of complexity in its semantics.
 
 **Another way to do things.** The [Zen of Python](https://www.python.org/dev/peps/pep-0020/) says, "There should be one -- and preferably only one -- obvious way to do it." In reality, Python has always had many different ways to do things. But now there's one that adds a fair bit of cognitive load to developers: as shown in many of the examples, developers may often need to try both with and without `match`, and still be left debating which is more "obvious".
 
-**Only useful in rarer domains.** As shown above, there are cases where `match` really shines. But they are few and far between, mostly when handling syntax trees and writing parsers. A lot of code does have `if ... elif` chains, but these are often either plain switch-on-value, and `if ... elif` works almost as well for those, or the conditions they're testing are a more complex combination of tests that don't fit into `case` patterns (unless you use awkward `case _ if cond` clauses, but then you might as well use `elif`).
+**Only useful in rarer domains.** As shown above, there are cases where `match` really shines. But they are few and far between, mostly when handling syntax trees and writing parsers. A lot of code does have `if ... elif` chains, but these are often either plain switch-on-value, where `elif` works almost as well, or the conditions they're testing are a more complex combination of tests that don't fit into `case` patterns (unless you use awkward `case _ if cond` clauses, but that's strictly worse than `elif`).
 
-My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Python core developers) regularly write the kind of code that does benefit from pattern matching, but most application developers and script writers will need `match` far less often. Guido van Rossum in particular has been working on the [Mypy](http://mypy-lang.org/) type checker for a while, and now he's working on speeding up CPython -- compiler-like work involving ASTs.
+My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Python core developers) regularly write the kind of code that does benefit from pattern matching, but most application developers and script writers will need `match` far less often. Guido van Rossum in particular has been working on the [Mypy](http://mypy-lang.org/) type checker for a while, and now he's working on speeding up CPython -- compiler work no doubt involving ASTs.
 
 **Syntax works differently.** There are at least two parts of this feature where syntax that looks like one thing in "normal Python" acts differently inside a pattern:
 
@@ -981,11 +981,11 @@ My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Pytho
 
 **The __match_args__ magic.** In my opinion the `__match_args__` feature is too magical, and requires developers to decide which of a class's attributes should be position-matchable, if any. It's also strange that the `__match_args__` order could be different from the order of the class's `__init__` parameters (though in practice you'd try not to do that). I can see why they've included this feature, as it makes the likes of AST node matching really nice, but it's not very explicit.
 
-**Cost for other implementations.** CPython is by far the most commonly-used Python interpreter, but there are also others, such as PyPy and MicroPython, that will have to decide whether or not to implement this feature. Other interpreters are always playing catch-up anyway, but a feature of this size at this stage in the game will make it even harder for other implementations to keep up.
+**Cost for other implementations.** CPython is by far the most commonly-used Python interpreter, but there are also others, such as PyPy and MicroPython, that will have to decide whether or not to implement this feature. Other interpreters are always playing catch-up anyway, but a feature of this size at this stage in Python's history will make it even harder for other implementations to keep up.
 
-Originally I was also concerned that `match` class patterns don't play well with Python's use of [duck typing](https://en.wikipedia.org/wiki/Duck_typing), where you just access attributes and call methods on an object, *without* checking its type first (for example, when using [file-like objects](https://docs.python.org/3/glossary.html#term-file-object)).
+Originally I was also concerned that `match`'s class patterns don't play well with Python's use of [duck typing](https://en.wikipedia.org/wiki/Duck_typing), where you just access attributes and call methods on an object, *without* checking its type first (for example, when using [file-like objects](https://docs.python.org/3/glossary.html#term-file-object)). With class patterns, however, you specify the type, and it performs an `isinstance` check. Duck typing is still possible using `object()`, but it would be a bit strange.
 
-With class patterns, however, you specify the type, and it performs an `isinstance` check. Duck typing is still possible using `object()`, but it's a bit strange. However, now that I've used the feature, I think this is mostly a theoretical concern -- the places you'd use class patterns don't really overlap with the places you'd use duck typing.
+However, now that I've used the feature, I think this is mostly a theoretical concern -- the places you'd use class patterns don't really overlap with the places you'd use duck typing.
 
 
 ## Wrapping up
