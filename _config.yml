@@ -7,6 +7,7 @@ url: https://benhoyt.com/
 kramdown:
   input: GFM
   hard_wrap: false
+  parse_block_html: true
 
 # These are GitHub defaults too, but we don't need them
 #gems:

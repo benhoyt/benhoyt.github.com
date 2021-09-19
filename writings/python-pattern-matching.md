@@ -297,7 +297,15 @@ Let's look at converting some existing code to use the new feature. I'm basicall
 
 The first couple of examples are from [pygit](https://benhoyt.com/writings/pygit/), a toy subset of `git` that's just enough of a Git client to create a repo, commit, and push itself to GitHub ([full source code](https://github.com/benhoyt/pygit/blob/master/pygit.py)).
 
-Here's a snippet from `find_object`:
+<details><summary markdown="span">**I've collapsed the code blocks below by default.** Just click the arrow or summary paragraph to expand.</summary>
+
+```python
+if answer() == 42:
+    print('The meaning of life, the universe and everything!')
+```
+</details>
+
+<details><summary markdown="span">**Example from `find_object()`.** Some aspects are a bit nicer, but overall I think rewriting it to use `match` is over-use of the feature.</summary>
 
 ```python
 def find_object(sha1_prefix):
@@ -341,10 +349,9 @@ However, one thing that's not great is how the "success case" ends up sandwiched
         case [obj]:
             return os.path.join(obj_dir, obj)
 ```
+</details>
 
-Overall I think rewriting that to use `match` is over-use of the feature, and we should keep it as is.
-
-Here's another example, from the `cat_file` function:
+<details><summary markdown="span">**Example from `cat_file()`,** shown two different ways. Seems like a slight win.</summary>
 
 ```python
 def cat_file(mode, sha1_prefix):
@@ -418,8 +425,9 @@ def cat_file(mode, sha1_prefix):
 ```
 
 Now it's more streamlined than the original, though arguably no more clear!
+</details>
 
-The other case in pygit where it would make sense to use `match` is when switching on the CLI sub-command, but again it would be a simple switch, not making use of the *structural* features:
+<details><summary markdown="span">**Example from argument parsing,** when switching on the CLI sub-command. Makes sense to use `match`, but it's a simple switch, not using the *structural* features.</summary>
 
 ```python
 args = parser.parse_args()
@@ -459,8 +467,11 @@ elif cmd == 'commit':
     ... # do commit
 ...
 ```
+</details>
 
-Here's an example from Canonical's Python Operator Framework, in [`pebble.py`](https://github.com/canonical/operator/blob/master/ops/pebble.py), which I wrote for work. It handles the various types allowed for the `layer` parameter:
+Here are a couple more examples from Canonical's Python Operator Framework, in [`pebble.py`](https://github.com/canonical/operator/blob/master/ops/pebble.py), which I wrote for work.
+
+<details><summary markdown="span">**Example from `add_layer()`.** It handles the various types allowed for the `layer` parameter. Less visual noise, though also less explicit.</summary>
 
 ```python
 def add_layer(self, label, layer, *, combine=False):
@@ -496,8 +507,9 @@ def add_layer(self, label, layer, *, combine=False):
 Is the `match` version clearer? It's less noisy, but I kind of like the explicitness of the `isinstance()` calls. In addition, the empty parentheses in the various cases are a bit weird -- they look unnecessary with no positional arguments or attributes, but without them `match` would bind new variables named `str` or `dict`.
 
 At first I thought it was weird how the variables bound (and assigned) in a `case` block outlive the entire `match` block. But as shown in the above, it makes sense -- you'll often want to use the variables in the code below the `match`.
+</details>
 
-Here's another example from the same code base, from code I'm [working on](https://github.com/canonical/operator/blob/da244446532d8c98323c6af96e2901b539c5579f/ops/pebble.py#L1647-L1663) now:
+<details><summary markdown="span">**Example from `exec()`,** code I'm [working on](https://github.com/canonical/operator/blob/da244446532d8c98323c6af96e2901b539c5579f/ops/pebble.py#L1647-L1663) now. No clearer in this case.</summary>
 
 ```python
 def exec(command, stdin=None, encoding='utf-8', ...):
@@ -551,15 +563,16 @@ def exec(command, stdin=None, encoding='utf-8', ...):
 I'd argue this is no clearer. The `case None` is awkward -- we could avoid it by wrapping the whole thing in `if stdin is not None:` like the original code did, but that adds a third nesting level, which is less than ideal.
 
 The default case with a guard, `case _ if not hasattr(stdin, 'read')`, is also a bit more obscure than the original `elif` version. You could of course just use `case _` and then nest the `if not hasattr`.
+</details>
 
-Maybe I just don't write much of the kind of code that would benefit from this feature, but my guess is that there are a lot of people that fall into this camp. However, let's scan code from a couple of popular Python projects to see what we can find.
+Maybe I just don't write much of the kind of code that would benefit from this feature, but my guess is that there are a lot of people that fall into this camp. However, let's scan code from a few popular Python projects to see what we can find.
 
 
 ## Using it in other projects
 
 > **Go to:** [Standard library](#the-standard-library) \| [Django](#django) \| [Warehouse](#warehouse) \| [Mercurial](#mercurial) \| [Ansible](#ansible)
 
-Let's try the same thing for a few well-known repositories on the net. I'm going to pick examples from three different types of code: library code (from the standard library), framework code (from the Django web framework), and application code (from Warehouse, the server that powers the Python Package Index, from Mercurial, and from Ansible).
+I'm going to pick examples from three different types of code: library code (from the standard library), framework code (from the Django web framework), and application code (from Warehouse, the server that powers the Python Package Index, from Mercurial, and from Ansible).
 
 In an effort to be fair, I tried to find examples that would really benefit from `match` and were more than a glorified `switch` (there were a lot of those, but they're not using the *structural* part of pattern matching, so converting them isn't a huge win). I went looking for `elif` blocks which look like they test the structure of the data. There might be some good uses of `match` in code which just uses `if` without `elif`, but I think that would be rare.
 
@@ -567,7 +580,7 @@ In an effort to be fair, I tried to find examples that would really benefit from
 
 Python's standard library has about 709,000 lines of code, including tests (measured using [scc](https://github.com/boyter/scc)). The [ripgrep](https://github.com/BurntSushi/ripgrep) search tool (`rg --type=py 'elif ' | wc`) tells us that 2529 of those lines are `elif` statements, or 0.4%. I realize this would find “elif&nbsp;” in comments, but presumably that's rare.
 
-The first good use case I found was, not surprisingly, in the `ast` module, inside `literal_eval`'s [`_convert`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/ast.py#L82-L107) helper:
+<details><summary markdown="span">**Example from `ast.literal_eval()`,** in the [`_convert()`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/ast.py#L82-L107) helper. Not surprisingly, the first really good use case I found was in AST processing. Definitely a win.</summary>
 
 ```python
 def _convert(node):
@@ -630,10 +643,11 @@ def _convert(node):
 ```
 
 Definitely a win! Syntax tree processing seems like the ideal use case for `match`. In Python 3.10, the `ast` module's node types already have `__match_args__` set, so that makes it even cleaner by avoiding `Constant(value=value)` type of repetition.
+</details>
 
-Still, I want to find one outside the `ast` module. I won't copy it here, but there's a nice long `if ... elif` chain in [`curses/textpad.py:do_command`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/curses/textpad.py#L95): it's mostly a simple switch, but it would benefit from `match ... case` with a few `if` guards.
+Still, I want to find one outside the `ast` module. I won't include it here, but there's a nice long `if ... elif` chain in `curses/textpad.py` in [`do_command()`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/curses/textpad.py#L95): it's mostly a simple switch, but it would benefit from `match ... case` with a few `if` guards.
 
-What about this, from [`dataclasses.py:_asdict_inner`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/dataclasses.py#L1235):
+<details><summary markdown="span">**Example from `dataclasses`,** in [`_asdict_inner()`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/dataclasses.py#L1235). Reduces visual noise for a nice little improvement.</summary>
 
 ```python
 def _asdict_inner(obj, dict_factory):
@@ -679,8 +693,9 @@ def _asdict_inner(obj, dict_factory):
 ```
 
 A nice little improvement, though the first `case _` with the `if` guard is a bit weird. It may be able to be moved to a regular `if` statement inside the final `case _`, but I don't know the code well enough to know if that ordering would still do what's required.
+</details>
 
-Here's a quite different example from [`email/_parseaddr.py:_parsedate_tz`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/email/_parseaddr.py#L57):
+<details><summary markdown="span">**Example from `email.utils`,** in [`parsedate_tz()`](https://github.com/python/cpython/blob/dea59cf88adf5d20812edda330e085a4695baba4/Lib/email/_parseaddr.py#L57). Matching with tuple unpacking makes it a good bit cleaner.</summary>
 
 ```python
 def _parsedate_tz(data):
@@ -704,23 +719,7 @@ def _parsedate_tz(data):
     # use thh, tmm, tss
 ```
 
-Interestingly, while testing this I found that this code has a bug that raises an `UnboundLocalError` on invalid user input: if you pass a time with more than 3 dotted segments like `12.34.56.78`, the `thh`/`tmm`/`tss` variables won't be defined for the following code. Check this out:
-
-```
-$ python3.10 -c 'import email.utils; \
-    email.utils.parsedate_tz("Wed, 3 Apr 2002 12.34.56.78+0800")'
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-  File "/usr/local/lib/python3.10/email/_parseaddr.py", line 50, in parsedate_tz
-    res = _parsedate_tz(data)
-  File "/usr/local/lib/python3.10/email/_parseaddr.py", line 134, in _parsedate_tz
-    thh = int(thh)
-UnboundLocalError: local variable 'thh' referenced before assignment
-```
-
-All it needs is another `else: return None` in the dot case. I've opened an [issue](https://bugs.python.org/issue45239) and a [pull request](https://github.com/python/cpython/pull/28452) that adds a test case for this and fixes the bug.
-
-Anyway, let's have a shot at converting it to use `match` (we'll fix the bug as well):
+Let's have a shot at converting it to use `match`:
 
 ```python
 def _parsedate_tz(tm):
@@ -746,12 +745,29 @@ def _parsedate_tz(tm):
 This is definitely a good bit cleaner. It's always a bit of a pain when you use `str.split()` to have to test the length before unpacking a tuple (you could also catch the `ValueError` exception, but it's not as clear, and the nesting levels get a bit much).
 
 Side note: the `str.partition()` method is often useful in cases like this, but only when you have two items with a separator in between.
+</details>
+
+Interestingly, while testing `parsedate_tz()` I found that this code has a bug that raises an `UnboundLocalError` on invalid user input: if you pass a time with more than 3 dotted segments like `12.34.56.78`, the `thh`/`tmm`/`tss` variables won't be defined for the following code. Check this out:
+
+```
+$ python3.10 -c 'import email.utils; \
+    email.utils.parsedate_tz("Wed, 3 Apr 2002 12.34.56.78+0800")'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.10/email/_parseaddr.py", line 50, in parsedate_tz
+    res = _parsedate_tz(data)
+  File "/usr/local/lib/python3.10/email/_parseaddr.py", line 134, in _parsedate_tz
+    thh = int(thh)
+UnboundLocalError: local variable 'thh' referenced before assignment
+```
+
+All it needs is another `else: return None` in the dot case. I've opened an [issue](https://bugs.python.org/issue45239) and a [pull request](https://github.com/python/cpython/pull/28452) that adds a test case for this and fixes the bug.
 
 ### Django
 
 [Django](https://github.com/django/django) has 327,000 lines of code, including tests. Of these, there are 905 uses of `elif`, or 0.3%.
 
-Here's one from [`_check_fieldsets_item`](https://github.com/django/django/blob/ca9872905559026af82000e46cde6f7dedc897b6/django/contrib/admin/checks.py#L302-L323) that looks interesting:
+<details><summary markdown="span">**Example from Django admin checks,** in [`_check_fieldsets_item()`](https://github.com/django/django/blob/ca9872905559026af82000e46cde6f7dedc897b6/django/contrib/admin/checks.py#L302-L323). The structural matching is great here, but doesn't help produce good error messages.</summary>
 
 ```python
 def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
@@ -819,12 +835,13 @@ def _check_fieldsets_item(self, obj, fieldset, label, seen_fields):
 ```
 
 Is it clearer? Not really. It's a little strange repeating yourself, getting less and less specific. It also seems less obvious to me with the cases "backwards", falling through to the looser matches. And `[_, _]` followed by `[*_]` to mean "not of length 2" is not exactly explicit.
+</details>
 
 ### Warehouse
 
 [Warehouse](https://github.com/pypa/warehouse), PyPI's server code, has 59,000 lines of Python code, including tests. There are 35 uses of `elif`, or 0.06%. Interestingly, that's an order of magnitude less than either the standard library or Django, which fits with my conjecture that `match` won't pay off as much in "regular" code.
 
-I only found one example that (at first) looked like it would benefit from `match`, in [`sync_bigquery_release_files`](https://github.com/pypa/warehouse/blob/ae9fc472cfdf4ef8838f917644ca93150f68a97a/warehouse/packaging/tasks.py#L194-L208):
+<details><summary markdown="span">**Example from BigQuery syncing,** in [`sync_bigquery_release_files()`](https://github.com/pypa/warehouse/blob/ae9fc472cfdf4ef8838f917644ca93150f68a97a/warehouse/packaging/tasks.py#L194-L208). This is the only example I found in Warehouse that (at first!) looked like it would benefit from `match`, but turns out it doesn't.</summary>
 
 ```python
 for sch in table_schema:
@@ -843,6 +860,7 @@ for sch in table_schema:
 ```
 
 However, on closer inspection, these structural tests are being done on three different values (`file`, `release`, and `project`), and the structure they're being tested for is dynamic. At first I was thinking `object(name=name)` would do what we want, but the code is actually matching on an attribute with a name of whatever `sch.name`'s value is. Tricky!
+</details>
 
 It seems Warehouse wasn't exactly crying out for `match`. I decided to keep it here anyway, as I think it's a good counterpoint. Let's find a couple more examples by skimming through two other large applications: Mercurial and Ansible.
 
@@ -850,7 +868,7 @@ It seems Warehouse wasn't exactly crying out for `match`. I decided to keep it h
 
 [Mercurial](https://www.mercurial-scm.org/), the version control system, has 268,000 lines of Python code, including tests. There are 1941 uses of `elif`, or 0.7% -- the highest ratio yet.
 
-Here's a simple example from [`context.py:ancestor`](https://www.mercurial-scm.org/repo/hg/file/4e6f27230aee/mercurial/context.py#l723):
+<details><summary markdown="span">**Example from `context.py`,** in [`ancestor()`](https://www.mercurial-scm.org/repo/hg/file/4e6f27230aee/mercurial/context.py#l723). Small improvement using tuple unpacking.</summary>
 
 ```python
 def ancestor(self, c2, warn=False):
@@ -884,14 +902,15 @@ def ancestor(self, c2, warn=False):
             anc = ...
     return self._repo[anc]
 ```
+</details>
 
 There are quite a few cases like this where it might not be a huge win, but it is a small "quality of life" improvement for developers.
 
 ### Ansible
 
-[Ansible](https://github.com/ansible/ansible) is a widely-used configuration management system written in Python. It has 217,000 lines of Python code, including tests. There are 1594 uses of `elif`, which again is 0.7%.
+[Ansible](https://github.com/ansible/ansible) is a widely-used configuration management system written in Python. It has 217,000 lines of Python code, including tests. There are 1594 uses of `elif`, which again is 0.7%. Below are a couple of cases I saw which might benefit from pattern matching.
 
-Here are a couple of cases I saw which might benefit from pattern matching. First, from [`module_utils/basic.py:_return_formatted`](https://github.com/ansible/ansible/blob/61f5c225510ca82ed43582540c9b9570ef676d7f/lib/ansible/module_utils/basic.py#L1476):
+<details><summary markdown="span">**Example from `module_utils/basic.py`,** in [`_return_formatted()`](https://github.com/ansible/ansible/blob/61f5c225510ca82ed43582540c9b9570ef676d7f/lib/ansible/module_utils/basic.py#L1476). Small readability improvement.</summary>
 
 ```python
 def _return_formatted(self, kwargs):
@@ -923,8 +942,9 @@ def _return_formatted(self, kwargs):
                 self.deprecate(d)
     ...
 ```
+</details>
 
-From some version comparison code in [`utils/version.py:_Alpha.__lt__`](https://github.com/ansible/ansible/blob/61f5c225510ca82ed43582540c9b9570ef676d7f/lib/ansible/utils/version.py#L65):
+<details><summary markdown="span">**Example from `utils/version.py`,** in [`_Alpha.__lt__()`](https://github.com/ansible/ansible/blob/61f5c225510ca82ed43582540c9b9570ef676d7f/lib/ansible/utils/version.py#L65), some version-comparison code. Type checking is a little bit nicer with `match`.</summary>
 
 ```python
 class _Alpha:
@@ -956,6 +976,7 @@ class _Alpha:
             case _:
                 raise ValueError
 ```
+</details>
 
 In all of these projects, there are many more cases that *could* be converted to use `match`, but I've tried to pick out a few different kinds of code where it made sense to at least try.
 
