@@ -13,7 +13,7 @@ rss_url: /writings/rss.xml
 Below are the programming-related articles I’ve written (see also my [**non-technical writings**](/writings/non-tech/)). The list includes the guest contributions I've written for LWN.net, and tech blog articles for several of the companies I’ve worked for.
 
 
-## 2021
+<h2 id="y2021">2021</h2>
 
 * [Mugo](/writings/mugo/) is a toy, single-pass compiler for a tiny subset of Go -- just enough to compile itself. It compiles to x86-64 assembly on Linux. (April)
 * [How to implement a hash table](/writings/hash-table-in-c/) explains how to implement a simple hash table data structure, with code and examples in the C programming language. (March)
@@ -22,7 +22,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 * [Coming in Go 1.16: ReadDir and DirEntry](/writings/go-readdir/): A look at the new `os.ReadDir` function coming in Go 1.16, with a comparison to `os.scandir` in Python. (January)
 
 
-## 2020
+<h2 id="y2020">2020</h2>
 
 * [Fuzzing in Go](https://lwn.net/Articles/829242/) is an overview of fuzz testing and the go-fuzz tool, as well as a look at the recent draft design for including fuzz testing in the `go` tool. (August, LWN.net)
 * [Searching code with Sourcegraph](https://lwn.net/Articles/828748/) looks at Sourcegraph, a code search and code intelligence tool. (August, LWN.net)
@@ -43,21 +43,21 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 * [SEO for Software Engineers](/writings/seo-for-software-engineers/) goes over the basics of Search Engine Optimization, written for software developers. (February, Compass.com)
 
 
-## 2019
+<h2 id="y2019">2019</h2>
 
 * [Fast Cloudfront log queries](https://medium.com/compass-true-north/fast-cloudfront-log-queries-using-aws-athena-and-serverless-ef117393c5a6) shows how to use AWS Lambda to partition your Cloudfront logs for faster querying via Athena. (December, Compass.com)
 * [Learning Elm](/writings/learning-elm/) describes how I ported a medium-sized web frontend from React to Elm and had fun with a pure functional language in the process. (October)
 * [Replacing Google Analytics with GoAccess](/writings/replacing-google-analytics/) describes how I replaced Google tracking with simple log-based analytics on my personal website. (April)
 
 
-## 2018
+<h2 id="y2018">2018</h2>
 
 * [GoAWK](/writings/goawk/) is an AWK interpreter written in Go, and this article describes how I wrote it, tested it, and measured and improved its performance. (November)
 * [LoxLox](/writings/loxlox/) is an interpreter for *Crafting Interpreters'* Lox programming language written in Lox! (October)
 * [Writing good commit messages](/writings/writing-good-commit-messages/) looks at why quality commit messages are important and how to write them. (September, Compass.com)
 
 
-## 2017
+<h2 id="y2017">2017</h2>
 
 * [Littlelang](/writings/littlelang/) is a dynamically-typed programming language I designed and wrote an interpreter for in Go (and in littlelang itself!). (December)
 * [Learning Go](/writings/learning-go/) describes how I learnt the basics of Go (its good parts as well as a few quirks) by porting a medium-sized web backend from Python. (November)
@@ -69,16 +69,17 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 * [Developing GiftyWeddings.com](/writings/gifty/) explains how I got started with my wedding gift registry website and also describes the 2016 revamp I gave the site. (January)
 
 
-## 2016
+<h2 id="y2016">2016</h2>
+
 * [Contributing os.scandir() to Python](/writings/scandir/) describes my experience contributing a medium-sized feature to the Python 3.5 standard library. (August)
 
 
-## 2015
+<h2 id="y2015">2015</h2>
 
 * [Using Ansible to restore developer sanity](/writings/using-ansible-to-restore-developer-sanity/) talks about how we went from a deployment including 28 manual steps to a single Ansible command. (July, Oyster.com)
 
 
-## 2013
+<h2 id="y2013">2013</h2>
 
 * [Saving 9 GB of RAM with Python’s \_\_slots\_\_](/writings/save-ram-with-python-slots/) describes the huge memory savings we got using `__slots__` on a single class. (November, Oyster.com)
 * [Yes, my credit card number *does* have spaces!](http://blog.brush.co.nz/2013/07/card-number/) rants about payment forms that don’t allow you to type the spaces in your credit card number. (July, Brush.co.nz)
@@ -87,26 +88,26 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 * [Masterminds of Programming](http://blog.brush.co.nz/2013/01/masterminds-of-programming/) reviews an excellent book that interviews the creators of 17 important programming languages. (January, Brush.co.nz)
 
 
-## 2012
+<h2 id="y2012">2012</h2>
 
 * [C#'s async/await compared to protothreads in C++](http://blog.brush.co.nz/2012/11/async-await-protothreads-cpp/) looks at how two very different async constructs unroll to state machines in a similar way. (November, Brush.co.nz)
 
 
-## 2011
+<h2 id="y2011">2011</h2>
 
 * [CherryPy, ctypes, and being explicit](/writings/cherrypy-ctypes-and-being-explicit/) details a bug in CherryPy on Windows due to lack of `ctypes` argument types. (October, Oyster.com)
 * [How our photo search engine really works](/writings/how-our-photo-search-engine-really-works/) describes how I wrote Oyster's photo search engine. (July, Oyster.com)
 * [Should you use C++ for an embedded project?](http://blog.brush.co.nz/2011/01/cpp-embedded/) asks some hard questions about C versus C++ in small embedded systems. (January, Brush.co.nz)
 
 
-## 2010
+<h2 id="y2010">2010</h2>
 
 * [C++ for C programmers, part 2 of 2](http://blog.brush.co.nz/2010/08/cpp-2/) introduces the object-oriented features of C++, for C programmers. (August, Brush.co.nz)
 * [C++ for C programmers, part 1 of 2](http://blog.brush.co.nz/2010/05/cpp-1/) introduces the non-OO features of C++, for C programmers. (May, Brush.co.nz)
 * [Why I'm not moving to Linux just yet](http://blog.brush.co.nz/2010/04/not-linux-yet/) gave the reasons I wasn’t about to switch to Linux in 2010, notably poor font rendering and inconsistent UI. (April, Brush.co.nz)
 
 
-## 2009
+<h2 id="y2009">2009</h2>
 
 * [Go Forth and WikiReadit](http://blog.brush.co.nz/2009/12/wikireader/) asks Christopher Hall, one of the main software developers of the WikiReader, why he chose Forth for testing and sub-apps. (December, Brush.co.nz)
 * [Code generation with X-Macros in C](http://blog.brush.co.nz/2009/08/xmacros/) describes X Macros, a little-known but very useful way to use the C preprocessor to initialize code and data. (August, Brush.co.nz)
@@ -116,7 +117,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 * [RAII, AC/DC, and the "with" statement](http://blog.brush.co.nz/2009/02/raii-acdc/) explains RAII in C++, and why it’s a terrible acronym. (February, Brush.co.nz)
 
 
-## 2008
+<h2 id="y2008">2008</h2>
 
 * [Helvetica: can a font be a film?](http://blog.brush.co.nz/2008/09/helvetica/) talks about Arial versus Helvetica, and about the film *Helvetica*. (September, Brush.co.nz)
 * [Protothreads and C++](http://blog.brush.co.nz/2008/07/protothreads/) introduces my port of Adam Dunkels’ protothreads to C++. (July, Brush.co.nz)
@@ -127,7 +128,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 * [Ten quirky things about Python](http://blog.brush.co.nz/2008/01/ten-python-quirkies/) lists, um, ten quirky things about Python. (January, Brush.co.nz)
 
 
-## 2007
+<h2 id="y2007">2007</h2>
 
 * [Recursive decent parsing [sic]](http://blog.brush.co.nz/2007/11/recursive-decent/) shows how to turn a simple BNF grammar into code. (November, Brush.co.nz)
 * [Ten things I love && hate about C](http://blog.brush.co.nz/2007/10/ten-things-about-c/) has a pretty self-explanatory title. (October, Brush.co.nz)

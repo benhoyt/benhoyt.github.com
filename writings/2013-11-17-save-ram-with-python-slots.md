@@ -5,7 +5,7 @@ permalink: /writings/save-ram-with-python-slots/
 description: Describes the huge memory savings we got using __slots__ on a single class
 canonical_url: http://tech.oyster.com/save-ram-with-python-slots/
 ---
-<h1>{{ page.title }}</h1>
+<h1>Saving 9 GB of RAM with Python \_\_slots\_\_</h1>
 <p class="subtitle">November 2013</p>
 
 > [Original article on tech.oyster.com]({{ page.canonical_url }})
