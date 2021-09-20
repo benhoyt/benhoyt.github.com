@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Structural pattern matching in Python 3.10</title>
+  <description>A critical but informative look at the new structural pattern matching feature in Python 3.10, with real-world code examples.</description>
+  <link>https://benhoyt.com/writings/python-pattern-matching/</link>
+  <guid>https://benhoyt.com/writings/python-pattern-matching/</guid>
+  <pubDate>Mon, 20 Sep 2021 19:30:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Mugo, a toy compiler for a subset of Go that can compile itself</title>
   <description>An overview of Mugo, a single-pass compiler for a tiny subset of the Go programming language -- just enough to compile itself.</description>
   <link>https://benhoyt.com/writings/mugo/</link>

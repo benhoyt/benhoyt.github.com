@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2021">2021</h2>
 
+* [Structural pattern matching in Python 3.10](/writings/python-pattern-matching/) is a critical but informative look at this new feature, with real-world code examples. (September)
 * [Mugo](/writings/mugo/) is a toy, single-pass compiler for a tiny subset of Go -- just enough to compile itself. It compiles to x86-64 assembly on Linux. (April)
 * [How to implement a hash table](/writings/hash-table-in-c/) explains how to implement a simple hash table data structure, with code and examples in the C programming language. (March)
 * [Performance comparison](/writings/count-words/) of counting and sorting word frequencies in various languages: Python, Go, C++, C, AWK, Forth, Rust, and others. (March)
