@@ -35,7 +35,7 @@ Part of what I want to do here is evaluate some real code and see how much (or l
 
 ## What it is
 
-You can think of pattern matching as a `switch` statement on steroids. Many people have asked for a `switch` in Python over the years, though I can see why it has never been added. It just doesn't provide enough value over a bunch of `if ... elif` statements to pay for itself. The new `match ... case` feature provides the features of `switch`, plus the "structural" matching part -- and some.
+It's tempting to think of pattern matching as a `switch` statement on steroids. However, as the rationale PEP points out, it's better thought of as a "generalized concept of iterable unpacking". Many people have asked for a `switch` in Python over the years, though I can see why that has never been added. It just doesn't provide enough value over a bunch of `if ... elif` statements to pay for itself. The new `match ... case` feature provides the basics of `switch`, plus the "structural" matching part -- and some.
 
 The basic syntax is shown in the following switch-like example (imagine we're rolling our own Git CLI):
 
@@ -297,7 +297,7 @@ Let's look at converting some existing code to use the new feature. I'm basicall
 
 The first couple of examples are from [pygit](https://benhoyt.com/writings/pygit/), a toy subset of `git` that's just enough of a Git client to create a repo, commit, and push itself to GitHub ([full source code](https://github.com/benhoyt/pygit/blob/master/pygit.py)).
 
-<details><summary markdown="span">**I've collapsed the code blocks below by default.** Just click the arrow or summary paragraph to expand.</summary>
+<details><summary markdown="span">**I've collapsed the code blocks below by default.** Just click the arrow or summary paragraph to expand. <button onclick="expandAllDetails()">Expand All</button> <button onclick="collapseAllDetails()">Collapse All</button></summary>
 
 ```python
 if answer() == 42:
@@ -1000,6 +1000,10 @@ My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Pytho
 1. Variable names: a variable in a `case` clause doesn't return its value like in ordinary code, it binds it as a name. This means `case RED` doesn't work as you expect -- it will set a new variable named `RED`, not match your colour constant. To match on constants, they have to have a dot in them -- so `case Colors.RED` works. In writing some of the code above I actually made this mistake: I wrote `case ('commit' | 'tree' | 'blob', mode)`, expecting it to match if the tuple's second item was equal to `mode`, but of course it would have set `mode` to the second item.
 2. Class patterns: these look like function calls, but they're really `isinstance` and `hasattr` tests. It looks nice, but it's sometimes confusing. It also means you can't match on the result of an actual function call -- that would have to be in an `if` guard.
 
+The rationale PEP does acknowledge these syntax variations in the ["Patterns" section](https://www.python.org/dev/peps/pep-0635/#id2):
+
+> Although patterns might superficially look like expressions, it is important to keep in mind that there is a clear distinction. In fact, no pattern is or contains an expression. It is more productive to think of patterns as declarative elements similar to the formal parameters in a function definition.
+
 **The __match_args__ magic.** In my opinion the `__match_args__` feature is too magical, and requires developers to decide which of a class's attributes should be position-matchable, if any. It's also strange that the `__match_args__` order could be different from the order of the class's `__init__` parameters (though in practice you'd try not to do that). I can see why they've included this feature, as it makes the likes of AST node matching really nice, but it's not very explicit.
 
 **Cost for other implementations.** CPython is by far the most commonly-used Python interpreter, but there are also others, such as PyPy and MicroPython, that will have to decide whether or not to implement this feature. Other interpreters are always playing catch-up anyway, but a feature of this size at this stage in Python's history will make it even harder for other implementations to keep up.
@@ -1007,6 +1011,10 @@ My hunch is that the PEP authors (Brandt Bucher and Guido van Rossum, both Pytho
 Originally I was also concerned that `match`'s class patterns don't play well with Python's use of [duck typing](https://en.wikipedia.org/wiki/Duck_typing), where you just access attributes and call methods on an object, *without* checking its type first (for example, when using [file-like objects](https://docs.python.org/3/glossary.html#term-file-object)). With class patterns, however, you specify the type, and it performs an `isinstance` check. Duck typing is still possible using `object()`, but it would be a bit strange.
 
 However, now that I've used the feature, I think this is mostly a theoretical concern -- the places you'd use class patterns don't really overlap with the places you'd use duck typing.
+
+This duck typing concern is [discussed briefly](https://www.python.org/dev/peps/pep-0635/#history-and-context) in the rationale PEP:
+
+> Paying tribute to Python's dynamic nature with 'duck typing', however, we also added a more direct way to specify the presence of, or constraints on specific attributes. Instead of `Node(x, y)` you could also write `object(left=x, right=y)`, effectively eliminating the `isinstance()` check and thus supporting any object with `left` and `right` attributes.
 
 
 ## Wrapping up
@@ -1020,3 +1028,19 @@ I've also been using Go a lot recently, and there's definitely something good ab
 Overall I'm a bit pessimistic about structural pattern matching in Python. It's just a big feature to add so late in the game (Python is 30 years old this year). Is the language starting to implode under its own weight?
 
 Or, as my friend predicted, is it one of those features that will be over-used for everything for a couple of years, and then the community will settle down and only use it where it really improves the code? We shall see!
+
+<script>
+function expandAllDetails() {
+    var details = document.querySelectorAll("details");
+    for (var i = 0; i < details.length; i++) {
+        details[i].setAttribute("open", "true");
+    }
+}
+
+function collapseAllDetails() {
+    var details = document.querySelectorAll("details");
+    for (var i = 0; i < details.length; i++) {
+        details[i].removeAttribute("open");
+    }
+}
+</script>
