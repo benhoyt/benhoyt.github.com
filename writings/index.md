@@ -4,7 +4,9 @@ title: Technical Writing
 permalink: /writings/
 rss_url: /writings/rss.xml
 ---
-<div style="float: right; font-size: 80%;"><a href="/writings/rss.xml">RSS feed</a></div>
+<div style="float: right; font-size: 80%;">
+<a href="/writings/rss.xml">RSS feed</a>
+</div>
 
 # {{ page.title }}
 
