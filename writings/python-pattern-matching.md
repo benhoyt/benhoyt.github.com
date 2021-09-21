@@ -349,6 +349,19 @@ However, one thing that's not great is how the "success case" ends up sandwiched
         case [obj]:
             return os.path.join(obj_dir, obj)
 ```
+
+Alternatively, you could put the success (most specific) case first, which is a bit nicer:
+
+```python
+    match objects:
+        case [obj]:
+            return os.path.join(obj_dir, obj)
+        case []:
+            raise ValueError('object {!r} not found'.format(sha1_prefix))
+        case _:
+            raise ValueError('multiple objects ({}) with prefix {!r}'
+                .format(len(objects), sha1_prefix))
+```
 </details>
 
 <details><summary markdown="span">**Example from `cat_file()`,** shown two different ways. Seems like a slight win.</summary>
