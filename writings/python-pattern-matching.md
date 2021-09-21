@@ -1029,6 +1029,9 @@ Overall I'm a bit pessimistic about structural pattern matching in Python. It's 
 
 Or, as my friend predicted, is it one of those features that will be over-used for everything for a couple of years, and then the community will settle down and only use it where it really improves the code? We shall see!
 
+*Comment over at [Lobsters](https://lobste.rs/s/dpdmcg/structural_pattern_matching_python_3_10) or [Hacker News](https://news.ycombinator.com/item?id=28600594).*
+
+
 <script>
 function expandAllDetails() {
     var details = document.querySelectorAll("details");
