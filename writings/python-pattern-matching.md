@@ -194,7 +194,7 @@ if isinstance(e, Click):
         handle_click_at(x, y)
     # ignore other clicks
 elif isinstance(e, KeyPress):
-    key == e.key_name
+    key = e.key_name
     if key == "Q":
         game.quit()
     elif key == "up arrow":
