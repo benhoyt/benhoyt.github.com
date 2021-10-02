@@ -2,10 +2,10 @@
 layout: default
 title: "Simple Lists: a tiny to-do list app written the old-school way (server-side Go, no JS)"
 permalink: /writings/simple-lists/
-description: "TODO"
+description: "Simple Lists is a tiny to-do list web application written in Go, with old school server-side rendering and no JavaScript."
 ---
 <h1>{{ page.title }}</h1>
-<p class="subtitle">September 2021</p>
+<p class="subtitle">October 2021</p>
 
 <!-- TODO:
 * run Heroku version on branch with red warning banner: "this is a demo. lists may be deleted every few hours"
@@ -14,7 +14,7 @@ description: "TODO"
 
 > Summary: This article describes why and how I wrote Simple Lists, a tiny to-do list web app written in Go. It's built in the old-school way: HTML rendered by the server, plain old `GET` and `POST` with HTML forms, and no JavaScript.
 >
-> **Go to:** [Features](TODO) \| [No JS](TODO) \| [Go](TODO) \| [Routing](TODO) \| [DB](TODO) \| [Testing](TODO) \| [HTML/CSS](TODO) \| [Security](TODO) \| [Conclusion](TODO)
+> **Go to:** [Features](#features) \| [No JS](#no-js-not-node-js) \| [Go](#yes-to-go) \| [Routing](#simple-servemux-routing) \| [DB](#database-handling) \| [DI](#manual-dependency-injection) \| [Testing](#testing) \| [HTML](#minimal-html-and-css) \| [Security](#security) \| [Conclusion](#conclusion)
 
 
 I've been wanting to do a little side project again: creating and coding, just for the joy of it. And I wanted to create something that might be useful for myself or my family, so I made a little to-do list app. I know there are thousands of to-do list apps out there, but I just like building stuff, especially things that fit with the principles of the [small web](/writings/the-small-web-is-beautiful/).
@@ -133,8 +133,6 @@ if lst is None:
 
 You *could* achieve this in Go using panics, but it's well outside the idiomatic zone. Go just isn't very terse, and the sooner one stops worrying about that, the better.
 
-TODO: link to .go files, mention that Server and SQLModel could be in their own packages, but just made them flat for simplicity.
-
 
 ## Simple `ServeMux` routing
 
@@ -207,41 +205,338 @@ func csrf(h http.HandlerFunc) http.HandlerFunc {
 
 The choice of database was a no-brainer. I've long admired SQLite, and for a project of this size it just made sense. The only alternative I'd consider for a larger project would be PostgreSQL, because I trust it and really like it (it's fast, well-documented, and has excellent features like JSON support).
 
-Model interface: note that in this case don't need it, but it's a good pattern for unit testing and it doesn't add much weight. TODO
+It's good practice to factor out your database queries into methods on a "model" struct, to avoid having SQL directly in your HTTP handlers. This keeps the data access concerns separate, and it allows you to test your server against a fake database instead of a heavy database like PostgreSQL if you need to.
 
-ORMs, sqlx, plain database/sql
+Because I'm trying to minimize dependencies (and because I don't love ORMs), I decided to use just the standard library's `database/sql` package for this project. I briefly considered using [`sqlx`](https://github.com/jmoiron/sqlx) -- I do like its struct and slice handling -- but for a tiny database model like this it doesn't add that much.
+
+Here are a couple of functions from [`db.py`](https://github.com/benhoyt/simplelists/blob/master/db.go) to give you the flavour of what this looks like. `GetList` fetches a single list, and the `getListItems` helper fetches all of that list's items:
+
+```go
+// GetList fetches one list and returns it, or nil if not found.
+func (m *SQLModel) GetList(id string) (*List, error) {
+    row := m.db.QueryRow(`
+        SELECT id, name
+        FROM lists
+        WHERE id = ? AND time_deleted IS NULL
+        `, id)
+    var list List
+    err := row.Scan(&list.ID, &list.Name)
+    if err == sql.ErrNoRows {
+        return nil, nil
+    }
+    if err != nil {
+        return nil, err
+    }
+    list.Items, err = m.getListItems(id)
+    return &list, err
+}
+
+func (m *SQLModel) getListItems(listID string) ([]*Item, error) {
+    rows, err := m.db.Query(`
+        SELECT id, description, done
+        FROM items
+        WHERE list_id = ? AND time_deleted IS NULL
+        ORDER BY id
+        `, listID)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var items []*Item
+    for rows.Next() {
+        var item Item
+        err = rows.Scan(&item.ID, &item.Description, &item.Done)
+        if err != nil {
+            return nil, err
+        }
+        items = append(items, &item)
+    }
+    return items, rows.Err()
+}
+```
+
+As you can see, `QueryRow` is used to fetch a single row from a single, and it's straightforward to use. `Query` fetches multiple rows, and it's a bit more of a hassle -- you have to iterate over the rows, `Scan` each row, check for scan errors, and append it to the slice. Oh, and remember to `Close` the rows object. I tried to find ways to simplify this, but with plain `database/sql`, this is about the best you can do (let me know if you have a better way).
+
+It's nice to minimize dependencies, but it's definitely a tradeoff. I'd recommend using the aforementioned [`sqlx`](https://github.com/jmoiron/sqlx) library if you have to do a lot of querying. With `sqlx`, the `getListItems` helper would lose all of the iteration and `Scan` boilerplate:
+
+```go
+func (m *SQLModel) getListItems(listID string) ([]*Item, error) {
+    var items []*Item
+    err := m.db.Select(&items, `
+        SELECT id, description, done
+        FROM items
+        WHERE list_id = ? AND time_deleted IS NULL
+        ORDER BY id
+        `, listID)
+    return items, err
+}
+```
+
+On the other hand, mutation queries are simple with `database/sql`, because you don't have to scan rows. Below is how I delete an item from a list (I usually prefer soft-delete so you can potentially undelete later):
+
+```go
+// DeleteItem (soft) deletes the given item in a list.
+func (m *SQLModel) DeleteItem(listID, itemID string) error {
+    _, err := m.db.Exec(`
+            UPDATE items
+            SET time_deleted = CURRENT_TIMESTAMP
+            WHERE list_id = ? AND id = ?
+        `, listID, itemID)
+    return err
+}
+```
+
+
+## Manual dependency injection
+
+Before I show how I've implemented the actual tests, I want to talk briefly about Go interfaces and dependency injection. "Injecting dependencies" is a Good Thing, but dependency injection frameworks and libraries are a pain in the neck.
+
+In Go, you tend to define interfaces not in the package that provides the implementation, but in the package that uses it (and the interface may only be a subset of the methods the implementation provides).
+
+The Simple Lists code is very flat, with everything in one package: `main`. But to show how it would be done in larger projects, I've defined a database `Model` interface [in `server.go`](https://github.com/benhoyt/simplelists/blob/master/server.go) near where it's used. Here are the interfaces that a `Server` needs, along with the signature of the `NewServer` function used to create a server instance:
+
+```go
+// Model is the database model interface used by the server.
+type Model interface {
+    GetLists() ([]*List, error)
+    CreateList(name string) (string, error)
+    DeleteList(id string) error
+    GetList(id string) (*List, error)
+
+    AddItem(listID, description string) (string, error)
+    UpdateDone(listID, itemID string, done bool) error
+    DeleteItem(listID, itemID string) error
+
+    CreateSignIn() (string, error)
+    IsSignInValid(id string) (bool, error)
+    DeleteSignIn(id string) error
+}
+
+// Logger is the logger interface used by the server.
+type Logger interface {
+    Printf(format string, v ...interface{})
+}
+
+// NewServer creates a new server with the specified dependencies.
+func NewServer(
+    model Model,
+    logger Logger,
+    timezone string,
+    username string,
+    passwordHash string,
+    showLists bool,
+) (*Server, error) {
+    ...
+}
+```
+
+Then in `main.go`, we wire everything up:
+
+```go
+func main() {
+    ...
+    db, err := sql.Open("sqlite", *dbPath)
+    exitOnError(err)
+    model, err := NewSQLModel(db)
+    exitOnError(err)
+    s, err := NewServer(model, log.Default(), *timezone,
+                        *username, passwordHash, *showLists)
+    exitOnError(err)
+    ...
+}
+```
+I've used dependency injection "frameworks" in Go before, and most of them use runtime reflection to magically wire everything up. That's a pain in the neck, because your compiler can't check the types, and your IDE can't go to definition, because the instances aren't explicitly created.
+
+Wiring up everything explicitly in `main` is far superior: it's type checked, IDE-friendly, ordinary Go code.
+
+Using an interface for the database model allows us to easily create a mock or fake database implementation for use in tests. That's useful when your production code uses heavy external database like PostgreSQL or MongoDB. However, in this case we're using a real SQLite database (albeit an in-memory one) in the tests, so we don't even need to write a fake. Here's how we wire up the server in the tests:
+
+```go
+db, err := sql.Open("sqlite", ":memory:")
+if err != nil {
+    t.Fatalf("opening database: %v", err)
+}
+model, err := NewSQLModel(db)
+if err != nil {
+    t.Fatalf("creating model: %v", err)
+}
+server, err := NewServer(model, nullLogger{}, "Pacific/Auckland",
+                         "", "", true)
+if err != nil {
+    t.Fatalf("creating server: %v", err)
+}
+```
 
 
 ## Testing
 
-TODO: write end-to-end tests? also one test with db mocked out just to show how that's done?
+I like running against the real database in tests where possible. If you can spin up a PostgreSQL database in a container cheaply, or if you can use an in-memory database, you're testing against a real database, maybe even the same one you're going to use in production.
+
+In our case, we're using an in-memory SQLite database (`:memory:`), so everything's in-process and doesn't even hit the disk. There's no need to write fakes or use mocks -- our tests run very fast using SQLite. If we were using PostgreSQL in production, I'd probably still use SQLite for the tests to keep them fast, and just override the queries that need to be different between SQLite and PostgreSQL.
+
+The tests are also fairly close to end-to-end: so they test the functionality, not the implementation. Each tests hits the `Server.ServeHTTP` handler and records the HTTP response using the [`net/http/httptest`](https://pkg.go.dev/net/http/httptest) package.
+
+Here's what a snippet of the tests looks like:
+
+```go
+func TestSQLite(t *testing.T) {
+    ...
+    jar, err := cookiejar.New(nil)
+    if err != nil {
+        t.Fatalf("creating cookie jar: %v", err)
+    }
+
+    // Fetch homepage
+    var csrfToken string // CSRF token stays same for entire session
+    {
+        recorder := serve(t, server, jar, "GET", "/", nil)
+
+        ensureCode(t, recorder, http.StatusOK)
+        forms := parseForms(t, recorder.Body.String())
+        ensureInt(t, len(forms), 1)
+        ensureString(t, forms[0].Action, "/create-list")
+        csrfToken = forms[0].Inputs["csrf-token"]
+        if csrfToken == "" {
+            t.Fatal("csrf-token input not found")
+        }
+    }
+
+    // Create list
+    var listID string
+    var listIDs []string
+    {
+        form := url.Values{}
+        form.Set("csrf-token", csrfToken)
+        form.Set("name", "Shopping List")
+        recorder := serve(t, server, jar, "POST", "/create-list", form)
+
+        ensureCode(t, recorder, http.StatusFound)
+        location := recorder.Result().Header.Get("Location")
+        ensureRegex(t, location, "/lists/[a-z]{10}")
+        listID = location[7:]
+        listIDs = append(listIDs, listID)
+    }
+    ...
+```
+
+Repeating `if got != want { t.Fatalf("got %d, want %d", got, want) }` blocks over and over again gets a bit old, so I've factored out those into helper functions. I could also use one of the many assertion libraries (I'm partial to [`gocheck`](http://labix.org/gocheck) because of its small API), but it was easy to write a couple of small `ensure*` helper functions to avoid pulling in a dependency.
+
+Because this isn't a JSON API, I've written a [`parseForms`](https://github.com/benhoyt/simplelists/blob/35d490b67f16982357321cb03eb9cd664f2f7175/server_test.go#L322) helper that parses the HTML forms in the response body using the [`golang.org/x/net/html`](https://pkg.go.dev/golang.org/x/net/html) package. That allows us to pull out various fields for later use, like the CSRF token.
+
+I've made a simplifying design choice here that probably wouldn't scale: the tests are all written in a single sequential `TestServer` function, and later parts of the test depend on previous ones. I can get away with this because running the tests is so fast (10 milliseconds), and it avoids having to do common setup steps like create a list at the start of each sub-test.
+
+If I were doing this in a larger codebase, I'd put the setup steps in a helper function, and run each part of the test as [subtests](https://go.dev/blog/subtests) using [`t.Run`](https://pkg.go.dev/testing#T.Run).
+
+The `serve` test helper is as follows:
+
+```go
+// serve records a single HTTP request and returns the response recorder.
+func serve(t *testing.T, server *Server, jar http.CookieJar,
+           method, path string, form url.Values,
+) *httptest.ResponseRecorder {
+    t.Helper()
+    var body io.Reader
+    if form != nil {
+        body = strings.NewReader(form.Encode())
+    }
+    r, err := http.NewRequest(method, "http://localhost"+path, body)
+    if err != nil {
+        t.Fatalf("creating request: %v", err)
+    }
+    if form != nil {
+        r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+    }
+    for _, c := range jar.Cookies(r.URL) {
+        r.Header.Add("Cookie", c.Name+"="+c.Value)
+    }
+    recorder := httptest.NewRecorder()
+    server.ServeHTTP(recorder, r)
+    jar.SetCookies(r.URL, recorder.Result().Cookies())
+    return recorder
+}
+```
+
+Note the use of [`net/http/cookiejar`](https://pkg.go.dev/net/http/cookiejar) to ensure we're passing cookies set on previous requests to subsequent requests. The CSRF cookie is automatically handled this way.
+
+The Go tests test most of the basic server-side functionality. However, they don't really test the layout and UI, so when making changes I run through a quick manual test locally in the browser as well. There are only a few features, so running through them all only takes a few seconds.
 
 
 ## Minimal HTML and CSS
 
-I've used Go's [html/template](https://pkg.go.dev/html/template) package for HTML templating. It's a bit quirky, but once you've read the documentation (the bulk of the templating documentation is actually in [text/template](https://pkg.go.dev/text/template)), it's not bad.
+I've used Go's [html/template](https://pkg.go.dev/html/template) package for HTML templating. It's a bit quirky (I'd prefer if the expression syntax was a subset of Go expressions, for example), but once you've read the documentation, it's not bad. Note that the bulk of the templating documentation is actually in the [text/template](https://pkg.go.dev/text/template) docs.
 
 The HTML is very simple: there are only two pages, which I've done in two separate templates. The `html/template` package has support for "blocks", which allow template reuse, but it's simpler just to have a bit of repetition between the two templates.
 
-See the [full template source](https://github.com/benhoyt/simplelists/blob/master/templates.go). Note the `meta` viewport tag, which makes the layout work nicely on mobile phones -- it's "fully responsive"!
+See the [full template source](https://github.com/benhoyt/simplelists/blob/master/templates.go). Note the `meta` viewport tag, which makes the layout work nicely on mobile phones -- Simple Lists is "fully responsive"!
 
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1">
 ```
 
-The HTML uses a small amount of CSS to style the list elements and buttons. For this size app, I find it easiest just to use inline CSS, for example, to remove the border and set the colour of the delete-item button (and note the use of the Unicode `✕` for the button label -- who needs icons!):
+The HTML uses a small amount of CSS to style the list elements and buttons. For this size app, I found it easiest just to use inline CSS, for example, to remove the border and set the colour of the delete-item button (and note the use of the Unicode `✕` for the button label -- who needs icons!):
 
 ```html
 <button style="padding: 0 0.5em; border: none; background: none;
                color: #ccc" title="Delete Item">✕</button>
 ```
 
-If you were creating a larger app, you'd probably want to use CSS classes to make it easier to reuse these styles and define them all in one place.
+If you were creating a larger app, you'd probably want to use CSS classes or some other mechanism to make it easier to reuse these styles and define them all in one place.
 
 
 ## Security
 
-First, this app has not had a security review, and I don't promise anything here. It's [not good practice](https://security.stackexchange.com/questions/9455/is-it-safe-to-store-the-password-hash-in-a-cookie-and-use-it-for-remember-me-l) to store the hashed password directly in a cookie. However, the authentication is just for my personal site (which I run over HTTPS), and I'm not storing anything hugely sensitive there, so it's good enough for my purposes.
+This app has not had a security review, so I don't promise anything here, although I've tried to be careful. Some points to note:
 
-* TODO: mention sign-in out, bcrypt, etc
-* TODO: CSRF protection
+* As mentioned, it implements CSRF protection by ensuring the `csrf-token` cookie matches the `csrf-token` form field.
+* It uses Go's templating library, which automatically protects against cross-site scripting (XSS) attacks.
+* It uses Go's `database/sql` library with parameterized queries, making it safe from SQL injection attacks.
+* SQLite is [heavily tested](https://sqlite.org/testing.html)
+* Go's HTTP server is known to be secure and production-hardened.
+
+The username/password authentication is turned off on the demo site, but I have it enabled on my personal instance our family uses. There's only a single username and password, but that's enough for my own use.
+
+In this mode, the [`bcrypt`](https://pkg.go.dev/golang.org/x/crypto/bcrypt) package is used to hash the (single!) password. The username is passed to the server as a command-line parameter, and the hashed password is passed in an environment variable. Obviously if we wanted to support multiple users, we'd want to store usernames and hashed passwords in the database. Sessions, or "sign ins", are stored in a simple `sign_ins` database table, and expire after 90 days.
+
+Below is the code for the `signIn` request handler. It fetches the username and password from form fields, checks it using `bcrypt.CompareHashAndPassword`, and creates the `sign_ins` row and sets a `sign-in` cookie if it's valid.
+
+```go
+func (s *Server) signIn(w http.ResponseWriter, r *http.Request) {
+    username := strings.TrimSpace(r.FormValue("username"))
+    password := r.FormValue("password")
+    returnURL := r.FormValue("return-url")
+    if returnURL == "" {
+        returnURL = "/"
+    }
+    if username != s.username || bcrypt.CompareHashAndPassword([]byte(s.passwordHash), []byte(password)) != nil {
+        http.Redirect(w, r, "/?error=sign-in&return-url="+url.QueryEscape(returnURL), http.StatusFound)
+        return
+    }
+    id, err := s.model.CreateSignIn()
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    cookie := &http.Cookie{
+        Name:     "sign-in",
+        Value:    id,
+        MaxAge:   90 * 24 * 60 * 60,
+        Path:     "/",
+        Secure:   r.URL.Scheme == "https",
+        HttpOnly: true,
+        SameSite: http.SameSiteStrictMode,
+    }
+    http.SetCookie(w, cookie)
+    http.Redirect(w, r, returnURL, http.StatusFound)
+}
+
+
+## Conclusion
+
+I really enjoyed building Simple Lists, and it's already been useful for shared lists for our family (birthday and Christmas lists, movies-to-watch lists, and so on). I like to keep thing small, fast, and light, and believe I've achieved that here.
+
+Using Go is a lot of fun: static type checking, fast compile times, a great standard library, and excellent tooling for formatting and running tests. And extremely easy to cross-compile and deploy. Simply say `GOOS=linux GOARCH=amd64 go build`, and a couple of seconds later (even if you're developing on macOS or Windows) you have a Linux executable you can copy to your production server.
+
+I also like how it turned out quite usable with no JavaScript. HTML can do quite a lot on its own these days, so think twice before you pull out React.
+
+I hope you've enjoyed this or learned something. Please let me know if you have any feedback!
