@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2021">2021</h2>
 
+* [Simple Lists](/writings/simple-lists/) describes a tiny to-do list app I wrote the old-school way: server-side Go that renders HTML, and no JavaScript. (October)
 * [Structural pattern matching in Python 3.10](/writings/python-pattern-matching/) is a critical but informative look at this new feature, with real-world code examples. (September)
 * [Mugo](/writings/mugo/) is a toy, single-pass compiler for a tiny subset of Go -- just enough to compile itself. It compiles to x86-64 assembly on Linux. (April)
 * [How to implement a hash table](/writings/hash-table-in-c/) explains how to implement a simple hash table data structure, with code and examples in the C programming language. (March)

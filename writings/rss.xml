@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Simple Lists: a tiny to-do list app written the old-school way (server-side Go, no JS)</title>
+  <description>Simple Lists is a tiny to-do list web application written in Go, with old school server-side rendering and no JavaScript.</description>
+  <link>https://benhoyt.com/writings/simple-lists/</link>
+  <guid>https://benhoyt.com/writings/simple-lists/</guid>
+  <pubDate>Mon, 4 Oct 2021 07:30:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Structural pattern matching in Python 3.10</title>
   <description>A critical but informative look at the new structural pattern matching feature in Python 3.10, with real-world code examples.</description>
   <link>https://benhoyt.com/writings/python-pattern-matching/</link>
