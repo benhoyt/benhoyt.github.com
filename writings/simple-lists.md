@@ -207,7 +207,7 @@ The choice of database was a no-brainer. I've long admired SQLite, and for a pro
 
 Because I'm trying to minimize dependencies (and because I don't love most ORMs), I decided to use just the standard library's `database/sql` package for this project. I briefly considered using [`sqlx`](https://github.com/jmoiron/sqlx) -- I do like its struct and slice handling -- but for a tiny database model like this it doesn't add that much.
 
-Here are a couple of functions from [`db.py`](https://github.com/benhoyt/simplelists/blob/master/db.go) to give you the flavour of what this looks like. `GetList` fetches a single list, and the `getListItems` helper fetches all of that list's items:
+Here are a couple of functions from [`db.go`](https://github.com/benhoyt/simplelists/blob/master/db.go) to give you the flavour of what this looks like. `GetList` fetches a single list, and the `getListItems` helper fetches all of that list's items:
 
 ```go
 // GetList fetches one list and returns it, or nil if not found.
