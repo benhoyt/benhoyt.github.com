@@ -109,12 +109,12 @@ In some of my other projects, I use the popular [mattn/go-sqlite3](https://githu
 
 I tried to write the Go code in an idiomatic way. For example, I used error returns everywhere, even when it was tempting to panic (like in the database code: surely these in-process SQLite queries should only fail if I've messed up the query?).
 
-I still don't love the verbosity of Go's error handling, particularly in HTTP request handlers, where the `return` is on its own line. One line of code, four lines of error handling. It doesn't make the code difficult to understand, just adds a bit of noise. For example, compare [this handler code in server.go](https://github.com/benhoyt/simplelists/blob/c4189585c48d2b3c6eb82c39d5265aa6f38c4628/server.go#L228-L236):
+I still don't love the verbosity of Go's error handling, particularly in HTTP request handlers, where the `return` is on its own line. One line of code, four lines of error handling. It doesn't make the code difficult to understand, just adds a bit of noise. For example, compare [this handler code in server.go](https://github.com/benhoyt/simplelists/blob/228b28e8d418604f7176d1980028f8bd139e537a/server.go#L230-L238):
 
 ```go
 list, err := s.model.GetList(id)
 if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
+    s.internalError(w, "fetching list", err)
     return
 }
 if list == nil {
@@ -423,7 +423,7 @@ If I were doing this in a larger codebase, I'd put the setup steps in a helper f
 
 Repeating `if got != want { t.Fatalf("got %v, want %v", got, want) }` blocks over and over again gets a bit old, so I've factored out those into helper functions. I could also use one of the many assertion libraries (I'm partial to [`gocheck`](http://labix.org/gocheck) because of its small API), but it was easy to write a couple of small `ensure*` helper functions to avoid pulling in a dependency.
 
-Because this isn't a JSON API, I've written a [`parseForms`](https://github.com/benhoyt/simplelists/blob/35d490b67f16982357321cb03eb9cd664f2f7175/server_test.go#L322) helper that parses the HTML forms in the response body using the [`golang.org/x/net/html`](https://pkg.go.dev/golang.org/x/net/html) package. That allows us to pull out various fields for later use, like the CSRF token.
+Because this isn't a JSON API, I've written a [`parseForms`](https://github.com/benhoyt/simplelists/blob/228b28e8d418604f7176d1980028f8bd139e537a/server_test.go#L317) helper that parses the HTML forms in the response body using the [`golang.org/x/net/html`](https://pkg.go.dev/golang.org/x/net/html) package. That allows us to pull out various fields for later use, like the CSRF token.
 
 The `serve` helper function, which executes and records a request, is as follows:
 
@@ -514,7 +514,7 @@ func (s *Server) signIn(w http.ResponseWriter, r *http.Request) {
     }
     id, err := s.model.CreateSignIn()
     if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
+        s.internalError(w, "creating sign in", err)
         return
     }
     cookie := &http.Cookie{
