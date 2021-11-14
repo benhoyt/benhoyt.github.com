@@ -2,20 +2,20 @@
 layout: default
 title: "Improving and fixing the code for the official Go RESTful API tutorial"
 permalink: /writings/web-service-stdlib/
-description: "Describes my reimplementation of the code for the official Go tutorial 'Developing a RESTful API with Go and Gin', using only the stdlib, adding tests, and fixing issues."
+description: "My re-implementation of the code for the official Go tutorial 'Developing a RESTful API with Go and Gin', using only the standard library, adding tests, and fixing issues."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">November 2021</p>
 
 
-> Summary: This article describes my reimplementation of the code for the official Go tutorial "Developing a RESTful API with Go and Gin", adding a few features, fixing some issues, writing tests, and using only the Go standard library.
+> Summary: This article describes my re-implementation of the code for the official Go tutorial "Developing a RESTful API with Go and Gin", adding a few features, fixing some issues, writing tests, and using only the Go standard library.
 
 
 Most of the Go [documentation](https://golang.org/doc/) and [tutorials](https://golang.org/doc/tutorial/) are really good: concise, accurate, and showing how to use Go's high-quality standard library. However, I recently read the [Tutorial: Developing a RESTful API with Go and Gin](https://golang.org/doc/tutorial/web-service-gin), and I think it could use improvement.
 
 It's not terrible code by any means, but there are several things that are non-ideal, and at least one bug (concurrent data races accessing the in-memory "database"). There are other things that are questionable, such as mixing "database" code into the HTTP handlers, when a simple database `interface` could avoid that. I understand that they're trying to keep things simple for the tutorial, but I think we should be setting a better example in such code.
 
-It also seems an odd choice to showcase a specific third party web library, rather than showing the power and composability of the standard library. The justifiction given is that "Gin simplifies many coding tasks associated with building web applications, including web services."
+It also seems an odd choice to showcase a specific third party web library, rather than showing the power and composability of the standard library. The justification given is that "Gin simplifies many coding tasks associated with building web applications, including web services."
 
 Fair enough, and I have nothing against [Gin](https://github.com/gin-gonic/gin) -- it looks like a good library -- but it's one of many Go web frameworks, so why promote a particular one in an official tutorial?
 
@@ -293,7 +293,7 @@ func TestConcurrentRequests(t *testing.T) {
 
 ## Decimal currency
 
-It's fairly well known that it's a [bad idea](https://stackoverflow.com/a/3730040/68707) to use binary floating point to store and manipulate currency values -- you can't store decimal fractions (cents) precisely, and errors accumuluate as you operate on those values.
+It's fairly well known that it's a [bad idea](https://stackoverflow.com/a/3730040/68707) to use binary floating point to store and manipulate currency values -- you can't store decimal fractions (cents) precisely, and errors accumulate as you operate on those values.
 
 To fix this, I've simply changed the `Album.Price` field from `float64` to `int`, so it can store integer cents precisely. This is one common way of accurately storing currency values. Another would be to use a decimal math library, such as [shopspring/decimal](https://github.com/shopspring/decimal).
 
@@ -324,7 +324,7 @@ func jsonError(w http.ResponseWriter, status int, error string,
 
 Usually the "data" field is empty, but for Bad Request errors it's useful to give the caller a bit more information about what they did wrong (for example in the validation code [shown above](#validation)).
 
-The `Error` field is one of several [defined constants](TODO) for JSON error codes, such as `ErrorValidation`.
+The `Error` field is one of several [defined constants](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main.go#L64-L72) for JSON error codes, such as `ErrorValidation`.
 
 
 ## Method not found
@@ -375,9 +375,9 @@ Note that I haven't separately tested the `MemoryDatabase` implementation used b
 
 A few other interesting things in these tests:
 
-* An example of table-driven sub-tests: [`TestGetAlbum`](TODO).
-* The concurrency test mentioned above: [`TestConcurrentRequests`](TODO).
-* Tests that the handlers correctly returns 500 Internal Server Error on database errors, using an `errorDatabase` mock: [`TestDatabaseErrors`](TODO).
+* An example of table-driven sub-tests: [`TestGetAlbum`](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main_test.go#L43).
+* The concurrency test mentioned above: [`TestConcurrentRequests`](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main_test.go#L149).
+* Tests that the handlers correctly returns 500 Internal Server Error on database errors, using an `errorDatabase` mock: [`TestDatabaseErrors`](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main_test.go#L167).
 
 
 ## Database interface
@@ -424,7 +424,7 @@ In a larger project, `Server` and `Database` would likely be defined in a `serve
 
 ## Database implementation
 
-For my database implementation, I'm still using a simple in-memory database like the original tutorial. However, it's now implemented using a struct (to fulfil the above `Database` interface), and I've added the locking to fix those concurrency issues. Here it is in full:
+For my database implementation, I'm still using a simple in-memory database like the original tutorial. However, it's now implemented using a struct (to fulfill the above `Database` interface), and I've added the locking to fix those concurrency issues. Here it is in full:
 
 ```go
 // MemoryDatabase is a Database implementation that uses a simple
