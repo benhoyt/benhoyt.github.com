@@ -7,10 +7,6 @@ description: "Simple Lists is a tiny to-do list web application written in Go, w
 <h1>{{ page.title }}</h1>
 <p class="subtitle">October 2021</p>
 
-<!-- TODO:
-* run Heroku version on branch with red warning banner: "this is a demo. lists may be deleted every few hours"
--->
-
 
 > Summary: This article describes why and how I wrote Simple Lists, a tiny to-do list web app written in Go. It's built in the old-school way: HTML rendered by the server, plain old `GET` and `POST` with HTML forms, and no JavaScript.
 >
