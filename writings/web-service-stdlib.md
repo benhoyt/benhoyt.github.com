@@ -8,12 +8,12 @@ description: "My re-implementation of the code for the official Go tutorial 'Dev
 <p class="subtitle">November 2021</p>
 
 
-> Summary: This article describes my re-implementation of the code for the official Go tutorial "Developing a RESTful API with Go and Gin", adding a few features, fixing some issues, writing tests, and using only the Go standard library.
+> Summary: This article describes my re-implementation of the code for the official Go tutorial "Developing a RESTful API with Go and Gin". My version adds a few features, fixes some issues, adds tests, and uses only the Go standard library.
 
 
 Most of the Go [documentation](https://golang.org/doc/) and [tutorials](https://golang.org/doc/tutorial/) are really good: concise, accurate, and showing how to use Go's high-quality standard library. However, I recently read the [Tutorial: Developing a RESTful API with Go and Gin](https://golang.org/doc/tutorial/web-service-gin), and I think it could use improvement.
 
-It's not terrible code by any means, but there are several things that are non-ideal, and at least one bug (concurrent data races accessing the in-memory "database"). There are other things that are questionable, such as mixing "database" code into the HTTP handlers, when a simple database `interface` could avoid that. I understand that they're trying to keep things simple for the tutorial, but I think we should be setting a better example in such code.
+It's not terrible code, but there are several things that are non-ideal, and at least one bug: concurrent data races accessing the in-memory "database". There are other things that are questionable, such as mixing "database" code into the HTTP handlers, when a simple database `interface` could avoid that. I understand that they're trying to keep things simple for the tutorial, but I think we should be setting a better example in such code.
 
 It also seems an odd choice to showcase a specific third party web library, rather than showing the power and composability of the standard library. The justification given is that "Gin simplifies many coding tasks associated with building web applications, including web services."
 
@@ -21,36 +21,36 @@ Fair enough, and I have nothing against [Gin](https://github.com/gin-gonic/gin) 
 
 The tutorial was [reviewed](https://go-review.googlesource.com/c/website/+/332349) by Russ Cox, Go's technical lead, who usually does very thorough reviews. Oddly, especially given Russ's [stance on dependencies](https://research.swtch.com/deps), this one was approved with nary a comment, just a bare "+2" (the Go code review system's equivalent of <abbr title="Looks Good To Me">LGTM</abbr>).
 
-In any case, I decided to rewrite the code using just the standard library, and fixed a bug and added some features at the same time (features I think should be part of any "real" web service).
+In any case, I decided to rewrite the code using just the standard library, and fixed a bug and added some features at the same time -- features I think should be part of any "real" web service.
 
 
 ## Improvements
 
-Here are things I found in the original code that I've changed or improved in my version:
+Here are things I found in the original code that I've changed or improved in my version (with links to the more detailed sections below):
 
-* **Standard library.** As mentioned, the original version used the Gin web framework. I only use the standard library packages.
-* **Validation.** It doesn't do any validation of the "create new album" input (other than ensuring it's JSON), so it's easy to add an album with an empty ID, or a negative price. I've changed it to do some basic validation, and return parseable validation errors to the client.
-* **Unique album IDs.** The existing code will happily add albums with duplicate IDs (the `/albums/:id` endpoint returns the first one). This seems problematic: it should probably either use `PUT /albums/:id` to just update the album with the given ID, or still use `POST /albums` but return an error for duplicates -- I've opted for the latter approach.
-* **Concurrency.** The global `albums` slice is read and written without locking, so the web service can't be accessed concurrently, and will panic if you try. I realize this is just an example, and a real database wouldn't have this problem, but it's pretty trivial to add a simple mutex lock to make this code safe. My version adds the lock as well as a test to ensure it's concurrency-safe.
-* **Decimal currency.** The `album.Price` field is a `float64`. It's not good to use binary floating point for currency values, as they can't represent decimal fractions accurately, and doing math on them can introduce rounding errors. I've change the `Price` field to integer cents ("fixed point").
-* **JSON errors.** The Gin router's default Not Found error returns `Content-Type: text/plain`, so not found errors return text instead of JSON. The explicit Not Found returned in `getAlbumByID` returns JSON, however. Similarly, Gin's `BindJSON` doesn't return a JSON error when it received invalid input. In my version, I return all errors as JSON.
-* **Method not found.** Gin (at least by default) returns status 404 Not Found instead of 405 Method Not Allowed when the URL is valid but the method is not found. I've fixed this to return the standard 405 status in those cases.
-* **Testing.** The original version has no tests. Testing HTTP handlers is quite easy with Go's [`httptest`](https://pkg.go.dev/net/http/httptest) library, and I've added tests for all the functionality, including error cases.
-* **Database interface.** I've used an explicit interface for the database methods (which can returns defined errors such as `ErrDoesNotExist`), along with an [in-memory implementation](#database-implementation) similar to the one in the original.
-* **Separation of concerns.** In the original the "database" code was intertwined into the handlers. Partly as a consequence of using a database interface, in my version the database code is completely separate from the HTTP handler code, making it easier to test things like error handling, as well as easier to swap in a real database when the time comes.
+* [Standard library.](#standard-library) As mentioned, the original version uses the Gin web framework. My version uses only standard library packages.
+* [Validation.](#validation) The original doesn't do any validation of the "create new album" input (other than ensuring it's JSON), so it's easy to add an album with an empty ID, a negative price, and so on. I've changed it to do some basic validation, and return parseable validation errors to the client.
+* [Unique album IDs.](#unique-album-ids) The existing code will happily add albums with duplicate IDs, and the `/albums/:id` endpoint returns the first one. This seems problematic: it should probably either use `PUT /albums/:id` to just update the album with the given ID, or still use `POST /albums` but return an error for duplicates -- I've opted for the latter approach.
+* [Concurrency.](#concurrency) The global `albums` slice in the original code is read and written without locking, so the web service can't be accessed concurrently, and will panic if you try. I realize this is just an example, and a real database wouldn't have this problem, but it's pretty trivial to add a simple mutex lock to make this code safe. My version adds the lock as well as a test to ensure it's race-free.
+* [Decimal currency.](#decimal-currency) The album's `Price` field is a `float64`. It's not good to use binary floating point for currency values, as binary floating point can't represent decimal fractions precisely, and doing math on them can introduce rounding errors. I've changed the `Price` field to integer cents ("fixed point").
+* [JSON errors.](#json-errors) The Gin router's default Not Found error returns `Content-Type: text/plain`, so these errors return text instead of JSON. The explicit Not Found returned in `getAlbumByID` returns JSON, however. Similarly, Gin's `BindJSON` doesn't return a JSON error when it receives invalid input. My version returns all errors as JSON.
+* [Method not found.](#method-not-found) Gin (at least by default) returns status 404 Not Found instead of 405 Method Not Allowed when the URL is valid but the method is not found. I've fixed this to return the standard 405 status in those cases.
+* [Testing.](#testing) The original version has no tests. That's fine, as it's not the purpose of the tutorial. But testing HTTP handlers is quite easy with Go's [`httptest`](https://pkg.go.dev/net/http/httptest) library, and I've added tests for all the functionality, including error cases.
+* [Database interface.](#database-interface) I've used an explicit interface for the database methods (which can returns defined errors such as `ErrDoesNotExist`), along with an [in-memory implementation](#database-implementation) similar to the one in the original.
+* [Separation of concerns.](#separation-of-concerns) In the original the "database" code was intertwined with handler code. Partly as a consequence of using a database interface, in my version the database code is completely separate from the HTTP handler code, making it easier to test things like error handling or swap in a real database when that's needed.
 
-My version is definitely more code (about 200 code lines rather than 50, along with about 250 lines of test code), but that's mostly due to the additional features. I believe my version -- apart from only depending on the standard library -- shows example code that is more robust and maintainable.
+My version is definitely more code (about 200 lines of code rather than 50, along with about 250 lines of test code), but that's mostly due to the additional features. I believe my version showcases code that is more robust and maintainable.
 
 Let's look at each one of these points in a bit more depth.
 
 
 ## Standard library
 
-The main Gin gives you is simple URL routing and a couple of JSON marshaling helper functions, so in my version I wrote some simple routing code and added a couple of JSON helper functions.
+Gin gives you URL routing (including URL parameters) and a couple of JSON marshaling functions. In my version I wrote some simple routing code and added a couple of custom JSON helpers.
 
 Elsewhere I've written extensively about [different approaches to HTTP routing in Go](https://benhoyt.com/writings/go-routing/), but here the routes are very simple, so I've just used a simple `switch` statement, along with a single regular expression for the `/albums/:id` route. We don't even need the standard library's [`http.ServeMux`](https://pkg.go.dev/net/http#ServeMux) here.
 
-The `/albums/:id` route would be simple to do without a regular expression, but it's a bit simpler to handle the edge cases with a regex (ID must be at least one character with no slashes).
+The `/albums/:id` route would be fairly simple without a regular expression, but it's a bit simpler to handle the edge cases with a regex: testing that the ID is at least one character and has no slashes.
 
 My code also handles HTTP methods, including proper 405 Method Not Found handling. Here's the full routing code:
 
@@ -92,7 +92,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-A little verbose, but very clear and explicit, and avoids having to configure a third party router to return errors as JSON and correct 405s.
+A little verbose, but very clear and explicit, and avoids having to configure a third party router to return errors as JSON and correctly return 405s.
 
 The other area where Gin shortened the code was with its `IndentedJSON` and `BindJSON` helpers, which marshal and unmarshal JSON, respectively. Thankfully, using JSON is very easy with just the standard [`encoding/json`](https://pkg.go.dev/encoding/json) package. I've written a couple of small helper functions to wrap this and perform error handling:
 
@@ -132,16 +132,16 @@ func readJSON(w http.ResponseWriter, r *http.Request, v interface{})
 }
 ```
 
-Note that I could have used `json.Encoder` to stream directly to the response. However, error handling is a bit tricky: if there's a JSON marshaling error and `Encoder.Encode` has already written something to the response, you can't return a non-200 HTTP status. In the `Album` case an error is unlikely (impossible?) because it's such a simple struct, but in the general case JSON encoding can return errors, so I'm marshaling the struct to a `[]byte` first.
+Note that I could have used [`json.Encoder`](https://pkg.go.dev/encoding/json#Encoder) to stream directly to the response. However, error handling is a bit tricky: if there's a JSON marshaling error and `Encoder.Encode` has already written something to the response, you can't return a non-200 HTTP status. In the `Album` case an error is unlikely (impossible?) because it's such a simple struct, but in the general case JSON encoding can return errors, so I'm marshaling the struct to a `[]byte` first.
 
-Similarly, for unmarshaling you can use `Decoder.Decode` and read directly from the request body -- however, that is really [designed for streams](https://ahmet.im/blog/golang-json-decoder-pitfalls/).
+Similarly, for unmarshaling you can use [`json.Decoder`](https://pkg.go.dev/encoding/json#Decoder) to read directly from the request body -- however, that is really [designed for streams](https://ahmet.im/blog/golang-json-decoder-pitfalls/).
 
 
 ## Validation
 
-It's one of the first rules of web security, or any development for that matter, to always validate user input. Without validation, a user of the service could add an album with no ID, no title or artist name, or a negative (or impossibly huge) price.
+It's one of the first rules of web security, or any software for that matter, to always validate user input. Without validation, a user of the service could add an album with no ID, no title or artist name, or a negative (or impossibly huge) price.
 
-I've added a few lines of validation code to the add-album endpoint, as well as a structured way to return validation errors so the client can display helpful error messages. Here's the full code:
+I've added a few lines of validation code to the add-album endpoint, as well as a structured way to return validation errors so the client can display helpful error messages. Here's the full validation code:
 
 
 ```go
@@ -172,7 +172,7 @@ if len(issues) > 0 {
 
 In this case I've allowed a zero price, thinking zero would mean "no price", as in free or not applicable (a home catalogue, for example).
 
-We don't need a framework with a domain-specific language, just simple `if` statements to check what we need to. We build up a map of issues (indexed by field name), and if there are any validation issues, return that in the JSON error to the caller. As an example:
+We don't need a framework with a domain-specific language, just simple `if` statements to check what we need to. We build up a map of issues (indexed by field name), and if there are any validation issues, return that in the JSON error to the caller. Here's what a validation error response looks like:
 
 ```
 $ curl http://localhost:8080/albums -d '{"price":-1}' | jq
@@ -227,7 +227,7 @@ $ curl http://localhost:8080/albums | jq
 ]
 ```
 
-I've fixed this so the "database" rejects an ID that already exists. Here's the relevant database and handler code:
+I've fixed this so the "database" rejects an ID that already exists. The `AddAlbum` database method returns `ErrAlreadyExists` in this case, and the handler code checks for that error and responds with 409 Conflict:
 
 ```go
 // Database method:
@@ -262,11 +262,11 @@ func (s *Server) addAlbum(w http.ResponseWriter, r *http.Request) {
 
 ## Concurrency
 
-The original code has a data race when you try to access the `GET` endpoints while someone else is adding an album. Obviously using an SQL database would solve this, as they have their own concurrent-safety built in. But it's not hard to add a mutex lock around the accesses.
+The original code has a data race when you try to access the `GET` endpoints while someone else is `POST`ing an album. Obviously using an SQL database would solve this, as such databases have their own concurrent-safety. But it's not hard to add a mutex lock when accessing an in-memory structure.
 
-In this case I'm using a [`sync.RWMutex`](https://pkg.go.dev/sync#RWMutex), as albums are almost certainly going to be viewed more often than they're added. So I simply added `RLock`/`RUnlock` calls around the reads, and `Lock`/`Unlock` around the writes.
+In this case I'm using a [`sync.RWMutex`](https://pkg.go.dev/sync#RWMutex), as albums are almost certainly going to be viewed more often than they're added. So I added `RLock`/`RUnlock` calls around the reads, and `Lock`/`Unlock` around the writes.
 
-Perhaps more interestingly, I added a test that fails under Go's [race detector](https://golang.org/doc/articles/race_detector) if you don't have the locking -- try commenting out the lock and unlock calls and run `go test -race` to see that.
+Perhaps more interestingly, I added a test that fails under Go's [race detector](https://golang.org/doc/articles/race_detector) if you don't have the locking -- to see that, try commenting out the lock and unlock calls and run `go test -race`.
 
 The test fires up a bunch of goroutines, with each one hitting all three endpoints, read and write:
 
@@ -293,16 +293,16 @@ func TestConcurrentRequests(t *testing.T) {
 
 ## Decimal currency
 
-It's fairly well known that it's a [bad idea](https://stackoverflow.com/a/3730040/68707) to use binary floating point to store and manipulate currency values -- you can't store decimal fractions (cents) precisely, and errors accumulate as you operate on those values.
+It's generally a [bad idea](https://stackoverflow.com/a/3730040/68707) to use binary floating point to store and manipulate currency values -- you can't store decimal fractions (cents) precisely, and errors accumulate as you operate on those values.
 
-To fix this, I've simply changed the `Album.Price` field from `float64` to `int`, so it can store integer cents precisely. This is one common way of accurately storing currency values. Another would be to use a decimal math library, such as [shopspring/decimal](https://github.com/shopspring/decimal).
+To fix this, I've changed the album's `Price` field from `float64` to `int`, so it can store integer cents precisely. This is one common way of accurately storing currency values. Another would be to use a decimal math library, such as [shopspring/decimal](https://github.com/shopspring/decimal).
 
 
 ## JSON errors
 
 It's nicer for API clients when a web service always returns JSON, even for errors such as Not Found. That way the client can have a single code path that always decodes the response as JSON.
 
-In my version I've made it always return errors as JSON, using a little `jsonError` helper function, which uses the `writeJSON` helper mentioned above, and is defined as follows:
+In my version I've made it always return errors as JSON, using a little `jsonError` helper function, which calls the `writeJSON` helper mentioned above:
 
 ```go
 // jsonError writes a structured error as JSON to the response, with
@@ -329,16 +329,16 @@ The `Error` field is one of several [defined constants](https://github.com/benho
 
 ## Method not found
 
-It's a very simple thing, but Gin (with the default configuration used by the tutorial code, at any rate) returns status 404 Not Found instead of 405 Method Not Allowed when the URL is valid but the method is not found.
+It's a very simple thing, but Gin (with the default configuration used by the tutorial code) returns status 404 Not Found instead of 405 Method Not Allowed when the URL is valid but the method is not found.
 
 As shown in the [routing code](#standard-library), I've changed this to return an HTTP 405 status in those cases.
 
 
 ## Testing
 
-I've added many tests of the server, that test all endpoints, as well as error behavior, validation issues, and so on.
+I've added many tests of the server: these test all endpoints, as well as error behavior, validation issues, and so on.
 
-Test coverage (via `go test -cover`) shows that I've tested all the code except a hard-to-test part of the `writeJSON` error handling (which will never happen in practice). In general, I don't think aiming for 100% test coverage is a reasonable goal, but it was nice how easy here to get so much coverage.
+Test coverage (via `go test -coverprofile`) [shows](/writings/web-service-stdlib-coverage.html) that I've tested all the code except the bare-bones `main` function and a hard-to-test part of the `writeJSON` error handling (which will never happen in practice). In general, I don't think aiming for 100% test coverage is a reasonable goal, but it was nice how easy it was here to cover so much.
 
 The tests all follow the same basic pattern: create a test server, execute one or more requests against an [`httptest.ResponseRecorder`](https://pkg.go.dev/net/http/httptest#ResponseRecorder), and then ensure that the response is correct -- status code and JSON data.
 
@@ -377,12 +377,12 @@ A few other interesting things in these tests:
 
 * An example of table-driven sub-tests: [`TestGetAlbum`](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main_test.go#L43).
 * The concurrency test mentioned above: [`TestConcurrentRequests`](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main_test.go#L149).
-* Tests that the handlers correctly returns 500 Internal Server Error on database errors, using an `errorDatabase` mock: [`TestDatabaseErrors`](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main_test.go#L167).
+* Tests that the handlers correctly return 500 Internal Server Error on database errors, using an `errorDatabase` mock: [`TestDatabaseErrors`](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main_test.go#L167).
 
 
 ## Database interface
 
-Go interfaces are powerful and (I believe) somewhat unique: you can implement a concrete type like a database struct with various access methods, and the implementation doesn't need to specify that it implements or inherits from anything. Just write code.
+Go interfaces are powerful and somewhat unique: you can implement a concrete type like a database struct with various access methods, and the implementation doesn't need to specify that it implements or inherits from anything. Just write code.
 
 Then the thing that uses the database, in this case the `Server`, defines an interface with only the methods it needs (which may well be a subset of the implementation's methods). In our case this looks like so:
 
@@ -417,9 +417,9 @@ As you can see, `Server` has a `Database`, which might be in-memory like the `Me
 
 There's a bit of API design that goes into defining a good interface. I started without the `error` return values, and the `AddAlbum` function returned a "did we actually add it?" boolean. However, real databases will need to return errors, so we might as well start with good error handling up front.
 
-Note how the doc comments for `GetAlbumByID` and `AddAlbum` describe the special error values returned if an album doesn't exist (or already exists). This allows the handler to test for this error value (using `==` or [`errors.Is`](https://pkg.go.dev/errors#Is)) and return an appropriate error code to the caller.
+Note how the doc comments for `GetAlbumByID` and `AddAlbum` describe the special error values returned if an album doesn't exist (or already exists). This allows the handler to test for this error value (using `==` or [`errors.Is`](https://pkg.go.dev/errors#Is)) and return an appropriate HTTP status code to the caller.
 
-In a larger project, `Server` and `Database` would likely be defined in a `server` package, and `MemoryDatabase` would likely be defined in a separate `testdb` package. For simplicity (this project is only a few hundred lines of code), I've kept everything in a single `main.go` file. A good rule of thumb in Go is: only break into packages when you need to.
+In a larger project, `Server` and `Database` would likely be defined in a `server` package, and `MemoryDatabase` would likely be defined in a separate `testdb` package. For simplicity (this project is only a few hundred lines of code), I've kept everything in a single `main.go` file. A good rule of thumb in Go is: only split things into packages if and when you need to.
 
 
 ## Database implementation
@@ -479,20 +479,22 @@ func (d *MemoryDatabase) AddAlbum(album Album) error {
 }
 ```
 
-Apart from the mutex, the only significant difference from the original approach is using a map indexed by ID instead of a slice to store the albums. This allows constant time lookup by ID (and duplicate detection).
+Apart from the mutex, the only significant difference from the original approach is using a map indexed by ID instead of a slice to store the albums. This allows constant time lookups by ID.
 
-However, because Go maps doesn't have a defined iteration order, I've made `GetAlbums` sort by ID to ensure it returns the albums in a defined order. The original code (perhaps accidentally?) returned them in oldest to newest order. If using a real database, you'd probably use an `ORDER BY` clause to order them by some user-relevant criteria, such as title.
+However, because Go maps don't have a defined iteration order, I've made `GetAlbums` sort by ID to ensure it returns the albums in a consistent order. The original code (perhaps accidentally?) returned them in oldest to newest order. If using a real database, you'd probably use an `ORDER BY` clause to order them by some user-relevant criteria, such as title.
 
 
 ## Separation of concerns
 
-This falls fairly obviously out of the database interface: in the original code, HTTP handler code like JSON marshaling was mixed in with database code. The database interface forces a separation of concerns, making it easier to test the database error handling. It would also make it straight-forward to swap in a real database when the time comes -- just add an `SQLDatabase` struct and implement its methods in terms of SQL queries.
+This falls fairly naturally out of the database interface: in the original code, HTTP handler code like JSON marshaling was mixed in with database code. The database interface forces a separation of concerns, making it easier to test the database error handling. It would also make it straightforward to swap in a real database when the time comes -- just add an `SQLDatabase` struct and implement its methods in terms of SQL queries.
 
 
 ## Conclusion
 
-It was a fun exercise to rewrite and try to improve this code, and I hope you've enjoyed it or learned something. I certainly hope it's more robust and maintainable, and it avoids the hassle that comes with learning and updating third party dependencies.
+It was a fun exercise to rewrite and try to improve this code, and I hope you've enjoyed it or learned something. I certainly hope it's more robust and maintainable, and it avoids the hassles that come with learning and updating third party dependencies.
 
-And instead of just critiquing the tutorial article, I've also [started a thread](TODO) on golang-dev, the Go development mailing list, asking if any of these suggestions could be incorporated into the original.
+<!--
+Instead of just critiquing the tutorial article, I've also [started a thread](TODO) on golang-dev, the Go development mailing list, asking if any of these suggestions could be incorporated into the original.
+-->
 
 Please let me know if you have any feedback, or suggestions to improve my code!

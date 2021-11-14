@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>web-service-stdlib: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/benhoyt/web-service-stdlib/main.go (89.1%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">// Developing a RESTful API with Go and ... Go
+//
+// This is a rewrite of https://golang.org/doc/tutorial/web-service-gin
+// using just the Go standard library (and fixing a few issues).
+
+package main
+
+import (
+        "encoding/json"
+        "errors"
+        "flag"
+        "io"
+        "log"
+        "net/http"
+        "regexp"
+        "sort"
+        "strconv"
+        "sync"
+)
+
+func main() <span class="cov0" title="0">{
+        // Allow user to specify listen port on command line
+        var port int
+        flag.IntVar(&amp;port, "port", 8080, "port to listen on")
+        flag.Parse()
+
+        // Create in-memory database and add a couple of test albums
+        db := NewMemoryDatabase()
+        db.AddAlbum(Album{ID: "a1", Title: "9th Symphony", Artist: "Beethoven", Price: 795})
+        db.AddAlbum(Album{ID: "a2", Title: "Hey Jude", Artist: "The Beatles", Price: 2000})
+
+        // Create server and wire up database
+        server := NewServer(db, log.Default())
+
+        log.Printf("listening on http://localhost:%d", port)
+        http.ListenAndServe(":"+strconv.Itoa(port), server)
+}</span>
+
+// Server is the album HTTP server.
+type Server struct {
+        db  Database
+        log *log.Logger
+}
+
+// Database is the interface used by the server to load and store albums.
+type Database interface {
+        // GetAlbums returns a copy of all albums, sorted by ID.
+        GetAlbums() ([]Album, error)
+
+        // GetAlbumsByID returns a single album by ID, or ErrDoesNotExist if
+        // an album with that ID does not exist.
+        GetAlbumByID(id string) (Album, error)
+
+        // AddAlbum adds a single album, or ErrAlreadyExists if an album with
+        // the given ID already exists.
+        AddAlbum(album Album) error
+}
+
+var (
+        ErrDoesNotExist  = errors.New("does not exist")
+        ErrAlreadyExists = errors.New("already exists")
+)
+
+const (
+        ErrorAlreadyExists    = "already-exists"
+        ErrorDatabase         = "database"
+        ErrorInternal         = "internal"
+        ErrorMalformedJSON    = "malformed-json"
+        ErrorMethodNotAllowed = "method-not-allowed"
+        ErrorNotFound         = "not-found"
+        ErrorValidation       = "validation"
+)
+
+// Album represents data about a single album.
+type Album struct {
+        ID     string `json:"id"`
+        Title  string `json:"title"`
+        Artist string `json:"artist"`
+        Price  int    `json:"price,omitempty"` // use int cents instead of float64 for currency
+}
+
+// NewServer creates a new server using the given database implementation.
+func NewServer(db Database, log *log.Logger) *Server <span class="cov8" title="1">{
+        return &amp;Server{db: db, log: log}
+}</span>
+
+// Regex to match "/albums/:id" (id must be one or more non-slash chars).
+var albumsIDRegexp = regexp.MustCompile(`^/albums/[^/]+$`)
+
+// ServeHTTP routes the request and calls the correct handler based on the URL
+// and HTTP method. It writes a 404 Not Found if the request URL is unknown,
+// or 405 Method Not Allowed if the request method is invalid.
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        path := r.URL.Path
+        s.log.Printf("%s %s", r.Method, path)
+
+        switch </span>{
+        case path == "/albums":<span class="cov8" title="1">
+                switch r.Method </span>{
+                case "GET":<span class="cov8" title="1">
+                        s.getAlbums(w, r)</span>
+                case "POST":<span class="cov8" title="1">
+                        s.addAlbum(w, r)</span>
+                default:<span class="cov8" title="1">
+                        w.Header().Set("Allow", "GET, POST")
+                        jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)</span>
+                }
+
+        case albumsIDRegexp.MatchString(path):<span class="cov8" title="1">
+                switch r.Method </span>{
+                case "GET":<span class="cov8" title="1">
+                        id := path[len("/albums/"):]
+                        s.getAlbumByID(w, r, id)</span>
+                default:<span class="cov8" title="1">
+                        w.Header().Set("Allow", "GET")
+                        jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)</span>
+                }
+
+        default:<span class="cov8" title="1">
+                jsonError(w, http.StatusNotFound, ErrorNotFound, nil)</span>
+        }
+}
+
+func (s *Server) getAlbums(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        albums, err := s.db.GetAlbums()
+        if err != nil </span><span class="cov8" title="1">{
+                jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
+                return
+        }</span>
+        <span class="cov8" title="1">writeJSON(w, http.StatusOK, albums)</span>
+}
+
+func (s *Server) addAlbum(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        var album Album
+        if !readJSON(w, r, &amp;album) </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        // Validate the input and build a map of validation issues
+        <span class="cov8" title="1">type validationIssue struct {
+                Error   string `json:"error"`
+                Message string `json:"message,omitempty"`
+        }
+        issues := make(map[string]interface{})
+        if album.ID == "" </span><span class="cov8" title="1">{
+                issues["id"] = validationIssue{"required", ""}
+        }</span>
+        <span class="cov8" title="1">if album.Title == "" </span><span class="cov8" title="1">{
+                issues["title"] = validationIssue{"required", ""}
+        }</span>
+        <span class="cov8" title="1">if album.Artist == "" </span><span class="cov8" title="1">{
+                issues["artist"] = validationIssue{"required", ""}
+        }</span>
+        <span class="cov8" title="1">if album.Price &lt; 0 || album.Price &gt;= 100000 </span><span class="cov8" title="1">{
+                issues["price"] = validationIssue{"out-of-range", "price must be between 0 and $1000"}
+        }</span>
+        <span class="cov8" title="1">if len(issues) &gt; 0 </span><span class="cov8" title="1">{
+                jsonError(w, http.StatusBadRequest, ErrorValidation, issues)
+                return
+        }</span>
+
+        <span class="cov8" title="1">err := s.db.AddAlbum(album)
+        if errors.Is(err, ErrAlreadyExists) </span><span class="cov8" title="1">{
+                jsonError(w, http.StatusConflict, ErrorAlreadyExists, nil)
+                return
+        }</span> else<span class="cov8" title="1"> if err != nil </span><span class="cov8" title="1">{
+                jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
+                return
+        }</span>
+
+        <span class="cov8" title="1">writeJSON(w, http.StatusCreated, album)</span>
+}
+
+func (s *Server) getAlbumByID(w http.ResponseWriter, r *http.Request, id string) <span class="cov8" title="1">{
+        album, err := s.db.GetAlbumByID(id)
+        if errors.Is(err, ErrDoesNotExist) </span><span class="cov8" title="1">{
+                jsonError(w, http.StatusNotFound, ErrorNotFound, nil)
+                return
+        }</span> else<span class="cov8" title="1"> if err != nil </span><span class="cov8" title="1">{
+                jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
+                return
+        }</span>
+        <span class="cov8" title="1">writeJSON(w, http.StatusOK, album)</span>
+}
+
+// writeJSON marshals v to JSON and writes it to the response, handling
+// errors as appropriate. It also sets the Content-Type header to
+// "application/json".
+func writeJSON(w http.ResponseWriter, status int, v interface{}) <span class="cov8" title="1">{
+        w.Header().Set("Content-Type", "application/json; charset=utf-8")
+        b, err := json.MarshalIndent(v, "", "    ")
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, `{"error":"`+ErrorInternal+`"}`, http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov8" title="1">w.WriteHeader(status)
+        w.Write(b)</span>
+}
+
+// jsonError writes a structured error as JSON to the response, with
+// optional structured data in the "data" field.
+func jsonError(w http.ResponseWriter, status int, error string, data map[string]interface{}) <span class="cov8" title="1">{
+        response := struct {
+                Status int                    `json:"status"`
+                Error  string                 `json:"error"`
+                Data   map[string]interface{} `json:"data,omitempty"`
+        }{
+                Status: status,
+                Error:  error,
+                Data:   data,
+        }
+        writeJSON(w, status, response)
+}</span>
+
+// readJSON reads the request body and unmarshals it from JSON, handling
+// errors as appropriate. It returns true on success; the caller should
+// return from the handler early if it returns false.
+func readJSON(w http.ResponseWriter, r *http.Request, v interface{}) bool <span class="cov8" title="1">{
+        b, err := io.ReadAll(r.Body)
+        if err != nil </span><span class="cov8" title="1">{
+                jsonError(w, http.StatusInternalServerError, ErrorInternal, nil)
+                return false
+        }</span>
+        <span class="cov8" title="1">err = json.Unmarshal(b, v)
+        if err != nil </span><span class="cov8" title="1">{
+                data := map[string]interface{}{"message": err.Error()}
+                jsonError(w, http.StatusBadRequest, ErrorMalformedJSON, data)
+                return false
+        }</span>
+        <span class="cov8" title="1">return true</span>
+}
+
+// MemoryDatabase is a Database implementation that uses a simple
+// in-memory map to store the albums.
+type MemoryDatabase struct {
+        lock   sync.RWMutex
+        albums map[string]Album
+}
+
+// NewMemoryDatabase creates a new in-memory database.
+func NewMemoryDatabase() *MemoryDatabase <span class="cov8" title="1">{
+        return &amp;MemoryDatabase{albums: make(map[string]Album)}
+}</span>
+
+func (d *MemoryDatabase) GetAlbums() ([]Album, error) <span class="cov8" title="1">{
+        d.lock.RLock()
+        defer d.lock.RUnlock()
+
+        // Make a copy of the albums map (as a slice)
+        albums := make([]Album, 0, len(d.albums))
+        for _, album := range d.albums </span><span class="cov8" title="1">{
+                albums = append(albums, album)
+        }</span>
+
+        // Sort by ID so we return them in a defined order
+        <span class="cov8" title="1">sort.Slice(albums, func(i, j int) bool </span><span class="cov8" title="1">{
+                return albums[i].ID &lt; albums[j].ID
+        }</span>)
+        <span class="cov8" title="1">return albums, nil</span>
+}
+
+func (d *MemoryDatabase) GetAlbumByID(id string) (Album, error) <span class="cov8" title="1">{
+        d.lock.RLock()
+        defer d.lock.RUnlock()
+
+        album, ok := d.albums[id]
+        if !ok </span><span class="cov8" title="1">{
+                return Album{}, ErrDoesNotExist
+        }</span>
+        <span class="cov8" title="1">return album, nil</span>
+}
+
+func (d *MemoryDatabase) AddAlbum(album Album) error <span class="cov8" title="1">{
+        d.lock.Lock()
+        defer d.lock.Unlock()
+
+        if _, ok := d.albums[album.ID]; ok </span><span class="cov8" title="1">{
+                return ErrAlreadyExists
+        }</span>
+        <span class="cov8" title="1">d.albums[album.ID] = album
+        return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
