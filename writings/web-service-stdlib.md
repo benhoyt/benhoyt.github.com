@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "Improving and fixing the code for the official Go RESTful API tutorial"
+title: "Improving and fixing the code from the official Go RESTful API tutorial"
 permalink: /writings/web-service-stdlib/
-description: "My re-implementation of the code for the official Go tutorial 'Developing a RESTful API with Go and Gin', using only the standard library, adding tests, and fixing issues."
+description: "My re-implementation of the code from the official Go tutorial 'Developing a RESTful API with Go and Gin', using only the standard library, adding tests, and fixing issues."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">November 2021</p>
 
 
-> Summary: This article describes my re-implementation of the code for the official Go tutorial "Developing a RESTful API with Go and Gin". My version adds a few features, fixes some issues, adds tests, and uses only the Go standard library.
+> Summary: This article describes my re-implementation of the code from the official Go tutorial "Developing a RESTful API with Go and Gin". My version adds a few features, fixes some issues, adds tests, and uses only the Go standard library.
 
 
 Most of the Go [documentation](https://golang.org/doc/) and [tutorials](https://golang.org/doc/tutorial/) are really good: concise, accurate, and showing how to use Go's high-quality standard library. However, I recently read the [Tutorial: Developing a RESTful API with Go and Gin](https://golang.org/doc/tutorial/web-service-gin), and I think it could use improvement.
