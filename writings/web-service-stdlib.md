@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Improving and fixing the code from the official Go RESTful API tutorial"
+title: "Improving the code from the official Go RESTful API tutorial"
 permalink: /writings/web-service-stdlib/
 description: "My re-implementation of the code from the official Go tutorial 'Developing a RESTful API with Go and Gin', using only the standard library, adding tests, and fixing issues."
 ---
@@ -11,17 +11,21 @@ description: "My re-implementation of the code from the official Go tutorial 'De
 > Summary: This article describes my re-implementation of the code from the official Go tutorial "Developing a RESTful API with Go and Gin". My version adds a few features, fixes some issues, adds tests, and uses only the Go standard library.
 
 
-Most of the Go [documentation](https://golang.org/doc/) and [tutorials](https://golang.org/doc/tutorial/) are really good: they're concise, accurate, and show how to use Go's high-quality standard library. However, I recently read the [Tutorial: Developing a RESTful API with Go and Gin](https://golang.org/doc/tutorial/web-service-gin), and I think it could use improvement.
+Recently I read the new [Tutorial: Developing a RESTful API with Go and Gin](https://golang.org/doc/tutorial/web-service-gin), and compared to the rest of Go's excellent documentation, this seemed to have a few quality issues, and it was odd to me that official documentation used a third party library ([Gin](https://gin-gonic.com/)) rather than promoting the standard library.
 
-There are several things that are important for web services that aren't mentioned, and at least one bug (concurrent data races accessing the in-memory "database"). There are other choices that are less than ideal, such as mixing "database" code into the HTTP handlers, when a simple database `interface` could avoid that.
+So I decided to rewrite the code using just the standard library, and to fix a concurrency issue due to missing locking. I've also added some features such as validation of inputs and better errors -- features I think should be part of any "real" web service.
 
-It's clear they're trying to keep things simple for the tutorial, but glossing over important details is risky when many beginners learn by copying example code. So I think we could be setting a better precedent in such code.
+After rewriting it, I [asked about these issues](https://groups.google.com/u/1/g/golang-dev/c/kC7YZsHTw4Y) on golang-dev, the Go development mailing list, and Russ Cox (Go's technical lead) replied:
 
-It also seems an odd choice to showcase a specific third party web library, rather than showing the power and composability of the standard library. The justification given is that "Gin simplifies many coding tasks associated with building web applications, including web services." Fair enough, and I have nothing against [Gin](https://github.com/gin-gonic/gin) -- it looks like a good library -- but it's one of many Go web frameworks, so why promote a particular one in an official tutorial?
+> This was the first of a couple of tutorials we have planned that make use of Go's third-party package ecosystem. The intent was to highlight packages that are widely used and simplify common use cases.
 
-The tutorial was [reviewed](https://go-review.googlesource.com/c/website/+/332349) by Russ Cox, Go's technical lead, who usually does very thorough reviews. Oddly, especially given Russ's [stance on dependencies](https://research.swtch.com/deps), this one was approved with nary a comment, just a bare +2 -- essentially a <abbr title="Looks Good To Me">LGTM</abbr>.
+I guess that makes sense, especially now with Go modules. When I mentioned the specific problems I saw with the code, he states that they'd rather leave the tutorial as is. His reply is helpful:
 
-In any case, I decided to rewrite the code using just the standard library, and fixed a bug and added some features at the same time -- features I think should be part of any "real" web service. You can see the full source on GitHub at [benhoyt/web-service-stdlib](https://github.com/benhoyt/web-service-stdlib).
+> I think all of these are all out of scope for this specific tutorial. A real system wouldn't use an in-memory database at all, so the lack of locking around the in-memory database doesn't seem like a significant problem. The same is true for validation of albums, etc. The goal of a tutorial is to be short and narrowly focused on illustrating a specific idea, in this case a RESTful JSON-based API. It intentionally omits all the input validations, authentication, and other complications that would be present in a real system. All the things you are talking about are good points to highlight, and I'm grateful you took the time to write your blog post, but they would detract from the narrow focus if added to this specific tutorial.
+
+Which is fair enough. However, I still think that a tutorial shouldn't include bugs, so I'd love to see them fix the concurrency issue, or at least call it out as a simplification. Glossing over important details is risky when many beginners learn by copying example code. So I think we could be setting a better precedent in such code.
+
+I discuss the improvements I've made in my version below. See the full source on GitHub at [**benhoyt/web-service-stdlib**](https://github.com/benhoyt/web-service-stdlib).
 
 
 ## Improvements
@@ -499,8 +503,6 @@ This falls fairly naturally out of the database interface: in the original code,
 
 It was a fun exercise to rewrite and try to improve this code, and I hope you've enjoyed it or learned something. I certainly hope it's more robust and maintainable, and it avoids the hassles that come with learning and updating third party dependencies.
 
-See the full source on GitHub at [benhoyt/web-service-stdlib](https://github.com/benhoyt/web-service-stdlib).
+See the full source on GitHub at [**benhoyt/web-service-stdlib**](https://github.com/benhoyt/web-service-stdlib).
 
-Instead of just critiquing the tutorial article, I've also [started a thread](https://groups.google.com/u/1/g/golang-dev/c/kC7YZsHTw4Y) on golang-dev, the Go development mailing list, asking if any of these suggestions could be incorporated into the original. We'll see where that goes -- hopefully I can contribute at least the fixes back into the original.
-
-Please let me know if you have any feedback, or suggestions to improve my code!
+Please let me know if you have any feedback, or suggestions to improve my code or this article!
