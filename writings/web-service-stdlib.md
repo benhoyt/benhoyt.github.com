@@ -11,15 +11,15 @@ description: "My re-implementation of the code from the official Go tutorial 'De
 > Summary: This article describes my re-implementation of the code from the official Go tutorial "Developing a RESTful API with Go and Gin". My version adds a few features, fixes some issues, adds tests, and uses only the Go standard library.
 
 
-Most of the Go [documentation](https://golang.org/doc/) and [tutorials](https://golang.org/doc/tutorial/) are really good: concise, accurate, and showing how to use Go's high-quality standard library. However, I recently read the [Tutorial: Developing a RESTful API with Go and Gin](https://golang.org/doc/tutorial/web-service-gin), and I think it could use improvement.
+Most of the Go [documentation](https://golang.org/doc/) and [tutorials](https://golang.org/doc/tutorial/) are really good: they're concise, accurate, and show how to use Go's high-quality standard library. However, I recently read the [Tutorial: Developing a RESTful API with Go and Gin](https://golang.org/doc/tutorial/web-service-gin), and I think it could use improvement.
 
-It's not terrible code, but there are several things that are non-ideal, and at least one bug: concurrent data races accessing the in-memory "database". There are other things that are questionable, such as mixing "database" code into the HTTP handlers, when a simple database `interface` could avoid that. I understand that they're trying to keep things simple for the tutorial, but I think we should be setting a better example in such code.
+There are several things that are important for web services that aren't mentioned, and at least one bug (concurrent data races accessing the in-memory "database"). There are other choices that are less than ideal, such as mixing "database" code into the HTTP handlers, when a simple database `interface` could avoid that.
 
-It also seems an odd choice to showcase a specific third party web library, rather than showing the power and composability of the standard library. The justification given is that "Gin simplifies many coding tasks associated with building web applications, including web services."
+It's clear they're trying to keep things simple for the tutorial, but glossing over important details is risky when many beginners learn by copying example code. So I think we could be setting a better precedent in such code.
 
-Fair enough, and I have nothing against [Gin](https://github.com/gin-gonic/gin) -- it looks like a good library -- but it's one of many Go web frameworks, so why promote a particular one in an official tutorial?
+It also seems an odd choice to showcase a specific third party web library, rather than showing the power and composability of the standard library. The justification given is that "Gin simplifies many coding tasks associated with building web applications, including web services." Fair enough, and I have nothing against [Gin](https://github.com/gin-gonic/gin) -- it looks like a good library -- but it's one of many Go web frameworks, so why promote a particular one in an official tutorial?
 
-The tutorial was [reviewed](https://go-review.googlesource.com/c/website/+/332349) by Russ Cox, Go's technical lead, who usually does very thorough reviews. Oddly, especially given Russ's [stance on dependencies](https://research.swtch.com/deps), this one was approved with nary a comment, just a bare "+2" (the Go code review system's equivalent of <abbr title="Looks Good To Me">LGTM</abbr>).
+The tutorial was [reviewed](https://go-review.googlesource.com/c/website/+/332349) by Russ Cox, Go's technical lead, who usually does very thorough reviews. Oddly, especially given Russ's [stance on dependencies](https://research.swtch.com/deps), this one was approved with nary a comment, just a bare +2 -- essentially a <abbr title="Looks Good To Me">LGTM</abbr>.
 
 In any case, I decided to rewrite the code using just the standard library, and fixed a bug and added some features at the same time -- features I think should be part of any "real" web service. You can see the full source on GitHub at [benhoyt/web-service-stdlib](https://github.com/benhoyt/web-service-stdlib).
 
