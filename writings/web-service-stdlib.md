@@ -269,6 +269,8 @@ func (s *Server) addAlbum(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
+Update: as a commenter [pointed out](https://lobste.rs/s/9fjnrw/improving_code_from_official_go_restful#c_ffgcv8), it would be even better to have the database *generate* a unique album ID, rather than the user setting it.
+
 
 ## Concurrency
 
