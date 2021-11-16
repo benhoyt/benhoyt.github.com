@@ -39,7 +39,7 @@ Here are things I found in the original code that I've changed or improved in my
 * [Database interface.](#database-interface) I've used an explicit interface for the database methods (which can returns defined errors such as `ErrDoesNotExist`), along with an [in-memory implementation](#database-implementation) similar to the one in the original.
 * [Separation of concerns.](#separation-of-concerns) In the original the "database" code was intertwined with handler code. Partly as a consequence of using a database interface, in my version the database code is completely separate from the HTTP handler code, making it easier to test things like error handling or swap in a real database when that's needed.
 
-My version is definitely more code (about 200 lines of code rather than 50, along with about 250 lines of test code), but that's mostly due to the additional features. I believe my version showcases code that is more robust and maintainable.
+My version is significantly more code (about 300 lines of code rather than 50, along with about 300 lines of test code), but that's mostly due to the additional features. I believe my version showcases code that is more robust and maintainable.
 
 Let's look at each one of these points in a bit more depth.
 
@@ -48,7 +48,7 @@ Let's look at each one of these points in a bit more depth.
 
 Gin gives you URL routing (including URL parameters) and a couple of JSON marshaling functions. In my version I wrote some simple routing code and added a couple of custom JSON helpers.
 
-Elsewhere I've written extensively about [different approaches to HTTP routing in Go](https://benhoyt.com/writings/go-routing/), but here the routes are very simple, so I've just used a simple `switch` statement, along with a single regular expression for the `/albums/:id` route. We don't even need the standard library's [`http.ServeMux`](https://pkg.go.dev/net/http#ServeMux) here.
+Elsewhere I've written extensively about [different approaches to HTTP routing in Go](/writings/go-routing/), but here the routes are very simple, so I've used a simplified version of the [regex switch](https://benhoyt.com/writings/go-routing/#regex-switch) approach, with a regular expression to parse the `/albums/:id` route. So we don't even need the standard library's [`http.ServeMux`](https://pkg.go.dev/net/http#ServeMux) here.
 
 The `/albums/:id` route would be fairly simple without a regular expression, but it's a bit simpler to handle the edge cases with a regex: testing that the ID is at least one character and has no slashes.
 
@@ -56,11 +56,13 @@ My code also handles HTTP methods, including proper 405 Method Not Found handlin
 
 ```go
 // Regex to match "/albums/:id" (id must be one or more non-slash chars).
-var albumsIDRegexp = regexp.MustCompile(`^/albums/[^/]+$`)
+var reAlbumsID = regexp.MustCompile(`^/albums/([^/]+)$`)
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     path := r.URL.Path
     s.log.Printf("%s %s", r.Method, path)
+
+    var id string
 
     switch {
     case path == "/albums":
@@ -71,23 +73,20 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
             s.addAlbum(w, r)
         default:
             w.Header().Set("Allow", "GET, POST")
-            jsonError(w, http.StatusMethodNotAllowed,
-                ErrorMethodNotAllowed, nil)
+            s.jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)
         }
 
-    case albumsIDRegexp.MatchString(path):
+    case match(path, reAlbumsID, &id):
         switch r.Method {
         case "GET":
-            id := path[len("/albums/"):]
             s.getAlbumByID(w, r, id)
         default:
             w.Header().Set("Allow", "GET")
-            jsonError(w, http.StatusMethodNotAllowed,
-                ErrorMethodNotAllowed, nil)
+            s.jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)
         }
 
     default:
-        jsonError(w, http.StatusNotFound, ErrorNotFound, nil)
+        s.jsonError(w, http.StatusNotFound, ErrorNotFound, nil)
     }
 }
 ```
@@ -100,41 +99,47 @@ The other area where Gin shortened the code was with its `IndentedJSON` and `Bin
 // writeJSON marshals v to JSON and writes it to the response, handling
 // errors as appropriate. It also sets the Content-Type header to
 // "application/json".
-func writeJSON(w http.ResponseWriter, status int, v interface{}) {
+func (s *Server) writeJSON(w http.ResponseWriter, status int, v interface{}) {
     w.Header().Set("Content-Type", "application/json; charset=utf-8")
     b, err := json.MarshalIndent(v, "", "    ")
     if err != nil {
-        http.Error(w, `{"error":"`+ErrorInternal+`"}`,
-            http.StatusInternalServerError)
+        s.log.Printf("error marshaling JSON: %v", err)
+        http.Error(w, `{"error":"`+ErrorInternal+`"}`, http.StatusInternalServerError)
         return
     }
     w.WriteHeader(status)
-    w.Write(b)
+    _, err = w.Write(b)
+    if err != nil {
+        // Very unlikely to happen, but log any error (not much more we can do)
+        s.log.Printf("error writing JSON: %v", err)
+    }
 }
 
 // readJSON reads the request body and unmarshals it from JSON, handling
 // errors as appropriate. It returns true on success; the caller should
 // return from the handler early if it returns false.
-func readJSON(w http.ResponseWriter, r *http.Request, v interface{})
-        bool {
+func (s *Server) readJSON(w http.ResponseWriter, r *http.Request, v interface{}) bool {
     b, err := io.ReadAll(r.Body)
     if err != nil {
-        jsonError(w, http.StatusInternalServerError, ErrorInternal, nil)
+        s.log.Printf("error reading JSON body: %v", err)
+        s.jsonError(w, http.StatusInternalServerError, ErrorInternal, nil)
         return false
     }
     err = json.Unmarshal(b, v)
     if err != nil {
         data := map[string]interface{}{"message": err.Error()}
-        jsonError(w, http.StatusBadRequest, ErrorMalformedJSON, data)
+        s.jsonError(w, http.StatusBadRequest, ErrorMalformedJSON, data)
         return false
     }
     return true
 }
 ```
 
-Note that I could have used [`json.Encoder`](https://pkg.go.dev/encoding/json#Encoder) to stream directly to the response. However, error handling is a bit tricky: if there's a JSON marshaling error and `Encoder.Encode` has already written something to the response, you can't return a non-200 HTTP status. In the `Album` case an error is unlikely (impossible?) because it's such a simple struct, but in the general case JSON encoding can return errors, so I'm marshaling the struct to a `[]byte` first.
+I could have used [`json.Encoder`](https://pkg.go.dev/encoding/json#Encoder) to stream directly to the response. However, error handling is a bit tricky: if there's a JSON marshaling error and `Encoder.Encode` has already written something to the response, you can't return a non-200 HTTP status. In the `Album` case an error is unlikely (impossible?) because it's such a simple struct, but in the general case JSON encoding can return errors, so I'm marshaling the struct to a `[]byte` first.
 
 Similarly, for unmarshaling you can use [`json.Decoder`](https://pkg.go.dev/encoding/json#Decoder) to read directly from the request body -- however, that is really [designed for streams](https://ahmet.im/blog/golang-json-decoder-pitfalls/).
+
+Note how we're logging the `err` value for Internal Server Errors -- it may have sensitive (or just too much) information in it, so log it instead of including it in the response.
 
 
 ## Validation
@@ -161,11 +166,11 @@ if album.Artist == "" {
     issues["artist"] = validationIssue{"required", ""}
 }
 if album.Price < 0 || album.Price >= 100000 {
-    issues["price"] = validationIssue{
-        "out-of-range", "price must be between 0 and $1000"}
+    issues["price"] = validationIssue{"out-of-range",
+        "price must be between 0 and $1000"}
 }
 if len(issues) > 0 {
-    jsonError(w, http.StatusBadRequest, ErrorValidation, issues)
+    s.jsonError(w, http.StatusBadRequest, ErrorValidation, issues)
     return
 }
 ```
@@ -248,14 +253,15 @@ func (s *Server) addAlbum(w http.ResponseWriter, r *http.Request) {
 
     err := s.db.AddAlbum(album)
     if errors.Is(err, ErrAlreadyExists) {
-        jsonError(w, http.StatusConflict, ErrorAlreadyExists, nil)
+        s.jsonError(w, http.StatusConflict, ErrorAlreadyExists, nil)
         return
     } else if err != nil {
-        jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
+        s.log.Printf("error adding album ID %q: %v", album.ID, err)
+        s.jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
         return
     }
 
-    writeJSON(w, http.StatusCreated, album)
+    s.writeJSON(w, http.StatusCreated, album)
 }
 ```
 
@@ -307,8 +313,8 @@ In my version I've made it always return errors as JSON, using a little `jsonErr
 ```go
 // jsonError writes a structured error as JSON to the response, with
 // optional structured data in the "data" field.
-func jsonError(w http.ResponseWriter, status int, error string,
-        data map[string]interface{}) {
+func (s *Server) jsonError(w http.ResponseWriter, status int,
+        error string, data map[string]interface{}) {
     response := struct {
         Status int                    `json:"status"`
         Error  string                 `json:"error"`
@@ -318,13 +324,13 @@ func jsonError(w http.ResponseWriter, status int, error string,
         Error:  error,
         Data:   data,
     }
-    writeJSON(w, status, response)
+    s.writeJSON(w, status, response)
 }
 ```
 
 Usually the "data" field is empty, but for Bad Request errors it's useful to give the caller a bit more information about what they did wrong (for example in the validation code [shown above](#validation)).
 
-The `Error` field is one of several [defined constants](https://github.com/benhoyt/web-service-stdlib/blob/924c99697a1267c1ab0d5e6f03cd6f3c2cb14abe/main.go#L64-L72) for JSON error codes, such as `ErrorValidation`.
+The `Error` field is one of several [defined constants](https://github.com/benhoyt/web-service-stdlib/blob/8efc3d83ac611cb415d746a75377f2b37d83b7e3/main.go#L64-L72) for JSON error codes, such as `ErrorValidation`.
 
 
 ## Method not found
