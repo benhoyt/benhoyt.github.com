@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Improving the code from the official Go RESTful API tutorial</title>
+  <description>My re-implementation of the code from the official Go tutorial 'Developing a RESTful API with Go and Gin', using only the standard library, adding tests, and fixing issues.</description>
+  <link>https://benhoyt.com/writings/web-service-stdlib/</link>
+  <guid>https://benhoyt.com/writings/web-service-stdlib/</guid>
+  <pubDate>Wed, 17 Nov 2021 07:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Simple Lists: a tiny to-do list app written the old-school way (server-side Go, no JS)</title>
   <description>Simple Lists is a tiny to-do list web application written in Go, with old school server-side rendering and no JavaScript.</description>
   <link>https://benhoyt.com/writings/simple-lists/</link>
