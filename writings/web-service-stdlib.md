@@ -21,7 +21,7 @@ Fair enough, and I have nothing against [Gin](https://github.com/gin-gonic/gin) 
 
 The tutorial was [reviewed](https://go-review.googlesource.com/c/website/+/332349) by Russ Cox, Go's technical lead, who usually does very thorough reviews. Oddly, especially given Russ's [stance on dependencies](https://research.swtch.com/deps), this one was approved with nary a comment, just a bare "+2" (the Go code review system's equivalent of <abbr title="Looks Good To Me">LGTM</abbr>).
 
-In any case, I decided to rewrite the code using just the standard library, and fixed a bug and added some features at the same time -- features I think should be part of any "real" web service.
+In any case, I decided to rewrite the code using just the standard library, and fixed a bug and added some features at the same time -- features I think should be part of any "real" web service. You can see the full source on GitHub at [benhoyt/web-service-stdlib](https://github.com/benhoyt/web-service-stdlib).
 
 
 ## Improvements
@@ -180,25 +180,25 @@ In this case I've allowed a zero price, thinking zero would mean "no price", as 
 We don't need a framework with a domain-specific language, just simple `if` statements to check what we need to. We build up a map of issues (indexed by field name), and if there are any validation issues, return that in the JSON error to the caller. Here's what a validation error response looks like:
 
 ```
-$ curl http://localhost:8080/albums -d '{"price":-1}' | jq
+$ curl http://localhost:8080/albums -d '{"price":-1}'
 {
-  "status": 400,
-  "error": "validation",
-  "data": {
-    "artist": {
-      "error": "required"
-    },
-    "id": {
-      "error": "required"
-    },
-    "price": {
-      "error": "out-of-range",
-      "message": "price must be between 0 and $1000"
-    },
-    "title": {
-      "error": "required"
+    "status": 400,
+    "error": "validation",
+    "data": {
+        "artist": {
+            "error": "required"
+        },
+        "id": {
+            "error": "required"
+        },
+        "price": {
+            "error": "out-of-range",
+            "message": "price must be between 0 and $1000"
+        },
+        "title": {
+            "error": "required"
+        }
     }
-  }
 }
 ```
 
@@ -214,21 +214,21 @@ $ curl http://localhost:8080/albums -d '{"id":"foo"}'
 ...
 $ curl http://localhost:8080/albums -d '{"id":"foo"}'
 ...
-$ curl http://localhost:8080/albums | jq
+$ curl http://localhost:8080/albums
 [
-  ...
-  {
-    "id": "foo",
-    "title": "",
-    "artist": "",
-    "price": 0
-  },
-  {
-    "id": "foo",
-    "title": "",
-    "artist": "",
-    "price": 0
-  }
+    ...
+    {
+        "id": "foo",
+        "title": "",
+        "artist": "",
+        "price": 0
+    },
+    {
+        "id": "foo",
+        "title": "",
+        "artist": "",
+        "price": 0
+    }
 ]
 ```
 
@@ -499,8 +499,8 @@ This falls fairly naturally out of the database interface: in the original code,
 
 It was a fun exercise to rewrite and try to improve this code, and I hope you've enjoyed it or learned something. I certainly hope it's more robust and maintainable, and it avoids the hassles that come with learning and updating third party dependencies.
 
-<!--
-Instead of just critiquing the tutorial article, I've also [started a thread](TODO) on golang-dev, the Go development mailing list, asking if any of these suggestions could be incorporated into the original.
--->
+See the full source on GitHub at [benhoyt/web-service-stdlib](https://github.com/benhoyt/web-service-stdlib).
+
+Instead of just critiquing the tutorial article, I've also [started a thread](https://groups.google.com/u/1/g/golang-dev/c/kC7YZsHTw4Y) on golang-dev, the Go development mailing list, asking if any of these suggestions could be incorporated into the original. We'll see where that goes -- hopefully I can contribute at least the fixes back into the original.
 
 Please let me know if you have any feedback, or suggestions to improve my code!
