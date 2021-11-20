@@ -55,7 +55,7 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/benhoyt/web-service-stdlib/main.go (89.1%)</option>
+				<option value="file0">github.com/benhoyt/web-service-stdlib/main.go (88.6%)</option>
 				
 				</select>
 			</div>
@@ -156,7 +156,7 @@ func NewServer(db Database, log *log.Logger) *Server <span class="cov8" title="1
 }</span>
 
 // Regex to match "/albums/:id" (id must be one or more non-slash chars).
-var albumsIDRegexp = regexp.MustCompile(`^/albums/[^/]+$`)
+var reAlbumsID = regexp.MustCompile(`^/albums/([^/]+)$`)
 
 // ServeHTTP routes the request and calls the correct handler based on the URL
 // and HTTP method. It writes a 404 Not Found if the request URL is unknown,
@@ -164,6 +164,8 @@ var albumsIDRegexp = regexp.MustCompile(`^/albums/[^/]+$`)
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
         path := r.URL.Path
         s.log.Printf("%s %s", r.Method, path)
+
+        var id string
 
         switch </span>{
         case path == "/albums":<span class="cov8" title="1">
@@ -174,36 +176,49 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) <span class="
                         s.addAlbum(w, r)</span>
                 default:<span class="cov8" title="1">
                         w.Header().Set("Allow", "GET, POST")
-                        jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)</span>
+                        s.jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)</span>
                 }
 
-        case albumsIDRegexp.MatchString(path):<span class="cov8" title="1">
+        case match(path, reAlbumsID, &amp;id):<span class="cov8" title="1">
                 switch r.Method </span>{
                 case "GET":<span class="cov8" title="1">
-                        id := path[len("/albums/"):]
                         s.getAlbumByID(w, r, id)</span>
                 default:<span class="cov8" title="1">
                         w.Header().Set("Allow", "GET")
-                        jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)</span>
+                        s.jsonError(w, http.StatusMethodNotAllowed, ErrorMethodNotAllowed, nil)</span>
                 }
 
         default:<span class="cov8" title="1">
-                jsonError(w, http.StatusNotFound, ErrorNotFound, nil)</span>
+                s.jsonError(w, http.StatusNotFound, ErrorNotFound, nil)</span>
         }
+}
+
+// match returns true if path matches the regex pattern, and binds any
+// capturing groups in pattern to the vars.
+func match(path string, pattern *regexp.Regexp, vars ...*string) bool <span class="cov8" title="1">{
+        matches := pattern.FindStringSubmatch(path)
+        if len(matches) &lt;= 0 </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">for i, match := range matches[1:] </span><span class="cov8" title="1">{
+                *vars[i] = match
+        }</span>
+        <span class="cov8" title="1">return true</span>
 }
 
 func (s *Server) getAlbums(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
         albums, err := s.db.GetAlbums()
         if err != nil </span><span class="cov8" title="1">{
-                jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
+                s.log.Printf("error fetching albums: %v", err)
+                s.jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
                 return
         }</span>
-        <span class="cov8" title="1">writeJSON(w, http.StatusOK, albums)</span>
+        <span class="cov8" title="1">s.writeJSON(w, http.StatusOK, albums)</span>
 }
 
 func (s *Server) addAlbum(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
         var album Album
-        if !readJSON(w, r, &amp;album) </span><span class="cov8" title="1">{
+        if !s.readJSON(w, r, &amp;album) </span><span class="cov8" title="1">{
                 return
         }</span>
 
@@ -226,51 +241,58 @@ func (s *Server) addAlbum(w http.ResponseWriter, r *http.Request) <span class="c
                 issues["price"] = validationIssue{"out-of-range", "price must be between 0 and $1000"}
         }</span>
         <span class="cov8" title="1">if len(issues) &gt; 0 </span><span class="cov8" title="1">{
-                jsonError(w, http.StatusBadRequest, ErrorValidation, issues)
+                s.jsonError(w, http.StatusBadRequest, ErrorValidation, issues)
                 return
         }</span>
 
         <span class="cov8" title="1">err := s.db.AddAlbum(album)
         if errors.Is(err, ErrAlreadyExists) </span><span class="cov8" title="1">{
-                jsonError(w, http.StatusConflict, ErrorAlreadyExists, nil)
+                s.jsonError(w, http.StatusConflict, ErrorAlreadyExists, nil)
                 return
         }</span> else<span class="cov8" title="1"> if err != nil </span><span class="cov8" title="1">{
-                jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
+                s.log.Printf("error adding album ID %q: %v", album.ID, err)
+                s.jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
                 return
         }</span>
 
-        <span class="cov8" title="1">writeJSON(w, http.StatusCreated, album)</span>
+        <span class="cov8" title="1">s.writeJSON(w, http.StatusCreated, album)</span>
 }
 
 func (s *Server) getAlbumByID(w http.ResponseWriter, r *http.Request, id string) <span class="cov8" title="1">{
         album, err := s.db.GetAlbumByID(id)
         if errors.Is(err, ErrDoesNotExist) </span><span class="cov8" title="1">{
-                jsonError(w, http.StatusNotFound, ErrorNotFound, nil)
+                s.jsonError(w, http.StatusNotFound, ErrorNotFound, nil)
                 return
         }</span> else<span class="cov8" title="1"> if err != nil </span><span class="cov8" title="1">{
-                jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
+                s.log.Printf("error fetching album ID %q: %v", id, err)
+                s.jsonError(w, http.StatusInternalServerError, ErrorDatabase, nil)
                 return
         }</span>
-        <span class="cov8" title="1">writeJSON(w, http.StatusOK, album)</span>
+        <span class="cov8" title="1">s.writeJSON(w, http.StatusOK, album)</span>
 }
 
 // writeJSON marshals v to JSON and writes it to the response, handling
 // errors as appropriate. It also sets the Content-Type header to
 // "application/json".
-func writeJSON(w http.ResponseWriter, status int, v interface{}) <span class="cov8" title="1">{
+func (s *Server) writeJSON(w http.ResponseWriter, status int, v interface{}) <span class="cov8" title="1">{
         w.Header().Set("Content-Type", "application/json; charset=utf-8")
         b, err := json.MarshalIndent(v, "", "    ")
         if err != nil </span><span class="cov0" title="0">{
+                s.log.Printf("error marshaling JSON: %v", err)
                 http.Error(w, `{"error":"`+ErrorInternal+`"}`, http.StatusInternalServerError)
                 return
         }</span>
         <span class="cov8" title="1">w.WriteHeader(status)
-        w.Write(b)</span>
+        _, err = w.Write(b)
+        if err != nil </span><span class="cov0" title="0">{
+                // Very unlikely to happen, but log any error (not much more we can do)
+                s.log.Printf("error writing JSON: %v", err)
+        }</span>
 }
 
 // jsonError writes a structured error as JSON to the response, with
 // optional structured data in the "data" field.
-func jsonError(w http.ResponseWriter, status int, error string, data map[string]interface{}) <span class="cov8" title="1">{
+func (s *Server) jsonError(w http.ResponseWriter, status int, error string, data map[string]interface{}) <span class="cov8" title="1">{
         response := struct {
                 Status int                    `json:"status"`
                 Error  string                 `json:"error"`
@@ -280,22 +302,23 @@ func jsonError(w http.ResponseWriter, status int, error string, data map[string]
                 Error:  error,
                 Data:   data,
         }
-        writeJSON(w, status, response)
+        s.writeJSON(w, status, response)
 }</span>
 
 // readJSON reads the request body and unmarshals it from JSON, handling
 // errors as appropriate. It returns true on success; the caller should
 // return from the handler early if it returns false.
-func readJSON(w http.ResponseWriter, r *http.Request, v interface{}) bool <span class="cov8" title="1">{
+func (s *Server) readJSON(w http.ResponseWriter, r *http.Request, v interface{}) bool <span class="cov8" title="1">{
         b, err := io.ReadAll(r.Body)
         if err != nil </span><span class="cov8" title="1">{
-                jsonError(w, http.StatusInternalServerError, ErrorInternal, nil)
+                s.log.Printf("error reading JSON body: %v", err)
+                s.jsonError(w, http.StatusInternalServerError, ErrorInternal, nil)
                 return false
         }</span>
         <span class="cov8" title="1">err = json.Unmarshal(b, v)
         if err != nil </span><span class="cov8" title="1">{
                 data := map[string]interface{}{"message": err.Error()}
-                jsonError(w, http.StatusBadRequest, ErrorMalformedJSON, data)
+                s.jsonError(w, http.StatusBadRequest, ErrorMalformedJSON, data)
                 return false
         }</span>
         <span class="cov8" title="1">return true</span>

@@ -350,7 +350,7 @@ As shown in the [routing code](#standard-library), I've changed this to return a
 
 I've added many tests of the server: these test all endpoints, as well as error behavior, validation issues, and so on.
 
-Test coverage (via `go test -coverprofile`) [shows](/writings/web-service-stdlib-coverage.html) that I've tested all the code except the bare-bones `main` function and a hard-to-test part of the `writeJSON` error handling (which will never happen in practice). In general, I don't think aiming for 100% test coverage is a reasonable goal, but it was nice how easy it was here to cover so much.
+Test coverage (via `go test -coverprofile`) [shows](/writings/web-service-stdlib-coverage.html) that I've tested all the code except the bare-bones `main` function and a hard-to-test part of the `writeJSON` error handling (which is very unlikely to happen in practice). In general, I don't think aiming for 100% test coverage is a reasonable goal, but it was nice how easy it was here to cover so much.
 
 The tests all follow the same basic pattern: create a test server, execute one or more requests against an [`httptest.ResponseRecorder`](https://pkg.go.dev/net/http/httptest#ResponseRecorder), and then ensure that the response is correct -- status code and JSON data.
 
