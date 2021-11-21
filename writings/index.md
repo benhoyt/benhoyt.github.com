@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2021">2021</h2>
 
+* [AWKGo, an AWK-to-Go compiler](/writings/awkgo/) describes a simple compiler that translates a subset of the AWK text processing language into Go source code. (November)
 * [Improving the Go RESTful API tutorial](/writings/web-service-stdlib/) describes my re-implementation of the code from an official Go tutorial, making it more robust and maintainable. (November)
 * [Simple Lists](/writings/simple-lists/) describes a tiny to-do list app I wrote the old-school way: server-side Go that renders HTML, and no JavaScript. (October)
 * [Structural pattern matching in Python 3.10](/writings/python-pattern-matching/) is a critical but informative look at this new feature, with real-world code examples. (September)

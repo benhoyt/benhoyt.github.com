@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>AWKGo, an AWK-to-Go compiler</title>
+  <description>A discussion of AWKGo, a simple compiler that translates a useful subset of the AWK text processing language into Go source code.</description>
+  <link>https://benhoyt.com/writings/awkgo/</link>
+  <guid>https://benhoyt.com/writings/awkgo/</guid>
+  <pubDate>Mon, 22 Nov 2021 00:10:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Improving the code from the official Go RESTful API tutorial</title>
   <description>My re-implementation of the code from the official Go tutorial 'Developing a RESTful API with Go and Gin', using only the standard library, adding tests, and fixing issues.</description>
   <link>https://benhoyt.com/writings/web-service-stdlib/</link>
