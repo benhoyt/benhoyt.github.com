@@ -12,52 +12,54 @@ I'm such a nerd that I [nerd-sniped](https://xkcd.com/356/) myself.
 
 As the author of [GoAWK](/writings/goawk/), an AWK interpreter written in Go, I was wondering one day how hard it would be to translate AWK programs into Go code. Couldn't be that hard, right? I decided to try it.
 
-It wasn't particularly hard -- at least, not the subset of AWK that my compiler supports -- and I was able to reuse GoAWK's parser and many of its tests. To show off my creative naming skills, I'm calling the compiler AWKGo.
+It wasn't particularly hard -- at least, not for the subset of AWK that my compiler supports -- and I was able to reuse GoAWK's parser and many of its tests. To show off my creative naming skills, I'm calling the compiler AWKGo.
 
-The rest of this article describes what AWKGo does and how it works, a few of the interesting things I learned while writing and testing it, and shows some examples of its output. I'll also touch briefly on the performance of the resulting code.
+The rest of this article describes what AWKGo does, how it works, a few of the interesting things I learned while writing and testing it, and shows some examples of its output. I'll also look briefly at the performance of the resulting code.
 
 You can view the [AWKGo source on GitHub](https://github.com/benhoyt/goawk/tree/master/awkgo).
 
-> **Go to:** [Subset](#the-subset) \| [Example output](#example-output) \| [Typing](#more-typing) \| [Compiler](#the-compiler) \| [Helpers](#helper-functions) \| [Performance](#performance) \| [Conclusion](#conclusion)
+> **Go to:** [The subset](#the-subset) \| [Examples](#example-output) \| [Typing](#typing) \| [Compiler](#the-compiler) \| [Helpers](#helper-functions) \| [Testing](#testing) \| [Perf](#performance) \| [Conclusion](#conclusion)
 
 
 
 ## The subset
 
-First, a disclaimer: AWKGo only supports a subset of AWK, and deviates from AWK semantics in several ways. However, I think the subset it supports is useful. Most small one-liner AWK scripts, and some larger scripts, will work.
+AWKGo supports a useful subset of AWK, but deviates from AWK semantics in several ways. Most small AWK scripts should work fine, though some will need minor changes.
 
 Here's what is supported:
 
 * `BEGIN`, `END`, and pattern-action blocks, including range patterns.
 * Control structures: `if`, `else`, `for`, `while`, `break`, and so on.
-* Automatic field splitting of the input (`$1`, `$2`, and so on).
+* Automatic field splitting of the input (`$1`, `$2`, etc).
 * Output using `print` and `printf` -- it's fast and buffered using Go's `bufio` package.
 * Scalar and array variables, both use and assignment, as well as augmented assignment like `x+=10` and increment/decrement operations such as `x++`.
 * The commonly-used special variables such as `FS`, `NF`, and `OFS`.
 * Automatic type conversions, as in AWK: if a number is used in a string context, it's automatically converted to a string, and vice versa.
-* The usual unary and binary operators, including `~` (regular expression match). Also, the ternary conditional, for example `n!=1?"s":""` (as long as both cases yield the same type).
+* The usual unary and binary operators, including `~` (regular expression match). Also, the ternary conditional, for example `n!=1?"s":""` -- this works as long as both cases yield the same type.
 * Most built-in functions: the math functions, `split`, `sprintf`, `sub`, `substr`, and so on.
 
 And here is what's *not* supported:
 
 * Dynamic typing: AWK has its own form of dynamic typing, whereas Go is statically typed. So in AWKGo, if you set a variable to a string, it must stay a string, and if you set it to a number, it must stay a number.
 * Numeric strings: related to the above, when an AWK value is read from user input and looks like a number, it's considered a "numeric string" and can be treated as either a string or a number. AWKGo tries to do the right thing, but once it has decided something is a string (or number), it must stay that type.
-* Null values: in AWK, unset variables are "null" and appear as the empty string in output; AWKGo outputs `0` if it's a number variable.
+* Null values: in AWK, unset variables are "null" and appear as the empty string when output. In contrast, AWKGo outputs `0` for an unset number variable.
 * User-defined functions: they're generally only used in large scripts (by AWK standards), and they were a bit hard to implement without dynamic typing.
 * Non-literal `printf` format strings: you can say things like `printf("%s %d", k, v)`, but not `printf(fmt, k, v)`. The latter is rare in simple scripts.
 * Print redirection: AWKGo doesn't support forms such as `print "foo" >"out.txt"`, nor does it support `getline`.
 * Non-existent array elements: in POSIX, a reference to a non-existent array element is supposed to create it. I think this is a horrible feature, and anyway, I wanted to stick with Go's `map` semantics.
-* Some forms of augmented assignment, like `x = y+=2`. There's no reason we can't support these less common constructs, I just didn't get around to it.
+* Some forms of augmented assignment, like `x = y+=2`. There's no reason it couldn't support these less common constructs, I just didn't get to it.
 * Some special variables, such as `ARGC` and `FILENAME`. Also, some special variables such as `NF` are read-only in AWKGo.
 
 
 ## Example output
 
-What does AWKGo's output look like? Like many "transpilers", the output is often neither beautiful nor idiomatic. Some constructs translate well, others not so much. Let's look at three examples, from simple to slightly more complex.
+What does AWKGo's output look like? Like many "transpilers", the output is neither beautiful nor idiomatic. Some constructs translate well, others not so much. Let's look at three examples, from simple to slightly more complex.
 
-I'm not going to include the `import` declarations at the beginning, nor the [runtime helper functions](#helper-functions) included at the end, as these are basically constant. I'm also going to elide some common setup code that's not particularly interesting. You can see those in the links I've provided to the full code, but here I'm just going to copy the interesting part -- the guts of what the compiler outputs.
+I'm not going to include the `import` declarations at the beginning, nor the [runtime helper functions](#helper-functions) included at the end, as these are the same every time.
 
-The first example is a very simple program that you might use to count show the IP address (field 4) in a web server log:
+I'm also going to elide some common setup code that's not particularly interesting. You can see those in the links I've provided to the full code, but here I'm just going to copy the interesting part -- the guts of what the compiler outputs.
+
+The first example is a simple program that you might use on a web server log to scan for requests to the "about" page and print the 4th field:
 
 ```awk
 /about/ { print $4 }
@@ -98,11 +100,11 @@ var (
 
 You can see how the helper functions like `_splitHelper` and `_getField` are defined in the [full output on GitHub](https://github.com/benhoyt/goawk/blob/master/awkgo/examples/about.go), but here they basically amount to `strings.Fields(_line)` and `_fields[3]`, respectively.
 
-Note how we're pre-compiling the regular expression literal (`_re1`) using Go's `regexp.MustCompile` function.
+Note how we're pre-compiling the regular expression literal (`_re1`) using Go's `regexp.MustCompile` function at the top level.
 
 As you can see, this example comes out pretty readable, and not too different from how you'd write it in Go by hand. Because I/O handling (and most variables) in AWK are global state, for simplicity I've defined them as globals in Go as well.
 
-The second example is more complex, but still a fairly real-world example: [counting the frequencies of unique words](/writings/count-words/#awk) in a text file, and then printing the words and their counts:
+The second example is more complex, but still a fairly real-world example: counting the frequencies of unique words in a text file, and then printing the words and their counts:
 
 ```awk
 {
@@ -177,14 +179,14 @@ func main() {
 }
 ```
 
-Probably not a particularly useful program, but it shows a couple of interesting things about AWKGo that we'll discuss further below: we sometimes need to prod AWKGo's type detection with constructs like `+0` to force an expression to a number (or string). The output also shows how we translates things like a increment, which are expressions in AWK but statements in Go. More on those below.
+Probably not a particularly useful program, but it shows a couple of interesting things about AWKGo that we'll discuss further below: we sometimes need to prod AWKGo's type detection with constructs like `+0` to force an expression to a number (or string). The output also shows how we translate things like increment, which are expressions in AWK but statements in Go. More on those below.
 
 
-## More typing
+## Typing
 
 AWK has been called "stringly typed". That's rather pejorative, however, and in actual fact it's *almost* statically typed: apart from a few edge cases such as "numeric strings", you can detect the types of most expressions at compile time -- and that's without any explicit type declarations.
 
-I actually think that with a few small tweaks, AWK types could be fully determined at compile time, and the language would probably be better for it. "Numeric strings" are one of the tricky things to get your head around when learning AWK.
+I actually think that with a few small tweaks to the language, AWK types could be fully determined at compile time, and the language would probably be better for it. "Numeric strings" are one of the tricky things to get your head around when learning AWK.
 
 In any case, AWKGo's job is to try to convert dynamically typed AWK into statically typed Go. To do that, there is a ["typer"](https://github.com/benhoyt/goawk/blob/master/awkgo/typer.go) that performs a pass to determine the type of each expression and variable in the AWK code.
 
@@ -228,9 +230,9 @@ func (t *typer) expr(expr Expr) (typ valueType) {
 }
 ```
 
-The typer walks over the syntax tree twice to ensure we detect the types of variables assigned after they're first used, for example in `while (i<5) i++` the `i++` is the "assignment", and `i<5` is the use.
+The typer walks over the syntax tree twice to ensure we detect the types of variables assigned after they're first used, for example in `while (i<5) i++` the `i++` is the assignment, and `i<5` is the use.
 
-As mentioned above, sometimes with AWKGo you need to use a no-operation expression like `n+0` (add zero) to force an expression to a number, or `s ""` (concatenate empty string) to force it to a string. This is required if you're comparing "numeric strings" like the `$1 == $2` shown above, because AWKGo doesn't know (without seeing the input) whether it should compare them as strings or numbers. So you need to tell it: either say `$1+0 == $2` to compare them numbers, or `$1 "" == $2` to compare them as strings. For many AWK scripts, you're comparing against number or string literals, so you don't nee this.
+As mentioned above, sometimes with AWKGo you need to use a no-operation expression like `n+0` (add zero) to force an expression to a number, or `s ""` (concatenate empty string) to force it to a string. This is required if you're comparing "numeric strings" like the `$1 == $2` shown above, because AWKGo doesn't know whether it should compare them as strings or numbers. So you need to tell it: either say `$1+0 == $2` to compare them numbers, or `$1 "" == $2` to compare them as strings. For many AWK scripts, you're comparing against expressions of a known type, so you don't need to use this trick.
 
 The other time you need an explicit conversion is when you assign a field directly to a variable without an operation. In this case, AWKGo treats fields such as `$1` as strings, so if you try to do `n = $1; n++`, it'll tell you `variable "n" already set to str, can't set to num`. You'll need to write `n = $1+0; n++` to force its hand.
 
@@ -300,7 +302,7 @@ To give an example, the compiled version of `y = x++` (split onto multiple lines
 
 ```go
 y = func() float64 {
-    _t := x
+    _t := x // temp variable to store current x
     x++
     return _t
 }()
@@ -308,20 +310,20 @@ y = func() float64 {
 
 However, the compiler uses an "optimization" when an increment or assignment expression is used as a statement. In these cases, because the expression's value is not being used (it's only the side effect we care about), we can shorten it to use a regular Go assignment or increment statement.
 
-For example, `BEGIN { x++; print x }` would compile to straightforward Go:
+For example, `{ x++; print x }` would compile to straightforward Go:
 
 ```go
 x++
 fmt.Fprintln(_output, _formatNum(x))
 ```
 
-One shortcut I've taken in the compiler is to not worry about syntax or extra parentheses. The Go compiler doesn't care about lack of whitespace or extra parentheses, and for the examples above I've just run the output through `gofmt -r '(x) -> x'` -- format the code, and use a rewrite rule to remove unneeded parentheses.
+One shortcut I've taken in the compiler is to not worry about whitespace or extra parentheses. The Go compiler doesn't care about lack of whitespace or extra parentheses, and for the examples above I've just run the output through `gofmt -r '(x) -> x'`, which formats the code and uses a rewrite rule to remove unneeded parentheses.
 
-So I don't have to try to convert AWK's operator precedence to Go's at all. I simply output parentheses around every binary or unary operation, and the `gofmt` fixes it up. For example, the AWK program `BEGIN { print 1+2*3 }` would compile to:
+So I don't have to try to convert AWK's operator precedence to Go's at all. I simply output parentheses around every binary or unary operation, and `gofmt` fixes it up. For example, the AWK program `BEGIN { print 1+2*3 }` would compile to:
 
 ```go
 func main() {
-    // Common setup code elided...
+// Common setup code elided...
 fmt.Fprintln(_output, _formatNum((1.0 + (2.0 * 3.0))))
 }
 ```
@@ -338,11 +340,11 @@ func main() {
 
 ## Helper functions
 
-There's a very small AWK "runtime" needed for operations like getting and setting fields (for example, `$1`), converting strings to and from numbers, and to implement the built-in functions such as `match()`, `substr()`, and `sub()`.
+There's a small AWK "runtime" needed for operations like getting and setting fields (for example, `$1`), converting strings to and from numbers, and implementing the built-in functions such as `match`, `substr`, and `sub`.
 
 These are the same every time, so I've just included them as a multi-line string containing Go source code in [helpers.go](https://github.com/benhoyt/goawk/blob/master/awkgo/helpers.go). Each of the names is prefixed with an underscore to avoid name clashes (not foolproof, I know, but good enough).
 
-For example, the helpers to get and set fields (`$i` and `$i = s`, respectively) are shown below. In a hand-written Go program, I'd probably not use globals for things like `_line` and `_fields`, but in AWK, those things are global, so translating it that way makes sense.
+For example, the helpers to get and set fields (`$i` and `$i = s`, respectively) are shown below. In a hand-written Go program, I'd probably avoid globals for things like `_line` and `_fields`, but in AWK, that state *is* global, so translating it that way makes sense.
 
 ```go
 func _getField(i int) string {
@@ -384,48 +386,59 @@ func _splitHelper(s, fs string) []string {
 ```
 
 
+## Testing
+
+I already had a volley of tests from GoAWK that ensure various aspects of the interpreter are working correctly. I copied them into the `awkgo` directory, and hacked them to run through AWKGo and execute the result.
+
+Like the original tests, the AWKGo tests are written as table-driven tests with a single [`TestAWKGo` function](https://github.com/benhoyt/goawk/blob/31a9e5dc25c9c72b4c4893efc8d9f0ac778b5253/awkgo/awkgo_test.go#L613) to drive them. It parses and compiles the AWK source, outputting the Go code to a temporary file. This is then executed using `go run`, and the output is compared against what we expect.
+
+I also wrote a little script, [awkgo/run_tests.sh](https://github.com/benhoyt/goawk/blob/master/awkgo/run_tests.sh), that runs the tests, strips from the output some stuff like timings that change from run to run, and writes the output to [awkgo/tests.txt](https://github.com/benhoyt/goawk/blob/master/awkgo/tests.txt).
+
+When I started, only a few tests passed. But with each feature implemented or bug fixed, slowly but surely the number of PASSes started to exceed the number of FAILs. It's really satisfying when you fix an issue that affects a number of tests and see a lot of failures disappear from the `tests.txt` diff.
+
+When I finished the features I wanted to implement, I drew a line in the sand and commented out the rest of the tests so that `go test` can run without failures.
+
+
 ## Performance
 
-How does the performance of an AWKGo program compare with the same program run under an AWK interpreter, or with the program written in Go by hand?
+How does the performance of an AWKGo program compare with the same program run using an AWK interpreter, or with the program written in Go by hand?
 
-Well, it depends on the program. Programs which do math operations in a tight loop get *much* faster. Let's use the following AWK one-liner:
+Well, it depends on the program. Programs which do math operations in a tight loop get *much* faster. Let's use the following AWK one-liner, which sums the integers from 0 to 100,000,000:
 
 ```awk
 BEGIN { for (i=0; i<100000000; i++) s += i; print s }
 ```
 
-And compare the execution time of the AWKGo version with GoAWK, Gawk, mawk, and the original Kernighan awk. Sorted from slowest to fastest (I've shown the best of three runs for each):
+We'll compare the execution time of the AWKGo version with GoAWK, Gawk, mawk, and the original Kernighan awk. I've shown the best of three runs for each, sorted from slowest to fastest:
 
-Version | Time (s)
-------------------
-goawk   | 6.59
-awk     | 6.27
-gawk    | 5.73
-mawk    | 2.88
-awkgo   | 0.33
+**Version** | **Time (seconds)**
+goawk       | 6.59
+awk         | 6.27
+gawk        | 5.73
+mawk        | 2.88
+awkgo       | 0.33
 
 The first three interpreters are all similar, with Gawk coming out a bit ahead. mawk is very fast for an interpreter! But of course the compiled Go code is about 9x as fast as that.
 
-For comparison, a hand-written Go version of this program, which uses locals instead of globals and `int` instead of `float64` runs in 0.098s, more than 3x as fast again.
+For comparison, a hand-written Go version of this program, which uses locals instead of globals and `int` instead of `float64`, runs in 0.098s, more than 3x as fast again.
 
 Programs which perform I/O (and to be fair, that's usually what you use AWK for) are only a little bit faster. The "count word frequencies" program I showed above run on a 10x concatenation of the King James Bible (and the output piped to `/dev/null`) runs as follows:
 
-Version | Time (s)
-------------------
-awk     | 4.575
-gawk    | 3.550
-goawk   | 3.160
-mawk    | 1.230
-awkgo   | 0.978
+**Version** | **Time (seconds)**
+awk         | 4.56
+gawk        | 3.55
+goawk       | 3.16
+mawk        | 1.23
+awkgo       | 0.98
 
-Mawk is again way ahead of the pack of interpreters, almost on a par with the compiled AWKGo version. I know it uses a bytecode compiler, but then, so does Gawk ... an interesting article would be "how does Mawk achieve its performance?" If you write it, please let me know. :-)
+Mawk is again way ahead of the pack of interpreters, almost on a par with the compiled AWKGo version. I know it uses a bytecode compiler, but then, so does Gawk ... an interesting article would be, "How does Mawk achieve its speed?" If you write it, send me the link!
 
 
 ## Conclusion
 
-Was it worth it? To me, almost certainly. I enjoy languages and compilers, and making a simple "three pass" compiler was a good experience. I've written very simple "compilers" before, but not one with a "typing" pass that compiles to a statically-typed language.
+Was it worth it? To me, almost certainly. I enjoy languages and compilers, and making a simple three pass compiler was a good experience. I've written simple compilers before, but not one with a "typing" pass that compiles to a statically-typed language.
 
-Is it useful? Probably not. If you want performance, just use Mawk! And if you want your text processing script in a more maintainable language than AWK, you'd probably just write it in Go from the start. You're pretty certain to end up with more idiomatic Go that way, and probably a bit more efficient as well.
+Is it useful? Not really. If you want performance, just use Mawk! And if you want your text processing script in a more maintainable language than AWK, you'd probably just write it in something like Go from the start. You're pretty certain to end up with more idiomatic Go that way, and it'll probably be more efficient as well.
 
 Still, if you have some AWK scripts lying around that you want to convert to "real programs", AWKGo might not be a bad place to start: you could compile a script to Go to get the structure, then clean it up and maintain the cleaned-up version.
 
