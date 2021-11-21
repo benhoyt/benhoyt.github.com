@@ -53,8 +53,8 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 
 ### [Canonical](https://canonical.com/) &ndash; Software Engineer &ndash; September 2020 to now
 
-* Develop features for and help maintain [Juju](https://github.com/juju/juju), a powerful application deployment tool (and one of the largest Go codebases in the world).
-<!-- Pebble, Python Operator Framework -->
+* Design and develop features for [Pebble](https://github.com/canonical/pebble), an API-driven service manager written in Go, and its corresponding Python client in Juju's [Python Operator Framework](https://github.com/canonical/operator).
+* Develop features for and help maintain [Juju](https://github.com/juju/juju), a cross-cloud application deployment tool (and one of the largest Go codebases in the world).
 
 ### [Compass](https://www.compass.com/) &ndash; Senior Software Engineer &ndash; March 2018 to August 2020:
 
