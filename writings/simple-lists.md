@@ -537,3 +537,6 @@ Using Go is a lot of fun: static type checking, fast compile times, a great stan
 I also like how it turned out quite usable with no JavaScript. HTML can do quite a lot on its own these days, so think twice before you pull out React.
 
 I hope you've enjoyed this or learned something. Please let me know if you have any feedback!
+
+
+{% include sponsor.html %}

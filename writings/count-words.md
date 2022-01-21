@@ -1194,3 +1194,6 @@ What can we learn from all this? Here are a few thoughts:
 This was definitely a fun exercise! I learned a good amount about optimization hot-spots, using the Valgrind profiler, and I wrote some Forth code for the first time in years.
 
 Let me know your thoughts or feedback, or send ideas for improvements (see the discussions on [Hacker News](https://news.ycombinator.com/item?id=26463967), [programming Reddit](https://www.reddit.com/r/programming/comments/m5gvxz/performance_comparison_counting_words_in_python/), and [Lobsters](https://lobste.rs/s/3byl7t/performance_comparison_counting_words)).
+
+
+{% include sponsor.html %}

@@ -281,3 +281,6 @@ So there you go: my 500-line toy compiler executes an integer-summing loop 30x a
 Enjoy! Just don't try to use it for real projects anytime soon. :-)
 
 Please write your comments on [Hacker News](https://news.ycombinator.com/item?id=14644576) or [programming reddit](https://www.reddit.com/r/programming/comments/6js83f/compiling_python_syntax_to_x8664_assembly_for_fun/).
+
+
+{% include sponsor.html %}

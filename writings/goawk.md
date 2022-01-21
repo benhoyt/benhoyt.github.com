@@ -729,3 +729,6 @@ Where to from here?
 I'd love to know if you use [GoAWK](https://github.com/benhoyt/goawk), and please send bug reports and code feedback my way. If you don't have a need for GoAWK, at least you've learned about AWK in general, and how useful a tool it is.
 
 Thanks for reading!
+
+
+{% include sponsor.html %}

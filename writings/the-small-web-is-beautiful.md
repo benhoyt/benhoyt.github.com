@@ -249,3 +249,6 @@ Companies will do what companies do, and continue to make flashy-looking, bloate
 Either way, I believe the "small web" is a compelling term and a compelling aesthetic. Not necessarily in the visual sense, but in the sense that you built it yourself, you understand all of it, and you run it on a single server or static file host.
 
 There are thousands of excellent examples of small websites, and hundreds of ways to create simple architectures -- this essay touches on only a few of the ones I'm passionate about. I'd love to hear your own ideas and stories! Comment over at [Lobsters](https://lobste.rs/s/d6qwff/small_web_is_beautiful) or [Hacker News](https://news.ycombinator.com/item?id=26305585) or [programming Reddit](https://www.reddit.com/r/programming/comments/lvfdq9/the_small_web_is_beautiful/).
+
+
+{% include sponsor.html %}

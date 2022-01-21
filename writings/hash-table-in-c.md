@@ -580,3 +580,6 @@ There's obviously a lot more you could do with the C version. You could focus on
 After I'd finished writing this, I remembered that Bob Nystrom's excellent [*Crafting Interpreters*](https://craftinginterpreters.com/) book has a [chapter on hash tables](https://craftinginterpreters.com/hash-tables.html). He makes some similar design choices, though his chapter is significantly more in-depth than this article. If I'd remembered his chapter before I started, I probably wouldn't have written this one!
 
 In any case, I hope you've found this useful or interesting. If you spot any bugs or have any feedback, please let me know. You can also go to the discussions on [Hacker News](https://news.ycombinator.com/item?id=26590234), [programming Reddit](https://www.reddit.com/r/programming/comments/mdkzli/how_to_implement_a_hash_table_in_c/), and [Lobsters](https://lobste.rs/s/6v0vxq/how_implement_hash_table_c).
+
+
+{% include sponsor.html %}

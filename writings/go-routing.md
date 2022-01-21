@@ -777,3 +777,6 @@ I disagree with Axel's assessment that third-party routing libraries make the ro
 In terms of third-party libraries, I quite like the [Chi version](#chi). I'd seriously consider using it, especially if building a web app as part of a large team. Chi seems well thought out and well-tested, and I like the composability of the middleware it provides.
 
 On the other hand, I'm all too aware of node-modules syndrome and the [left-pad fiasco](https://www.davidhaney.io/npm-left-pad-have-we-forgotten-how-to-program/), and agree with [Russ Cox's take](https://research.swtch.com/deps) that dependencies should be used with caution. Developers shouldn't be scared of a little bit of code: writing a tiny customized regex router is fun to do, easy to understand, and easy to maintain.
+
+
+{% include sponsor.html %}

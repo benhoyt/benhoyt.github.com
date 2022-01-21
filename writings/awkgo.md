@@ -443,3 +443,6 @@ Is it useful? Not really. If you want performance, just use Mawk! And if you wan
 Still, if you have some AWK scripts lying around that you want to convert to "real programs", AWKGo might not be a bad place to start: you could compile a script to Go to get the structure, then clean it up and maintain the cleaned-up version.
 
 In any case, please let me know if you find AWKGo interesting or useful. Feedback welcome!
+
+
+{% include sponsor.html %}
