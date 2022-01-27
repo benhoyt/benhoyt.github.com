@@ -1,0 +1,17 @@
+# dot -Tsvg images/goawk-ast-example.dot -o images/goawk-ast-example.svg
+digraph {
+    node [shape=box fontname="monospace"]
+    n1 [label="0xc00010e450\nPrintStmt"]
+    n2 [label="0xc00010e420\nBinaryExpr (+)"]
+    n3 [label="0xc00010c3e0\nFieldExpr"]
+    n4 [label="0xc00012a048\nNumExpr (1)"]
+    n5 [label="0xc00010c400\nFieldExpr"]
+    n6 [label="0xc00012a050\nNumExpr (2)"]
+
+    edge [fontname="monospace"]
+    n1 -> n2
+    n2 -> n3 [label=" Left"]
+    n2 -> n5 [label=" Right"]
+    n3 -> n4
+    n5 -> n6
+}
