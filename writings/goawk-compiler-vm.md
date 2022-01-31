@@ -1,52 +1,40 @@
 ---
 layout: default
-title: "Optimizing GoAWK with a compiler and virtual machine"
+title: "Optimizing GoAWK with a bytecode compiler and virtual machine"
 permalink: /writings/goawk-compiler-vm/
-description: "TODO"
+description: "How I sped up GoAWK by switching from a tree-walking interpreter to a bytecode compiler and virtual machine interpreter. I also show how dramatically the Go compiler improved over time."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">February 2022</p>
 
 
-<!--
-> Summary: TODO
->
-> **Go to:** [TODO1](#todo1) \| [TODO2](#todo2)
--->
-
-A few years ago I wrote [GoAWK](https://github.com/benhoyt/goawk), an AWK interpreter written in Go, along with an article describing [how it works, how it's tested, and how I made it faster](https://benhoyt.com/writings/goawk/).
-
-GoAWK has been a fun side project, and has been [used](https://www.benthos.dev/docs/components/processors/awk) in at least one sizeable open source project, the [Benthos](https://github.com/Jeffail/benthos) stream processor. It even landed me my current job at Canonical.
-
-In any case, GoAWK previously used a [tree-walking interpreter](https://benhoyt.com/writings/goawk/#interpreter): to execute a code block, it recursively walked the parsed syntax tree. That's very simple, but not particularly fast. I've been wanting to switch to a bytecode compiler and virtual machine interpreter for a while, and I finally got around to it.
-
-To summarize up front: the new version is definitely faster, though it didn't speed things up as much as I'd hoped. It made the micro-benchmarks about 18% faster (I was hoping for about 40%). On the more "real world" or macro-benchmarks it gave a 10% improvement. (TODO: real numbers)
+> Summary: I recently sped up GoAWK by switching from a tree-walking interpreter to a bytecode compiler and virtual machine interpreter. I discuss why it's faster and how the new interpreter works. I also show how dramatically the Go compiler and standard library have improved performance over time.
 
 
-## My history with virtual machines
+A few years ago I wrote [GoAWK](https://github.com/benhoyt/goawk), an AWK interpreter written in Go, along with an [article](/writings/goawk/) describing how it works, how it's tested, and how I made it faster.
 
-I had a unique start in the programming world: my first languages were [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) and x86 assembly. My dad was a minister by day, Forth hacker by night -- as a teen I learned programming partly due to his Forth enthusiasm, and partly reading tutorials written by [demosceners](https://en.wikipedia.org/wiki/Demoscene).
+GoAWK has been a fun side project, and is [used](https://www.benthos.dev/docs/components/processors/awk) in at least one sizeable open source project, the [Benthos](https://github.com/Jeffail/benthos) stream processor. It even landed me my current job at Canonical.
 
-One of my early projects was [Third](https://github.com/benhoyt/third), an ANS-compliant Forth interpreter for 8086 DOS. Most Forth compilers, including mine, are very simple compilers that use a form of bytecode -- called [threaded code](https://en.wikipedia.org/wiki/Threaded_code) in the Forth world. Third used "direct threading", where each instruction is the address of the machine code to jump to.
+GoAWK previously used a [tree-walking interpreter](/writings/goawk/#interpreter): to execute a code block, it recursively walked the parsed syntax tree. That's very simple, but not particularly fast. I've been wanting to switch to a bytecode compiler and virtual machine interpreter for a while, and I finally got around to it.
 
-Often a Forth virtual machine is written in assembly (for example, the well-known [Jonesforth](https://github.com/nornagon/jonesforth/blob/master/jonesforth.S)). You can also do direct threading in C compilers such as gcc that support [computed goto](https://eli.thegreenplace.net/2012/07/12/computed-goto-for-efficient-dispatch-tables).
+The new version is definitely faster, though not quite as much as I'd hoped. Read on for more details, or use these links to skip to a specific section:
 
-The heavily-optimized Gforth interpreter uses this approach: it turns out Anton Ertl, one of Gforth's authors, has written a [virtual machine generator](https://www.complang.tuwien.ac.at/anton/vmgen/) and many papers on efficient interpreters.
-
-I guess you could say I've been interested in efficient interpreters for about 25 years. My nerd credentials are impeccable...
+> **Go to:** [Why VMs?](#why-are-virtual-machines-faster-than-tree-walking) \| [Details](#compiler-and-virtual-machine-details) \| [switch](#gos-switch-statement) \| [Other speedups](#other-optimizations-and-a-de-optimization) \| [Results](#virtual-machine-results) \| [Go versions](#performance-across-go-versions) \| [Conclusion](#conclusion)
 
 
 ## Why are virtual machines faster than tree-walking?
 
-It's not immediately obvious why compiling to virtual instructions and then executing them with a virtual machine is faster than just walking the syntax tree.
+One of my early programming projects was [Third](https://github.com/benhoyt/third), an ANS-compliant [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) interpreter for DOS. Most Forth compilers, including Third, are very simple compilers that use a form of bytecode -- called [threaded code](https://en.wikipedia.org/wiki/Threaded_code) in the Forth world. So I guess you could say I've been interested in virtual machines for 25 years...
 
-It's actually *more* work up-front: instead of just lexing and parsing, we now also have a compile step -- but virtual machine compilers (including GoAWK's) are usually very simple and non-optimizing, so that step is very fast.
+It's not immediately obvious why compiling to virtual instructions and then executing them with a virtual machine is faster than evaluating the syntax tree ("tree walking").
 
-The reason it's faster to execute boils down to this: RAM (Random Access Memory) is not actually *random access* on modern processors. Memory blocks are loaded into fast CPU caches as needed, so when you have to access a new block, it takes about 10x as long as if it's in the cache. Peter Norvig's table of [timings for various operations on a typical CPU](http://norvig.com/21-days.html#answers) shows how fetching from level 1 cache takes about 0.5 nanosecond, fetching from level 2 cache 14x that long, and fetching from main memory another 14x!
+It's actually *more* work up-front: instead of just lexing and parsing into a syntax tree, we now also have a compile step -- but virtual machine compilers (including GoAWK's) are usually very simple and non-optimizing, so that step is very fast.
 
-Programming with this in mind is called "data-driven design". I was reminded of how much impact this makes when watching Andrew Kelley's excellent talk, [A Practical Guide to Applying Data-Oriented Design](https://media.handmade-seattle.com/practical-data-oriented-design/). Andrew is the creator of the Zig programming languages, and his talk describes how we significantly sped up the Zig compiler by applying simple data-driven design techniques. This talk was what pushed me to think about this for GoAWK.
+One reason it's faster to execute is this: RAM (Random Access Memory) is not actually *random access* on modern processors. Memory blocks are loaded into fast CPU caches as needed, so when you have to access a new block, it takes about 10x as long as if it's in the cache. Peter Norvig's table of [timings for various operations on a typical CPU](http://norvig.com/21-days.html#answers) shows how fetching from level 1 cache takes about 0.5 nanosecond, fetching from level 2 cache 14x that long, and fetching from main memory another 14x!
 
-That was a rather lengthy aside ... back to why a virtual machine is faster than tree walking. A syntax tree is a bunch of node structs that point to other nodes. They're scattered around in memory, so to evaluate the child nodes you have to follow pointers and jump around in RAM, possibly evicting whatever's in the cache already.
+Programming with this in mind is called "data-driven design". I was reminded of how much impact this makes when watching Andrew Kelley's excellent talk, [A Practical Guide to Applying Data-Oriented Design](https://media.handmade-seattle.com/practical-data-oriented-design/). Andrew is the creator of the Zig programming languages, and his talk describes how he significantly sped up the Zig compiler by applying data-driven design techniques. That talk was what pushed me to think about this for GoAWK.
+
+That was a rather lengthy aside ... back to why a virtual machine is faster than tree walking. A syntax tree is a bunch of node structures that point to other nodes. They're scattered around in memory, so to evaluate the child nodes you have to follow pointers and jump around in RAM, possibly evicting whatever's in the cache already.
 
 Here's a diagram of the GoAWK syntax tree for the expression `print $1+$2`, showing the memory address in hex above each node name:
 
@@ -54,28 +42,29 @@ Here's a diagram of the GoAWK syntax tree for the expression `print $1+$2`, show
 
 The `PrintStmt` is only 48 bytes from the `BinaryExpr`, but the left `FieldExpr` is 8KB from that, and then its `NumExpr` is almost 120KB away from that. Cache blocks are typically 64 bytes, so each of those probably requires loading an additional cache block from main memory. Not very cache-friendly.
 
-With a virtual machine interpreter, the instructions are in a nice linear array of opcodes, which will probably be loaded into a cache block all at once. There's much less jumping around in RAM. Here's what the GoAWK virtual machine instructions for that same program looks like (you can see this with the new disassembly flag, `goawk -da '{ print $1+$2 }'`):
+With a virtual machine interpreter, the instructions are in a nice linear array of opcodes, which will probably be loaded into a cache block all at once. There's much less jumping around in RAM. Here's what the GoAWK virtual machine instructions for that same program look like (you can see this with the new disassembly flag, `goawk -da`):
 
 ```
-addr    instruction    comment
-----    -----------    -------
-0000    FieldInt 1     $1
-0002    FieldInt 2     $2
-0004    Add            +
-0005    Print 1        print (1 is the number of values to print)
+$ echo 3 4 | goawk -da '{ print $1+$2 }'
+        // { body }
+0000    FieldInt 1
+0002    FieldInt 2
+0004    Add
+0005    Print 1    // 1 is the number of values to print
+
+7
 ```
 
-One of the (relatively few) optimizations GoAWK's compiler does is shown here: it turns `$i` into a single `FieldInt i` instruction when *i* is an integer constant, rather than the two-instruction sequence `Num i` and `Field`. This means most field lookups only go through the opcode decode loop once instead of twice.
+One of the (relatively few) optimizations GoAWK's compiler does is shown here: it turns `$i` into a single `FieldInt i` instruction when `i` is an integer constant, rather than the two-instruction sequence `Num i` and `Field`. This means most field lookups only go through the opcode decode loop once instead of twice.
 
-Additionally, with the interpreter's for loop and big `switch`, there are fewer function calls, which are relatively slow. When evaluating a syntax tree, the `eval` function recursively calls `eval` again to evaluate child nodes. With a virtual machine, that's all flattened into a single array of opcodes that we loop over -- no function calls are needed for dispatching opcodes.
-
+Another reason the virtual machine approach is faster is because there are fewer function calls, and function calls are relatively slow. When evaluating a syntax tree, the `eval` function recursively calls `eval` again to evaluate child nodes. With a virtual machine, that's all flattened into a single array of opcodes that we loop over -- no function calls are needed for dispatching opcodes.
 
 
 ## Compiler and virtual machine details
 
-GoAWK's virtual machine uses 32-bit opcodes (`type Opcode int32` in Go). Initially I was going to use 8-bit opcodes (where the "byte" in "bytecode" comes from), but I found that 32-bit opcodes were actually slightly faster than 8- or 16-bit ones. Also, with 32-bit opcodes you avoid the need for variable sized jump offsets: larger AWK scripts often need more than -128 to +127 jump offsets. Whereas nobody's going to need bigger jump offsets than two billion (though I do check just in case).
+GoAWK's virtual machine uses 32-bit opcodes (`type Opcode int32`). Initially I was going to use 8-bit opcodes (where the "byte" in "bytecode" comes from), but I found that 32-bit opcodes were actually slightly faster than 8- or 16-bit ones. Plus, with 32-bit opcodes you avoid the need for variable sized jump offsets. Larger AWK scripts may need more than -128 to +127 jump offsets, whereas nobody's going to need bigger jump offsets than two billion (though I do check just in case).
 
-Here are the first 10 opcodes (there are 85 total -- you can see the full list in [internal/compiler/opcodes.go](TODO)):
+Here are the first 10 opcodes (there are 85 total -- you can see the full list in [internal/compiler/opcodes.go](https://github.com/benhoyt/goawk/blob/master/internal/compiler/opcodes.go)):
 
 ```go
 // Opcode represents a single virtual machine instruction (or argument).
@@ -104,7 +93,7 @@ const (
 
 As you can see in the `print $1+$2` assembly listing above, I'm using a stack-based virtual machine. This is simpler to implement, because the compiler doesn't need to figure out how to allocate registers, it just pushes and pops to and from the stack. Stack-based virtual machines may be slightly slower, however -- very fast virtual machines like Lua's are register-based.
 
-GoAWK's compiler is very simple, with an almost direct translation from the syntax tree to instructions. I use some specializations for accessing variables of different scopes: for example, fetching a global variable uses the `Global` instruction, fetching a local uses `Local`. (As you can see, my instruction naming scheme is extremely creative.)
+GoAWK's compiler is very simple, with a fairly direct translation from the syntax tree to instructions. I use some specializations for accessing variables of different scopes: for example, fetching a global variable uses the `Global` instruction, fetching a local uses `Local`. (As you can see, my instruction naming scheme is extremely creative.)
 
 Here's the assembly listing for a very simple program that sums the numbers from 1 through 10:
 
@@ -128,15 +117,15 @@ $ goawk -da 'BEGIN { for (i=1; i<=10; i++) sum += i; print sum }'
 55
 ```
 
-This shows a neat little optimization I copied from Python (whose interpreter added it in Python 3.10). To compile a `for` or `while` loop, it'd be simplest just to do the test at the top, and then use an uncoditional `Jump` at the bottom of the loop. But that means you're executing two jump instructions every loop: one at the top and one at the bottom.
+This shows a neat little optimization I copied from Python (whose interpreter added it in Python 3.10) -- though I'm sure it's not a new idea. To compile a `for` or `while` loop, it'd be simplest just to do the test at the top, and then use an unconditional `Jump` at the bottom of the loop. But that means you're executing two jump instructions every loop: one at the top and one at the bottom.
 
 Instead, we compile the condition twice: once inverted before the loop (`JumpGreater 0x0018`) and once at the bottom of the loop (`JumpLessOrEqual 0x000a`). This is slightly more code overall as the condition is repeated, but the loop itself -- which is what matters -- is one jump instruction shorter.
 
-We could almost certainly improve the instruction set further, perhaps adding special instructions for integers or strings, when we know the type of the operation ahead of time. That adds complexity, however, so for now I'm going to keep it simple.
+We could almost certainly improve the instruction set further, perhaps adding special instructions for integers or strings when we know the type of the operation ahead of time. That adds complexity, however, and for now I'm going to keep it simple.
 
 The one other optimization the GoAWK compiler does is for assignments. Assignments in AWK are expressions, so by default you'd push their value on the stack ... only to discard it right away in most cases. And you rarely use the value of an assignment expression.
 
-Compare this optimized assignment expression:
+Here's the optimized assignment expression:
 
 ```
 $ ./goawk -da 'BEGIN { x=42; print x }'
@@ -149,18 +138,18 @@ $ ./goawk -da 'BEGIN { x=42; print x }'
 42
 ```
 
-With what the assembly would look like with that optimized disabled:
+And here's what the assembly would look like with that optimization disabled:
 
 ```
 0000    Num 42 (0)
-0002    Dupe              # unnecessary!
+0002    Dupe              # unnecessary
 0003    AssignGlobal x
-0005    Drop              # unnecessary!
+0005    Drop              # unnecessary
 0006    Global x
 0008    Print 1
 ```
 
-Here's a snippet of the [code that compiles statements](TODO), showing the special case for this optimization. Note how the compiler makes heavy use of Go's type switch:
+Below is the [code that compiles statements](https://github.com/benhoyt/goawk/blob/16012e2ff77343e6fe93edcb243ad9df08e507b7/internal/compiler/compiler.go#L190), showing the special case used for this optimization. I also include how we compile `if` statements, to show something quite different. Note how the compiler makes heavy use of Go's type switch:
 
 ```go
 func (c *compiler) stmt(stmt ast.Stmt) {
@@ -207,23 +196,23 @@ func (c *compiler) stmt(stmt ast.Stmt) {
 }
 ```
 
-The virtual machine [`execute` function](TODO) is a single `for` loop with a big `switch` statement, one `case` for each opcode. Here's a snippet:
+The virtual machine [`execute` function](https://github.com/benhoyt/goawk/blob/e3a7a275348b7b44653276ebfccda61971461897/interp/vm.go#L30) is a single `for` loop with a big `switch` statement -- one `case` for each opcode. Here's a snippet showing the instruction fetching and the code to handle a few of the opcodes:
 
 ```go
 func (p *interp) execute(code []compiler.Opcode) error {
-    for i := 0; i < len(code); {
-        op := code[i]
-        i++
+    for ip := 0; ip < len(code); {
+        op := code[ip]
+        ip++
 
         switch op {
         case compiler.Num:
-            index := code[i]
-            i++
+            index := code[ip]
+            ip++
             p.push(num(p.nums[index]))
 
         case compiler.Str:
-            index := code[i]
-            i++
+            index := code[ip]
+            ip++
             p.push(str(p.strs[index]))
 
         case compiler.Dupe:
@@ -233,8 +222,8 @@ func (p *interp) execute(code []compiler.Opcode) error {
         ...
 
         case compiler.FieldInt:
-            index := code[i]
-            i++
+            index := code[ip]
+            ip++
             v, err := p.getField(int(index))
             if err != nil {
                 return err
@@ -250,37 +239,288 @@ func (p *interp) execute(code []compiler.Opcode) error {
 
 ## Go's switch statement
 
-Go doesn't have "computed goto".
+As shown above, the virtual machine is implemented as a big `switch` statement with one `case` per opcode (around 80 cases). Go's `switch` statement is currently implemented as a binary search through the "case space". You can think of it as compiling to something like this -- for brevity, only a few branches of the tree are shown in full:
 
-Results of switch vs funcslice
+```go
+if op < 40 {
+    if op < 20 {
+        if op < 10 {
+            if op < 5 {
+                if op < 2 {
+                    if op < 1 {
+                        // handle opcode 0
+                    } else {
+                        // handle opcode 1
+                    }
+                } else {
+                    // cases for opcodes 2-4
+                }
+            } else {
+                // cases for opcodes 5-9
+            }
+        } else {
+            // cases for opcodes 10-19
+        }
+    } else {
+        // cases for opcodes 20-39
+    }
+} else {
+    if op < 60 {
+        // cases for opcodes 40-59
+    } else {
+        // cases for opcodes 60-79
+    }
+}
+```
 
-Reducing number of opcodes to 80-ish helped significantly: commit 71e2560da9b5084a175f7a6336c6ecdb5266dc94
+As you can see, you need to do O(log<sub>2</sub> N) comparisons and jumps to get down to the case you're interested in. For 80 opcodes, that's 6 or 7 branches to decode every instruction.
 
-Go uses a binary tree of jumps, but looks like it might get a jump table: link to issue.
+As the number of instructions grows, the number of branches grows too (though thankfully that growth is logarithmic, not linear). When I first coded a proof-of-concept virtual machine for GoAWK and just implemented the 7 or 8 instructions I needed for the demo, it gave a huge performance boost, almost 40% faster, because the `switch` only had a few cases. But now that I have all the opcodes in place, it's "only" 18% faster.
 
-So maybe the big switch will magically get faster in Go 1.19
+It was actually slower than that when I had around 100 opcodes. I removed some specializations that I had thought would speed things up, but with fewer opcodes it meant one less binary search branch and was actually [12% faster on average](https://github.com/benhoyt/goawk/commit/71e2560da9b5084a175f7a6336c6ecdb5266dc94).
 
-Further reading: https://www.nextmovesoftware.com/technology/SwitchOptimization.pdf
+It'd be great if there were a way to get constant time instruction dispatch. Why can't Go implement `switch` as a jump table: look up the code address in a table and jump directly to it? It turns out Keith Randall on the Go team is [working on just that](https://go-review.googlesource.com/c/go/+/357330/), so we may get it in Go 1.19.
+
+I tried Keith's branch (which only works with `int64` types at the moment) on GoAWK, and it [improved the speed](https://groups.google.com/g/golang-dev/c/CO4flfrYeo4/m/RxmdO1oJDQAJ) of a simple microbenchmark by 10%. So I'm definitely looking forward to the Go compiler learning about "jump tables".
+
+Could we do this optimization ourself? What about an array of functions? I tried that too, and it turns the dispatch loop into the following:
+
+```go
+func (p *interp) execute(code []compiler.Opcode) error {
+    for ip := 0; ip < len(code); {
+        op := code[ip]
+        ip++
+
+        n, err := vmFuncs[op](p, code, ip)
+        if err != nil {
+            return err
+        }
+        ip += n
+    }
+    return nil
+}
+
+// Type of function called for each instruction. Each function returns
+// the number of arguments the instruction read from code[ip:].
+type vmFunc func(p *interp, code []compiler.Opcode, ip int) (int, error)
+
+var vmFuncs [compiler.EndOpcode]vmFunc
+
+func init() {
+    vmFuncs = [compiler.EndOpcode]vmFunc{
+        compiler.Nop: vmNop,
+        compiler.Num: vmNum,
+        compiler.Str: vmStr,
+        ...
+    }
+}
+
+func vmNop(p *interp, code []compiler.Opcode, ip int) (int, error) {
+    return 0, nil
+}
+
+func vmNum(p *interp, code []compiler.Opcode, ip int) (int, error) {
+    index := code[ip]
+    p.push(num(p.nums[index]))
+    return 1, nil
+}
+
+func vmStr(p *interp, code []compiler.Opcode, ip int) (int, error) {
+    index := code[ip]
+    p.push(str(p.strs[index]))
+    return 1, nil
+}
+```
+
+This only gave me a 1-2% speed increase on GoAWK's microbenchmarks ([see results and code](https://github.com/benhoyt/goawk/commit/8e04b069b621ff9b9456de57a35ff2fe335cf201)). In the end I decided I'd rather stick with the simpler `switch` code and find other ways to improve the speed. And when the Go compiler supports jump tables for `switch`, I'll get a 10% improvement by doing nothing!
+
+The `gcc` C compiler has a non-standard feature called "computed goto", which allows you to write something like `goto *dispatch_table[code[ip++]]` at the end of each opcode's code to jump directly to the code for the next opcode. Eli Bendersky has written an [excellent article about computed goto](https://eli.thegreenplace.net/2012/07/12/computed-goto-for-efficient-dispatch-tables), so I won't dwell on it further here. Most virtual machines written in C use this technique, including CPython and many others. Unfortunately Go doesn't have "computed goto", but again, when `switch` is compiled to a jump table, that will get us half way there.
+
+If you're interested in reading something a bit more academic about how compilers can optimize `switch`, read the paper ["A Superoptimizer Analysis of Multiway Branch Code Generation [PDF]"](https://www.nextmovesoftware.com/technology/SwitchOptimization.pdf) by Roger Sayle, which was presented at the 2008 GCC Developers' Summit.
 
 
-## Other recent optimizations
+## Other optimizations (and a de-optimization!)
 
-* look in commit history
-* concat
-* Go 1.17 (?) register-based calling convention
-  - maybe do a fun table of GoAWK speed across Go versions from 1.0 (one CPU benchmark and one I/O)
-* bytes/unicode saga: https://github.com/benhoyt/goawk/issues/93
+Since writing the original article about GoAWK and how I [improved performance](/writings/goawk/#improving-performance) back then, it's gotten faster in two ways: me optimizing the code further, and Go getting faster.
+
+Here are the optimizations I've added since then:
+
+* [Buffering output piped to commands](https://github.com/benhoyt/goawk/commit/89aae73fcb0ba6ebbe4981318901a0d696067911), which gave a 10x speedup for print redirection. I got a similar speedup for all print output when I [added buffering to stdout](https://github.com/benhoyt/goawk/commit/60745c3503ba3d99297816f5c7b5364a08ec47ab) originally, but I overlooked adding it for the redirected variant.
+* [Only convert numeric strings to number if needed](https://github.com/benhoyt/goawk/commit/b05d0d983d4e96ae518c6af3e846fbb1a15040aa). Previously I was doing the conversion eagerly, now I only do it if the value is required in a number context. This gives a solid improvement on real-world scripts that use `$i` fields as strings, though it did [slow down](https://github.com/benhoyt/goawk/commit/cbe2629f0d8ffa33bc84013a9cb54ac03aac8dcd) comparisons. It gave a 40% speedup for my reasonably real-world word counting script.
+
+One problematic [fix](https://github.com/benhoyt/goawk/commit/b7ec795b6716aa2159907cce7a54351dc78b0788) I did was to change GoAWK's string functions, such as `length()` and `substr()`, to use Unicode character indexes rather than byte indexes. I knew this was going to change these operations from O(1) to O(N) in the length of the string, but I figured it wouldn't matter that much because "N is usually small".
+
+That assumption turned out not to be the case: Volodymyr Gubarkov's [gron.awk](https://github.com/xonixx/gron.awk) script went from processing a large JSON file in 1 second to over 8 minutes -- [accidentally quadratic](https://accidentallyquadratic.tumblr.com/)! This was untenable, so I decided to revert that fix for now, and figure out an O(1) way to address this in future. Arnold Robbins, long-time maintainer of Gawk, [commented](https://github.com/benhoyt/goawk/issues/35#issuecomment-1020994304) on how Gawk does a lot of work to make string handling efficient.
+
+I hope to optimize GoAWK further in the future, and have opened an [umbrella issue](https://github.com/benhoyt/goawk/issues/91) to track ongoing performance work.
+
+**Virtual machine improvements.** Here are a few of the ideas I have to speed up the virtual machine:
+
+* Optimize or eliminate stack operations. The `interp.push` method is particularly slow, due to the `append` check (and the `append` is almost never needed in normal AWK code). Let me know if you have good ideas about how to 
+determine the maximum stack size ahead of time. Is it even possible with potentially-recursive function calls?
+* Are there any specializations we could add, such as an `Int` instruction? Adding `Int`, for example, would save a memory lookup in the `interp.nums` slice.
+* Presumably `JumpLess` and so on are not used very often on strings. Would it be better to replace them with `JumpLessNum` to avoid the type check on at least one of the operands? (For strings we'd use a longer instruction sequence.)
+
+**String concatenation** is also unnecessarily expensive due to excess allocations and copying when you're concatenating more than two strings. Currently a multi-concatenation expression like `first_name " " last_name` is compiled to two binary `Concat` instructions:
+
+```
+Global first_name
+Str " "
+Concat
+Global last_name
+Concat
+```
+    
+It'd be more efficient for the compiler to detect this and output a new `Concat numArgs` instruction, for example:
+
+```
+Global first_name
+Str " "
+Global last_name
+Concat 3
+```
+
+This is one fewer instruction, but more importantly, it would avoid allocating a temporary string only to have to allocate a new one and copy the bytes over. Concatenating more than two values is quite common in AWK, and this optimization would get better the more values you're concatenating.
+
+**Regular expressions** would be great to speed up. GoAWK currently uses Go's `regexp` package, but unfortunately it's [quite slow](https://github.com/golang/go/issues/26623). This makes AWK scripts that use regular expressions heavily about half the speed of Gawk and almost a quarter the speed of Mawk.
+
+There are two ways to improve this:
+
+1. Write my own regular expression engine (probably trying to port Mawk's directly to Go). This is probably a lot of work, and due to Go's bounds checking and fewer compiler optimizations, might still not be all that fast.
+2. Improve the speed of Go's regular expression engine. This would be the better way by far, because everyone who uses Go's `regexp` package would benefit. It's also likely to be quite hard. I may leave this to smarter minds than mine -- perhaps some of [these issues](https://github.com/golang/go/issues?q=is%3Aissue+is%3Aopen+regexp+label%3APerformance) will be fixed over time.
 
 
-## Future work
+## Virtual machine results
 
-* faster/smaller value representation?
-* Go's slow regexp
+So how much faster *is* the virtual machine interpreter? The microbenchmarks -- which admittedly are mostly not the kind of scripts you'd write in AWK -- got about 18% faster overall. These are times, so smaller is better:
+
+```
+name                    old time/op  new time/op  delta
+NativeFunc-8            10.7µs ± 0%  10.8µs ± 0%   +0.67%  (p=0.008 n=5+5)
+BuiltinGsub-8           16.2µs ± 0%  16.2µs ± 0%   +0.36%  (p=0.008 n=5+5)
+BuiltinGsubAmpersand-8  16.2µs ± 0%  16.2µs ± 0%   +0.29%  (p=0.008 n=5+5)
+BuiltinSub-8            13.6µs ± 0%  13.6µs ± 0%     ~     (p=1.000 n=5+5)
+BuiltinSubAmpersand-8   13.5µs ± 0%  13.6µs ± 0%     ~     (p=0.095 n=5+5)
+SimplePattern-8          133ns ± 1%   134ns ± 0%     ~     (p=0.063 n=5+5)
+ConcatLarge-8           8.43ms ± 1%  8.35ms ± 2%     ~     (p=0.690 n=5+5)
+BuiltinSplitRegex-8     87.9µs ± 0%  87.7µs ± 0%   -0.21%  (p=0.016 n=5+5)
+BuiltinSplitSpace-8     35.4µs ± 0%  35.1µs ± 0%   -0.70%  (p=0.008 n=5+5)
+GetField-8               445ns ± 1%   435ns ± 2%   -2.42%  (p=0.008 n=5+5)
+FuncCall-8              2.84µs ± 0%  2.76µs ± 2%   -2.65%  (p=0.008 n=5+5)
+BuiltinSprintf-8        9.67µs ± 0%  9.23µs ± 0%   -4.58%  (p=0.008 n=5+5)
+RecursiveFunc-8         15.7µs ± 0%  14.9µs ± 0%   -4.95%  (p=0.008 n=5+5)
+ConcatSmall-8            735ns ± 0%   691ns ± 1%   -5.98%  (p=0.008 n=5+5)
+BuiltinMatch-8          2.91µs ± 0%  2.71µs ± 1%   -7.02%  (p=0.008 n=5+5)
+BuiltinIndex-8          1.23µs ± 1%  1.11µs ± 1%   -9.51%  (p=0.008 n=5+5)
+RegexMatch-8            1.24µs ± 1%  1.11µs ± 4%  -10.07%  (p=0.008 n=5+5)
+SetField-8               905ns ± 0%   810ns ± 0%  -10.45%  (p=0.008 n=5+5)
+ForInLoop-8             2.04µs ± 2%  1.78µs ± 4%  -12.86%  (p=0.008 n=5+5)
+ArrayOperations-8        657ns ± 0%   565ns ± 0%  -13.94%  (p=0.008 n=5+5)
+BinaryOperators-8        493ns ± 0%   413ns ± 0%  -16.15%  (p=0.008 n=5+5)
+BuiltinSubstr-8          975ns ± 0%   765ns ± 0%  -21.50%  (p=0.016 n=4+5)
+Comparisons-8            417ns ± 0%   321ns ± 0%  -22.98%  (p=0.016 n=5+4)
+SimpleBuiltins-8        1.00µs ± 0%  0.75µs ± 0%  -25.61%  (p=0.008 n=5+5)
+CondExpr-8               203ns ± 0%   151ns ± 0%  -25.62%  (p=0.016 n=4+5)
+BuiltinLength-8          607ns ± 0%   429ns ± 0%  -29.34%  (p=0.008 n=5+5)
+IfStatement-8            219ns ± 0%   152ns ± 0%  -30.65%  (p=0.008 n=5+5)
+AugAssign-8             1.50µs ± 0%  0.98µs ± 0%  -34.74%  (p=0.008 n=5+5)
+LocalVars-8              479ns ± 0%   300ns ± 2%  -37.32%  (p=0.008 n=5+5)
+Assign-8                 446ns ± 0%   261ns ± 0%  -41.55%  (p=0.008 n=5+5)
+ForLoop-8               4.34µs ± 0%  2.50µs ± 0%  -42.39%  (p=0.008 n=5+5)
+GlobalVars-8             468ns ± 0%   269ns ± 1%  -42.48%  (p=0.008 n=5+5)
+IncrDecr-8               448ns ± 0%   148ns ± 0%  -66.87%  (p=0.016 n=5+4)
+[Geo mean]              2.36µs       1.94µs       -17.90%
+```
+
+Increment, decrement, and augmented assignment are so much faster because the virtual machine has dedicate opcodes for them. Variable access has improved considerably too, as have `for` loops, `if` statements, and binary operators.
+
+My more "real world" benchmark suite -- most of which I pulled from the [original AWK source](https://github.com/onetrueawk/awk) -- got 13% faster overall. In this table, `goawk` is the new virtual machine interpreter and `orig` is the old tree-walking one. Somewhat unintuitively, the numbers here are the number of times faster it is than `awk`, so *bigger is better*.
+
+Test      | goawk |  orig |   awk |  gawk |  mawk
+--------- | ----- | ----- | ----- | ----- | -----
+tt.01     |  2.02 |  1.91 |  1.00 |  1.66 |  2.29
+tt.02     |  1.59 |  1.60 |  1.00 |  1.77 |  2.20
+tt.02a    |  1.54 |  1.56 |  1.00 |  1.73 |  2.05
+tt.03     |  1.32 |  1.27 |  1.00 |  3.85 |  1.83
+tt.03a    |  1.29 |  1.26 |  1.00 |  4.08 |  1.79
+tt.04     |  0.97 |  0.80 |  1.00 |  1.26 |  2.74
+tt.05     |  0.95 |  0.88 |  1.00 |  1.61 |  2.26
+tt.06     |  1.39 |  1.35 |  1.00 |  2.53 |  1.97
+tt.07     |  1.24 |  1.18 |  1.00 |  1.46 |  1.71
+tt.08     |  1.97 |  1.98 |  1.00 |  1.13 |  2.70
+tt.09     |  2.13 |  2.13 |  1.00 |  2.41 |  5.01
+tt.10     |  0.34 |  0.34 |  1.00 |  1.45 |  3.40
+tt.10a    |  0.32 |  0.34 |  1.00 |  1.30 |  3.08
+tt.11     |  2.20 |  2.13 |  1.00 |  1.15 |  3.68
+tt.12     |  1.21 |  1.19 |  1.00 |  1.70 |  1.78
+tt.13     |  3.14 |  2.62 |  1.00 |  3.11 |  5.92
+tt.13a    |  2.25 |  1.80 |  1.00 |  1.86 |  4.85
+tt.14     |  1.17 |  1.09 |  1.00 |  0.64 |  1.56
+tt.15     |  0.62 |  0.61 |  1.00 |  0.96 |  2.21
+tt.16     |  1.47 |  1.21 |  1.00 |  1.27 |  2.12
+tt.big    |  1.62 |  1.41 |  1.00 |  1.83 |  3.82
+tt.x1     |  2.25 |  1.62 |  1.00 |  1.34 |  3.44
+tt.x2     |  1.76 |  1.03 |  1.00 |  1.15 |  2.68
+--------- | ----- | ----- | ----- | ----- | -----
+**Geo mean**  | **1.45** | **1.28** | **1.00** | **1.86** | **2.32**
+
+
+## Performance across Go versions
+
+Go's compiler and libraries have also gotten faster. Many compiler and library optimizations have been added over the years. Here are a couple of highlights for me:
+
+* My [optimization for `strings.TrimSpace`](https://go-review.googlesource.com/c/go/+/152917) was included in Go 1.13, so I was able to [remove](https://github.com/benhoyt/goawk/commit/91ddc5b3dcf9c813bdf3378f30d5968abe55b733) my custom version of `TrimSpace` now that GoAWK requires at least Go 1.13.
+* As of version 1.17, Go [passes function arguments and results in registers](https://menno.io/posts/golang-register-calling/) instead of on the stack. This was a *significant* improvement for GoAWK's tree-walking interpreter, where I saw a [38% improvement](https://groups.google.com/g/golang-nuts/c/rHLMH2wHi8U/m/oW73wnEZBgAJ) on one microbenchmark, and a [17% average speedup](https://github.com/benhoyt/goawk/commit/1f314f421273b3dc164ff4e5d41363f4ac4d160f) across all microbenchmarks.
+
+There are many other ways Go has gotten faster, so I thought it'd be interesting to put together a comparison of GoAWK's performance when compiled using all the different Go versions, from 1.2 (the earliest version I could download) to 1.18 (which is in beta now).
+
+I tested with two scripts which represent different extremes of what you can do with AWK: string processing and number crunching.
+
+First, `countwords`, a string processing task (typical for an AWK script) that counts the frequencies of words in the input, and prints out the words and their counts. Here's the AWK script:
+
+```awk
+{
+    for (i=1; i<=NF; i++)
+        counts[tolower($i)]++
+}
+
+END {
+    for (k in counts)
+        print k, counts[k]
+}
+```
+
+The second, `sumloop`, is a tight loop that sums the loop counter a bunch of times (this one's not really a typical use of AWK):
+
+```awk
+BEGIN {
+    for (; i<10000000; i++)
+        s += i+i+i+i+i
+}
+```
+
+The timing numbers in the following chart are the best-of-three-runs time on my x86-64 Linux laptop. I've also included a chart of the GoAWK binary size for each Go version. I did have to [remove](https://github.com/benhoyt/goawk/pull/96/files#diff-75ce4f581748212eae300ff58d04530abc20be2c9a38873ef4de57128b1848d1R204) a couple of unimportant calls to library functions added in later versions of Go so it would compile on the oldest versions.
+
+Here are the charts (or [as a table](https://github.com/benhoyt/goawk/blob/290c573830ec721ed39457cccd0071ac3929d142/goversions.txt) if you prefer):
+
+![GoAWK speed across Go versions](/images/goawk-speed.png)
+
+![GoAWK binary size across Go versions](/images/goawk-binary-size.png)
+
+Wow! I guess there was some low-hanging fruit they picked way back in Go version 1.3 -- the [release doc](https://go.dev/doc/go1.3#impl) says there were some significant changes to the runtime, garbage collector, and how stacks were handled. Then there are significant steady improvement for `countwords` up through Go 1.7 and for `sumloop` through 1.9. After that there are very gradual improvements up to 1.18, where we are today.
+
+Interestingly, with the new virtual machine implementation of GoAWK, there's no noticeable improvement due to Go 1.17's change to pass function arguments in registers. This is because the virtual machine uses a big switch statement to dispatch the different opcodes, and very few function calls. This is in contrast to the old tree-walking interpreter, which did get large performance gains from this, because every expression required a (recursive) function call to `eval`.
+
+Overall, `countwords` is now about 5x as fast as it would have been with Go 1.2, and `sumloop` is 14x as fast! For reference, I first released GoAWK when Go was at version 1.11.
 
 
 ## Conclusion
 
-Still not entirely sure it was worth the additional 2500 lines of code, but okay.
+I do like the performance improvements I got. They weren't quite as much as I was hoping for, but the fact that GoAWK is faster than Gawk for many CPU-bound operations now is pretty cool. It's still always slower than the performance-fiend Mawk. And for the stuff that AWK is normally used for -- string processing and regular expressions, GoAWK still has a lot of room for improvement.
+
+To be honest, I'm not entirely sure it was worth the additional 2500 lines of code (for a project that's only 15,000 lines of code, including tests). If I had an engineering manager overseeing this, I would have expected push-back ("is this going to help us with real-world workloads?"). However, GoAWK was and remains a passion project -- I had fun making and sharing this, and that's enough for me.
+
+I hope you've enjoyed the write-up. Please don't hesitate to contact me with your feedback or ideas.
 
 
 {% include sponsor.html %}
