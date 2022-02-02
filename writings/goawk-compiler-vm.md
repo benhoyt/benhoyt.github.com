@@ -8,12 +8,6 @@ description: "How I sped up GoAWK by switching from a tree-walking interpreter t
 <p class="subtitle">February 2022</p>
 
 
-<!--
-TODO:
-* test speed of Opcode width (int8..int64) and update "details" section if necessary
--->
-
-
 > Summary: I recently sped up GoAWK by switching from a tree-walking interpreter to a bytecode compiler with a virtual machine interpreter. I discuss why it's faster and how the new interpreter works.
 >
 > **Go to:** [Why VMs?](#why-are-virtual-machines-faster-than-tree-walking) \| [Details](#compiler-and-virtual-machine-details) \| [Go's `switch`](#gos-switch-statement) \| [Other optimizations](#other-optimizations-and-a-de-optimization) \| [Results](#virtual-machine-results) \| [Conclusion](#conclusion)
@@ -66,7 +60,7 @@ Another reason the virtual machine approach is faster is because there are fewer
 
 ## Compiler and virtual machine details
 
-GoAWK's virtual machine uses 32-bit opcodes. Initially I was going to use 8-bit opcodes (where the "byte" in "bytecode" comes from), but I found that 32-bit opcodes were actually slightly faster than 8- or 16-bit ones. Plus, with 32-bit opcodes you avoid the need for variable sized jump offsets: larger AWK scripts may need more than -128 to +127 jump offsets, whereas nobody's going to need bigger jump offsets than the two billion that 32 bits gives you (though I do check just in case).
+GoAWK's virtual machine uses 32-bit opcodes. Initially I was going to use 8-bit opcodes (where the "byte" in "bytecode" comes from), but 32-bit opcodes were just as fast, and with 32-bit opcodes you avoid the need for variable sized jump offsets: larger AWK scripts may need more than -128 to +127 jump offsets, whereas nobody's going to need bigger jump offsets than the two billion that 32 bits gives you. 64-bit opcodes are unnecessary big, and they were slightly slower as well.
 
 Here are the first 10 opcodes (there are 85 total -- you can see the full list in [internal/compiler/opcodes.go](https://github.com/benhoyt/goawk/blob/master/internal/compiler/opcodes.go)):
 
