@@ -17,6 +17,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2022">2022</h2>
 
+* [Go version performance](/writings/go-version-performance/) charts how much the performance of Go has improved from version 1.2 through to 1.18 -- in its compiler, runtime, and libraries. (Februrary)
 * [Optimizing GoAWK](/writings/goawk-compiler-vm/) describes how I made GoAWK faster by switching from tree-walking to a bytecode compiler with a virtual machine interpreter. (February)
 
 
