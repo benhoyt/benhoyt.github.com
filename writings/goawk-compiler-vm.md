@@ -468,6 +468,8 @@ I definitely like the performance improvements I got. They weren't quite as much
 
 To be honest, I'm not entirely sure it was worth the additional 2500 lines of code (for a project that's only 15,000 lines of code, including tests). If I had an engineering manager overseeing this, I would have expected pushback ("is this going to help us with real-world workloads?"). However, GoAWK was and remains a passion project -- I had fun making and sharing this, and that's enough for me.
 
+I've merged the compiler and virtual machine and released them in [GoAWK v1.15.0](https://github.com/benhoyt/goawk/releases/tag/v1.15.0). The Go API and `goawk` command should be 100% backwards compatible. It's been well-tested against my interpreter tests as well as the tests from the original AWK and the relevant ones from Gawk, but file an [issue](https://github.com/benhoyt/goawk/issues) if you find something amiss.
+
 I hope you've enjoyed or learned from this write-up. Please don't hesitate to contact me with your feedback or ideas.
 
 
