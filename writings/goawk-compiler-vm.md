@@ -40,7 +40,7 @@ Here's a diagram of the GoAWK syntax tree for the expression `print $1+$2`, show
 
 The `PrintStmt` is only 48 bytes from the `BinaryExpr`, but the left `FieldExpr` is 8KB from that, and then its `NumExpr` is almost 120KB away from that. Cache blocks are typically 64 bytes, so each of those probably requires loading an additional cache block from main memory. Not very cache-friendly.
 
-With a virtual machine interpreter, the instructions are in a nice linear array of opcodes, which will probably be loaded into a cache block all at once. There's much less jumping around in RAM. Here's what the GoAWK virtual machine instructions for that same program look like (you can see this with the new disassembly flag, `goawk -da`):
+With a virtual machine interpreter, the instructions are in a nice linear array of opcodes (instruction numbers), which will probably be loaded into a cache block all at once. There's much less jumping around in RAM. Here's what the GoAWK virtual machine instructions for that same program look like (you can see this "assembly listing" with the new debug flag, `goawk -da`):
 
 ```
 $ echo 3 4 | goawk -da '{ print $1+$2 }'
@@ -89,7 +89,7 @@ const (
 )
 ```
 
-As you can see in the `print $1+$2` assembly listing above, I'm using a stack-based virtual machine. This is simpler to implement, because the compiler doesn't need to figure out how to allocate registers, it just pushes and pops from the stack. Stack-based virtual machines may be slightly slower, however -- very fast virtual machines like Lua's are register-based.
+As you can see in the `print $1+$2` assembly listing above, I'm using a stack-based virtual machine. This is simpler to implement, because the compiler doesn't need to figure out how to allocate registers, it just pushes to and pops from the stack. Stack-based virtual machines may be slightly slower, however -- very fast virtual machines like Lua's are register-based.
 
 GoAWK's compiler is quite simple, with a fairly direct translation from the syntax tree to instructions. I use some specializations for accessing variables of different scopes: for example, fetching a global variable uses the `Global` instruction, fetching a local uses `Local`. (As you can see, my instruction naming scheme is extremely creative.)
 
@@ -355,7 +355,7 @@ I hope to optimize GoAWK further in the future, and have opened an [umbrella iss
 
 * Optimize or reduce stack operations. The `interp.push` method is particularly slow, due to the `append` check (and the `append` is almost never needed in normal AWK code). Let me know if you have good ideas about how to 
 determine the maximum stack size ahead of time. Is it even possible with potentially-recursive function calls?
-* Are there any specialized opcodes we could add, such as an `Int` instruction? Adding `Int`, for example, would save a memory lookup to the `interp.nums` slice.
+* Are there any specialized opcodes we could add, such as an `Int` instruction that pushes the integer constant in its argument? Adding `Int` would save a memory lookup to the `interp.nums` slice.
 * Presumably `JumpLess` and similar opcodes are not used very often on strings. Would it be better to replace them with `JumpLessNum` to avoid the type check on at least one of the operands? (For strings we'd use a longer instruction sequence.)
 
 **String concatenation** is also unnecessarily expensive due to excess allocations and copying when you're concatenating more than two strings. Currently a multi-concatenation expression like `first_name " " last_name` is compiled to two binary `Concat` instructions:
@@ -389,7 +389,7 @@ There are two ways to improve this:
 
 ## Virtual machine results
 
-So how much faster *is* the virtual machine interpreter? The microbenchmarks -- which admittedly are mostly not the kind of scripts you'd write in AWK -- got about 18% faster overall. These are elapsed times, so smaller is better ([original here](https://github.com/benhoyt/goawk/commit/16012e2ff77343e6fe93edcb243ad9df08e507b7)):
+So how much faster *is* the virtual machine interpreter? The microbenchmarks -- which admittedly are mostly not the kind of scripts you'd write in AWK -- got about 18% faster overall. These are elapsed times, so smaller is better (you can see the [original](https://github.com/benhoyt/goawk/commit/16012e2ff77343e6fe93edcb243ad9df08e507b7) or measure them yourself using [benchmark.sh](https://github.com/benhoyt/goawk/blob/master/benchmark.sh) followed by [benchstat.sh](https://github.com/benhoyt/goawk/blob/master/benchstat.sh) to show these deltas):
 
 ```
 name                    old time/op  new time/op  delta
