@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Optimizing GoAWK with a bytecode compiler and virtual machine</title>
+  <description>How I sped up GoAWK by switching from a tree-walking interpreter to a bytecode compiler and virtual machine interpreter.</description>
+  <link>https://benhoyt.com/writings/goawk-compiler-vm/</link>
+  <guid>https://benhoyt.com/writings/goawk-compiler-vm/</guid>
+  <pubDate>Thu, 3 Feb 2022 22:25:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>AWKGo, an AWK-to-Go compiler</title>
   <description>A discussion of AWKGo, a simple compiler that translates a useful subset of the AWK text processing language into Go source code.</description>
   <link>https://benhoyt.com/writings/awkgo/</link>

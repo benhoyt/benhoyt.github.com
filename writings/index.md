@@ -15,6 +15,11 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 {% include sponsor.html %}
 
 
+<h2 id="y2022">2022</h2>
+
+* [Optimizing GoAWK](/writings/goawk-compiler-vm/) describes how I made GoAWK faster by switching from tree-walking to a bytecode compiler with a virtual machine interpreter. (February)
+
+
 <h2 id="y2021">2021</h2>
 
 * [AWKGo, an AWK-to-Go compiler](/writings/awkgo/) describes a simple compiler that translates a subset of the AWK text processing language into Go source code. (November)
