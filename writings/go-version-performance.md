@@ -55,6 +55,12 @@ A recent improvement was in version 1.17, which [passes function arguments and r
 
 Interestingly, with GoAWK's new virtual machine implementation, there's no noticeable improvement from the change to pass arguments in registers. This is because the virtual machine uses a big `switch` statement to dispatch the different opcodes, but very few function calls. This is in contrast to the tree-walking interpreter, where every expression required a (recursive) function call to `eval`, so it did get large performance gains.
 
+<details><summary markdown="span">Expand this to see benchmark results on the old tree-walking interpreter ([table](https://github.com/benhoyt/goawk/blob/c996205385d64767486753ad54d6000a998eff9d/goversions.txt)). It follows much the same trajectory, though you can see the jump down at 1.17 due to the register calling change.</summary>
+
+![GoAWK speed across Go versions with tree-walking interpreter](/images/goawk-speed-tree-walking.png)
+
+</details>
+
 I'm looking forward to someone improving the performance of Go's `regexp` package, which is [quite slow](https://github.com/golang/go/issues/26623). Regular expressions are used heavily in AWK scripts, so this would make a big difference when using GoAWK for real-world scripts. Maybe I'll have a crack at this myself sometime.
 
 Overall, `countwords` is now about 5x as fast as it would have been with Go 1.2, and `sumloop` is 14x as fast! (Though I first released GoAWK when Go was already at version 1.11, so it wasn't around for the huge early gains.)
