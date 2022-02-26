@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Prig: like AWK, but snobbish (Go! static typing!)"
+title: "Prig: like AWK, but with Go \"scripting\""
 permalink: /writings/prig/
 description: "Describes Prig, which is for Processing Records In Go. It's a text processing tool, like AWK, but it uses Go as the language."
 ---
@@ -8,18 +8,20 @@ description: "Describes Prig, which is for Processing Records In Go. It's a text
 <p class="subtitle">March 2022</p>
 
 
-> Summary: The article describes Prig, my AWK-like tool that uses the Go compiler for "scripting". I dive into what makes Prig different, as well as my experimentation with Go's new generics.
+> Summary: The article describes Prig, my AWK-like tool that uses the Go compiler for "scripting". I dive into how Prig works and look briefly at Prig's `Sort` and `SortMap` builtins, which use Go's new generics if Go 1.18 is available.
+>
+> **Go to:** [Prig vs AWK](#prig-compared-to-awk) \| [Go output](#resulting-go-program) \| [Generics](#experimenting-with-generics) \| [Testing](#fun-with-testing) \| [See also](#see-also) \| [Conclusion](#was-it-worth-it)
 
 
-In a recent Hacker News [comment](https://news.ycombinator.com/item?id=30191430) I learned about [`rp`](https://github.com/c-blake/cligen/blob/master/examples/rp.nim), a little text processing tool kind of like AWK, but using Nim as the scripting language. The works because the Nim compiler is fast (and the Nim language is quite terse), so you can use Nim as a scripting language.
+In a recent Hacker News [comment](https://news.ycombinator.com/item?id=30191430) I learned about [`rp`](https://github.com/c-blake/cligen/blob/master/examples/rp.nim), a little text processing tool kind of like AWK, but using [Nim](https://nim-lang.org/) as the scripting language. The works because the Nim compiler is fast and the Nim language is terse, so you can use it as a scripting language.
 
-Go has one of those two things going for it: fast compile times. It definitely isn't terse, making it less than ideal for one-liner scripting. On the other hand, it's not terrible, either (Prig scripts are about twice as many characters as AWK scripts).
+Go has one of those two things going for it: fast compile times. It's not exactly terse, which makes it less than ideal for one-liner scripts. On the other hand, it's not terrible, either: Prig scripts are about twice as many characters as AWK scripts.
 
-The author of `rp` suggested that new fast-compile languages like Nim and Go are ideal for this kind of tool. And the code to do it is almost trivial: a couple of hundred lines of code that inserts the user's command-line parameters into a source code template, compiles it, and then runs the result.
+The author of `rp` suggested that languages with fast compile speeds, like Nim and Go, are ideal for this kind of tool. The code to do it is almost trivial: Prig is about 200 lines of straight-forward Go code that inserts the user's command-line "script" into a Go source code template, compiles that, and then runs the resulting executable.
 
-On my Linux machine, `go build` can build a zero-dependency "script" is about 200 milliseconds, so the startup time is very reasonable -- Go can compile and run a program almost before you've released the Enter key. For comparison, Nim compiles give a startup time of about 300ms on my system.
+On my Linux machine, `go build` can build a program that only uses the standard library in about 200 milliseconds, so the startup time is very reasonable -- Go can compile and run the program almost before you've released the Enter key. For comparison, Nim compiles give a startup time of about 300ms on my system.
 
-In any case, I decided to build an equivalent of `rp` in Go, and ended up with Prig, which is of course short for **P**rocessing **R**ecords **I**n **G**o.
+So I decided to build an equivalent of `rp` in Go, and ended up with [Prig](https://github.com/benhoyt/prig), which is of course for **P**rocessing **R**ecords **I**n **G**o. You could say that Prig is like AWK, but snobbish -- it turns down its nose at dynamic typing.
 
 
 ## Prig compared to AWK
@@ -56,19 +58,20 @@ https://example.com/robots.txt
 
 Just 3 characters shorter -- not bad so far.
 
-Here's where things start to get worse for Go. Below is a script, shown in both Prig and AWK variants, that prints the average value of last field by summing the field and then dividing by the number of records at the end:
+Here's where things start to get worse for Go. Below is a script, shown in both Prig and AWK variants, that prints the average value of the last field, by summing the field and then dividing by the number of records at the end:
 
 ```
-$ cat avg.txt 
+$ cat average.txt 
 a b 400
 c d 200
 e f 200
 g h 200
 
-$ prig -b 's := 0.0' 's += F(NF())' -e 'Println(s / float64(NR()))' <avg.txt
+$ prig -b 's := 0.0' 's += F(NF())' -e 'Println(s / float64(NR()))' \
+  <average.txt
 250
 
-$ awk '{ s += $NF } END { print s / NR }' <avg.txt
+$ awk '{ s += $NF } END { print s / NR }' <average.txt
 250
 ```
 
@@ -86,7 +89,8 @@ $ cat millis.txt
 2 HEAD 4.0
 3 GET 1.0
 
-$ prig 'if Match(`GET|HEAD`, S(0)) { Printf("%.0fms\n", F(3)*1000) }' <millis.txt
+$ prig 'if Match(`GET|HEAD`, S(0)) { Printf("%.0fms\n", F(3)*1000) }' \
+  <millis.txt
 3142ms
 4000ms
 1000ms
@@ -128,40 +132,161 @@ In AWK, which doesn't have built-in sorting (only Gawk does), we use AWK's pipe 
 
 For most examples, **AWK is definitely clearer and less verbose** -- there was a reason Aho, Weinberger, and Kernighan designed a new language for AWK instead of using C (or similar) as the base language.
 
-On the other hand, if you know Go well and don't know AWK, Prig might be useful for you. It's also significantly faster, because Go compiles to optimized machine code, whereas AWK is interpreted. (Related: see my [performance comparison](https://benhoyt.com/writings/count-words/) of counting word frequencies in Python, Go, C++, C, AWK, Forth, Rust, and others.)
+On the other hand, if you know Go well and don't know AWK, Prig might be useful for you. It's also significantly faster, because Go compiles to optimized machine code, whereas AWK is interpreted.
+
+Some brief **performance numbers:** for the "count word frequencies" example shown above, Prig is about three times as fast as AWK (using Gawk): Prig counts a 43MB file in 1.1 seconds, Gawk in 3.1 seconds. Of course, at this point we're really comparing Go with Gawk (see much more detail in this [performance comparison](/writings/count-words/)).
+
+For a CPU-bound task like adding number together, Go is of course much faster, about 20 times in this example (and remember that Go takes 200 of those 274 milliseconds to compile):
+
+```
+$ time gawk 'BEGIN { for (i=0; i<100000000; i++) s+=i; print s }'
+4999999950000000
+
+real    0m5.698s
+...
+$ time ./prig -b 's:=0; for i:=0; i<100000000; i++ { s+=i }; Println(s)'
+4999999950000000
+
+real    0m0.274s
+...
+```
 
 
 ## Resulting Go program
 
-Prig itself is trivial: about 200 lines of Go code, about a third of which is to parse command line arguments. The rest just puts your script in a Go source template, runs `go build` to compile it, and then executes the result.
+The [prig.go](https://github.com/benhoyt/prig/blob/master/prig.go) code itself is trivial: about 200 lines of Go code, about a third of which is to parse command line arguments. The rest just puts your script in a Go source template, runs `go build` to compile it, and then executes the result.
 
-TODO: Basic structure of the resulting Go program
+The basic structure of the resulting Go program is just what you'd expect: some setup code, the "begin" code, a `bufio.Scanner` loop over the lines with the "per-record" code, and then the "end" code. There's also the Prig built-in functions.
 
-TODO: using -s to build a binary that you can reuse
+You can view the resulting Go source code with `prig -s`. Below is the "average value of last field" example from above. It's not quite verbatim; I've elided unused parts for brevity:
+
+```
+$ prig -s -b 's := 0.0' 's += F(NF())' -e 'Println(s / float64(NR()))'
+// ... package and import ...
+var (
+    _output *bufio.Writer
+    _record string
+    _nr     int
+    _fields []string
+)
+
+func main() {
+    _output = bufio.NewWriter(os.Stdout)
+    defer _output.Flush()
+
+    // begin
+    s := 0.0
+
+    _scanner := bufio.NewScanner(os.Stdin)
+    for _scanner.Scan() {
+        _record = _scanner.Text()
+        _nr++
+        _fields = nil
+
+        // per-record
+        s += F(NF())
+    }
+    if _scanner.Err() != nil {
+        _errorf("error reading stdin: %v", _scanner.Err())
+    }
+
+    // end
+    Println(s / float64(NR()))
+}
+
+func Println(args ...any) {
+    _, err := fmt.Fprintln(_output, args...)
+    if err != nil {
+        _errorf("error writing output: %v", err)
+    }
+}
+
+func NR() int {
+    return _nr
+}
+
+func S(i int) string {
+    if i == 0 {
+        return _record
+    }
+    _ensureFields()
+    if i < 1 || i > len(_fields) {
+        return ""
+    }
+    return _fields[i-1]
+}
+
+func F(i int) float64 {
+    s := S(i)
+    f, _ := strconv.ParseFloat(s, 64)
+    return f
+}
+
+func _ensureFields() {
+    if _fields != nil {
+        return
+    }
+    _fields = strings.Fields(_record)
+}
+
+func NF() int {
+    _ensureFields()
+    return len(_fields)
+}
+// ... other Prig builtin functions ...
+```
+
+Note how I've prefixed Prig internal names with underscore to avoid name clashes with variables the Prig user defines. Far from foolproof, but good enough for this use case.
+
+The main loop is basically how you'd write the code manually in Go (though you'd probably use local variables instead of globals). However, in typical Go you'd likely write the `F(NF())` inline along with bounds checks, something like this inside the main loop:
+
+```
+if len(fields) > 0 {
+    last := fields[len(fields)-1]
+    f, err := strconv.ParseFloat(last, 64)
+    if err == nil {
+        s += f
+    }
+}
+```
+
+In this context it's nice to have Prig's `F()` do the bounds checking for you: `s += F(NF())` is a lot simpler than that 7-line chunk of verbosity. Go is verbose, but Go with a few well-placed helper functions can be downright terse!
 
 
-## Experimenting with generics 
+## Experimenting with generics
 
 TODO: Sort/SortMap, and their Go 1.17 equivalents. Why this works when you're just using say Println.
 
 
 ## Fun with testing
 
-TODO: tests are a bit unique in that they just run prig. Some people would hate this, but it keeps Prig simple. They're relatively slow, as each takes 200ms to call the `go build` step.
+Prig's tests (in [prig_test.go](https://github.com/benhoyt/prig/blob/master/prig_test.go)) are a bit unconventional in that they just run the `prig` binary. Some developers would balk at this, but it keeps Prig itself simple. Besides, Prig is all about running other executables, so why not test that way too?
 
-TODO: runnable examples from `prig -h` output.
+Each test is relatively slow (on the order of 200 milliseconds), but the test suite still runs in 7-8 seconds on my system. It's a lot slower on Windows, where starting a new process is much heavier.
+
+The main tests are "table-driven tests", a staple of Go testing that you can [read about elsewhere](https://dave.cheney.net/2019/05/07/prefer-table-driven-tests).
+
+However, one of the neat things I did was to test the examples shown in `prig --help`. In writing the Prig [usage message](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig.go#L237), I kept making small typos in the examples, and had to keep copying and pasting them into my terminal to test them manually.
+
+At some point I thought, why don't I test these examples automatically using `go test`? So I [extracted](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig.go#L290) the command lines examples to separate strings that are tested in [`TestExamples`](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig_test.go#L370). I use an ad-hoc little [parser](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig_test.go#L399) to turn the example command line into an argument list, and then call `prig` on the result.
+
+This is similar to Go's excellent [testable examples](https://go.dev/blog/examples), but for command-line examples instead of Go code examples.
 
 
 ## See also
 
-GoAWK and AWKGo.
+If you haven't used AWK before, you should try it! It's a brilliant, 45-year-old tool that's still quite widely used for text and data processing in 2022. The original book by A, W, and K called [*The AWK Programming Language*](https://en.wikipedia.org/wiki/The_AWK_Programming_Language) is really good.
+
+If you want to integrate AWK into your Go programs, or just want to learn how an AWK interpreter works, check out my [GoAWK](https://github.com/benhoyt/goawk) project.
+
+You can also check out my very creatively-named [AWKGo](https://benhoyt.com/writings/awkgo/) project, which can compile a subset of AWK programs to Go source code.
 
 
 ## Was it worth it?
 
-I'm unashamedly a nerd at heart, so yes, I had fun building this. I like how simple the code is: about 200 lines of Go code, 300 lines of template code (oh, and 400 lines of tests). Go and its standard library are doing all the hard work!
+I'm unashamedly a nerd at heart, so yes, I had fun building Prig (mostly on a flight from Christchurch to Frankfurt). I like how simple the code is: about 200 lines of Go code, 300 lines of template code ... and 400 lines of tests. Go and its standard library are doing all the hard work!
 
-Would I use Prig for real? Possibly, if I'm processing large files and need a bit more performance than AWK can give me. I might also use it just for testing tiny snippets of Go code -- for example, "How do `Printf` widths work again? Ah yes, let's try it with `prig`.":
+Would I use Prig for real? Possibly, if I'm processing large files and need a bit more performance than AWK can give me. I might also use it just for testing tiny snippets of Go code -- for example, "How do `Printf` widths work again? Ah yes, let's try it with `prig`":
 
 ```
 $ prig -b 'Printf("%3.5s\n", "hi")'
@@ -170,11 +295,11 @@ $ prig -b 'Printf("%3.5s\n", "hello world")'
 hello
 ```
 
-Should you use it? I'm not going to stop you! But to be honest, you're probably better off learning the ubuiquitous (and significantly terser) AWK language.
+Should you use Prig? I'm not going to stop you! But to be honest, you're probably better off learning the ubuiquitous (and significantly terser) AWK language.
 
-You might also use if you need an *executable* for some data processing, for example in a lightweight container that doesn't have `awk` installed. For this case, you can use `prig -s` to print the source, `go build` that result, and copy the executable to the target -- no other dependencies needed.
+You might also use it if you need an *executable* for some data processing, for example in a lightweight container that doesn't have `awk` installed. For cases like this, you can use `prig -s` to print the source, `go build` the result, and copy the executable to the target -- no other dependencies needed.
 
-In any case, I'd love to hear your feedback: if you have any ideas for improvement, or if you make an rp/Prig variant in another language, get in touch!
+In any case, I'd love to hear your feedback: if you have any ideas for improvement, or if you make an `rp` or Prig variant in another language, get in touch.
 
 
 {% include sponsor.html %}
