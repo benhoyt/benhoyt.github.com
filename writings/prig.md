@@ -7,7 +7,6 @@ description: "Describes Prig, which is for Processing Records In Go. It's a text
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2022</p>
 
-
 > Summary: The article describes Prig, my AWK-like tool that uses the Go compiler for "scripting". I dive into how Prig works and look briefly at Prig's `Sort` and `SortMap` builtins, which use Go's new generics if Go 1.18 is available.
 >
 > **Go to:** [Prig vs AWK](#prig-compared-to-awk) \| [Go output](#resulting-go-program) \| [Generics](#experimenting-with-generics) \| [Testing](#fun-with-testing) \| [See also](#see-also) \| [Conclusion](#was-it-worth-it)
@@ -77,11 +76,11 @@ $ awk '{ s += $NF } END { print s / NR }' <average.txt
 
 The script is 60 characters for Prig, 35 for AWK -- almost twice the length. Go (and many statically-typed languages) are at a disadvantage here. First we have to initialize our sum variable to 0; in AWK that's implicit.
 
-Then we have the extra parentheses in `F(NF())` compard to AWK's cleaner `$NF`. I made a design decision early on to make all Prig builtins functions -- initially I had `NF` and `NR` as variables, but making them all functions means the code can split into fields lazily, only as needed (some simple scripts don't).
+Then we have the extra parentheses in `F(NF())` compared to AWK's cleaner `$NF`. I made a design decision early on to make all Prig builtins functions -- initially I had `NF` and `NR` as variables, but making them all functions means the code can split into fields lazily, only as needed (some simple scripts don't).
 
 Then there's the `float64()` conversion, which along with the parentheses for `NR()` and `Println()`, mean Prig ends up looking a bit like Lisp in some cases. AWK's `print s / NR` is definitely easier on the eye!
 
-Our third example prints the third field multiplied by 1000 (that is, in milliseconds) if the input line contains either of the strings `GET` or `HEAD`. Again, the Prig script compard to its AWK equivalent:
+Our third example prints the third field multiplied by 1000 (that is, in milliseconds) if the input line contains either of the strings `GET` or `HEAD`. Again, the Prig script compared to its AWK equivalent:
 
 ```
 $ cat millis.txt 
@@ -194,7 +193,7 @@ func main() {
     Println(s / float64(NR()))
 }
 
-func Println(args ...any) {
+func Println(args ...interface{}) {
     _, err := fmt.Fprintln(_output, args...)
     if err != nil {
         _errorf("error writing output: %v", err)
@@ -255,7 +254,77 @@ In this context it's nice to have Prig's `F()` do the bounds checking for you: `
 
 ## Experimenting with generics
 
-TODO: Sort/SortMap, and their Go 1.17 equivalents. Why this works when you're just using say Println.
+One of the more difficult parts of Prig to design was the sorting helpers, and I'm still not at all sure I got them right. API design is an area where programming seems more like art than science.
+
+In any case, I ended up with two functions that are useful on the data types I think you'd use with Prig. Here's what the rather terse usage message says:
+
+```
+Sort[T int|float64|string](s []T) []T
+  // return new sorted slice; also Sort(s, Reverse) to sort descending
+SortMap[T int|float64|string](m map[string]T) []KV[T]
+  // return sorted slice of key-value pairs
+  // also Sort(s[, Reverse][, ByValue]) to sort descending or by value
+```
+
+On Go 1.18 (which will be released any day now), these make use of the new generics feature, so they're type-checked and return a concrete slice type. Because of the optional parameters, the actual Go signatures (and the `KV` type) are defined as follows:
+
+```
+type _sortOption int
+
+const (
+    Reverse _sortOption = iota
+    ByValue
+)
+
+func Sort[T int|float64|string](s []T, options ..._sortOption) []T {
+    // ... implementation ...
+}
+
+type KV[T int|float64|string] struct {
+    K string
+    V T
+}
+
+func SortMap[T int|float64|string](m map[string]T,
+        options ..._sortOption) []KV[T] {
+    // ... implementation ...
+}
+```
+
+`Sort` is simple enough: it takes a slice and returns a new sorted slice. It's sorted from low to high by default, or from high to low if you pass the `Reverse` option. I could have used a broader type set than just `int`, `float64`, and `string`, but this keeps it simple for Prig (and for the non-generic version that we'll look at below).
+
+`SortMap` was a bit trickier to design an API for. You can't sort a Go map directly, so you need to convert it to a slice of key-value pairs: that's the `KV` type. You can sort by key (the default), or by value if you pass the `ByValue` option.
+
+All this works okay, and my very limited experience with Go 1.18's generics was a success.
+
+But what about most of us, who are still using pre-1.18 versions of Go without support for generics? Well, I made the same API work without generics ... kind of. The non-generic version uses `interface{}`, so it's not type safe, of course. And it only works at all without type conversions because you're often just printing the results; the `Print` family of functions already take any type of argument (via `interface{}`).
+
+So the word-count example code works just as well on Go 1.17 and Go 1.18:
+
+```
+for _, f := range SortMap(freqs, ByValue, Reverse) {
+    Println(f.K, f.V)
+}
+```
+
+Prig detects the Go version you have installed by running `go version`, and uses the non-generic version if it's 1.17 or below. Here's how the non-generic versions of `Sort` and `SortMap` are defined:
+
+```
+func Sort(s interface{}, options ..._sortOption) []interface{} {
+    // ... implementation ...
+}
+
+type KV struct {
+    K string
+    V interface{}
+}
+
+func SortMap(m interface{}, options ..._sortOption) []KV {
+    // ... implementation ...
+}
+```
+
+Crazy? Probably. Most libraries could never get away with this kind of switcheroo, because the APIs just aren't compatible for a lot of tasks. But for an experiment in Prig, it seems to work pretty well.
 
 
 ## Fun with testing
@@ -266,9 +335,9 @@ Each test is relatively slow (on the order of 200 milliseconds), but the test su
 
 The main tests are "table-driven tests", a staple of Go testing that you can [read about elsewhere](https://dave.cheney.net/2019/05/07/prefer-table-driven-tests).
 
-However, one of the neat things I did was to test the examples shown in `prig --help`. In writing the Prig [usage message](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig.go#L237), I kept making small typos in the examples, and had to keep copying and pasting them into my terminal to test them manually.
+However, one of the neat things I did was to test the examples shown in `prig --help`. In writing the Prig [usage message](https://github.com/benhoyt/prig/blob/335e3d456ae7e0ea708312d6be212e6fbaad6d47/prig.go#L237), I kept making small typos in the examples, and had to keep copying and pasting them into my terminal to test them manually.
 
-At some point I thought, why don't I test these examples automatically using `go test`? So I [extracted](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig.go#L290) the command lines examples to separate strings that are tested in [`TestExamples`](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig_test.go#L370). I use an ad-hoc little [parser](https://github.com/benhoyt/prig/blob/731008dc6c36221dfe51d861c339fe0b03c296fc/prig_test.go#L399) to turn the example command line into an argument list, and then call `prig` on the result.
+At some point I thought, why don't I test these examples automatically using `go test`? So I [extracted](https://github.com/benhoyt/prig/blob/335e3d456ae7e0ea708312d6be212e6fbaad6d47/prig.go#L290) the command lines examples to separate strings that are tested in [`TestExamples`](https://github.com/benhoyt/prig/blob/335e3d456ae7e0ea708312d6be212e6fbaad6d47/prig_test.go#L370). I use an ad-hoc little [parser](https://github.com/benhoyt/prig/blob/335e3d456ae7e0ea708312d6be212e6fbaad6d47/prig_test.go#L399) to turn the example command line into an argument list, and then call `prig` on the result.
 
 This is similar to Go's excellent [testable examples](https://go.dev/blog/examples), but for command-line examples instead of Go code examples.
 
@@ -295,7 +364,7 @@ $ prig -b 'Printf("%3.5s\n", "hello world")'
 hello
 ```
 
-Should you use Prig? I'm not going to stop you! But to be honest, you're probably better off learning the ubuiquitous (and significantly terser) AWK language.
+Should you use Prig? I'm not going to stop you! But to be honest, you're probably better off learning the ubiquitous (and significantly terser) AWK language.
 
 You might also use it if you need an *executable* for some data processing, for example in a lightweight container that doesn't have `awk` installed. For cases like this, you can use `prig -s` to print the source, `go build` the result, and copy the executable to the target -- no other dependencies needed.
 
