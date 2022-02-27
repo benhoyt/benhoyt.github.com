@@ -9,7 +9,7 @@ description: "Describes Prig, which is for Processing Records In Go. It's a text
 
 > Summary: The article describes Prig, my AWK-like tool that uses Go as the scripting language. I compare Prig with AWK, then dive into how Prig works, and finally look briefly at Prig's `Sort` and `SortMap` builtins (which use Go's new generics if Go 1.18 is available).
 >
-> **Go to:** [Prig vs AWK](#prig-compared-to-awk) \| [Go output](#resulting-go-program) \| [Testing](#fun-with-testing) \| [Generics](#experimenting-with-generics) \| [Conclusion](#was-it-worth-it)
+> **Go to:** [Prig vs AWK](#prig-compared-to-awk) \| [Go output](#resulting-go-program) \| [Testing](#fun-with-testing) \| [Generics](#experimenting-with-generics) \| [Conclusion](#conclusion-was-it-worth-it)
 
 
 In a recent Hacker News [comment](https://news.ycombinator.com/item?id=30191430) I learned about [`rp`](https://github.com/c-blake/cligen/blob/master/examples/rp.nim), a little text processing tool by Charles Blake that is kind of like AWK, but uses [Nim](https://nim-lang.org/) as the scripting language. The works because the Nim compiler is fast and the Nim language is terse, so you can use it for one-off scripts.
@@ -341,7 +341,7 @@ func SortMap(m interface{}, options ..._sortOption) []KV {
 Crazy? Probably. Most libraries could never get away with this kind of switcheroo, because the APIs just aren't compatible for a lot of tasks. But for an experiment in Prig, it seems to work pretty well.
 
 
-## Was it worth it?
+## Conclusion: was it worth it?
 
 I'm unashamedly a nerd at heart, so yes, I had fun building Prig (mostly on a flight from Christchurch to Frankfurt). I like how simple the code is: about 200 lines of Go code, 300 lines of template code ... and 400 lines of tests. Go and its standard library are doing all the hard work!
 
