@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Prig: like AWK, but with Go \"scripts\""
+title: "Prig: like AWK, but uses Go for \"scripting\""
 permalink: /writings/prig/
 description: "Describes Prig, which is for Processing Records In Go. It's a text processing tool like AWK, but it uses Go as the scripting language."
 ---
