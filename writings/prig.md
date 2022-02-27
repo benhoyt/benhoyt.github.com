@@ -5,7 +5,7 @@ permalink: /writings/prig/
 description: "Describes Prig, which is for Processing Records In Go. It's a text processing tool like AWK, but it uses Go as the scripting language."
 ---
 <h1>{{ page.title }}</h1>
-<p class="subtitle">March 2022</p>
+<p class="subtitle">February 2022</p>
 
 > Summary: The article describes Prig, my AWK-like tool that uses Go as the scripting language. I compare Prig with AWK, then dive into how Prig works, and finally look briefly at Prig's `Sort` and `SortMap` builtins (which use Go's new generics if Go 1.18 is available).
 >
