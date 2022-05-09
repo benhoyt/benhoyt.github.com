@@ -107,9 +107,9 @@ You must do validation at least on the backend, otherwise an attacker could bypa
 
 ## Further reading
 
-OWASP has two cheat sheets on [Cross Site Scripting Prevention](https://owasp.org/www-project-cheat-sheets/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet) and [SQL Injection Prevention](https://owasp.org/www-project-cheat-sheets/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html) that contain a lot of further information on escaping.
+OWASP has two cheat sheets on [Cross Site Scripting Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html) and [SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html) that contain a lot of further information on escaping.
 
-There's also a StackOverflow [answer to "How can I sanitize user input with PHP?"](https://stackoverflow.com/questions/129677/how-can-i-sanitize-user-input-with-php/130323#130323) that is somewhat PHP-specific, but I found it succinct and helpful. It links to a page on PHP [magic quotes](https://www.php.net/manual/en/security.magicquotes.php), which were a bad idea and actually removed in PHP 5.4 -- the discussion there is very much in line with what I've written above.
+There's also a StackOverflow [answer to "How can I sanitize user input with PHP?"](https://stackoverflow.com/questions/129677/how-can-i-sanitize-user-input-with-php/130323#130323) that is somewhat PHP-specific, but I found it succinct and helpful. It links to a page on PHP [magic quotes](https://en.wikipedia.org/wiki/Magic_quotes), which were a bad idea and actually removed in PHP 5.4 -- the discussion there is very much in line with what I've written above.
 
 If you have any feedback on this article, please get in touch! Or see the comments on [Hacker News](https://news.ycombinator.com/item?id=22431022) and [programming reddit](https://www.reddit.com/r/programming/comments/fa7rn8/dont_try_to_sanitize_input_escape_output/).
 
