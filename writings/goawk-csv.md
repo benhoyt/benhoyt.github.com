@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Adding CSV support to (Go)AWK"
+title: "Modernizing AWK, a 45-year old language, by adding CSV support"
 permalink: /writings/goawk-csv/
 description: "Why and how I added proper CSV support to GoAWK, my POSIX-compatible AWK interpreter."
 ---
@@ -8,7 +8,7 @@ description: "Why and how I added proper CSV support to GoAWK, my POSIX-compatib
 <p class="subtitle">May 2022</p>
 
 
-I recently added proper handling of CSV files to my [GoAWK](https://github.com/benhoyt/goawk) interpreter, and I think it's a feature that will make AWK significantly more useful for developers and data analysts.
+I recently added proper handling of CSV files to [GoAWK](https://github.com/benhoyt/goawk), my POSIX-compatible AWK interpreter, and I think it's a feature that will make AWK significantly more useful for developers and data analysts in our data-heavy world.
 
 Whether it's producing input for a spreadsheet, analyzing data from a public data source, or writing scripts to process "big data", [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) and [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) files are ubiquitous today. Whether it's the *best* format is up for debate, but like guy said, there are only two kinds of data formats: the ones people complain about and the ones nobody uses.
 

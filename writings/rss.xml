@@ -8,7 +8,7 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
-  <title>Adding CSV support to (Go)AWK</title>
+  <title>Modernizing AWK, a 45-year old language, by adding CSV support</title>
   <description>Why and how I added proper CSV support to GoAWK, my POSIX-compatible AWK interpreter.</description>
   <link>https://benhoyt.com/writings/goawk-csv/</link>
   <guid>https://benhoyt.com/writings/goawk-csv/</guid>

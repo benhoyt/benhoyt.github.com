@@ -17,7 +17,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2022">2022</h2>
 
-* [Adding CSV support to (Go)AWK](/writings/goawk-csv/) discusses why and how I added proper CSV support to GoAWK, my POSIX-compatible AWK interpreter. (May)
+* [Modernizing AWK by adding CSV support](/writings/goawk-csv/) discusses why and how I added proper CSV support to GoAWK, my POSIX-compatible AWK interpreter. (May)
 * [Prig](/writings/prig/) is for Processing Records In Go. It's a text processing tool like AWK, but it uses Go as the scripting language. (February)
 * [Go version performance](/writings/go-version-performance/) charts how much the performance of Go has improved from version 1.2 through to 1.18 -- in its compiler, runtime, and libraries. (February)
 * [Optimizing GoAWK](/writings/goawk-compiler-vm/) describes how I made GoAWK faster by switching from tree-walking to a bytecode compiler with a virtual machine interpreter. (February)
