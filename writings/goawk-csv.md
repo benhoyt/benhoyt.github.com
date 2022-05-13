@@ -120,16 +120,16 @@ For CSV output mode, I *was* able to use [`encoding/csv.Writer`](https://pkg.go.
 
 ## Performance
 
-I haven't yet spent much time on performance. I intend to profile it properly at some point, but for now, it's "good enough": on a par with using Go's `encoding/csv` package directly, and much faster than the `csv` module in Python. It can process a gigabyte of complex CSV input in under five seconds on my laptop.
+I haven't yet spent much time on performance. I intend to profile it properly at some point, but for now, it's "good enough": on a par with using Go's `encoding/csv` package directly, and much faster than the `csv` module in Python. It can read a gigabyte of complex CSV input in about three seconds on my laptop.
 
 Compared to `frawk`, CSV input speed is significantly slower, though (somewhat surprisingly) CSV output speed is significantly faster.
 
-Below are the results of some simple read and write [benchmarks](https://github.com/benhoyt/goawk/blob/master/scripts/csvbench) using `goawk` and `frawk` as well as plain Python and Go. The input for the read benchmarks is a large 1.5GB, 749,818-row input file with many columns (286). Times are in seconds, showing the best of three runs on my 64-bit Linux laptop with an SSD drive:
+Below are the results of some simple read and write [benchmarks](https://github.com/benhoyt/goawk/blob/master/scripts/csvbench) using `goawk` and `frawk` as well as plain Python and Go. The output of the write benchmarks is a 1GB, 3.5 million row CSV file with 20 columns (including quoted columns); the input for the read benchmarks uses that same file. Times are in seconds, showing the best of three runs on a 64-bit Linux laptop with an SSD drive:
 
-Test              | goawk | frawk | Python |   Go
------------------ | ----- | ----- | ------ | ----
-Reading 1.5GB CSV |  6.49 |  2.03 |   20.2 | 6.95
-Writing 0.6GB CSV |  3.25 |  7.36 |   10.5 | 2.10
+Test            | goawk | frawk | Python |   Go
+--------------- | ----- | ----- | ------ | ----
+Reading 1GB CSV |  3.18 |  1.01 |   13.4 | 3.22
+Writing 1GB CSV |  5.64 |  13.0 |   17.0 | 3.24
 
 
 ## Conclusion
