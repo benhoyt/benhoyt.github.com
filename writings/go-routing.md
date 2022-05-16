@@ -395,6 +395,8 @@ Other than that, the `get()` and `post()` helpers, as well as the handlers thems
 
 [Full pattern matcher code on GitHub.](https://github.com/benhoyt/go-routing/blob/master/match/route.go)
 
+**Update:** Yuri Vishnevsky sent me an [interesting variant](https://gist.github.com/benhoyt/98b08cf79d0fe659b5700c52667c8742) of this idea on Gophers Slack. In his words, "I decided to inline the pieces, so the match arguments reads as the path does: `match("foo", &bar, "baz")`." I quite like this -- thanks Yuri!
+
 
 Split switch
 ------------
