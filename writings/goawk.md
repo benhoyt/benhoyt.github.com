@@ -14,6 +14,9 @@ description: How I wrote GoAWK, how I tested it, and how I measured and improved
 >
 > Chinese (zh) translation: [一个用Go编写的AWK解释器](http://llever.com/2018/11/19/%E8%AF%91-goawk%E4%B8%80%E4%B8%AA%E7%94%A8go%E7%BC%96%E5%86%99%E7%9A%84awk%E8%A7%A3%E9%87%8A%E5%99%A8/)
 
+
+*Update: GoAWK now uses a [bytecode compiler](/writings/goawk-compiler-vm/) and includes native [support for CSV files](/writings/goawk-csv/).*
+
 AWK is a fascinating text processing language, and [*The AWK Programming Language*](https://ia802309.us.archive.org/25/items/pdfy-MgN0H1joIoDVoIC7/The_AWK_Programming_Language.pdf) is a wonderfully concise book describing it. The A, W, and K in AWK stand for the surnames of the three original creators: Alfred Aho, Peter Weinberger, and Brian Kernighan. Kernighan is also an author of *The C Programming Language* ("K&R"), and the two books have that same each-page-packs-a-punch feel.
 
 AWK was released in 1977, which makes it over 40 years old! Not bad for a domain-specific language that's still used for one-liners on Unix command lines everywhere.

@@ -13,6 +13,8 @@ description: "How I sped up GoAWK by switching from a tree-walking interpreter t
 > **Go to:** [Why VMs?](#why-are-virtual-machines-faster-than-tree-walking) \| [Details](#compiler-and-virtual-machine-details) \| [Go's `switch`](#gos-switch-statement) \| [Other optimizations](#other-optimizations-and-a-de-optimization) \| [Results](#virtual-machine-results) \| [Conclusion](#conclusion)
 
 
+*Update: GoAWK now includes native [support for CSV files](/writings/goawk-csv/).*
+
 A few years ago I wrote [GoAWK](https://github.com/benhoyt/goawk), an AWK interpreter written in Go, along with an [article](/writings/goawk/) describing how it works, how it's tested, and how I made it faster.
 
 GoAWK has been a fun side project, and is [used](https://www.benthos.dev/docs/components/processors/awk) in at least one sizeable open source project, the [Benthos](https://github.com/Jeffail/benthos) stream processor. It even landed me my current job at Canonical.
