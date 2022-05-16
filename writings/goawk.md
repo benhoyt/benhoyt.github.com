@@ -231,7 +231,7 @@ func ParseProgram(src []byte, config *ParserConfig) (
 
 The [resolver](https://github.com/benhoyt/goawk/blob/master/parser/resolve.go) is actually part of the parser package. It does basic type checking of arrays versus scalars, and assigns integer indexes to all variable references (to avoid slower map lookups at execution time).
 
-I think the way I've done the resolver is non-traditional: instead of making a full pass over the AST, the parser records just what's necessary for the resolver to figure out the types (a list of function calls and variable references). This is probably faster than walking the whole tree, but it probably makes the code a bit less straight-forward.
+I think the way I've done the resolver is non-traditional: instead of making a full pass over the AST, the parser records just what's necessary for the resolver to figure out the types (a list of function calls and variable references). This is probably faster than walking the whole tree, but it makes the code a bit less straight-forward.
 
 In fact, the resolver was one of the harder pieces of code I've written for a while. It's the one piece of the GoAWK source I'm not particularly happy with. It works, but it's messy, and I'm still not sure I've covered all the edge cases.
 
@@ -246,6 +246,8 @@ The program simply prints `2` twice. But when we're calling `f` inside `g` we do
 After figuring out the unknown arguments types, the resolver assign integer indexes to all variable references, global and local.
 
 ### Interpreter
+
+*Update: As of v1.15.0, GoAWK uses a faster [bytecode compiler and virtual machine](/writings/goawk-compiler-vm/) instead of a tree-walking interpreter.*
 
 The interpreter is a simple tree-walk interpreter. The interpreter implements statement execution and expression evaluation, input/output, function calls, and the base value type.
 
