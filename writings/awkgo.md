@@ -16,7 +16,7 @@ It wasn't particularly hard -- at least, not for the subset of AWK that my compi
 
 The rest of this article describes what AWKGo does, how it works, a few of the interesting things I learned while writing and testing it, and shows some examples of its output. I'll also look briefly at the performance of the resulting code.
 
-You can view the [AWKGo source on GitHub](https://github.com/benhoyt/goawk/tree/master/awkgo).
+You can view the [AWKGo source on GitHub](https://github.com/benhoyt/goawk/tree/awkgo/awkgo).
 
 > **Go to:** [The subset](#the-subset) \| [Examples](#example-output) \| [Typing](#typing) \| [Compiler](#the-compiler) \| [Helpers](#helper-functions) \| [Testing](#testing) \| [Perf](#performance) \| [Conclusion](#conclusion)
 
@@ -98,7 +98,7 @@ var (
 )
 ```
 
-You can see how the helper functions like `_splitHelper` and `_getField` are defined in the [full output on GitHub](https://github.com/benhoyt/goawk/blob/master/awkgo/examples/about.go), but here they basically amount to `strings.Fields(_line)` and `_fields[3]`, respectively.
+You can see how the helper functions like `_splitHelper` and `_getField` are defined in the [full output on GitHub](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/examples/about.go), but here they basically amount to `strings.Fields(_line)` and `_fields[3]`, respectively.
 
 Note how we're pre-compiling the regular expression literal (`_re1`) using Go's `regexp.MustCompile` function at the top level.
 
@@ -118,7 +118,7 @@ END {
 }
 ```
 
-This compiles to the following ([full output on GitHub](https://github.com/benhoyt/goawk/blob/master/awkgo/examples/countwords.go)):
+This compiles to the following ([full output on GitHub](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/examples/countwords.go)):
 
 ```go
 func main() {
@@ -157,7 +157,7 @@ $1+0 == $2 { x += ++n }
 END { print x }
 ```
 
-This compiles to the following ([full output on GitHub](https://github.com/benhoyt/goawk/blob/master/awkgo/examples/trickier.go)):
+This compiles to the following ([full output on GitHub](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/examples/trickier.go)):
 
 ```go
 func main() {
@@ -188,7 +188,7 @@ AWK has been called "stringly typed". That's rather pejorative, however, and in 
 
 I actually think that with a few small tweaks to the language, AWK types could be fully determined at compile time, and the language would probably be better for it. "Numeric strings" are one of the tricky things to get your head around when learning AWK.
 
-In any case, AWKGo's job is to try to convert dynamically typed AWK into statically typed Go. To do that, there is a ["typer"](https://github.com/benhoyt/goawk/blob/master/awkgo/typer.go) that performs a pass to determine the type of each expression and variable in the AWK code.
+In any case, AWKGo's job is to try to convert dynamically typed AWK into statically typed Go. To do that, there is a ["typer"](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/typer.go) that performs a pass to determine the type of each expression and variable in the AWK code.
 
 If a number literal or a math operation is being performed, we know it's a number. If a string literal or a string operation is being done, we know it's a string. Once the typer knows the type of the right hand side of an assignment, it designates the variable on the left hand side as that type too.
 
@@ -240,7 +240,7 @@ The other time you need an explicit conversion is when you assign a field direct
 
 ## The compiler
 
-The AWKGo [compiler](https://github.com/benhoyt/goawk/blob/master/awkgo/compiler.go) is a simple "tree walker" that walks over the syntax tree again, printing Go code to the output. It's tedious but nothing at all fancy. Here's a taste, showing part of the function that compiles expressions:
+The AWKGo [compiler](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/compiler.go) is a simple "tree walker" that walks over the syntax tree again, printing Go code to the output. It's tedious but nothing at all fancy. Here's a taste, showing part of the function that compiles expressions:
 
 ```go
 func (c *compiler) expr(expr Expr) string {
@@ -342,7 +342,7 @@ func main() {
 
 There's a small AWK "runtime" needed for operations like getting and setting fields (for example, `$1`), converting strings to and from numbers, and implementing the built-in functions such as `match`, `substr`, and `sub`.
 
-These are the same every time, so I've just included them as a multi-line string containing Go source code in [helpers.go](https://github.com/benhoyt/goawk/blob/master/awkgo/helpers.go). Each of the names is prefixed with an underscore to avoid name clashes (not foolproof, I know, but good enough).
+These are the same every time, so I've just included them as a multi-line string containing Go source code in [helpers.go](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/helpers.go). Each of the names is prefixed with an underscore to avoid name clashes (not foolproof, I know, but good enough).
 
 For example, the helpers to get and set fields (`$i` and `$i = s`, respectively) are shown below. In a hand-written Go program, I'd probably avoid globals for things like `_line` and `_fields`, but in AWK, that state *is* global, so translating it that way makes sense.
 
@@ -392,7 +392,7 @@ I already had a volley of tests from GoAWK that ensure various aspects of the in
 
 Like the original tests, the AWKGo tests are written as table-driven tests with a single [`TestAWKGo` function](https://github.com/benhoyt/goawk/blob/31a9e5dc25c9c72b4c4893efc8d9f0ac778b5253/awkgo/awkgo_test.go#L613) to drive them. It parses and compiles the AWK source, outputting the Go code to a temporary file. This is then executed using `go run`, and the output is compared against what we expect.
 
-I also wrote a little script, [awkgo/run_tests.sh](https://github.com/benhoyt/goawk/blob/master/awkgo/run_tests.sh), that runs the tests, strips from the output some stuff like timings that change from run to run, and writes the output to [awkgo/tests.txt](https://github.com/benhoyt/goawk/blob/master/awkgo/tests.txt).
+I also wrote a little script, [awkgo/run_tests.sh](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/run_tests.sh), that runs the tests, strips from the output some stuff like timings that change from run to run, and writes the output to [awkgo/tests.txt](https://github.com/benhoyt/goawk/blob/awkgo/awkgo/tests.txt).
 
 When I started, only a few tests passed. But with each feature implemented or bug fixed, slowly but surely the number of PASSes started to exceed the number of FAILs. It's really satisfying when you fix an issue that affects a number of tests and see a lot of failures disappear from the `tests.txt` diff.
 
