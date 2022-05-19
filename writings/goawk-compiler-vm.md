@@ -435,33 +435,33 @@ Increment, decrement, and augmented assignment are so much faster because the vi
 
 My more "real world" benchmark suite -- most of which I pulled from the [original AWK source](https://github.com/onetrueawk/awk) -- got 13% faster overall. In this table, `goawk` is the new virtual machine interpreter and `orig` is the old tree-walking one. Somewhat unintuitively, the numbers here are the number of times faster it is than the original `awk`, so *bigger is better*.
 
-Test      | goawk |  orig |   awk |  gawk |  mawk
---------- | ----- | ----- | ----- | ----- | -----
-tt.01     |  2.02 |  1.91 |  1.00 |  1.66 |  2.29
-tt.02     |  1.59 |  1.60 |  1.00 |  1.77 |  2.20
-tt.02a    |  1.54 |  1.56 |  1.00 |  1.73 |  2.05
-tt.03     |  1.32 |  1.27 |  1.00 |  3.85 |  1.83
-tt.03a    |  1.29 |  1.26 |  1.00 |  4.08 |  1.79
-tt.04     |  0.97 |  0.80 |  1.00 |  1.26 |  2.74
-tt.05     |  0.95 |  0.88 |  1.00 |  1.61 |  2.26
-tt.06     |  1.39 |  1.35 |  1.00 |  2.53 |  1.97
-tt.07     |  1.24 |  1.18 |  1.00 |  1.46 |  1.71
-tt.08     |  1.97 |  1.98 |  1.00 |  1.13 |  2.70
-tt.09     |  2.13 |  2.13 |  1.00 |  2.41 |  5.01
-tt.10     |  0.34 |  0.34 |  1.00 |  1.45 |  3.40
-tt.10a    |  0.32 |  0.34 |  1.00 |  1.30 |  3.08
-tt.11     |  2.20 |  2.13 |  1.00 |  1.15 |  3.68
-tt.12     |  1.21 |  1.19 |  1.00 |  1.70 |  1.78
-tt.13     |  3.14 |  2.62 |  1.00 |  3.11 |  5.92
-tt.13a    |  2.25 |  1.80 |  1.00 |  1.86 |  4.85
-tt.14     |  1.17 |  1.09 |  1.00 |  0.64 |  1.56
-tt.15     |  0.62 |  0.61 |  1.00 |  0.96 |  2.21
-tt.16     |  1.47 |  1.21 |  1.00 |  1.27 |  2.12
-tt.big    |  1.62 |  1.41 |  1.00 |  1.83 |  3.82
-tt.x1     |  2.25 |  1.62 |  1.00 |  1.34 |  3.44
-tt.x2     |  1.76 |  1.03 |  1.00 |  1.15 |  2.68
---------- | ----- | ----- | ----- | ----- | -----
-**Geo mean**  | **1.45** | **1.28** | **1.00** | **1.86** | **2.32**
+Test                         | goawk |  orig |   awk |  gawk |  mawk
+---------------------------- | ----- | ----- | ----- | ----- | -----
+tt.01 (print)                |  2.02 |  1.91 |  1.00 |  1.66 |  2.29
+tt.02 (print NR NF)          |  1.59 |  1.60 |  1.00 |  1.77 |  2.20
+tt.02a (print length)        |  1.54 |  1.56 |  1.00 |  1.73 |  2.05
+tt.03 (sum length)           |  1.32 |  1.27 |  1.00 |  3.85 |  1.83
+tt.03a (sum field)           |  1.29 |  1.26 |  1.00 |  4.08 |  1.79
+tt.04 (printf fields)        |  0.97 |  0.80 |  1.00 |  1.26 |  2.74
+tt.05 (concat fields)        |  0.95 |  0.88 |  1.00 |  1.61 |  2.26
+tt.06 (count lengths)        |  1.39 |  1.35 |  1.00 |  2.53 |  1.97
+tt.07 (even fields)          |  1.24 |  1.18 |  1.00 |  1.46 |  1.71
+tt.08 (even lengths)         |  1.97 |  1.98 |  1.00 |  1.13 |  2.70
+tt.09 (regex starts with)    |  2.13 |  2.13 |  1.00 |  2.41 |  5.01
+tt.10 (regex ends with)      |  0.34 |  0.34 |  1.00 |  1.45 |  3.40
+tt.10a (regex ends with var) |  0.32 |  0.34 |  1.00 |  1.30 |  3.08
+tt.11 (substr)               |  2.20 |  2.13 |  1.00 |  1.15 |  3.68
+tt.12 (update fields)        |  1.21 |  1.19 |  1.00 |  1.70 |  1.78
+tt.13 (array ops)            |  3.14 |  2.62 |  1.00 |  3.11 |  5.92
+tt.13a (array printf)        |  2.25 |  1.80 |  1.00 |  1.86 |  4.85
+tt.14 (function call)        |  1.17 |  1.09 |  1.00 |  0.64 |  1.56
+tt.15 (format lines)         |  0.62 |  0.61 |  1.00 |  0.96 |  2.21
+tt.16 (count words)          |  1.47 |  1.21 |  1.00 |  1.27 |  2.12
+tt.big (complex program)     |  1.62 |  1.41 |  1.00 |  1.83 |  3.82
+tt.x1 (mandelbrot)           |  2.25 |  1.62 |  1.00 |  1.34 |  3.44
+tt.x2 (sum loop)             |  1.76 |  1.03 |  1.00 |  1.15 |  2.68
+---------------------------- | ----- | ----- | ----- | ----- | -----
+**Geo mean**                 | **1.45** | **1.28** | **1.00** | **1.86** | **2.32**
 
 
 ## Conclusion

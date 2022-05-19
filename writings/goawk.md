@@ -696,22 +696,22 @@ So how does GoAWK compare to the other AWK implementations? Pretty well! In the 
 
 The numbers below represent the speed of running the given test over 3 runs, relative to the speed of `awk`. So 6.27 means it was about 6x as fast as `awk` -- *higher is better*. As you can see, GoAWK is significantly faster than `awk` in most cases and not too bad compared to `gawk`!
 
-Test      | goawk |  orig |   awk |  gawk |  mawk 
---------- | ----- | ----- | ----- | ----- | -----
-tt.01     | 20.59 |  5.73 |  1.00 | 10.88 | 11.55
-tt.02     |  5.46 |  4.69 |  1.00 |  3.63 |  4.98
-tt.02a    |  4.39 |  3.81 |  1.00 |  2.98 |  4.49
-tt.03     |  6.27 |  4.88 |  1.00 | 12.29 |  7.93
-tt.03a    |  6.57 |  3.06 |  1.00 | 16.07 |  7.75
-tt.04     |  1.34 |  0.88 |  1.00 |  1.53 |  2.82
-tt.05     |  1.68 |  1.00 |  1.00 |  2.50 |  3.37
-tt.06     |  5.66 |  3.99 |  1.00 |  8.21 |  7.45
-tt.07     |  6.46 |  5.48 |  1.00 |  5.27 |  6.31
-tt.big    |  1.48 |  0.90 |  1.00 |  1.71 |  2.88
-tt.x1     |  1.05 |  0.33 |  1.00 |  1.52 |  2.03
-tt.x2     |  0.60 |  0.22 |  1.00 |  1.22 |  1.74
---------- | ----- | ----- | ----- | ----- | -----
-**Geo mean**  | **3.28** | **1.88** | **1.00** | **3.90** | **4.52**
+Test                     | goawk |  orig |   awk |  gawk |  mawk 
+------------------------ | ----- | ----- | ----- | ----- | -----
+tt.01 (print)            | 20.59 |  5.73 |  1.00 | 10.88 | 11.55
+tt.02 (print NR NF)      |  5.46 |  4.69 |  1.00 |  3.63 |  4.98
+tt.02a (print length)    |  4.39 |  3.81 |  1.00 |  2.98 |  4.49
+tt.03 (sum length)       |  6.27 |  4.88 |  1.00 | 12.29 |  7.93
+tt.03a (sum field)       |  6.57 |  3.06 |  1.00 | 16.07 |  7.75
+tt.04 (printf fields)    |  1.34 |  0.88 |  1.00 |  1.53 |  2.82
+tt.05 (concat fields)    |  1.68 |  1.00 |  1.00 |  2.50 |  3.37
+tt.06 (count lengths)    |  5.66 |  3.99 |  1.00 |  8.21 |  7.45
+tt.07 (even fields)      |  6.46 |  5.48 |  1.00 |  5.27 |  6.31
+tt.big (complex program) |  1.48 |  0.90 |  1.00 |  1.71 |  2.88
+tt.x1 (mandelbrot)       |  1.05 |  0.33 |  1.00 |  1.52 |  2.03
+tt.x2 (sum loop)         |  0.60 |  0.22 |  1.00 |  1.22 |  1.74
+------------------------ | ----- | ----- | ----- | ----- | -----
+**Geo mean**             | **3.28** | **1.88** | **1.00** | **3.90** | **4.52**
 
 <!--
 tt.08     | 15.96 |  4.75 |  1.00 |  6.64 | 13.11
