@@ -78,9 +78,9 @@ AWK has two scalar types, string and number, but it's been described as "stringl
 
 The language supports the usual range of C-like expressions and control structures (`if`, `for`, etc). It also has a range of builtin functions like `substr()` and `tolower()`, and it supports user-defined functions complete with local variables and array parameters.
 
-So it's most definitely Turing-complete, and is actually quite a nice, powerful language. You can even [generate the Mandelbrot set](https://github.com/benhoyt/goawk/blob/master/examples/mandel.awk) in a couple dozen lines of code:
+So it's most definitely Turing-complete, and is actually quite a nice, powerful language. You can even [generate the Mandelbrot set](https://github.com/benhoyt/goawk/blob/master/testdata/tt.x1_mandelbrot) in a couple dozen lines of code:
 
-    $ awk -f examples/mandel.awk
+    $ awk -v width=150 -v height=50 -f testdata/tt.x1_mandelbrot
 
 <pre style="font-size: 47%;"><code>......................................................................................................................................................
 ............................................................................................................-.........................................
