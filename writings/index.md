@@ -17,6 +17,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2022">2022</h2>
 
+* [Tools I use to build my website](/writings/tools-i-use-to-build-my-website/) describes how I build `benhoyt.com` with GitHub Pages, Jekyll, a simple HTML+CSS layout, Sublime Text, and Sublime Merge. (August)
 * [Modernizing AWK by adding CSV support](/writings/goawk-csv/) discusses why and how I added proper CSV support to GoAWK, my POSIX-compatible AWK interpreter. (May)
 * [Prig](/writings/prig/) is for Processing Records In Go. It's a text processing tool like AWK, but it uses Go as the scripting language. (February)
 * [Go version performance](/writings/go-version-performance/) charts how much the performance of Go has improved from version 1.2 through to 1.18 -- in its compiler, runtime, and libraries. (February)

@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Tools I use to build my website</title>
+  <description>How I build my website benhoyt.com with GitHub Pages, Jekyll, a simple HTML+CSS layout, Sublime Text, and Sublime Merge.</description>
+  <link>https://benhoyt.com/writings/tools-i-use-to-build-my-website/</link>
+  <guid>https://benhoyt.com/writings/tools-i-use-to-build-my-website/</guid>
+  <pubDate>Tue, 02 Aug 2022 19:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Modernizing AWK, a 45-year old language, by adding CSV support</title>
   <description>Why and how I added proper CSV support to GoAWK, my POSIX-compatible AWK interpreter.</description>
   <link>https://benhoyt.com/writings/goawk-csv/</link>
