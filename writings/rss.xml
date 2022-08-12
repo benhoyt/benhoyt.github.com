@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Rob Pike's simple C regex matcher in Go</title>
+  <description>Translating Rob Pike's simple and elegant C regex matcher to Go.</description>
+  <link>https://benhoyt.com/writings/rob-pike-regex/</link>
+  <guid>https://benhoyt.com/writings/rob-pike-regex/</guid>
+  <pubDate>Fri, 12 Aug 2022 14:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Tools I use to build my website</title>
   <description>How I build my website benhoyt.com with GitHub Pages, Jekyll, a simple HTML+CSS layout, Sublime Text, and Sublime Merge.</description>
   <link>https://benhoyt.com/writings/tools-i-use-to-build-my-website/</link>
