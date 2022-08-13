@@ -73,7 +73,7 @@ A number of things take more lines in Go, partly because of the lack of `do`-`wh
 
 A few things are simpler thanks to Go's strings, for example `regexp[0] == '$' && regexp[1] == '\0'` becomes just `regexp == "$"`.
 
-So without further ado, here's my Go version:
+So without further ado, here's my Go version ([full source here](https://github.com/benhoyt/repike/blob/master/repike.go)):
 
 ```go
 // Match reports whether regexp matches anywhere in text.
@@ -124,6 +124,8 @@ func matchStar(c byte, regexp, text string) bool {
 It's 43 lines compared to 35. Thanks partly to Pike's influence on the language, I think the Go version still captures much of the elegance of his original C.
 
 My first version was very slightly different (and 4 lines longer): I [simplified](https://github.com/benhoyt/repike/commit/45c498067faa47c28553c219f6dcfa1cb86fcc4a) a few things, including replacing the run of `if`s in `matchHere` with the `switch`. If you have any suggestions for how to make the Go code simpler or more elegant, let me know.
+
+*Update: GitHub user [MoiTux](https://github.com/MoiTux) submitted a [PR](https://github.com/benhoyt/repike/pull/1) to shorten my version down to 39 lines. He put the `Match` and `matchStar` loop conditions on the `for` line, and then called `matchHere` once more after the loop to handle the empty string case. [Full source here.](https://github.com/benhoyt/repike/blob/fc46f69698632b86d2a556d2d623303114469498/repike.go) Clever!*
 
 
 ## Testing
