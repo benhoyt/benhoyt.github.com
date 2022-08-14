@@ -125,7 +125,7 @@ It's 43 lines compared to 35. Thanks partly to Pike's influence on the language,
 
 My first version was very slightly different (and 4 lines longer): I [simplified](https://github.com/benhoyt/repike/commit/45c498067faa47c28553c219f6dcfa1cb86fcc4a) a few things, including replacing the run of `if`s in `matchHere` with the `switch`. If you have any suggestions for how to make the Go code simpler or more elegant, let me know.
 
-*Update: GitHub user [MoiTux](https://github.com/MoiTux) submitted a [PR](https://github.com/benhoyt/repike/pull/1) to shorten my version down to 39 lines. He put the `Match` and `matchStar` loop conditions on the `for` line, and then called `matchHere` once more after the loop to handle the empty string case. [Full source here.](https://github.com/benhoyt/repike/blob/fc46f69698632b86d2a556d2d623303114469498/repike.go) Clever!*
+*Update: GitHub user [MoiTux](https://github.com/MoiTux) submitted a [PR](https://github.com/benhoyt/repike/pull/1) to shorten my version down to 37 lines. He put the `Match` and `matchStar` loop conditions and the `text = text[1:]` statement on the `for` line, and then called `matchHere` once more after the loop to handle the empty string case. [Full source here.](https://github.com/benhoyt/repike/blob/c89b143019894020344b55ad538d19f213bb8b7c/repike.go) Clever!*
 
 
 ## Testing
