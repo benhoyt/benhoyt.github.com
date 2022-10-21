@@ -25,7 +25,7 @@ This article provides an overview of our startup, digs into our mistakes and wha
 * good timing: "crowdfunding" as a term
 * a software focus
 * three brothers
-* investors (Geoff Shaw, family)
+* investors (Geoff, family)
 * why was it good (the competition)
 
 
