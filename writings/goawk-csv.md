@@ -102,7 +102,7 @@ Arizona AZ
 
 Plus, we have all the features of standard AWK, so there's a lot more you can do.
 
-**[Read the CSV documentation](https://github.com/benhoyt/goawk/blob/master/csv.md) for full details and many more examples.**
+**[Read the CSV documentation](https://github.com/benhoyt/goawk/blob/master/docs/csv.md) for full details and many more examples.**
 
 
 ## Implementation notes
