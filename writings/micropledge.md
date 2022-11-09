@@ -53,7 +53,7 @@ Looking back, that period was a lot of fun: working with my brothers on our very
 
 ## Why we failed
 
-microPledge wasn't a complete failure: we had about 1200 users, 105 projects created, and about $25,000 pledged. A small handful few of those projects reached their target. But we launched, got a little bit of traction, then floundered, and ultimately failed.
+microPledge wasn't a complete failure: we had about 1200 users, 105 projects created, and about $25,000 pledged. A small handful few of those projects reached their target. But we launched, got a little bit of traction, then floundered and ran out of money, and ultimately failed.
 
 Below I describe the various reasons why I think we failed. It's easy to see why in retrospect, but these things weren't obvious to three young software geeks in 2006.
 
@@ -73,9 +73,9 @@ There were a *lot* of details, as the length of our multi-page [project creator 
 
 Don't get me wrong: microPledge had a well-designed UI for a complex system. We spent a lot of time figuring out the details! The "fundraising thermometer" and the progress slider were clear and visual, details were presented slowly behind tooltips, and both creator and pledger were guided through the complex voting process.
 
-Our mistake was earlier: we shouldn't have designed a complex system. Kickstarter succeeded with a simple "Back this project" button, and project creators either get all the money (if the goal is reached), or none. There's no progress stages, no voting, no complicated payment calculation.
+Our mistake was earlier: we designed an amazing system ... that nobody wanted. Kickstarter, which launched two years after microPledge, succeeded with a simple "Back this project" button, and project creators either get all the money (if the goal is reached), or none. There's no progress stages, no voting, no complicated payment calculation.
 
-We didn't design this complex system for complexity's sake; we wanted to solve the problem of pledgers trusting creators to actually follow through and make the product. But it turns out people are pretty trusting, and most of the time, this works! There are relatively rare [cases](https://www.thrillist.com/gear/kickstarter-frauds-worst-crooks-in-crowdfunding) of Kickstarter project creators that don't deliver, and pledgers get grumpy. But they went in knowing the risk, and how grumpy can you get when you've only pledged $20?
+We didn't design this complex system for complexity's sake; we wanted to solve the problem of pledgers trusting creators to actually follow through and make the product. But it turns out people are pretty trusting, and most of the time, this works! There are relatively rare [cases](https://www.thrillist.com/gear/kickstarter-frauds-worst-crooks-in-crowdfunding) of Kickstarter creators that don't deliver, and pledgers get grumpy. But they went in knowing the risk, and how grumpy can you get when you've only pledged $20?
 
 In short, microPledge was way too intricate for a minimum viable product, and way too complicated compared to what users really wanted: pledgers just want a simple pledge button, and creators just want a payout.
 
@@ -89,6 +89,10 @@ We spent a bunch of time tweaking PostgreSQL configs and cron jobs so we could p
 
 I remember personally spending several hours implementing code to detect and handle hash collisions of random SHA-1 hashes. This basically [couldn't happen in billions of years](https://medium.com/coinmonks/how-likely-is-it-that-someone-could-guess-your-bitcoin-private-key-6c0edd56fa1f), so I'm not sure why I wrote code to check for it -- it was probably me not understanding cryptographic hashes than actual over-engineering.
 
+We did all of this without any paying users! It had not yet sunk in that startups live or die based on generating revenue, not technical prowess in the code.
+
+Something that would have helped with both of these "over-complication" points is having an artistic or business person on the team rather than another engineering-minded brother.
+
 ### Emphasizing the process, not the finished product
 
 If you look at our project page shown above, most prominent is the pledging and progress, rather than the product the pledgers will get. There's only a small paragraph "selling" the project.
@@ -97,9 +101,9 @@ Compare that to Kickstarter's project page, which leads with a big video selling
 
 ![Example Kickstarter project page](/images/kickstarter-project.jpg)
 
-Kickstarter helps the creator make their (potential) product really shine. Our project page did not.
+Kickstarter helps the creator make their (potential) product really shine. Our project page did not. Kickstarter guided you through making a great project page. Essentially, they were training founders of these mini-startups to sell to their own audience.
 
-I think this was partly because we started with software, which is often hard to photograph. But it was also because we were thinking of things from the creator's perspective rather than the paying customer: the pledgers -- or in sales terms, the buyer.
+I think we made this mistake because we were thinking of things from the creator's perspective rather than the paying customer: the pledgers -- or in sales terms, the buyer. Along the same lines, "Kickstarter" is a somewhat better name than "microPledge": it emphasizes the output people want rather than the input (a pledge).
 
 ### Poor choice of focus
 
@@ -119,7 +123,7 @@ And in September 2007 we got a little bit of press in the Dominion Post, a New Z
 
 ![Dominion Post article about microPledge](/images/micropledge-dompost-article.jpg)
 
-That said, we should have been selling it to potential project creators and real-life pledgers from early on ... before spending 12 months developing it.
+That said, we should have been selling it to potential project creators and real-life pledgers from early on ... before spending 12 months developing it. I think part of the reason was because we didn't know how to sell. But perhaps the main reason was that for us, writing code was fun. Picking up the phone was not.
 
 ### PayPal legal battle
 
