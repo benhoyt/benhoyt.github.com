@@ -7,12 +7,6 @@ description: "What our crowdfunding startup microPledge was, why it failed, and 
 <h1>{{ page.title }}</h1>
 <p class="subtitle">November 2022</p>
 
-<!--
-TODO:
-- spell check, proofread
-- send to Bryan and Berwyn for review
--->
-
 > **Go to:** [Overview](#overview-and-origin-of-micropledge) \| [Why we failed](#why-we-failed) \| [IP for sale](#attempt-to-sell-company-ip) \| [What we learned](#what-we-learned) \| [Timeline](#timeline) \| [Conclusion](#conclusion)
 
 
@@ -27,7 +21,7 @@ This article provides an overview of our startup, digs into our mistakes and wha
 
 ## Overview and origin of microPledge
 
-Back in January 2006, my brother Berwyn had the idea for microPledge on his commute to work. The seed idea was something like, "Imagine getting all your neighbours and friends and grandma to each chip in $20 to build a local playground."
+Back in January 2006, my brother Berwyn had the idea for microPledge on his commute to work. The seed idea was something like, "Imagine getting all your neighbours and friends and grandma to each chip in $20 to build a local playground. All we need is a web tool to enable these new creations!"
 
 Shortly after this he contacted my brother Bryan and myself, to see if we wanted to help build this. Bryan had just started his own web design company, and joined right away. I was a couple of years out of university; I'd been reading [Paul Graham's essays](http://paulgraham.com/articles.html) on startups and was keen to join. I'd also been eyeing the Python programming language and wanted to start using it.
 
@@ -47,7 +41,7 @@ From there, project creators could set a target amount, then wait for pledges to
 
 We used PayPal as our payment system. Back then it was one of the few providers that let you pay money *out* to others. However, we didn't read their fine print carefully enough when starting: the short version is that PayPal does *not* like you holding money in trust. But more on that below.
 
-We got a small amount of money from angel investors: about NZ$10,000 from family and NZ$60,000 from a friend (TODO: check). At the time we estimated that investment as worth a third of the company, so we founders kept a two-thirds share between us. This money was enough to pay small salaries for the three of us for a few months while we developed it full time.
+We got a small amount of money from angel investors: about NZ$10,000 from family and NZ$60,000 from a friend. At the time we estimated that investment as worth a third of the company, so we founders kept a two-thirds share between us. This money was enough to pay minimal living costs for the three of us while we developed it full time.
 
 Looking back, that period was a lot of fun: working with my brothers on our very own startup, learning Python, SQL, and web development.
 
@@ -61,7 +55,7 @@ Most of these things are probably noted in any Startups 101 article -- in the li
 
 ### Over-complicated progress and payout system
 
-One reason microPledge didn't take off was that the system was just too complicated. Remember that we were three engineers with no product designers. Instead of making a dead-simple "version 1", we created a Rube Goldberg machine: technically brilliant, but hard to understand.
+One reason microPledge didn't take off was that the system was just too complicated. Remember that we were three engineers with little marketing know-how. Instead of making a dead-simple "version 1", we created a Rube Goldberg machine: technically brilliant, but hard to understand.
 
 We designed an incremental payout system, letting the project creator drag a slider to say (for example) "I'm 30% done", and upload evidence -- photos or source code -- to show the progress they'd made on the product so far. Pledgers would be notified, then they would drag the slider to vote, and after a voting period the creator would get 30% × TotalPledged × AverageVotePercentage.
 
@@ -73,19 +67,19 @@ There were a *lot* of details, as the length of our multi-page [project creator 
 
 Don't get me wrong: microPledge had a well-designed UI for a complex system. We spent a lot of time figuring out the details! The "fundraising thermometer" and the progress slider were clear and visual, details were presented slowly behind tooltips, and both creator and pledger were guided through the voting process.
 
-Our mistake was earlier: we designed an intricate system ... that nobody wanted. Kickstarter, which launched two years after microPledge, succeeded with a simple "Back this project" button, and project creators either get all the money (if the goal is reached), or none. There's no progress stages, no voting, no complicated payment calculations.
+Our mistake was earlier: we designed an intricate system ... that nobody needed. Kickstarter, which launched two years after microPledge, succeeded with a simple "Back this project" button, and project creators either get all the money (if the goal is reached), or none. There's no progress stages, no voting, no payout calculations.
 
 We didn't design this complex system for complexity's sake; we wanted to solve the problem of pledgers trusting creators to actually follow through and make the product. But it turns out people are pretty trusting, and most of the time, this works! There are relatively rare cases of [Kickstarter creators that don't deliver](https://www.thrillist.com/gear/kickstarter-frauds-worst-crooks-in-crowdfunding), and pledgers get grumpy. But they went in knowing the risk, and how grumpy can you get when you've only pledged $20?
 
-In short, microPledge was much too intricate for a minimum viable product, and much too complicated compared to what users really wanted: pledgers just want a simple pledge button, and creators just want a payout.
+In short, microPledge was too intricate for a minimum viable product, and too complicated compared to what users really wanted: pledgers just want a simple pledge button, and creators just want a payout.
 
 ### Over-engineered software
 
 When you put three software engineers with perfectionist tendencies in a room, they're bound to over-engineer things.
 
-For example, we developed our own mini-<abbr title="Object-Relational Mapper">ORM</abbr> instead of using something off the shelf (or just plain SQL). As a startup we should have focused on getting the job done, not writing framework-level code.
+For example, we developed our own mini-[ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping) instead of using something off the shelf (or just plain SQL). As a startup we should have focused on getting the job done, not writing framework-level code.
 
-We spent a bunch of time tweaking PostgreSQL configs to use WAL logging (at the time, this was tricky to set up) so that we could proudly tell users we had up-to-the-minute backups. We could have written a 5-line script that used `pg_dump` to save a backup once a day.
+We spent a bunch of time tweaking PostgreSQL configs to use [WAL logging](https://www.postgresql.org/docs/current/wal-intro.html) (at the time, this was tricky to set up) so that we could proudly tell users we had up-to-the-minute backups. We could have written a 5-line script that used `pg_dump` to save a backup once a day.
 
 I remember personally spending several hours implementing code to detect and handle hash collisions of random SHA-1 hashes. This basically [can't happen in billions of years](https://medium.com/coinmonks/how-likely-is-it-that-someone-could-guess-your-bitcoin-private-key-6c0edd56fa1f), so I guess I needed to read an article on cryptographic hashes.
 
@@ -93,7 +87,7 @@ And we did all this without any paying users! It had not yet sunk in that startu
 
 Something that would have helped with both of these "over-complication" points is having an artistic or business person on the team rather than another engineering-minded brother.
 
-### Emphasizing the process, not the finished product
+### Emphasizing process rather than outcome
 
 If you look at our project page shown above, the most prominent part is the pledging and progress, rather than the product the pledgers will get. There's only a small paragraph selling the project itself.
 
@@ -109,13 +103,13 @@ I think we made this mistake because we were thinking of things from the creator
 
 While microPledge did support physical projects, most of our promotion efforts were for software projects, particularly as a means of funding open source software.
 
-We started there because that was what we knew. However, in retrospect that was almost certainly a mistake: there *is* money in open source, but it generally comes from enterprise support and extensions, not crowdfunding.
+We started there because that was what we knew, and software distribution is easy. However, in retrospect that was almost certainly a mistake: there *is* money in open source, but it generally comes from enterprise support and extensions, not crowdfunding.
 
 Kickstarter and other pledging websites tend to focus on real, physical projects. It's much easier to get regular folks to chip in for a hardware gizmo or a new type of shoe than for software.
 
 ### Not selling to or talking to users first
 
-Another big reason for failure was that we built the system without sounding out the market, and without testing on real users. We did some "hallway usability testing" on unsuspecting family members, but they were far too close to it -- and to us -- to give us good critical feedback.
+Another big reason for failure was that we built the system without sounding out the market, and without testing on real users.
 
 We did do some promotion, of course, mostly to software project creators that we thought might find it useful. For example, we interacted a bunch with Graham Dumpleton, maintainer of the [mod_wsgi extension](https://github.com/GrahamDumpleton/mod_wsgi) for Apache (which we used to serve microPledge). We convinced him to use microPledge for a [donations-only project](http://micropledge.brush.co.nz/projects/modwsgi), and he gave us some valuable feedback along the way.
 
@@ -137,8 +131,6 @@ We had good intentions, and of course we paid out as promised, but we found out 
 
 We were frustrated, and users were understandably upset. We considered various options and other payment providers, but microPledge hadn't gotten the traction we'd hoped for in any case, so this 6-month freeze was basically the death knell.
 
-We emailed our 1200 users asking them to pledge $10 each so we could switch to a different payment provider and keep microPledge going, but that didn't go anywhere.
-
 
 ## Attempt to sell company IP
 
@@ -154,16 +146,16 @@ We also attempted to sell the company on Flippa.com. Once again, this didn't go 
 
 ## What we learned
 
-Failure is a good teacher, and we learned a lot during these couple of years. In fact, as a programmer without formal training in software engineering, I don't think it was till years later that I realized just how much I'd learnt from our startup experience.
+Failure is a good teacher, and we learned a lot during these couple of years.
 
 ### Business
 
-On the startup side, what we learned is essentially the inverse of all the "reasons for failure" listed above:
+On the startup side, what we learned was essentially the reverse of the "why we failed" list above:
 
-* Start with a dead-simple version 1. The <abbr title="Keep It Stupid-Simple">KISS</abbr> principle applies to startups too.
+* Start with a dead-simple version 1 (the <abbr title="Keep It Stupid-Simple">KISS</abbr> principle).
 * Emphasize what the (paying) customer wants.
-* Choose your focus wisely; be careful trying to make money from open source.
-* Sell first, and test with real users -- before you write any code.
+* Focus on paying markets; maybe not open source.
+* Sell first -- before you write any code.
 * Read your payment system's fine print. :-)
 
 We did get valuable business experience from all this: my brother Bryan created microPledge's parent company, [Brush Technology](https://brush.nz/), which Berwyn and I helped run for several years after microPledge failed. Bryan still runs it today as a software and electronics consulting company.
@@ -172,13 +164,15 @@ A few years after microPledge, we started another startup, [Hivemind](https://hi
 
 ### Technical
 
+As a programmer without formal training in software engineering, I don't think it was till years later that I realized just how much I'd learnt from our startup experience.
+
 On the technical side, I learned web development (HTTP, HTML forms, and enough CSS and JavaScript to be dangerous). I learned Python development, as well as relational databases and SQL (specifically PostgreSQL). Bryan probably knew the most about these when we started, though I think all of us learned a lot.
 
 I also learned about web frameworks: we evaluated Django, but ended up using [web.py](https://webpy.org/), a micro-framework created by [Aaron Swartz](https://en.wikipedia.org/wiki/Aaron_Swartz). I'm surprised it's still actively maintained. I still like my web tools [small and light](/writings/the-small-web-is-beautiful/): more library and less framework.
 
 Another thing I learned was what I call "diff testing". This was Berwyn's idea, though I'm sure it's not original with him -- I've heard it referred to as "snapshot testing" or testing with "golden files". The basic idea is to save your test's expected output to a file and commit that snapshot to source control. Then when you run the code under test, you write output to a new file, and the test is simply to `diff` it against the snapshot. I've used this technique for many projects since then; it's particularly good for data transformation tasks.
 
-But perhaps the most important thing I learned was teamwork: how to create software in teams, how to split up and organize work, the importance of using good tools, and so on. microPledge was my first job where I was developing with a team and using revision control. Most of this mentorship came from our older brother Berwyn, who'd worked at medium-sized software companies for several years.
+But perhaps the most important thing I learned was teamwork: how to create software in teams, how to split up and organize work, the importance of using good tools, and so on. microPledge was my first job where I was developing with a team and using revision control. Most of this mentorship came from our older brother Berwyn, who'd worked at a medium-sized software company for several years.
 
 
 ## Timeline
