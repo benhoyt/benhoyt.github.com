@@ -17,6 +17,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2022">2022</h2>
 
+* [microPledge](/writings/micropledge/) was the Kickstarter-like startup we launched in 2007. This is a discussion of why it failed and what we learned. (November)
 * [Rob Pike's simple C regex matcher in Go](/writings/rob-pike-regex/) looks at my translation of Pike's elegant regex matcher from C to Go. (August)
 * [Tools I use to build my website](/writings/tools-i-use-to-build-my-website/) describes how I build `benhoyt.com` with GitHub Pages, Jekyll, a simple HTML+CSS layout, Sublime Text, and Sublime Merge. (August)
 * [Modernizing AWK by adding CSV support](/writings/goawk-csv/) discusses why and how I added proper CSV support to GoAWK, my POSIX-compatible AWK interpreter. (May)
