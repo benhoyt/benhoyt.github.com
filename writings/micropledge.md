@@ -7,14 +7,14 @@ description: "What our crowdfunding startup microPledge was, why it failed, and 
 <h1>{{ page.title }}</h1>
 <p class="subtitle">November 2022</p>
 
-> **Go to:** [Overview](#overview-and-origin-of-micropledge) \| [Why we failed](#why-we-failed) \| [IP for sale](#attempt-to-sell-company-ip) \| [What we learned](#what-we-learned) \| [Timeline](#timeline) \| [Conclusion](#conclusion)
+> **Go to:** [Overview](#overview-and-origin-of-micropledge) \| [Why we failed](#why-we-failed) \| [IP for sale](#attempt-to-sell-company-ip) \| [What we learned](#what-we-learned) \| [Conclusion](#conclusion) \| [Timeline](#timeline)
 
 
 I recently read Paul Graham's [tweet](https://twitter.com/paulg/status/1547698706161344516) about how founders who fail are usually admired, as long as they made something good, and understand why they failed.
 
 When two of my brothers and I launched our crowdfunding startup "microPledge" in 2007, we certainly tried to make something good: a crowdfunding platform any project could use, with a focus on software projects.
 
-And I believe we know why we failed: our first version was overly complex rather than a minimum viable product, and we created it before testing it with and selling it to potential users. Then there was the PayPal legal battle which finished us off.
+And I believe we know why we failed: our first version was overly complex rather than a minimum viable product, and we created it before testing it with and selling it to potential users. Then there was the PayPal legal issue which finished us off.
 
 This article provides an overview of our startup, digs into our mistakes and what we learned, and gives a timeline of events for the record. It also looks at why Kickstarter took off, but microPledge did not. What microPledge did do, however, was *kickstart* our careers.
 
@@ -29,13 +29,13 @@ It was great timing -- the term "crowdfunding" was [first used](https://wordspy.
 
 Here is a screenshot of the original microPledge homepage (which is preserved on our [read-only website](http://micropledge.brush.co.nz/)).
 
-![microPledge homepage](/images/micropledge-home.png)
+<img class="screenshot" alt="microPledge homepage" src="/images/micropledge-home.png">
 
 We initially focused on helping people fund *software* projects, but we also wanted the system to work for any kind of physical project.
 
 Creators who wanted funding could easily create a project: we carefully kept the [start-a-project form](http://micropledge.brush.co.nz/dream) to one simple screen:
 
-![microPledge start-a-project page](/images/micropledge-start-project.png)
+<img class="screenshot" alt="microPledge start-a-project page" src="/images/micropledge-start-project.png">
 
 From there, project creators could set a target amount, then wait for pledges to come in. Pledged money was transferred to a trust account until payout time.
 
@@ -61,11 +61,11 @@ We designed an incremental payout system, letting the project creator drag a sli
 
 Here's a screenshot showing one of our project pages (this project reached its target but was never developed):
 
-![microPledge project page](/images/micropledge-project.png)
+<img class="screenshot" alt="microPledge project page" src="/images/micropledge-project.png">
 
 There were a *lot* of details, as the length of our multi-page [project creator FAQ](http://micropledge.brush.co.nz/help/dev) showed. In addition, we had a full-fledged project quoting system, so that anyone could add a project suggestion, then developers could quote for it, and the best quote would win.
 
-Don't get me wrong: microPledge had a well-designed UI for a complex system. We spent a lot of time figuring out the details! The "fundraising thermometer" and the progress slider were clear and visual, details were presented slowly behind tooltips, and both creator and pledger were guided through the voting process.
+Don't get me wrong: microPledge had an adequate UI for a complicated system. We spent a lot of time figuring out the details! The "fundraising thermometer" and the progress slider were clear and visual, details were presented slowly behind tooltips, and both creator and pledger were guided through the voting process.
 
 Our mistake was earlier: we designed an intricate system ... that nobody needed. Kickstarter, which launched two years after microPledge, succeeded with a simple "Back this project" button, and project creators either get all the money (if the goal is reached), or none. There's no progress stages, no voting, no payout calculations.
 
@@ -83,17 +83,17 @@ We spent a bunch of time tweaking PostgreSQL configs to use [WAL logging](https:
 
 I remember personally spending several hours implementing code to detect and handle hash collisions of random SHA-1 hashes. This basically [can't happen in billions of years](https://medium.com/coinmonks/how-likely-is-it-that-someone-could-guess-your-bitcoin-private-key-6c0edd56fa1f), so I guess I needed to read an article on cryptographic hashes.
 
-And we did all this without any paying users! It had not yet sunk in that startups live or die based on generating revenue, not technical prowess in the code.
+And we did all this without paying users or a meaningful revenue strategy! It had not yet sunk in that startups live or die based on generating revenue, not technical prowess in the code.
 
 Something that would have helped with both of these "over-complication" points is having an artistic or business person on the team rather than another engineering-minded brother.
 
-### Emphasizing process rather than outcome
+### Emphasizing mechanics, not the finished product
 
 If you look at our project page shown above, the most prominent part is the pledging and progress, rather than the product the pledgers will get. There's only a small paragraph selling the project itself.
 
 Compare that to Kickstarter's project page, which leads with a big video selling the product being created, normally followed by a lengthy blurb about said product, intermingled with high-quality photos. Here's the top part of a [Kickstarter project page](https://www.kickstarter.com/projects/switchbot/switchbot-blind-tilt-solar-powered-retrofit-smart-blinds):
 
-![Example Kickstarter project page](/images/kickstarter-project.jpg)
+<img class="screenshot" alt="Example Kickstarter project page" src="/images/kickstarter-project.jpg">
 
 Kickstarter helps the creator make their (potential) product really shine. Our project page did not. And they guide you through making a great project page. Essentially, they're training founders of these mini-startups to sell to their own audience.
 
@@ -107,25 +107,27 @@ We started there because that was what we knew, and software distribution is eas
 
 Kickstarter and other pledging websites tend to focus on real, physical projects. It's much easier to get regular folks to chip in for a hardware gizmo or a new type of shoe than for software.
 
-### Not selling to or talking to users first
+### Not grasping what users really needed
 
-Another big reason for failure was that we built the system without sounding out the market, and without testing on real users.
+Another big reason for failure was that we built the system without sounding out the market, and without testing what real users actually wanted.
 
 We did do some promotion, of course, mostly to software project creators that we thought might find it useful. For example, we interacted a bunch with Graham Dumpleton, maintainer of the [mod_wsgi extension](https://github.com/GrahamDumpleton/mod_wsgi) for Apache (which we used to serve microPledge). We convinced him to use microPledge for a [donations-only project](http://micropledge.brush.co.nz/projects/modwsgi), and he gave us some valuable feedback along the way.
 
-And in September 2007 we got a little bit of press in the Dominion Post, a New Zealand newspaper (the article was also [posted to Stuff.co.nz](https://www.stuff.co.nz/technology/52103/Brothers-Micropledge-offers-way-to-chip-in), their sister news website). Here it is complete with a picture of the three stooges:
+<a href="/images/micropledge-dompost-article.jpg" title="Show higher-resolution image"><img class="right" alt="Dominion Post article about microPledge" src="/images/micropledge-dompost-article.jpg"></a>
 
-![Dominion Post article about microPledge](/images/micropledge-dompost-article.jpg)
+And in September 2007 we got a little bit of press in the Dominion Post, a New Zealand newspaper (the article was also [posted to Stuff.co.nz](https://www.stuff.co.nz/technology/52103/Brothers-Micropledge-offers-way-to-chip-in), their sister news website).
 
-That said, we should have been selling it to potential project creators and real-life pledgers from early on ... before spending 12 months developing it. Probably the main reason we didn't was that for us, writing code was fun; picking up the phone was not.
+That said, we should have been selling it to potential project creators and real-life pledgers from early on ... before spending 12 months developing it. We should have iterated on the product often based on this feedback. Probably the main reason we didn't was that for us, writing code was fun; picking up the phone was not.
 
-### PayPal legal battle
+### PayPal legal issue
 
 Within a few months of launch, we could already see it wasn't going great. However, what put the nail in the coffin was our legal saga with PayPal a year after we launched.
 
 How microPledge handled money was this: we accepted pledges via PayPal, then transferred that money into our trust account, and finally paid it out to project creators as a project made progress.
 
 It was the "holding money in trust" bit that was our downfall. This was really our fault: we hadn't read PayPal's terms of service closely enough, and holding money in trust was one of the things they prohibited.
+
+PayPal found out because a credit card scammer started trying to launder money through our site. This got discovered by PayPal, who then audited us and noticed we were holding money in trust.
 
 We had good intentions, and of course we paid out as promised, but we found out there's very little "pal" in PayPal. Once they found out we were holding money in trust, they immediately froze our account, and despite many calls to their support line to plead our case, they kept our money locked up for a 6-month period.
 
@@ -153,12 +155,12 @@ Failure is a good teacher, and we learned a lot during these couple of years.
 On the startup side, what we learned was essentially the reverse of the "why we failed" list above:
 
 * Start with a dead-simple version 1 (the <abbr title="Keep It Stupid-Simple">KISS</abbr> principle).
-* Emphasize what the (paying) customer wants.
+* Emphasize the output that the (paying) customer wants.
 * Focus on paying markets; maybe not open source.
 * Sell first -- before you write any code.
 * Read your payment system's fine print. :-)
 
-We did get valuable business experience from all this: my brother Bryan created microPledge's parent company, [Brush Technology](https://brush.nz/), which Berwyn and I helped run for several years after microPledge failed. Bryan still runs it today as a software and electronics consulting company.
+We did get valuable business experience from all this: my brother Bryan created microPledge's parent company, [Brush Technology](https://brush.nz/), which Berwyn and I helped run for several years after microPledge failed, and which still operates today as a software and electronics consulting company.
 
 A few years after microPledge, we started another startup, [Hivemind](https://hivemind.nz/), that made a tangible product: an electronic monitoring and reporting system for beehives. Selling to beekeepers is hard, but this startup went significantly better, and we put into practice several of the lessons we'd learned earlier.
 
@@ -175,9 +177,25 @@ Another thing I learned was what I call "diff testing". This was Berwyn's idea, 
 But perhaps the most important thing I learned was teamwork: how to create software in teams, how to split up and organize work, the importance of using good tools, and so on. microPledge was my first job where I was developing with a team and using revision control. Most of this mentorship came from our older brother Berwyn, who'd worked at a medium-sized software company for several years.
 
 
+## Conclusion
+
+My main take-away is that all of that learning-from-failure was very valuable to our future careers. Particularly valuable for my own career was the technical experience developing web apps with Python, and learning how to build software in a (small) team.
+
+Would we have succeeded if we had created microPledge knowing what we know now? I think we'd have a very good chance. We'd create a much simpler system and promote it to the right people.
+
+However, one thing we still wouldn't have: a presence in Silicon Valley. There is a reason Paul Graham and company [moved Y Combinator from Boston to Silicon Valley](https://www.youtube.com/watch?v=nqA-4EpafPM). It's a lot harder to raise funds for startups like this in little old New Zealand. That said, I think we could have been a local, smaller-scale success.
+
+Kickstarter succeeded -- and kudos to them -- by being simple and clear, and by making the system focus on the product the creator is trying to sell rather than the money mechanics.
+
+Would I do a startup again? Till now I've thought, "Nope. I want to work for more stable companies for a while." But writing this surprised and re-inspired me. Maybe it's time again!
+
+
+{% include sponsor.html %}
+
+
 ## Timeline
 
-Below is a timeline for microPledge. This is mostly for my record; feel free to skip to the [conclusion](#conclusion) (if you've gotten this far!).
+Below is a timeline for microPledge (mostly for my record!).
 
 * Jan 2006: Berwyn had the original idea on his commute
 * Jan 2006: Initial Subversion commit
@@ -198,19 +216,3 @@ Below is a timeline for microPledge. This is mostly for my record; feel free to 
 * Dec 2009: Attempted to sell microPledge software or IP
 * Feb 2010: Attempted to sell the company on Flippa.com
 * Feb 2013: We let the `micropledge.com` domain expire: the end of an era.
-
-
-## Conclusion
-
-My main take-away is that all of that learning-from-failure was very valuable to our future careers. Particularly valuable for my own career was the technical experience developing web apps with Python, and learning how to build software in a (small) team.
-
-Would we have succeeded if we had created microPledge knowing what we know now? I think we'd have a very good chance. We'd create a much simpler system and promote it to the right people.
-
-However, one thing we still wouldn't have: a presence in Silicon Valley. There is a reason Paul Graham and company [moved Y Combinator from Boston to Silicon Valley](https://www.youtube.com/watch?v=nqA-4EpafPM). It's a lot harder to raise funds for startups like this in little old New Zealand. That said, I think we could have been a local, smaller-scale success.
-
-Kickstarter succeeded -- and kudos to them -- by being simple and clear, and by making the system focus on the product the creator is trying to sell rather than the money mechanics.
-
-Would I do a startup again? Till now I've thought, "Nope. I want to work for more stable companies for a while." But writing this surprised and re-inspired me. Maybe it's time again!
-
-
-{% include sponsor.html %}
