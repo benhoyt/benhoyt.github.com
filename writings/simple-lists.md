@@ -15,9 +15,7 @@ description: "Simple Lists is a tiny to-do list web application written in Go, w
 
 I've been wanting to do a little side project again: creating and coding, just for the joy of making. And I wanted to create something that might be useful for myself or my family, so I made a little to-do list app. I know there are thousands of to-do list apps out there, but I just like building stuff, especially things that fit with the principles of the [small web](/writings/the-small-web-is-beautiful/).
 
-To jump straight in, you can try a [**live demo**](https://go-simplelists.herokuapp.com/) (thanks to Heroku's free tier). Please don't use this for any real lists -- it's just a demo, and **demo lists will be deleted** regularly.
-
-If you have [Go installed](https://golang.org/doc/install), you can also run the app locally very easily (it will take a few seconds the first time to download and build):
+If you have [Go installed](https://golang.org/doc/install), you can run the app locally very easily (it will take a few seconds the first time to download and build):
 
 ```
 $ git clone https://github.com/benhoyt/simplelists.git
