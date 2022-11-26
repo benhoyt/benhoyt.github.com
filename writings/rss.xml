@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>I/O is no longer the bottleneck</title>
+  <description>In 2022, disk I/O is very fast, and not usually the performance bottleneck in programs. This article digs into some numbers.</description>
+  <link>https://benhoyt.com/writings/io-is-no-longer-the-bottleneck/</link>
+  <guid>https://benhoyt.com/writings/io-is-no-longer-the-bottleneck/</guid>
+  <pubDate>Sat, 26 Nov 2022 22:20:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>microPledge: our startup that (we wish) competed with Kickstarter</title>
   <description>What our crowdfunding startup microPledge was, why it failed, and what we learned from the process.</description>
   <link>https://benhoyt.com/writings/micropledge/</link>
