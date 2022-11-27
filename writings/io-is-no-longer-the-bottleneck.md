@@ -18,7 +18,7 @@ I'm not picking on him ... before I [analyzed the performance](/writings/count-w
 
 Not anymore! Disk I/O may have been slow 10 or 20 years ago, but in 2022, **reading a file sequentially from disk is very fast.**
 
-Just how fast? I tested the read and write speed of my development laptop using [this method](https://www.shellhacks.com/disk-speed-test-read-write-hdd-ssd-perfomance-linux/) but with `count=4096` so we're reading and writing 4GB. Here are the results on my Dell XPS 13 with a Samsung PM9A1 NVMe drive, running Ubuntu 22.04:
+Just how fast? I tested the read and write speed of my development laptop using [this method](https://www.shellhacks.com/disk-speed-test-read-write-hdd-ssd-perfomance-linux/) but with `count=4096` so we're reading and writing 4GB. Here are the results on my 2022 Dell XPS 13 Plus with a Samsung PM9A1 NVMe drive, running Ubuntu 22.04:
 
 | I/O Type                | Speed (GB/s) |
 | ----------------------- | -------------:
