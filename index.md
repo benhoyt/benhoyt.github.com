@@ -11,13 +11,8 @@ permalink: /
 
 I'm married to the only Franci Hoyt in the world, and we and our three lovely daughters live in Christchurch, New Zealand.
 
-By day I'm a software engineer at [Canonical](https://canonical.com/) -- see my [resume/CV](/cv/) for more info.
+By day I'm an engineering manager and software engineer at [Canonical](https://canonical.com/) -- see my [resume/CV](/cv/).
 
 I've created a few open source [projects](/projects/), and I enjoy writing [technical](/writings/) and [non-technical](/writings/non-tech/) articles.
 
-
-## Other web sites I run
-
-* [Gifty Weddings](https://giftyweddings.com/), my side business that helps couples make simple wedding gift registries.
-* [Aliens in the Apple](https://aliensintheapple.com/) is our family blog, started during our time in New York City.
-* [Prism magazine](/prism-magazine/) was a small-scale print magazine I edited back in 2005-2007.
+I also run [Gifty Weddings](https://giftyweddings.com/), a small business that helps couples make simple wedding gift registries.
