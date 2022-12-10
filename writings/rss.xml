@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Code coverage for your AWK programs</title>
+  <description>This article describes GoAWK's code coverage support, which was contributed by Volodymyr Gubarkov.</description>
+  <link>https://benhoyt.com/writings/goawk-coverage/</link>
+  <guid>https://benhoyt.com/writings/goawk-coverage/</guid>
+  <pubDate>Sat, 10 Dec 2022 13:41:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>I/O is no longer the bottleneck</title>
   <description>In 2022, disk I/O is very fast, and not usually the performance bottleneck in programs. This article digs into some numbers.</description>
   <link>https://benhoyt.com/writings/io-is-no-longer-the-bottleneck/</link>

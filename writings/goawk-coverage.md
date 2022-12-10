@@ -5,7 +5,7 @@ permalink: /writings/goawk-coverage/
 description: "This article describes GoAWK's code coverage support, which was contributed by Volodymyr Gubarkov."
 ---
 <h1>{{ page.title }}</h1>
-<p class="subtitle">November 2022</p>
+<p class="subtitle">December 2022</p>
 
 Despite being the author of [GoAWK](https://github.com/benhoyt/goawk), I don't personally use AWK for multi-line scripts. I tend to use Python for scripting, and AWK for one-liners in the terminal.
 
