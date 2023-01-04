@@ -7,6 +7,8 @@ description: "This article describes GoAWK's code coverage support, which was co
 <h1>{{ page.title }}</h1>
 <p class="subtitle">December 2022</p>
 
+> **Update:** The author of this feature, Volodymyr Gubarkov, has written [his own article](https://maximullaris.com/goawk_cover.html) about GoAWK's code coverage reporting, how he came up with the idea, and how it works.
+
 Despite being the author of [GoAWK](https://github.com/benhoyt/goawk), I don't personally use AWK for multi-line scripts. I tend to use Python for scripting, and AWK for one-liners in the terminal.
 
 However, some people do write longer programs using AWK, from the useful to the magnificent:
