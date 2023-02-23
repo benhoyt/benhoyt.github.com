@@ -44,8 +44,8 @@ The feature list for Simple Lists is not very long:
 
 Optional features (I use these for my personal instance):
 
-* If you run the server with the `-lists` flag, it shows a list of lists on the homepage, and allows you to delete lists.
-* If you run the server with the `-username` flag, you have to sign in with a username and password to access the site. (It's for my personal use, so there's only one user.)
+* If you run the server with the `SIMPLELISTS_LISTS` environment variable set to `1`, it shows a list of lists on the homepage, and allows you to delete lists.
+* If you run the server with the `SIMPLELISTS_USERNAME` and `SIMPLELISTS_PASSHASH` environment variables set, you have to sign in with a username and password to access the site. (It's for my personal use, so there's only one user.)
 
 To keep it simple, here's what Simple Lists doesn't do:
 
