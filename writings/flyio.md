@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "From Go on EC2 to Fly.io: −$9/mo +fun"
+title: "From Go on EC2 to Fly.io: +fun, −$9/mo"
 permalink: /writings/flyio/
 description: "How I switched hosting my Go-based side projects from Amazon EC2 to Fly.io, significantly simplified deployment, and saved a bit of cash while I was at it."
 ---
@@ -36,7 +36,7 @@ As I [replied](https://news.ycombinator.com/item?id=34815076) (this was before a
 >
 > It looks like you don't need most of this, or get it without additional configuration with Fly.io and Render.
 
-As I noted after that, the difference between Fly.io and doing it yourself using an EC2 instance is kind of like the difference between Dropbox and what was suggested in that [famous Hacker News comment](https://news.ycombinator.com/item?id=28153080) when Dropbox first came out:
+As I noted after that, the difference between Fly.io and doing it yourself using an EC2 instance is kind of like the difference between Dropbox and what was suggested in that [famous Hacker News comment](https://news.ycombinator.com/item?id=9224) when Dropbox first came out:
 
 > For a Linux user, you can already build such a system yourself quite trivially by getting an FTP account, mounting it locally with curlftpfs, and then using SVN or CVS on the mounted filesystem. From Windows or Mac, this FTP account could be accessed through built-in software.
 
@@ -172,7 +172,7 @@ Before switching to Fly.io, I had two cron jobs:
 
 Fly.io doesn't support cron jobs as a built-in concept, so I had a few options to choose from:
 
-1. Use Fly.io to run a service manager that would start Gifty as well as the cron jobs.
+1. Use Fly.io to run a service manager that would start Gifty as well as the cron jobs. [Update: as Ben Johnson pointed out, if I was using a Dockerfile, I could `apt install cron` and then just use cron normally.]
 2. Fire up a separate cron application in Fly.io or use [Fly Machines](https://fly.io/docs/machines/).
 3. Use simple goroutines in the Go server to perform background tasks.
 
