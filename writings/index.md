@@ -15,6 +15,11 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 {% include sponsor.html %}
 
 
+<h2 id="y2023">2023</h2>
+
+* [From Go on EC2 to Fly.io](/writings/flyio/) is about how I moved my Go-based side projects from Amazon EC2 to Fly.io, significantly simplified deployment, and saved $9 a month.
+
+
 <h2 id="y2022">2022</h2>
 
 * [Code coverage for your AWK programs](/writings/goawk-coverage/) describes GoAWK's code coverage support, which was contributed by Ukranian developer Volodymyr Gubarkov. (December)

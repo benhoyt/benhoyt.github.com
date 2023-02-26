@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>From Go on EC2 to Fly.io: +fun, −$9/mo</title>
+  <description>How I switched hosting my Go-based side projects from Amazon EC2 to Fly.io, significantly simplified deployment, and saved a bit of cash while I was at it.</description>
+  <link>https://benhoyt.com/writings/flyio/</link>
+  <guid>https://benhoyt.com/writings/flyio/</guid>
+  <pubDate>Mon, 27 Feb 2023 10:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Code coverage for your AWK programs</title>
   <description>This article describes GoAWK's code coverage support, which was contributed by Volodymyr Gubarkov.</description>
   <link>https://benhoyt.com/writings/goawk-coverage/</link>
