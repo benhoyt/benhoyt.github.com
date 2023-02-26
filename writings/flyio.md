@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "From Go on EC2 to Fly.io: −$9/mo +fun"
-permalink: /writings/flyio-joy/
+permalink: /writings/flyio/
 description: "How I switched hosting my Go-based side projects from Amazon EC2 to Fly.io, significantly simplified deployment, and saved a bit of cash while I was at it."
 ---
 <h1>{{ page.title }}</h1>
