@@ -231,9 +231,9 @@ Here's a screenshot of the network timeline for the initial HTML and subsequent 
 
 ![GiftyWeddings.com network timeline](/images/gifty-network-timeline.png)
 
-I also ran a small test using the HTTP load testing tool [Vegeta](https://github.com/tsenart/vegeta), fetching the homepage (the largest HTML page), a wedding registry (which queries the SQLite database), the contact page (a small HTML page), and a medium-sized image.
+I ran a small test using the HTTP load testing tool [Vegeta](https://github.com/tsenart/vegeta) hitting four URLs: three pages that render HTML templates (the home page, a registry page which does two SQL queries, and the contact page), and a medium-sized image.
 
-I ran the "attack" for 10 seconds. The default rate is 50 requests per second, but I also tried 500 and 1000. Below are the results:
+I had the "attack" run for 10 seconds. The default rate is 50 requests per second, but I also tried 500 and 1000. Below are the results:
 
 ```
 $ cat urls.txt | vegeta attack -duration=10s | vegeta report
