@@ -282,7 +282,7 @@ One of the slightly awkward things is how it works for paths that handle more th
 
 At first I included the HTTP method matching in the `match()` helper, but that makes it more difficult to return 405 Method Not Allowed responses properly.
 
-One other aspect of this approach is the lazy regex compiling. We could just call `regexp.MustCompile`, but that would re-compile each regex on every reqeust. Instead, I've added a concurrency-safe `mustCompileCached` function that means the regexes are only compiled the first time they're used:
+One other aspect of this approach is the lazy regex compiling. We could just call `regexp.MustCompile`, but that would re-compile each regex on every request. Instead, I've added a concurrency-safe `mustCompileCached` function that means the regexes are only compiled the first time they're used:
 
 ```go
 var (
