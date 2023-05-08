@@ -284,5 +284,7 @@ It also made me smile to finally stop the EC2 instance and bump my AWS bill down
 
 It probably sounds like Fly.io is paying me to carry on like this, but trust me, they're not. I'm just an enthusiastic geek who likes their product, their support for very small VMs, and their love of SQLite. Not to mention their pricing!
 
+*For discussion, see [Hacker News](https://news.ycombinator.com/item?id=34953242) and [r/golang](https://www.reddit.com/r/golang/comments/11d1ex0/from_go_on_ec2_to_flyio_fun_9mo/).*
+
 
 {% include sponsor.html %}
