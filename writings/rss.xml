@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Designing Pythonic library APIs</title>
+  <description>Principles I've found useful for designing good Python library APIs, including structure, naming, error handling, and type annotations.</description>
+  <link>https://benhoyt.com/writings/python-api-design/</link>
+  <guid>https://benhoyt.com/writings/python-api-design/</guid>
+  <pubDate>Sun, 18 Jun 2023 21:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>From Go on EC2 to Fly.io: +fun, −$9/mo</title>
   <description>How I switched hosting my Go-based side projects from Amazon EC2 to Fly.io, significantly simplified deployment, and saved a bit of cash while I was at it.</description>
   <link>https://benhoyt.com/writings/flyio/</link>
