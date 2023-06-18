@@ -14,9 +14,11 @@ description: "Principles I've found useful for designing good Python library API
 
 -->
 
-> Summary: This article describes some principles I've found useful for designing good Python library APIs, including structure, naming, error handling, type annotations, and more. It's a written version of a talk I gave in June 2023 at the [Christchurch Python meetup](https://www.meetup.com/NZPUG-Christchurch/).
+> Summary: This article describes some principles I've found useful for designing good Python library APIs, including structure, naming, error handling, type annotations, and more. It's a written version of a talk I gave in June 2023 at the Christchurch Python meetup.
 >
-> **Go to:** [Iteration](#iterate-rome-wasnt-built-in-a-day) \| [Pythonic](#what-does-pythonic-mean) \| [Structure](#module-and-package-structure) \| [Globals](#avoid-global-configuration-and-state) \| [Naming](#naming) \| [Errors](#errors-and-exceptions) \| [Versioning](#versioning-and-backwards-compatibility) \| [Types](#type-annotations) \| [Expressiveness](#pythons-expressiveness-be-careful) \| [Takeaways](#takeaways)
+> **Go to:** [Pythonic](#what-does-pythonic-mean) \| [Structure](#module-and-package-structure) \| [Globals](#avoid-global-configuration-and-state) \| [Naming](#naming) \| [Errors](#errors-and-exceptions) \| [Versions](#versioning-and-backwards-compatibility) \| [Types](#type-annotations) \| [Expressiveness](#pythons-expressiveness-be-careful)
+>
+> Or just skip to the [takeaways](#takeaways).
 
 
 Let's start with some code. What do you think this snippet does?
@@ -68,9 +70,6 @@ I'll include several "takeaways" in this article, but this is the overall theme:
 
 **Takeaway: Good API design is very important to users.**
 
-
-## Iterate (Rome wasn't built in a day)
-
 Requests didn't start perfect and complete right away. I dug back to the first commits in the Requests git repository, and the [first real commit](https://github.com/psf/requests/commit/d8b19573f38aa84db95a7e4d1f1c0a2fa26517eb) is as follows (formatting modified slightly):
 
 ```python
@@ -98,7 +97,7 @@ The author, Kenneth Reitz, clearly had a lot of implementing to do. But you can 
 
 In a flurry of commits over the course of the next few weeks, he implemented the first version of the library and refined the API.
 
-**Takeaway: When creating a library, start small and iterate quickly.**
+**Takeaway: When creating a library, start with a good base and iterate.**
 
 In this article, we're going to look at several principles for making well-designed library APIs in Python. But first, let's briefly discuss what we mean by a *Pythonic* API.
 
@@ -235,7 +234,7 @@ The `ImageFile` import shown here is four levels of import deep! Django dot core
 
 So I thought, maybe there are several different kinds of `ImageFile` in Django, and they want to keep them all straight using deep namespaces. But no -- I grepped the Django source, and there's only the one. Same with `File`. So the four or five levels of namespace is completely unnecessary; `django.ImageFile` would have been fine.
 
-I realize Django is a huge library with many components, so maybe two levels of nesting is reasonable, but surely not four or five. The late Aaron Swartz made a similar point about Django in his 2005 blog post, ["Rewriting Reddit"](http://www.aaronsw.com/weblog/rewritingreddit) -- see the paragraph that starts with "Another Django goal".
+I realise Django is a huge library with many components, so maybe two levels of nesting is reasonable, but surely not four or five. The late Aaron Swartz made a similar point about Django in his 2005 blog post, ["Rewriting Reddit"](http://www.aaronsw.com/weblog/rewritingreddit) -- see the paragraph that starts with "Another Django goal".
 
 Recently in a library I maintain for work, we made a [change](https://github.com/canonical/operator/pull/910) to pull all the items defined in submodules up to the top level in `__init__.py`, making the class names significantly easier to discover. Instead of users having to guess, "Hmm, was `ActiveStatus` in the `ops.charm` or `ops.model` submodule?", we now recommend simply using `import ops` and then `ops.ActiveStatus`. All the classes users need are right there.
 
@@ -322,9 +321,7 @@ order_fast = functools.partial(fishnchips.order, timeout=1)
 order_fast(...)
 ```
 
-<!-- TODO: proofreading up to here -->
-
-Then the other person using `fishnchips.order` will still get the timeout they expect. The `functools.partial` approach is basically equivalent to the following, but it avoids the noisy `*args` and `**kwargs` thing:
+Then the other person using `fishnchips.order` will still get the timeout they expect. The `functools.partial` approach is basically equivalent to the following, but it avoids the noisy `*args` and `**kwargs`:
 
 ```python
 def order_fast(*args, **kwargs):
@@ -333,12 +330,12 @@ def order_fast(*args, **kwargs):
 
 **Takeaway: Avoid global configuration; use good defaults and let the user override them.**
 
-Another thing to avoid is global state, where your library stores a bunch of stuff in module-level variables in an attempt to make the library "easy to use".
+Another thing to avoid is global state, where your library stores a bunch of stuff in module-level variables in an attempt to make the library easy to use.
 
-For example, say you're creating a URL routing library, `routerlib`, with an `add()` function that adds a URL route:
+For example, say you're creating a URL routing library, `routa`, with an `add()` function that adds a URL route:
 
 ```python
-# routerlib.py
+# routa.py
 _urls = []
 
 def add(pattern, func):
@@ -348,16 +345,16 @@ def match(url):
     ...
 
 # app.py
-routerlib.add('/', home_page)
-routerlib.add('/contact', contact_page)
+routa.add('/', home_page)
+routa.add('/contact', contact_page)
 ```
 
 This is all very nice when the user only needs one router, but what if all of a sudden they need two, one for the HTML pages and one for the JSON API? The `add()` calls will stomp on each other, because there's only a single `_urls` list.
 
-So how do we fix this? One sensible way is to add a `Router` class.
+So how do we fix this? The sensible way is to add a `Router` class.
 
 ```python
-# routerlib.py
+# routa.py
 class Router:
     def __init__(self):
         self._urls = []
@@ -369,7 +366,7 @@ class Router:
         ...
 
 # app.py
-router = routerlib.Router()
+router = routa.Router()
 router.add('/', home_page)
 router.add('/contact', contact_page)
 ```
@@ -392,9 +389,9 @@ session.get('https://example.com/bar')
 The code doesn't use `requests.get()` directly, but first creates a `requests.Session`. There are two advantages to that:
 
 1. You can attach custom authentication or custom headers to every request. That's handy, though if it were just that, you could do it with `functools.partial` or a wrapper function.
-2. The Session will also reuse TCP connections, significantly speeding up multiple requests to the same domain.
+2. The Session will reuse TCP connections, significantly speeding up multiple requests to the same domain.
 
-With TLS (HTTPS) -- which is almost everything these days -- that second point can be really significant. I did this for requests from New Zealand to England a while ago, and it sped up subsequent requests from 1 second each to about 0.3 seconds each, because they didn't have to set up the TLS connection each time.
+With TLS (`https://` URLs) -- which is almost everything these days -- this can be really significant. I did this for requests from New Zealand to England a while ago, and it sped up subsequent requests from 1 second each to about 0.3 seconds each, because Requests didn't have to set up the TLS connection each time.
 
 **Takeaway: Avoid global state; use a class instead.**
 
@@ -403,22 +400,21 @@ With TLS (HTTPS) -- which is almost everything these days -- that second point c
 
 We've talked a little bit about naming already, but naming is hard!
 
-When naming local variables, sometimes people use names that are too short. However, when naming API functions, normally I find people use names that are too long.
+When naming variables, sometimes people use names that are too short. However, when naming API functions, I find people usually use names that are too long.
 
-As we've seen, a library name already has the context of the module name as a prefix. So let's look at an example.
+As we've seen, a name in an API already has the context of the module name as a prefix. Let's look at an example.
 
 Imagine if Bob Just-Out-Of-Uni was designing Requests, and one of his lecturers had said "name a function to explain what it does". He heard, "name a function to explain everything it does", and wrote this:
 
 ```python
 # requests.py
-
 def send_get_request_and_receive_response():
     ...
 ```
 
-What's wrong with that? Well, the extra words don't add anything. In fact, they take away clarity: `requests.get` is easy to see and read, whereas with the longer name the important part, the "get", is hidden in the middle of the name.
+What's wrong with that? Well, the extra words don't add anything. In fact, they take away clarity: `requests.get()` is easy to see and read, whereas with the longer name the important part, the fact that it's a "get" method, is hidden in the middle of the name.
 
-The word "request" appears twice, once in the module name and once in the function name. And then there's "send" and "receive response". But the entire point of the library is to send requests and receive responses, so that's unnecessary.
+The word "request" appears twice, once in the module name and once in the function name. And then there's "send" and "receive response". But the entire point of the library is to send requests and receive responses, so that's unnecessary too.
 
 You're left with the short and sweet `requests.get` – perform a GET request – clear and succinct. You can't get any shorter than that. I mean, you could make it `requests.g` -- but that's just silly.
 
@@ -428,35 +424,34 @@ Remember our `fishnchips` library: we could have called the `order` function `or
 
 Now for a little rabbit trail: you've probably heard that function names should be verbs, because they *do* something, like `get` and `post` (those are HTTP verbs or *methods*). Property and class names should be nouns, because they're things, like `Session` and `Response`. And that's a good rule of thumb.
 
-But sometimes it's tricky. Is "Shop" a noun or a verb? What about "order"?
+But sometimes it's tricky. Is "shop" a noun or a verb? What about "order"?
 
-That's right -- they're both! A lot of short words in English are both verbs and nouns, so just like when speaking, you sometimes have to tell from the context.
+That's right -- they're both! A lot of short words in English are both verbs and nouns, so just like when speaking, you have to tell from the context.
 
-However, in the case of Python, capitalization also adds meaning: if we had a `shop` function, it would have a lowercase `s`. And if we had an `Order` class, it would have an uppercase `O`. Which is kind of a nice way to distinguish that comes straight from PEP 8.
+However, in Python, we can also use capitalisation to add meaning: if we had a `shop` function, it would have a lowercase `s`. And if we had an `Order` class, it would have an uppercase `O`. Which is kind of a nice way to distinguish that comes straight from PEP 8.
 
-**Takeaway: Functions should normally be verbs and classes nouns, but don't get hung up on this.**
+**Takeaway: Function names should usually be verbs and classes nouns, but don't get hung up on this.**
 
 Let's talk about privacy for a bit.
 
 In Python, names that start with an underscore, like `_private`, are private by convention. Users can still access them, but they're saying, "I know this is a bad idea, but I'm going to access `_private` anyway." When you're writing a library, it's fair game to change or remove `_private` in a new version, even if the new version is supposed to be backwards-compatible. If a user is accessing `_private`, they're on their own.
 
-Don't bother about making things "extra private" with a double-underscore prefix, like `__extra_private`. Python does a very simple form of name-mangling when you do this, but it probably causes more issues than it fixes, and people who want to can easily work around it, so it's still not really private. A single underscore is plenty.
+Don't bother about making things "extra private" with a double-underscore prefix, like `__extra_private`. Python does a very simple form of name-mangling when you do this, but it tends to cause more issues than it fixes, and people who want to can easily work around it, so it's still not really private. A single underscore is plenty.
 
-In addition, I think using double underscore for your private parts is confusing: it looks like a magic method, but it's not (all Python magic methods have double underscores, like `__init__`).
+Using double underscores for your private parts is also *confusing*: it looks like a magic method, but it's not (all Python magic methods have double underscores, like `__init__`).
 
-**Takeaway: It's fine to be `_private`; `__extra_privacy` is unnecessary.**
+**Takeaway: Being `_private` is fine; `__extra_privacy` is unnecessary.**
 
 
 ## Errors and exceptions
 
 In Python, errors should almost always be raised as exceptions.
 
-There's a large built-in [exception hierarchy](https://docs.python.org/3/library/exceptions.html#exception-hierarchy) that you can use. It has core things like `TypeError` or `ValueError` -- if your function is called with the wrong types or invalid values. It also has more interesting exceptions like `TimeoutError` and `FileNotFoundError`. If possible, reuse built-in exception types.
+There's a large built-in [exception hierarchy](https://docs.python.org/3/library/exceptions.html#exception-hierarchy) that you can use. It has core things like `TypeError` or `ValueError` if your function is called with the wrong types or invalid values. It also has more interesting exceptions like `TimeoutError` and `FileNotFoundError`. If possible, you should reuse built-in exception types.
 
-For example:
+For example, we could add some range checking to our `fishnchips.order` function:
 
 ```python
-# fishnchips.py
 def order(chips=None, fish=None):
     if chips is None and fish is None:
         raise ValueError('nothing to order!')
@@ -467,24 +462,21 @@ def order(chips=None, fish=None):
     ...
 ```
 
-Using `ValueError` is fine for things like this -- there's no need to define a custom exception type.
+Using `ValueError` is fine here -- there's no *value* in defining a custom exception type.
 
 However, if your error needs to provide additional information, a custom `Exception` subclass is useful. For example:
 
 ```python
-# fishnchips.py
 class OrderError(Exception):
     def __init__(self, shop_url, chef_name, message):
         self.shop_url = shop_url
         self.chef_name = chef_name
         self.message = message
 
-
 def order(chips=None, fish=None):
-    ...
     quantities = {'chips': chips, 'fish': fish}
     response = requests.post(_default_shop_url, json=quantities)
-    if 400 <= response.status_code <= 599:
+    if 400 <= response.status_code <= 499:
         data = response.json()
         raise OrderError(
             shop_url=_default_shop_url,
@@ -495,13 +487,11 @@ def order(chips=None, fish=None):
 
 Here the `fishnchips` library is defining a custom exception type with three attributes: the shop URL, the chef name, and a message.
 
-If there's an HTTP 4xx or 5xx error talking to the web API, we raise `OrderError`. Some of the attributes come straight from the response JSON.
+If there's an HTTP 4xx error talking to the web API, we raise `OrderError`. Notice that some of the attributes come from the response JSON.
 
-Now users can catch that specific exception type and use the details to (for example) print a helpful error message:
+Now users can catch that specific exception type and use the details to do something helpful, like print a nice error message:
 
 ```python
-import fishnchips
-
 try:
     fishnchips.order(chips=1, fish=2)
 except fishnchips.OrderError as e:
@@ -532,30 +522,34 @@ response = requests.get('https://benhoyt.com/resume/')
 pathlib.Path('resume.html').write_text(response.text)
 ```
 
-We've forgotten to check `response.status_code`, so this code silently writes my 404 page HTML to `resume.html`. You can "fix" it by checking the `status_code` attribute or calling `raise_for_status`, but the API design means it's easy to forget. APIs should be designed so that it's hard to do the wrong thing.
+We've forgotten to check `response.status_code`, so this code silently writes my 404 page HTML to `resume.html`. You can "fix" it by checking the `status_code` attribute or calling `raise_for_status`, but the API design means it's easy to forget. APIs should be designed so that it's hard to make mistakes.
 
 **Takeaway: If an error occurs, raise an exception; use custom exceptions where appropriate.**
 
 
 ## Versioning and backwards-compatibility
 
-If you're publishing changes to your library on the [Python Package Index (PyPI)](https://pypi.org/), you should always bump up the version number and write release notes about what changed. But there's a lot of nuance in that...
+If you're publishing changes to your library on the [Python Package Index (PyPI)](https://pypi.org/), you should always bump up the version number and write release notes about what changed. But there's a lot of nuance in that.
 
-Most of you probably know about [semantic versioning](https://semver.org/), or "semver" for short, which is where you have a version number like 1.2.3, where 1 is the *major* version, 2 is the *minor* version, and 3 is the *patch* version.
+You've probably heard of [semantic versioning](https://semver.org/), or "semver" for short. This is where you have a version number like 1.2.3, where 1 is the *major* version, 2 is the *minor* version, and 3 is the *patch* version.
 
 The semver spec says you should increment the:
 
-* MAJOR version when you make incompatible API changes
-* MINOR version when you add functionality in a backward compatible manner
-* PATCH version when you make backward compatible bug fixes
+* Major version when you make incompatible API changes
+* Minor version when you add functionality in a backward compatible manner
+* Patch version when you make backward compatible bug fixes
 
-It's pretty easy to do. Just make your version first 1.0.0, and go from there. When you add a new class or function, bump it up to 1.1.0, then 1.2.0, and so on. That middle number can go past 9 and get very high, like 1.42.0 or even 1.747.0.
+It's pretty easy to do. Just make your version first 1.0.0, and go from there. When you add a new class or function, bump it up to 1.1.0, then 1.2.0, and so on. It's common for the middle number to go past 9 and even get very high, like 1.42.0 or 1.365.0.
 
-Remember that you're making your API for users, so you want to be *very* slow to update the major version. It will mean that if your users want to upgrade, they'll have to update their code. This is a real pain, so don't do it often!
+Remember that you're making your API for users, so you want to be *very* slow to update the major version. If your users want to upgrade to a new major version, they'll likely have to change their code. This is a real pain, so don't do it often!
+
+This is a bit opinionated, but I think you should only ship a new major version when you're completely changing the structure of the API.
+
+**Takeaway: Be kind to your users; only break backwards compatibility if you're overhauling your API.**
 
 The nice thing is that Python has some great features for keeping things backwards-compatible: two of the main ones are *keyword arguments* and *dynamic typing*.
 
-Let's go back to our fish ’n’ chip library. Here's version one -- you can order a number of scoops of chips, and a number of fish:
+Let's go back to our fish ’n’ chip library. Here's version one -- you can order a number of scoops of chips and a number of fish:
 
 ```python
 def order(chips=None, fish=None):
@@ -581,16 +575,15 @@ def order(chips=None, fish=None, fish_type='battered'):
         fish_type: type of fish, 'battered' or 'crumbed'
     """
 
-...
-
+# example usage:
 fishnchips.order(chips=1, fish=2, fish_type='crumbed')
 ```
 
 The cool thing about keyword arguments is that you, as a library author, can add as many as you want, and each one can have a sensible default. So we could add a `timeout` argument, and any number of new foods, like `onion_rings` and `hotdogs`.
 
-You could also use an [enum](https://docs.python.org/3/library/enum.html) for the fish type, like `FishType.CRUMBED`. It's a bit more verbose, but the interpreter will catch it if you spelled it wrong.
+You could even use an [enum](https://docs.python.org/3/library/enum.html) for the fish type, like `FishType.CRUMBED`. It's a bit more verbose, but the interpreter will catch it if you spelled it wrong.
 
-Another approach is to take advantage of dynamic typing, and allow `fish` to be either an integer, or a tuple of (quantity, type), so you could ask for "3 crumbed fish":
+Another approach is to take advantage of dynamic typing, and allow `fish` to be either an integer, or a tuple of (quantity, type), so you could ask for "2 crumbed fish":
 
 ```python
 def order(chips=None, fish=None):
@@ -602,8 +595,7 @@ def order(chips=None, fish=None):
             where type is 'battered' or 'crumbed'
     """
 
-...
-
+# example usage:
 fishnchips.order(chips=1, fish=(2, 'crumbed'))
 ```
 
@@ -620,20 +612,18 @@ def order(chips=None, fish=None):
            or a list of such tuples
     """
 
-...
+# example usage:
 fishnchips.order(chips=1, fish=[(1, 'crumbed'), (1, 'battered')])
 ```
 
 It's kind of a complicated signature, but this sort of thing is fairly common in Python, and it makes the easy thing easy, but the hard thing doable. All of these changes are backwards-compatible, which is great for existing users.
 
-This is a bit opinionated, but I think you should only ship a new major version when you're completely changing the structure of the API.
-
-**Takeaway: Be kind to your users; only break backwards compatibility if you're overhauling your API.**
+**Takeaway: Keyword arguments and dynamic typing are great for backwards compatibility.**
 
 
 ## Type annotations
 
-I'll state up-front that I have mixed feelings about type annotations in Python. On the negative side:
+I'll state up-front that I have mixed feelings about type annotations in Python. I'll start with the negatives:
 
 * They were bolted on late in the game: the first [Type Hints PEP](https://peps.python.org/pep-0484/) came 23 years after Python was created
 * They make for unwieldy signatures for dynamically-typed arguments (which are common in Python)
