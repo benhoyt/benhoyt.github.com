@@ -7,12 +7,6 @@ description: "Principles I've found useful for designing good Python library API
 <h1>{{ page.title }}</h1>
 <p class="subtitle">June 2023</p>
 
-<!-- TODO:
-
-- spellcheck
-- proofread, link check
-
--->
 
 > Summary: This article describes some principles I've found useful for designing good Python library APIs, including structure, naming, error handling, type annotations, and more. It's a written version of a talk I gave in June 2023 at the Christchurch Python meetup.
 >
@@ -430,7 +424,7 @@ That's right -- they're both! A lot of short words in English are both verbs and
 
 However, in Python, we can also use capitalisation to add meaning: if we had a `shop` function, it would have a lowercase `s`. And if we had an `Order` class, it would have an uppercase `O`. Which is kind of a nice way to distinguish that comes straight from PEP 8.
 
-**Takeaway: Function names should usually be verbs and classes nouns, but don't get hung up on this.**
+**Takeaway: Function names should be verbs and classes nouns, but don't get hung up on this.**
 
 Let's talk about privacy for a bit.
 
@@ -545,7 +539,7 @@ Remember that you're making your API for users, so you want to be *very* slow to
 
 This is a bit opinionated, but I think you should only ship a new major version when you're completely changing the structure of the API.
 
-**Takeaway: Be kind to your users; only break backwards compatibility if you're overhauling your API.**
+**Takeaway: Only break backwards compatibility if you're overhauling your API.**
 
 The nice thing is that Python has some great features for keeping things backwards-compatible: two of the main ones are *keyword arguments* and *dynamic typing*.
 
@@ -625,10 +619,10 @@ It's kind of a complicated signature, but this sort of thing is fairly common in
 
 I'll state up-front that I have mixed feelings about type annotations in Python. I'll start with the negatives:
 
-* They were bolted on late in the game: the first [Type Hints PEP](https://peps.python.org/pep-0484/) came 23 years after Python was created
-* They make for unwieldy signatures for dynamically-typed arguments (which are common in Python)
-* The hinting syntax is constantly being updated
-* There are multiple type checkers, none of which quite agree
+* They were bolted on late in the game, and it shows. The original [Type Hints PEP](https://peps.python.org/pep-0484/) came 23 years after Python was created.
+* They make for unwieldy signatures for dynamically-typed arguments, which are common in Python.
+* The annotation syntax is constantly being updated.
+* There are multiple type checkers, none of which quite agree.
 
 As an example of how they can quickly get unwieldy, let's look at the "fish type" example from earlier, where the optional `fish` argument can be an integer, a tuple, or a list of tuples. Here's what the signature would look like:
 
@@ -639,7 +633,11 @@ def order(
     ):
 ```
 
-This also shows how quickly the annotations change: the above uses the new `x | y` syntax for unions (added in Python 3.10), and the generic `list[T]` instead of `typing.List[T]` (added in Python 3.9). Just a couple of versions ago you would have had to write this:
+For something fairly simple, that's a lot of (ahem) *typing*!
+
+There's an excellent post on the Python sub-Reddit, rather dramatically titled ["Why Type Hinting Sucks!"](https://www.reddit.com/r/Python/comments/10zdidm/why_type_hinting_sucks/), where the author shows just how many knots you can get yourself tied in when trying to write correct type signatures in the face of duck typing. The author goes through 10 increasingly absurd attempts at annotating a simple function that adds two numbers.
+
+The example above also shows how quickly the syntax changes: the above uses the new `x | y` syntax for unions (added in Python 3.10), and the `list[T]` syntax instead of `typing.List[T]` (added in Python 3.9). Just a couple of versions ago you would have had to write this:
 
 ```python
 from typing import List, Optional, Tuple, Union
@@ -650,24 +648,22 @@ def order(
     ):
 ```
 
-Look at those four right brackets at the end of the `fish` type in the second version! But even the first version with the new syntax it pretty unwieldy.
-
-Even as I was writing this I saw a post about [PEP 695](https://peps.python.org/pep-0695/), which proposes a new syntax for type parameters (generic types).
+Even as I was writing this I saw a post about [PEP 695](https://peps.python.org/pep-0695/), which proposes a new syntax for type parameters (generic types). It will be included in Python 3.12, along with two other proposals introducing new syntax for [method overrides](https://peps.python.org/pep-0698/) and using [`TypedDict` for `**kwargs`](https://peps.python.org/pep-0692/).
 
 But I must be fair -- there's definitely a positive side to type annotations:
 
-* They help catch bugs
-* They make refactoring much safer
-* They make documentation and usage clearer
-* They provide better navigation and auto-completion in your IDE
+* They help catch bugs. You need fewer tests if you have type checking.
+* They make refactoring easier and safer.
+* They document what types are acceptable.
+* They help your IDE provide better navigation and auto-completion.
 
 Those last two points in particular make them useful for users of your library.
 
-On balance, for standalone programs, I'd probably avoid type annotations in small programs and scripts, but use them in medium to large ones. For libraries, I definitely think it's the right thing to do to ship with type annotations in 2023.
+On balance, I definitely think it's the right thing to do in 2023 to ship your library with type annotations.
 
 And of course, don't just use them, but run [Pyright](https://microsoft.github.io/pyright/) or [MyPy](https://www.mypy-lang.org/) over your library's code on every commit. (At the moment I don't have a strong reason to prefer one or the other).
 
-**Takeaway: Use type annotations at least for your public API; your users will thank you (in their hearts).**
+**Takeaway: Use type annotations at least for your public API; your users will thank you.**
 
 There's a ton more to say about types and type annotations in Python, but here I'll just mention one other modern Python tool: data classes.
 
@@ -699,22 +695,24 @@ class User:
     active: bool
 ```
 
-It's not only shorter and sweeter than an ordinary class, you get a lot of things for free: type annotations on the fields, and an automatically-generated `__init__`, `__repr__`, `__eq__`, and even `__match_args__` for pattern matching. So definitely check out the `dataclasses` module if you have classes which are "mostly data". (There's nothing stopping you adding methods to them too.)
+It's not only shorter and sweeter than an ordinary class, you get a lot of things for free: type annotations on the fields, an automatically-generated `__init__`, `__repr__`, and `__eq__`, and even `__match_args__` for [pattern matching](/writings/python-pattern-matching/).
+
+So definitely check out the `dataclasses` module if you have classes which are mostly data. There's nothing stopping you adding methods to them too.
 
 **Takeaway: Use `@dataclass` for classes which are (mostly) data.**
 
 
 ## Python's expressiveness: be careful!
 
-I want to leave you with one last thought: Python is almost infinitely flexible. You can overload operators like `a+b` and `a[b]`, you can make a simple attribute lookup delete someone's hard drive, you can dynamically import packages by name at runtime, and on and on. But just because you can doesn't mean you should!
+I want to leave you with one last thought: Python is almost infinitely flexible. You can overload operators like `a+b` and `a[b]`, you can make a simple attribute lookup delete someone's hard drive, you can dynamically import packages by name at runtime, you can create a domain-specific language only you can read, and on and on.
 
-Programming might be magic, but too much magic is confusing and hard to reason about.
+But just because you can doesn't mean you should! Programming might be magic, but too much magic is confusing and hard to reason about.
 
-So here are my rules of thumb:
+Here are my rules of thumb:
 
 * Only override math operators like `a+b` if you're creating a number type.
 * Only override indexing operators like `a[b]` if you're creating an indexable collection.
-* Property getters and setters "look cheap", so they should *be* cheap (for example, not perform I/O or raise exceptions).
+* Property getters and setters "look cheap", so they should *be* cheap. For example, don't perform I/O or raise exceptions.
 * If the type signature is too hard to write, it might be a bad idea.
 
 **Takeaway: Python's expressiveness is boundless; don't use too much of it!**
@@ -726,9 +724,26 @@ There's a lot more that could be said. In fact, you could probably write an enti
 
 I'll conclude by listing all the takeaways in one place:
 
-* TODO
+* Good API design is very important to users.
+* When creating a library, start with a good base and iterate.
+* Try to follow PEP 8 and grok PEP 20. This is the way.
+* The standard library isn't always the best example to follow.
+* Expose a clean API; file structure is an implementation detail.
+* Flat is better than nested.
+* Design your library to be used as `import lib ... lib.Thing()` rather than `from lib import LibThing ... LibThing()`.
+* Avoid global configuration; use good defaults and let the user override them.
+* Avoid global state; use a class instead.
+* Names should be as short as they can be while still being clear.
+* Function names should be verbs and classes nouns, but don't get hung up on this.
+* Being `_private` is fine; `__extra_privacy` is unnecessary.
+* If an error occurs, raise an exception; use custom exceptions where appropriate.
+* Only break backwards compatibility if you're overhauling your API.
+* Keyword arguments and dynamic typing are great for backwards compatibility.
+* Use type annotations at least for your public API; your users will thank you.
+* Use `@dataclass` for classes which are (mostly) data.
+* Python's expressiveness is boundless; don't use too much of it!
 
-Happy API designing! Please send your own API design ideas or feedback. <!-- TODO: You can discuss this on Hacker News or programming reddit. -->
+Happy designing! Please send your own API design ideas or any other feedback. <!-- TODO: You can discuss this on Hacker News or programming reddit. -->
 
 
 {% include sponsor.html %}
