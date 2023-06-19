@@ -48,7 +48,7 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 
 ### [Canonical](https://canonical.com/) &ndash; Senior Software Engineer and Engineering Manager &ndash; Sep 2020 to now
 
-* Led the team and developed code for the [Python Operator Framework](https://github.com/canonical/operator), a library for writing "software that operates software".
+* Led the team and developed code for the [`ops` library](https://github.com/canonical/operator), a framework for writing [Juju](https://juju.is/) charms ("software that operates software").
 * Designed and developed features for [Pebble](https://github.com/canonical/pebble), an API-driven service manager written in Go, and its corresponding [Python client](https://github.com/canonical/operator/blob/320e7e04e737000abc1d25729ccd29d6e783e6df/ops/pebble.py#L1452) in Juju's Python Operator Framework.
 * Developed features for and helped maintain [Juju](https://github.com/juju/juju), a cross-cloud application deployment tool (and one of the largest Go codebases in the world).
 

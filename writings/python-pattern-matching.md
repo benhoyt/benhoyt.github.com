@@ -482,7 +482,7 @@ elif cmd == 'commit':
 ```
 </details>
 
-Here are a couple more examples from Canonical's Python Operator Framework, in [`pebble.py`](https://github.com/canonical/operator/blob/master/ops/pebble.py), which I wrote for work.
+Here are a couple more examples from Canonical's `ops` library, in [`pebble.py`](https://github.com/canonical/operator/blob/master/ops/pebble.py), which I wrote for work.
 
 <details><summary markdown="span">**Example from `add_layer()`.** It handles the various types allowed for the `layer` parameter. Less visual noise, though also less explicit.</summary>
 
