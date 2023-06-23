@@ -461,7 +461,9 @@ If you're creating something that maps very well to standard operations, like a 
 However, when you're building a new library, it's usually best to create a custom class for all of your library's exceptions, and raise meaningful subclasses of this. Your base class should inherit from `Exception`. For example, in our fish ’n’ chips library, you might do:
 
 ```python
-class Error(Exception):
+# fishnchips.py
+
+class Error(Exception):  # will be used as fishnchips.Error
     """Base class for all of this library's exceptions."""
 
 class NetworkError(Error):
