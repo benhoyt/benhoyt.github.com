@@ -441,9 +441,7 @@ Using double underscores for your private parts is also *confusing*: it looks li
 
 In Python, errors should almost always be raised as exceptions.
 
-There's a large built-in [exception hierarchy](https://docs.python.org/3/library/exceptions.html#exception-hierarchy) that you can use. It has core things like `TypeError` or `ValueError` if your function is called with the wrong types or invalid values. It also has more interesting exceptions like `TimeoutError` and `FileNotFoundError`. If possible, you should reuse built-in exception types.
-
-For example, we could add some range checking to our `fishnchips.order` function:
+To start with, there's a large [built-in exception hierarchy](https://docs.python.org/3/library/exceptions.html#exception-hierarchy) that you can use for core programming errors like `TypeError` or `ValueError`. For example, we could add some range checking to our `fishnchips.order` function:
 
 ```python
 def order(chips=None, fish=None):
@@ -458,38 +456,72 @@ def order(chips=None, fish=None):
 
 Using `ValueError` is fine here -- there's no *value* in defining a custom exception type.
 
-However, if your error needs to provide additional information, a custom `Exception` subclass is useful. For example:
+If you're creating something that maps very well to standard operations, like a filesystem library, you might want to reuse [`OSError` subclasses](https://docs.python.org/3/library/exceptions.html#os-exceptions) like [`FileNotFoundError`](https://docs.python.org/3/library/exceptions.html#FileNotFoundError) or [`PermissionError`](https://docs.python.org/3/library/exceptions.html#PermissionError).
+
+However, when you're building a new library, it's usually best to create a custom class for all of your library's exceptions, and raise meaningful subclasses of this. Your base class should inherit from `Exception`. For example, in our fish ’n’ chips library, you might do:
 
 ```python
-class OrderError(Exception):
-    def __init__(self, shop_url, chef_name, message):
-        self.shop_url = shop_url
+class Error(Exception):
+    """Base class for all of this library's exceptions."""
+
+class NetworkError(Error):
+    """Low-level networking error."""
+
+class APIError(Error):
+    """Error talking to the shop's API."""
+```
+
+This makes it easy for users of the library to catch any exception it can raise. For example, if your library can raise [`ssl.SSLError`](https://docs.python.org/3/library/ssl.html#ssl.SSLError) when it's calling an HTTP API, it's probably best to catch that and re-raise as `fishnchips.NetworkError`.
+
+You can even make your exceptions inherit from your exception base class *and* a standard library exception. For example, Requests has an [exception hierarchy](https://requests.readthedocs.io/en/latest/user/quickstart/#errors-and-exceptions) where exceptions like [`InvalidURL`](https://github.com/psf/requests/blob/6e5b15d542a4e85945fd72066bb6cecbc3a82191/requests/exceptions.py#L97) inherit from both the `RequestException` base class and the built-in `ValueError`:
+
+```python
+class InvalidURL(RequestException, ValueError):
+    """The URL provided was somehow invalid."""
+```
+
+The other good reason to create custom exceptions is to provide additional information. For example, you might add an `OrderError` which provides information from the HTTP 4xx response:
+
+```python
+class OrderError(Error):
+    def __init__(self, code, chef_name, message):
+        self.code = code
         self.chef_name = chef_name
         self.message = message
 
 def order(chips=None, fish=None):
     quantities = {'chips': chips, 'fish': fish}
-    response = requests.post(_default_shop_url, json=quantities)
+    try:
+        response = requests.post(_shop_url, json=quantities)
+    except requests.RequestException as e:
+        raise NetworkError(f'Network error: {e}')
+    if 500 <= response.status_code <= 599:
+        raise APIError(f'API Error {response.status_code}: {response.text}')
     if 400 <= response.status_code <= 499:
         data = response.json()
         raise OrderError(
-            shop_url=_default_shop_url,
+            code=response.status_code,
             chef_name=data['chef_name'],
             message=data['error_message'],
         )
 ```
 
-Here the `fishnchips` library is defining a custom exception type with three attributes: the shop URL, the chef name, and a message.
+If there's a low-level exception like `requests.Timeout`, that will be caught by the `except requests.RequestException` block and re-raised as `NetworkError`.
 
-If there's an HTTP 4xx error talking to the web API, we raise `OrderError`. Notice that some of the attributes come from the response JSON.
+If there's an HTTP 5xx server error talking to the web API, we raise `APIError`.
 
-Now users can catch that specific exception type and use the details to do something helpful, like print a nice error message:
+And if there's an HTTP 4xx client error talking to the web API, we raise `OrderError`, our new custom exception type. It has three attributes: the HTTP status code, the chef's name, and a message (two of the fields come from the response JSON).
+
+Now users can catch `OrderError` and use the details to do something helpful, like print a nice error message:
 
 ```python
 try:
     fishnchips.order(chips=1, fish=2)
 except fishnchips.OrderError as e:
-    print(f'Error ordering: {e.chef_name} said {e.message}', file=os.stderr)
+    print(f'Error with order: {e.chef_name} said {e.message}', file=sys.stderr)
+    sys.exit(1)
+except fishnchips.Error as e:
+    print(f'Unexpected error, please contact us: {e}', file=sys.stderr)
     sys.exit(1)
 ```
 
@@ -518,7 +550,7 @@ pathlib.Path('resume.html').write_text(response.text)
 
 We've forgotten to check `response.status_code`, so this code silently writes my 404 page HTML to `resume.html`. You can "fix" it by checking the `status_code` attribute or calling `raise_for_status`, but the API design means it's easy to forget. APIs should be designed so that it's hard to make mistakes.
 
-**Takeaway: If an error occurs, raise an exception; use custom exceptions where appropriate.**
+**Takeaway: If an error occurs, raise a custom exception; use built-in exceptions if appropriate.**
 
 
 ## Versioning and backwards-compatibility
