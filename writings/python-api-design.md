@@ -770,7 +770,7 @@ I'll conclude by listing all the takeaways in one place:
 * Names should be as short as they can be while still being clear.
 * Function names should be verbs and classes nouns, but don't get hung up on this.
 * Being `_private` is fine; `__extra_privacy` is unnecessary.
-* If an error occurs, raise an exception; use custom exceptions where appropriate.
+* If an error occurs, raise a custom exception; use built-in exceptions if appropriate.
 * Only break backwards compatibility if you're overhauling your API.
 * Keyword arguments and dynamic typing are great for backwards compatibility.
 * Use type annotations at least for your public API; your users will thank you.
