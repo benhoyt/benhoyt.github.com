@@ -131,6 +131,8 @@ With those [changes](https://github.com/benhoyt/loxlox/blob/master/jlox_diff.pat
 
 I wanted to be able to run LoxLox under Bob's CLox and not just JLox, but unfortunately **CLox bytecode only supports a maximum of 255 constants** in a code block, and LoxLox exceeds that by quite a bit. I hope to patch this limitation at some point to see how much faster LoxLox runs under CLox.
 
+**Update: LoxLox now works under CLox!** Thanks to [gloria-mundi](https://github.com/gloria-mundi)'s [patch](https://github.com/benhoyt/loxlox/blob/master/clox_diff.patch), you can now even run LoxLox under CLox. Follow the instructions [in the README](https://github.com/benhoyt/loxlox#clox). It's about 6x as fast as under JLox -- see the [benchmarks](https://github.com/benhoyt/loxlox/pull/3)!
+
 Lox is quite a cleanly-designed language. I did miss arrays and maps, but the core language, classes, and scoping rules are very pleasant to work with!
 
 
