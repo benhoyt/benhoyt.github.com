@@ -17,6 +17,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2023">2023</h2>
 
+* [File structure != API](/writings/python-api-file-structure/) shows how decoupling file structure from a Python package's API makes it nicer to use. (June)
 * [Designing Pythonic library APIs](/writings/python-api-design/) describes principles I've found useful for designing good Python library APIs. (June)
 * [From Go on EC2 to Fly.io](/writings/flyio/) is about how I moved my Go-based side projects from Amazon EC2 to Fly.io, simplified deployment, and saved $9 a month. (February)
 

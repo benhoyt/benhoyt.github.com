@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>For Python packages, file structure != API</title>
+  <description>When designing Python packages, decoupling the file structure from the package's API makes your package easier to import and use.</description>
+  <link>https://benhoyt.com/writings/python-api-file-structure/</link>
+  <guid>https://benhoyt.com/writings/python-api-file-structure/</guid>
+  <pubDate>Fri, 30 Jun 2023 22:50:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Designing Pythonic library APIs</title>
   <description>Principles I've found useful for designing good Python library APIs, including structure, naming, error handling, and type annotations.</description>
   <link>https://benhoyt.com/writings/python-api-design/</link>
