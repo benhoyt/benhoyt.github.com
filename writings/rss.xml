@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Lookup Tables (Forth Dimensions XIX.3)</title>
+  <description>An article about lookup tables in Forth that I co-authored with Hans Bezemer (creator of 4tH) when I was 16.</description>
+  <link>https://benhoyt.com/writings/forth-lookup-tables/</link>
+  <guid>https://benhoyt.com/writings/forth-lookup-tables/</guid>
+  <pubDate>Sat, 01 Jul 2023 22:10:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>For Python packages, file structure != API</title>
   <description>When designing Python packages, decoupling the file structure from the package's API makes your package easier to import and use.</description>
   <link>https://benhoyt.com/writings/python-api-file-structure/</link>

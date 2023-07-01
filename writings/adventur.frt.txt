@@ -1,0 +1,344 @@
+(*
+ * LANGUAGE    : ANS Forth
+ * PROJECT     : Forth Environments
+ * DESCRIPTION : Find your way out of a maze.
+ * CATEGORY    : Game, text based.
+ * AUTHOR      : (c) 1983 by A. Clapman - Design and original Spectrum programming
+ * AUTHOR      : (c) 1996 by H. Bezemer - Structured design and 4tH programming
+ * AUTHOR      : 1997 mhx: restored to a Forth program.
+ * LAST CHANGE : April 11, 1997, Marcel Hendrix
+ *)
+
+	NEEDS -miscutil
+	NEEDS -terminal
+
+	REVISION -adventur "─── Adventure Game      Version 1.01 ───"
+
+	PRIVATES
+
+: ECHO[	BEGIN  0. refill
+	WHILE  2drop 0 <word>
+	       2dup s" ]ECHO" compare 0<>
+	WHILE  POSTPONE sliteral POSTPONE type POSTPONE cr
+	REPEATED
+	2drop ;P IMMEDIATE
+
+:ABOUT
+
+ECHO[
+
+ Extract from a time-traveller's diary discovered in the pyramid of
+ Ikhotep, pharaoh of the ninth dynasty, on the planet Sirius B,
+ in the dog star system.
+
+ "I have been attempting to discover the secret of the pyramid for some
+ months now. It is the only way I will be able to escape this barren
+ planet. After my time-machine was destroyed by the warrior tribe I
+ found my way to this dusty monument after consulting a man they regard
+ as a wizard. He is in fact a fellow traveller in time and space exiled
+ by the Time Lords to this lost planet. He has decided to stay and
+ persue his black arts amoung the warrior folk. But he has told me of
+ a time gate which will lead me back to the main time lanes and freedom.
+ He said the gate was hidden within the pyramid. I have uncovered some
+ clues but not enough to lead me to the final solution. I can only keep
+ trying. But I feel that, for me at least, time is running out."
+
+ The diary was found next to a small pile of oddly shaped bones deep
+ within the heart of the pyramid.
+
+ Can you find your way out of the pyramid and off the barren planet?
+ You will find several rooms within the pyramid and several objects
+ within those rooms which must be collected to solve the riddle of the
+ ancient monument. The program uses the standard two word entry system
+ and adjectives should not be entered. To move simply type in the
+ direction you want to go, for example 'N' or 'north'. Other useful
+ words are TAKE, GET, THROW, DROP, INVENTORY.
+ Careful: use "HELMET TAKE" not "TAKE HELMET"
+
+ Type "ADVENTURE" (without the quotes) to start.
+
+]ECHO
+;
+
+BASE @ DECIMAL
+
+: .string ( 'string -- ) @ .$ ;P
+
+: d" ( "str" -- c-addr )
+	&" <word>
+	DUP 1+ allocate ?allocate
+	pack ;P
+
+
+ 6 =: #flags	PRIVATE			\ Number of special cases
+14 =: #mapped 	PRIVATE			\ numbered locations on the map
+ 0 =: stays 	PRIVATE			\ cannot be moved
+ 1 =: moves 	PRIVATE			\ can be moved
+
+CREATE objects	PRIVATE  #mapped cells ALLOT
+CREATE flags   	PRIVATE	 #flags  chars ALLOT
+CREATE map     	PRIVATE	 #mapped cells ALLOT
+CREATE default 	PRIVATE	 3 ,  4 , 2 , 16 ,    13 , 12 , 11 , 10 ,
+			15 , 14 , 5 ,  0 ,     7 ,  0 ,
+
+0 VALUE north	PRIVATE
+0 VALUE south	PRIVATE
+0 VALUE west	PRIVATE
+0 VALUE east	PRIVATE
+
+0 VALUE level	PRIVATE			\ room where you are
+0 VALUE object  PRIVATE			\ subject mentioned by player
+
+: initmap				\ fills the map with values
+  default map #mapped cells move
+  flags #flags 0 fill ;p
+
+: CANNOT	CR ." YOU CAN'T, IDIOT!!" ;p
+: DEAD		CR ." YOU'RE DEAD!!" quit ;p
+: DUNNO		CR ." I don't know what you mean." ;p
+: NOTHERE	CR ." It isn't here!!" ;p
+: NOCARRY	CR ." You aren't carrying it, stupid!!" ;p
+
+\ It would be nice to have a graphical editor / compiler for this..
+CREATE locations PRIVATE		\ map locations to directions
+  d" a road leading west and east. Two things are pointing to the west." ,	0 ,  0 , -1 ,  2 ,
+  d" a bend in the road." ,  							0 ,  5 ,  1 ,  0 ,
+  d" a small dark shack." ,  							0 ,  0 ,  0 ,  5 ,
+  d" a small dark shack." ,  							0 ,  0 ,  5 , 15 ,
+  d" a road leading north and south. There are shacks either side." ,  		2 ,  6 ,  3 ,  4 ,
+  d" a road leading north. There is a pyramid south." , 			5 ,  7 ,  0 ,  0 ,
+  d" the entrance hall of the pyramid. There is a road north." , 		6 , 12 ,  8 ,  9 ,
+  d" the embalming room." , 							0 ,  0 , 10 ,  7 ,
+  d" the recreation room. An exit to the garden is east." , 			0 , 13 ,  7 , 16 ,
+  d" the room of ANKH." , 							0 ,  0 ,  0 ,  8 ,
+  d" a small triangular room." , 						0 ,  0 ,  0 , 12 ,
+  d" a long oblong room" , 							7 , 14 , 11 ,  0 ,
+  d" the funeral parlour" , 							9 ,  0 ,  0 ,  0 ,
+  d" the treasure room. It has been looted. There is a smashed door north." ,  12 ,  0 ,  0 ,  0 ,
+  d" a small circular cave." , 							0 ,  0 ,  4 ,  0 ,
+  d" a small garden." , 							0 ,  0 ,  9 ,  0 ,
+
+: room		( -- addr )		\ get address of room
+  level 1-  5 cells *  locations + ;p
+
+: set-possibilities ( 'room -- )	\ fill n-s-w-e variables
+  cell+
+  @+ TO north
+  @+ TO south
+  @+ TO west
+  @  TO east ;p
+
+\ A remarkably murky definition, but it's the cornerstone of this game :-(
+: except	( v flag# room# -- f )	\ make flag of exception
+  level = >r
+  chars flags + c@ =
+  r> and ;p
+
+: north?	north IF ." North" Tab emit THEN ;p
+: south?	0 2 12 except IF 0 TO south THEN  south IF ." South" Tab emit THEN ;p
+: west?		0 3  8 except IF 0 TO west  THEN  west  IF ." West"  Tab emit THEN ;p
+: east?		0 0  4 except IF 0 TO east  THEN  east  IF ." East"  Tab emit THEN ;p
+
+: 'object ( n -- addr ) objects []cell @ ;P
+
+: showcontents ( n -- )			\ prints the appropriate strings
+  cr Tab emit
+  dup 'object 2 cells + .string bl emit
+      'object   cell+   .string ;p
+
+: contents				\ shows the contents of a room
+  0 #mapped 0
+  do
+    map i cell[] @
+    level =
+    IF 1+ i showcontents THEN
+  loop
+  0= IF cr Tab emit ." None" THEN
+
+  0 3 8 except IF cr ." There is a small slot on the west wall." 	       THEN
+  2 0 4 except IF cr ." The dragon doesn't like you so he kills you." DEAD     THEN
+  0 0 4 except IF cr ." The dragon blocks a hole in the EAST wall." 2 flags c! THEN
+
+  level 4 <>  flags c@ 2 =  and IF 0 flags c! THEN
+
+  1 0  4 except IF cr ." The dragon is dead." THEN
+  0 1 16 except IF cr ." There is something glistening at the top of the tree." THEN
+  1 1 16 except IF cr ." The tree is lying on the ground" THEN
+  1 2 12 except  level 14 = or  IF cr ." The door is smashed down" THEN ;p
+
+
+: map?  ( n -- f )
+  map []cell @ -1 <> ;p
+
+: lastroom?
+  level -1 <> IF exit THEN
+  CR ." LASER BOLTS FLASH OUT FROM THE KILLO-ZAP GUNS FIXED TO THE ROAD!" CR
+  7 map?
+  8 map?
+     and IF CR ." FRIZZLE!!" DEAD THEN
+  8 map? IF CR ." THE LEFT RAY IS REFLECTED BY THE MIRROR. THE RIGHT ONE ISN'T!!"    DEAD THEN
+  7 map? IF CR ." THE RIGHT RAY IS REFLECTED BY THE REFLECTOR. THE LEFT ONE ISN'T!!" DEAD THEN
+  CR ." BOTH THE RAYS ARE REFLECTED BY THE MIRROR AND THE REFLECTOR!!"
+  CR ." YOU HAVE MANAGED TO ESCAPE ALIVE!!" CR
+  quit ;p
+
+: .room
+  lastroom?
+  CR ." You are at " room .string 	\ show location
+  room set-possibilities
+  CR ." Directions you may proceed in:"
+  CR Tab emit north? south? west? east? CR
+  CR ." Things of interest here:" contents ;P
+
+: do-go                                ( val -- )
+  dup 0= IF drop CANNOT exit THEN TO level ;p
+
+: do-take				\ take an object
+    object map []cell @ -1 = IF cr ." YOU ARE ALREADY CARRYING IT!!" exit THEN
+    object 0<>  0 map?  and  IF cr ." YOU HAVEN'T GOT ANYTHING TO CARRY IT IN!!" exit THEN
+    object map []cell @ level <> IF NOTHERE exit THEN
+    object 'object @ stays =  IF CANNOT  exit THEN
+    object 0= IF -1 map ! cr ." YOU STRAP IT ON YOUR WRIST." exit THEN
+    -1  object map []cell !
+    cr ." IT ZOOMS SAFELY INTO YOUR WATCH!" ;p
+
+: do-drop				\ drop object
+    object map? IF NOCARRY THEN
+    level  map object cell[] !
+    object 12 = IF flags 4 chars +  c0! THEN ;p
+
+: do-saw				\ saw tree
+    object 3 <>  flags 1 chars + c@ 1 = or IF CANNOT exit THEN
+    2 map? 6 map? or IF CANNOT exit THEN
+    level 16 <> IF NOTHERE exit THEN
+    flags 5 chars + c@ 0= IF cr ." The saw won't work without electricity!!" exit THEN
+    flags 4 chars + c@ 0= IF cr ." The  tree falls on your unprotected head. Crunch." DEAD THEN
+    1  flags 1 chars + c!
+    cr ." The tree falls down on your safety helmet."
+    cr ." An axe falls out of the top of the tree."
+    level  map 13 cell[] ! ;p
+
+: do-smash				\ smash door
+    object 5 <> IF CANNOT exit THEN
+    13 map?  flags 2 chars + c@ 1 =  or IF CANNOT exit THEN
+    level 12 <> IF NOTHERE exit THEN
+    cr ." Chop chop smash smash.. The door has been smashed down."
+    1  flags 2 chars +  c! ;p
+
+: do-wear                              \ wear helmet
+    object 12 <> IF CANNOT exit THEN
+    12 map? IF NOCARRY exit THEN
+    1 flags 4 chars + c! ;p
+
+: do-connect                           \ connect generator
+    object 6 <>  object 2 <> and  IF CANNOT exit THEN
+    map? IF NOCARRY exit THEN
+    6 map? 2 map? or IF CANNOT exit THEN
+    1 flags 5 chars + c!  ;p
+
+: do-push                              \ push wall
+    object 9 <>  IF CANNOT exit THEN
+    object map?  IF NOCARRY exit THEN
+    level 8 <> IF cr ." I can't see anywhere to insert it!!" exit THEN
+    map object cell[] OFF
+    cr ." The wall suddenly shakes and glides one side leaving a doorway west!!"
+    1  flags 3 chars + c! ;p
+
+: do-file                              \ file knife
+    object 10 <> IF CANNOT exit THEN
+    map? IF NOCARRY exit THEN
+    4 map? IF cr ." You haven't got anything to sharpen it on!!" exit THEN
+    cr ." The knife turns extra sharp!!"
+     0  map 10 cell[] !
+    -1  map 11 cell[] ! ;p
+
+: do-kill                              \ kill dragon
+    object 1 <>  11 map? or  IF CANNOT exit THEN
+    level 4 <> IF NOTHERE exit THEN
+    flags c@ 1 = IF cr ." The poor thing is already dead ..." exit THEN
+    1 flags c!
+    cr ." Squelch. The dagger sinks to the hilt in the dragon."
+    cr ." It's dead. Poor thing." ;p
+
+: do-list				\ shows the inventory
+  cr ." You are carrying:"
+  0 #mapped 0
+    do
+      map i cell[] @
+      -1 = IF cell+ i showcontents THEN
+  loop
+  0= IF cr Tab emit ." Nothing" THEN ;p
+
+: OBJECT: ( attr1 name attr2 # -- )
+	CREATE DUP , objects []cell HERE SWAP !  , , ,
+	DOES>  @ TO object ;P
+
+
+WORDLIST CONSTANT <adventure> PRIVATE	\ Here's where the user commands go.
+
+<adventure> SET-CURRENT
+
+: go ;
+: move ;
+: run ;
+: walk ;
+
+: stop	   quit ;
+: help	   .help ;
+
+: north    north do-go ;	: n  north do-go ;
+: south	   south do-go ;	: s  south do-go ;
+: west	   west  do-go ;	: w  west  do-go ;
+: east	   east  do-go ;	: e  east  do-go ;
+
+: get	   do-take ;		: take	   do-take ;	: steal	    do-take ;
+: drop	   do-drop ;		: throw	   do-drop ;	: leave	    do-drop ;
+: saw	   do-saw ;		: cut	   do-saw ;	: fell	    do-saw ;
+: chop	   do-smash ;		: smash	   do-smash ;	: axe	    do-smash ;
+
+: wear	   do-wear ;
+: connect  do-connect ;
+
+: insert   do-push ;		: push	   do-push ;
+: sharpen  do-file ;		: file	   do-file ;
+: kill 	   do-kill ;		: stab	   do-kill ;	: knife	    do-kill ;
+: invent   do-list ;		: objects  do-list ;	: inventory do-list ;   : list	do-list ;
+
+\ attribute1		   object	 attr2  #	  name
+d" wrist"                  d" watch" 	 moves 	0 OBJECT: watch
+d" magenta, firebreathing" d" dragon" 	 stays 	1 OBJECT: dragon
+d" mobile electricity"     d" generator" moves	2 OBJECT: generator
+d" Canadian Redwood"       d" tree"	 stays	3 OBJECT: tree
+d" granite"                d" slab" 	 moves 	4 OBJECT: slab
+d" thick wooden"           d" door"	 stays 	5 OBJECT: door
+d" electric"               d" saw"  	 moves 	6 OBJECT: saw
+d" purple"                 d" mirror"	 moves 	7 OBJECT: mirror
+d" green"                  d" reflector" moves 	8 OBJECT: reflector
+d" 10 pence"               d" coin"	 moves 	9 OBJECT: coin
+d" butter"                 d" knife" 	 moves 10 OBJECT: knife
+d" razor sharp"            d" dagger"  	 moves 11 OBJECT: dagger
+d" safety"                 d" helmet" 	 moves 12 OBJECT: helmet
+d" sharp"                  d" axe"	 moves 13 OBJECT: axe
+
+FORTH DEFINITIONS
+
+: EVAL-REST
+	BEGIN  >in @  #tib @ <
+	WHILE  bl word count <adventure> SEARCH-WORDLIST
+	       0<> IF execute ELSE #tib @ >in ! DUNNO THEN
+	REPEAT ;P
+
+: ADVENTURE
+	PAGE  initmap  2 TO level
+	BEGIN
+	  -1 TO object
+ 	  cr ." COMMAND> " query
+	  eval-rest
+	  .room
+	AGAIN ;
+
+	CR BASE !
+	.ABOUT -adventur
+	DEPRIVE
+
+				(* End of File *)
