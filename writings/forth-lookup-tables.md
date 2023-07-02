@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Lookup Tables (Forth Dimensions XIX.3)"
+title: "Lookup Tables -- Forth Dimensions"
 permalink: /writings/forth-lookup-tables/
 description: "An article about lookup tables in Forth that I co-authored with Hans Bezemer (creator of 4tH) when I was 16."
 ---
@@ -11,6 +11,9 @@ description: "An article about lookup tables in Forth that I co-authored with Ha
 > This is an article I co-authored with [Hans Bezemer](https://thebeez.home.xs4all.nl/4tH/thebeez.html) when I was 16. The article was published in the September 1997 issue of *Forth Dimensions*, the Forth programming magazine published by the Forth Interest Group. Hans, the creator of a Forth compiler called "4tH", helped me tune my prose and reduce a little of my zealous-Forther tone. I think I wrote the [Case study II](#case-study-ii-the-for32-decompiler) and [The catch](#the-catch) sections. See the [original PDF](http://forth.org/fd/FD-V19N3.pdf).
 >
 > To learn more about Forth, read the [Wikipedia article](https://en.wikipedia.org/wiki/Forth_(programming_language)) and then read [*Thinking Forth*](https://thinking-forth.sourceforge.net/).
+
+
+<a href="http://forth.org/fd/FD-V19N3.pdf"><img src="/images/forth-dimensions-xix-3.jpg" class="right" alt="Forth Dimensions XIX.3 (September 1997)" title="Click to see the original magazine"></a>
 
 
 “Personally, I consider the case statement an
