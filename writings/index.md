@@ -12,8 +12,6 @@ rss_url: /writings/rss.xml
 
 Below are the programming-related articles I’ve written (see also my [**non-technical writings**](/writings/non-tech/)). The list includes the guest contributions I've written for LWN.net, and tech blog articles for several of the companies I’ve worked for.
 
-{% include sponsor.html %}
-
 
 <h2 id="y2023">2023</h2>
 
@@ -166,9 +164,12 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y1997">1997</h2>
 
-* [Lookup Tables](/writings/forth-lookup-tables/) is an article about lookup tables in Forth that I co-authored with Hans Bezemer (creator of 4tH) when I was 16. (September)
+* [Lookup Tables](/writings/forth-lookup-tables/) is an article about lookup tables in Forth that I co-authored with Hans Bezemer when I was 16. My first published technical writing. (September)
 
 
 ## Copyright
 
 Unless it says otherwise in the individual document, the works above are &copy;&nbsp;Ben&nbsp;Hoyt under a [Creative Commons BY-NC-ND](http://creativecommons.org/licenses/by-nc-nd/3.0/) license, which basically means you can copy and share them freely, as long as you link back to [benhoyt.com](https://benhoyt.com/), don&rsquo;t make money with them, and don&rsquo;t alter the content. Enjoy!
+
+
+{% include sponsor.html %}
