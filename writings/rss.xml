@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Scripting with Go: a 400-line Git client that can create a repo and push itself to GitHub</title>
+  <description>In which I rewrite my toy pygit client in Go to see how suitable Go is for simple scripts.</description>
+  <link>https://benhoyt.com/writings/gogit/</link>
+  <guid>https://benhoyt.com/writings/gogit/</guid>
+  <pubDate>Sat, 29 Jul 2023 16:30:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Names should be as short as possible while still being clear</title>
   <description>Short, meaningful names that take context into account are better than long, verbose names that don't.</description>
   <link>https://benhoyt.com/writings/short-names/</link>

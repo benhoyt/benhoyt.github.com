@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2023">2023</h2>
 
+* [Gogit](/writings/gogit/) is just enough of a Git client to create a repo, commit, and push itself to GitHub, written in a scripting style. (July)
 * [Names should be as short as possible while still being clear](/writings/short-names/) is my variable naming philosophy. (July)
 * [File structure != API](/writings/python-api-file-structure/) shows how decoupling file structure from a Python package's API makes it nicer to use. (June)
 * [Designing Pythonic library APIs](/writings/python-api-design/) describes principles I've found useful for designing good Python library APIs. (June)
