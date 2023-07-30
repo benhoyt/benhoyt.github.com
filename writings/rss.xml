@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Proposal to enhance Go's HTTP router</title>
+  <description>A brief look at the proposed enhancements to the Go standard library HTTP request router, net/http.ServeMux: matching on HTTP method, and supporting wildcards in matched paths.</description>
+  <link>https://benhoyt.com/writings/go-servemux-enhancements/</link>
+  <guid>https://benhoyt.com/writings/go-servemux-enhancements/</guid>
+  <pubDate>Mon, 31 Jul 2023 08:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Scripting with Go: a 400-line Git client that can create a repo and push itself to GitHub</title>
   <description>In which I rewrite my toy pygit client in Go to see how suitable Go is for simple scripts.</description>
   <link>https://benhoyt.com/writings/gogit/</link>
