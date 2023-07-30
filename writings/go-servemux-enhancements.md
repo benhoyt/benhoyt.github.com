@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Proposal to enhance Go's HTTP router"
+title: "The proposal to enhance Go's HTTP router"
 permalink: /writings/go-servemux-enhancements/
 description: "A brief look at the proposed enhancements to the Go standard library HTTP request router, net/http.ServeMux: matching on HTTP method, and supporting wildcards in matched paths."
 ---

@@ -8,7 +8,7 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
-  <title>Proposal to enhance Go's HTTP router</title>
+  <title>The proposal to enhance Go's HTTP router</title>
   <description>A brief look at the proposed enhancements to the Go standard library HTTP request router, net/http.ServeMux: matching on HTTP method, and supporting wildcards in matched paths.</description>
   <link>https://benhoyt.com/writings/go-servemux-enhancements/</link>
   <guid>https://benhoyt.com/writings/go-servemux-enhancements/</guid>
