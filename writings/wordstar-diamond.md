@@ -36,7 +36,7 @@ At some point some horrible keyboard designers swapped `Ctrl` with `Caps Lock`. 
 
 "But how do I use these amazing key bindings in 2023?" I thought you'd never ask!
 
-My brother Berwyn created a set of scripts just for you. They're MIT-licensed, and available on his [**wordstar-keys**](https://github.com/berwynhoyt/wordstar-keys) repo.
+My brother Berwyn created a set of scripts just for you. They're MIT-licensed, and available on his [**wordstar-keys**](https://github.com/berwynhoyt/wordstar-keys) repo. They map the `Caps Lock` key (right under your left pinky) as the WordStar control key, but leave the real `Ctrl` key available for other uses.
 
 If you're on Linux, it uses the [xremap](https://github.com/k0kubun/xremap) key remapping tool. This works on X11 and Wayland, and I use it daily on Ubuntu (22.04 LTS). Installation is simple:
 
