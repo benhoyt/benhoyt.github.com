@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Name before type: why 'name string' is better than 'string name'"
+title: "Name before type: why 'age int' is better than 'int age'"
 permalink: /writings/name-before-type/
 description: "A variable's name is more important than its type, so the name should be more prominent and come first in declarations."
 ---
