@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Name before type: why 'age int' is better than 'int age'</title>
+  <description>A variable's name is more important than its type, so the name should be more prominent and come first in declarations.</description>
+  <link>https://benhoyt.com/writings/name-before-type/</link>
+  <guid>https://benhoyt.com/writings/name-before-type/</guid>
+  <pubDate>Mon, 07 Aug 2023 08:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>The proposal to enhance Go's HTTP router</title>
   <description>A brief look at the proposed enhancements to the Go standard library HTTP request router, net/http.ServeMux: matching on HTTP method, and supporting wildcards in matched paths.</description>
   <link>https://benhoyt.com/writings/go-servemux-enhancements/</link>
