@@ -12,7 +12,7 @@ I grew up with the WordStar diamond, and still use it today on Ubuntu Linux. Mos
 
 Back when the `Ctrl` key was where `Caps Lock` is now, there was a popular word processor named [WordStar](https://en.wikipedia.org/wiki/WordStar). As Wikipedia says, it "dominated the market in the early and mid-1980s". It was beloved by writers, arguably well past its use-by date. For example, George R.R. Martin, author of the books behind *Game of Thrones*, [uses WordStar](https://georgerrmartin.com/notablog/2020/04/14/this-that-and-tother-thing-3/) for DOS to write his novels (as recently as 2020).
 
-The *WordStar diamond* is the diamond-shaped, arrow key-like navigation the word processor used. When you held down `Ctrl`, you could use `E`, `S`, `D`, and `X` as arrow keys -- up, left, right, and down:
+The *WordStar diamond* is the diamond-shaped, arrow key-like navigation the word processor used. When you held down `Ctrl`, you could use `E`, `S`, `D`, and `X` as arrow keys:
 
 <p style="text-align: center"><img width="350" alt="The WordStar diamond (Image artwork: Bryan Hoyt, original from clipground.com CC BY 4.0)" src="/images/wordstar-diamond.png"></p>
 
