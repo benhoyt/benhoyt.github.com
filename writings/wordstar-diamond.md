@@ -46,7 +46,7 @@ cd wordstar-keys/xremap
 ./install
 ```
 
-If you're on Windows, it uses the freely-available [AutoHotkey](https://www.autohotkey.com/) automation tool. Installation is just a matter of installing AutoHotkey and double-clicking `wordstar.ahk`.
+If you're on Windows, it uses the freely-available [AutoHotkey](https://www.autohotkey.com/) automation tool. Installation is just a matter of installing AutoHotkey v1 and double-clicking `wordstar.ahk`.
 
 **The brilliant thing about these scripts is that they allow you to navigate with the WordStar diamond in any program.**
 
