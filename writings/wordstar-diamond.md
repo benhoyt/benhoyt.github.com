@@ -14,7 +14,7 @@ Back when the `Ctrl` key was where `Caps Lock` is now, there was a popular word 
 
 The *WordStar diamond* is the diamond-shaped, arrow key-like navigation the word processor used. When you held down `Ctrl`, you could use `E`, `S`, `D`, and `X` as arrow keys:
 
-<p style="text-align: center"><img width="350" alt="The WordStar diamond (Image artwork: Bryan Hoyt, original from clipground.com CC BY 4.0)" src="/images/wordstar-diamond.png"></p>
+<p style="text-align: center"><img width="350" title="The WordStar diamond (Image artwork: Bryan Hoyt, original from clipground.com CC BY 4.0)" alt="The WordStar diamond (Image artwork: Bryan Hoyt, original from clipground.com CC BY 4.0)" src="/images/wordstar-diamond.png"></p>
 
 The beauty was that you could just move your left pinky a little bit, over to the `Ctrl` key (now `Caps Lock`), and then you could navigate the entire document without lifting your hand over to the arrow keys, and without reaching for the mouse.
 
@@ -22,7 +22,7 @@ The beauty was that you could just move your left pinky a little bit, over to th
 
 If you prefixed a navigation key with `Ctrl-Q` you'd get the "quick functions", which would extend the key's meaning in a sensible way. For example, prefixing left or right with `Ctrl-Q` meant move to the start or end of the line, respectively. Similarly, prefixing page-up or page-down with `Ctrl-Q` meant jump to the start or end of the file:
 
-<p style="text-align: center;"><img width="350" alt="The WordStar diamond (Image artwork: Bryan Hoyt, original from clipground.com CC BY 4.0)" src="/images/wordstar-ctrlq.png"></p>
+<p style="text-align: center;"><img width="350" title="The WordStar diamond 'quick functions' (Image artwork: Bryan Hoyt, original from clipground.com CC BY 4.0)" alt="The WordStar diamond 'quick functions' (Image artwork: Bryan Hoyt, original from clipground.com CC BY 4.0)" src="/images/wordstar-ctrlq.png"></p>
 
 There were other keys for selecting and copying text that used a `Ctrl-K` prefix: `Ctrl-K Ctrl-B` would begin selecting, and `Ctrl-K Ctrl-C` would copy, and so on.
 
