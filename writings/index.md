@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2023">2023</h2>
 
+* [Using the WordStar diamond in 2023](/writings/wordstar-diamond/) explains the "Wordstar diamond" and how you can still use these key bindings from the 1970s on modern systems. (August)
 * [Name before type](/writings/name-before-type/) explains why a variables's name should come first in declarations, for example `age int` instead of `int age`. (August)
 * [The proposal to enhance Go's HTTP router](/writings/go-servemux-enhancements/) looks at Jonathan Amsterdam's proposal to enhance `http.ServeMux` to match HTTP methods and wildcard paths. (July)
 * [Gogit](/writings/gogit/) is just enough of a Git client to create a repo, commit, and push itself to GitHub, written in a scripting style. (July)

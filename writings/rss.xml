@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Using the WordStar diamond in 2023</title>
+  <description>Describes the WordStar diamond, a wonderful set of key bindings from the 1970s, and how you can use it in 2023 on Linux or Windows.</description>
+  <link>https://benhoyt.com/writings/wordstar-diamond/</link>
+  <guid>https://benhoyt.com/writings/wordstar-diamond/</guid>
+  <pubDate>Thu, 17 Aug 2023 12:15:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Name before type: why 'age int' is better than 'int age'</title>
   <description>A variable's name is more important than its type, so the name should be more prominent and come first in declarations.</description>
   <link>https://benhoyt.com/writings/name-before-type/</link>
