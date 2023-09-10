@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "The AWK book's 50-line version of Make"
+title: "The AWK book's 60-line version of Make"
 permalink: /writings/awk-make/
 description: "A discussion of the minimal version of Make included in 'The AWK Programming Language', as well as a Python port of the AWK program."
 ---
@@ -11,15 +11,15 @@ description: "A discussion of the minimal version of Make included in 'The AWK P
 > **Go to:** [AWK Make](#original-awk-version) \| [How it works](#how-it-works) \| [Python Make](#python-version) \| [Conclusion](#conclusion)
 
 
-In the wonderful book *The AWK Programming Language* by Aho, Weinberger, and Kernighan, there are a few pages at the end of chapter 7 that present a simplified version of the Make utility -- written in 50 lines of AWK.
+In the wonderful book *The AWK Programming Language* by Aho, Weinberger, and Kernighan, there are a few pages at the end of chapter 7 that present a simplified version of the Make utility -- written in a single page of AWK code.
 
 Before we look at that, I want to mention that the [second edition](https://awk.dev/) of the AWK book is coming out next month. Brian Kernighan's done a great job of updating it, most notably with a new chapter on [exploratory data analysis](https://en.wikipedia.org/wiki/Exploratory_data_analysis), and adding proper CSV support to AWK to enable this. I was honoured to be asked to review a draft of the second edition.
 
-AWK still shines for exploring data in 2023, especially with the new `--csv` option. CSV mode has also been [added to GNU AWK](https://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS) (Gawk), the most widely-installed version of AWK. My own GoAWK implementation has had [proper CSV support](/writings/goawk-csv/) for some time, and I've added the `--csv` option to match the others.
+AWK still shines for exploring data in 2023, especially with the new `--csv` option. CSV mode has also been [added to Gawk](https://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS) (GNU AWK), the most widely-installed version of AWK. My own [GoAWK](https://github.com/benhoyt/goawk) implementation has had [proper CSV support](/writings/goawk-csv/) for some time, and I've added the `--csv` option to match the others.
 
-The second edition of the book -- at least in the draft I reviewed -- still includes the Make program in all its 50-line glory.
+The second edition of the book still includes the Make program, though it's been made more readable with the [addition](https://github.com/benhoyt/awkmake/commit/a5793b2b55168959f3f2e976d1e409401cd8aac4) of some "spacing and bracing" -- this took it from 50 lines to 62 lines.
 
-I'd like to present that Make program here, to show how AWK is not just great for one-liners, but [can be used](https://maximullaris.com/awk.html) as a scripting language too -- though whether you *should* or not is another question.
+This article presents the Make program, to show how AWK is not just great for one-liners, but [can be used](https://maximullaris.com/awk.html) as a scripting language too -- though whether you *should* or not is another question.
 
 I'm then going to compare what the same program would look like in Python, and briefly discuss when you'd choose AWK or Python for this kind of thing.
 
@@ -28,7 +28,7 @@ It should go without saying, but I intend this purely as a learning exercise (fo
 
 ## Original AWK version
 
-The book introduces the Make program as follows. (For what it's worth, I find the term "target" confusing here -- I think "source" or "dependency" would fit better.)
+The second edition of the book introduces the Make program as follows. (For what it's worth, I find the term "target" confusing here -- I think "source" or "dependency" would fit better.)
 
 > This section develops a
 > rudimentary updating program, patterned after the Unix `make` command, that
@@ -37,7 +37,7 @@ The book introduces the Make program as follows. (For what it's worth, I find th
 > To use the updater, one must explicitly describe what the components of the
 > system are, how they depend upon one another, and what commands are needed
 > to construct them. We'll assume these dependencies and commands are stored
-> in a file, called a `makefile`, that contains a sequence of rules of the form:
+> in a file, called a `makefile`, that contains a sequence of rules of the form
 >
 >     name:   t1 t2 ... tn
 >             commands
@@ -46,26 +46,26 @@ The book introduces the Make program as follows. (For what it's worth, I find th
 > file *name* depends on the targets *t1*, *t2*, ..., *tn* where each *ti* is a filename or
 > another *name*. Following each dependency relation may be one or more lines of
 > *commands* that list the commands necessary to generate *name*. Here is an
-> example of a `makefile` for a small program with two C files and a `yacc`
-> grammar file, a typical program-development application.
+> example of a `makefile` for a small program with two C files called `a.c` and `b.c`, and a `yacc`
+> grammar file `c.y`, a typical program-development application.
 >
 >     prog:   a.o b.o c.o
->             cc a.o b.o c.o -ly -o prog
+>             gcc a.o b.o c.o -ly -o prog
 >     a.o:    prog.h a.c
->             cc -c prog.h a.c
+>             gcc -c prog.h a.c
 >     b.o:    prog.h b.c
->             cc -c prog.h b.c
+>             gcc -c prog.h b.c
 >     c.o:    c.c
->             cc -c c.c
+>             gcc -c c.c
 >     c.c:    c.y
 >             yacc c.y
 >             mv y.tab.c c.c
 >     print:
 >             pr prog.h a.c b.c c.y
 >
-> The first line states that `prog` depends on the target files `a.o`, `b.o` and `c.o`.
+> The first line states that `prog` depends on the target files `a.o`, `b.o`, and `c.o`.
 > The second line says that `prog` is generated by using the C compiler command
-> `cc` to link `a.o`, `b.o`, `c.o`, and a library into the file `prog`. The next rule
+> `gcc` to link `a.o`, `b.o`, `c.o`, and a `yacc` library `y` into the file `prog`. The next rule
 > (third line) states that `a.o` depends on the targets `prog.h` and `a.c` and is
 > created by compiling these targets; `b.o` is the same. The file `c.o` depends on
 > `c.c`, which in turn depends on `c.y`, which has to be processed by the `yacc`
@@ -91,49 +91,60 @@ The book introduces the Make program as follows. (For what it's worth, I find th
 
 It's a highly-simplified version of Make, of course, but still has the core concepts of outputs, dependencies, and build commands.
 
-Before we look at how it works, I've included the full source code below, as it appeared in the first edition of the AWK book. Click on the bold text to expand it, or skip down to "How it works" to see the code explained in more detail.
+Before we look at how it works, I've included the full source code below, as it appears in the second edition of the AWK book. Click on the bold text to expand it, or skip down to "How it works" to see the code explained in detail.
 
 <details><summary markdown="span">**The AWK book's Make program (full source code).**</summary>
 
 ```awk
 BEGIN {
-    while (getline <"makefile" > 0)
+    while (getline <"makefile" > 0) {
         if ($0 ~ /^[A-Za-z]/) {  #  $1: $2 $3 ...
             sub(/:/, "")
             if (++names[nm = $1] > 1)
                 error(nm " is multiply defined")
             for (i = 2; i <= NF; i++) # remember targets
                 slist[nm, ++scnt[nm]] = $i
-        } else if ($0 ~ /^\t/)        # remember cmd for
+        } else if ($0 ~ /^\t/) {      # remember cmd for
             cmd[nm] = cmd[nm] $0 "\n" #   current name
-        else if (NF > 0)
+        } else if (NF > 0) {
             error("illegal line in makefile: " $0)
+        }
+    }
+
     ages()      # compute initial ages
+
     if (ARGV[1] in names) {
         if (update(ARGV[1]) == 0)
             print ARGV[1] " is up to date"
-    } else
+    } else {
         error(ARGV[1] " is not in makefile")
+    }
 }
 
 function ages(      f,n,t) {
     for (t = 1; ("ls -t" | getline f) > 0; t++)
-        age[f] = t   # all existing files get an age
+        age[f] = t         # all existing files get an age
     close("ls -t")
+
     for (n in names)
         if (!(n in age))   # if n has not been created
             age[n] = 9999  # make n really old
 }
+
 function update(n,   changed,i,s) {
-    if (!(n in age)) error(n " does not exist")
-    if (!(n in names)) return 0
+    if (!(n in age))
+        error(n " does not exist")
+    if (!(n in names))
+        return 0
     changed = 0
     visited[n] = 1
     for (i = 1; i <= scnt[n]; i++) {
-        if (visited[s = slist[n, i]] == 0) update(s)
+        if (visited[s = slist[n, i]] == 0)
+            update(s)
         else if (visited[s] == 1)
             error(s " and " n " are circularly defined")
-        if (age[s] <= age[n]) changed++
+        if (age[s] <= age[n])
+            changed++
     }
     visited[n] = 2
     if (changed || scnt[n] == 0) {
@@ -145,6 +156,7 @@ function update(n,   changed,i,s) {
     }
     return 0
 }
+
 function error(s) { print "error: " s; exit }
 ```
 </details>
@@ -154,29 +166,24 @@ function error(s) { print "error: " s; exit }
 
 There's an explanation of how the program works in the book, but I'll explain it in my own words here, focussing on the aspects I find interesting.
 
-First, note that the formatting and variable names are rather terse -- very [K&R](https://en.wikipedia.org/wiki/The_C_Programming_Language)-like. There's no extra vertical spacing, and braces are omitted where possible.
-
 The `BEGIN` block is the main entry point for a program like this. Unlike most AWK programs which implicitly read lines from standard input, this one uses an explicit loop with `getline` to read the `makefile`:
 
 ```awk
 BEGIN {
-    while (getline <"makefile" > 0)
+    while (getline <"makefile" > 0) {
         if ($0 ~ /^[A-Za-z]/) {  #  $1: $2 $3 ...
             sub(/:/, "")
             if (++names[nm = $1] > 1)
                 error(nm " is multiply defined")
             for (i = 2; i <= NF; i++) # remember targets
                 slist[nm, ++scnt[nm]] = $i
-        } else if ($0 ~ /^\t/)        # remember cmd for
+        } else if ($0 ~ /^\t/) {      # remember cmd for
             cmd[nm] = cmd[nm] $0 "\n" #   current name
-        else if (NF > 0)
+        } else if (NF > 0) {
             error("illegal line in makefile: " $0)
-    ages()      # compute initial ages
-    if (ARGV[1] in names) {
-        if (update(ARGV[1]) == 0)
-            print ARGV[1] " is up to date"
-    } else
-        error(ARGV[1] " is not in makefile")
+        }
+    }
+    ...
 }
 ```
 
@@ -186,16 +193,16 @@ The `sub(/:/, "")` call removes the colon from the current line (the `$0` is imp
 
 We then ensure that this rule hasn't already been defined by checking the `names` array. An AWK array is actually an *associative array*, an old-school term for a key-value map.
 
-The inner `for` loop adds each target (or dependency) to the `slist` / `scnt` data structure. This is really a map of lists, but it's flattened to work around the fact that AWK doesn't support nested containers. The body of the loop is very terse:
+The inner `for` loop adds each target (or dependency) to the `slist` / `scnt` data structure. This is really a map of lists, but it's flattened to work around the fact that AWK doesn't support nested collections. The body of the loop is very terse:
 
 ```awk
 for (i = 2; i <= NF; i++)
     slist[nm, ++scnt[nm]] = $i
 ```
 
-This loops through each target: every field `$i` from field 2 to `NF` (the number of fields in the line).
+This loops through each dependency: every field `$i` from field 2 to `NF` (the number of fields in the line).
 
-For each target, it increments `scnt[nm]`, the count of sources for this rule (`nm`). Then, store the target `$i` in `slist`, indexed by the multi-key name and count. AWK simulates multi-dimensional or multi-key arrays by creating a concatenated key where each key is separated by the `SUBSEP` separator (which defaults to `"\x1c"`).
+For each dependency, it increments `scnt[nm]`, the count of sources for the current rule (`nm`). Then, store the dependency `$i` in `slist`, indexed by the multi-key name and count. AWK simulates multi-dimensional or multi-key arrays by creating a concatenated key where each key is separated by the `SUBSEP` separator (which defaults to `"\x1c"`).
 
 After the loop, in the `prog` example we'd end up with `slist` and `scnt` looking like this:
 
@@ -227,42 +234,61 @@ cmd[nm] = cmd[nm] $0 "\n"
 
 Otherwise, if the line is not a blank line (`NF > 0`), it's a `makefile` error.
 
-Finally, after reading the `makefile` in the `while` loop, we uses `ages()` to compute the ages of all files in the current directory, and then call `update(ARGV[1])` to update the rule passed on the command line.
+Finally, after reading the `makefile` in the `while` loop, we uses `ages()` to compute the ages of all files in the current directory, and then call `update(ARGV[1])` to update the rule passed on the command line:
+
+```awk
+BEGIN {
+    ...
+    ages()      # compute initial ages
+
+    if (ARGV[1] in names) {
+        if (update(ARGV[1]) == 0)
+            print ARGV[1] " is up to date"
+    } else {
+        error(ARGV[1] " is not in makefile")
+    }
+}
+```
 
 The `ages` function is where things start to get interesting:
 
 ```awk
 function ages(      f,n,t) {
     for (t = 1; ("ls -t" | getline f) > 0; t++)
-        age[f] = t   # all existing files get an age
+        age[f] = t         # all existing files get an age
     close("ls -t")
+
     for (n in names)
         if (!(n in age))   # if n has not been created
             age[n] = 9999  # make n really old
 }
 ```
 
-The parameter names `f`, `n`, and `t` are prefixed with a bunch of spaces to show they're actually local variables, and not intended as parameters. This is an AWK quirk (which Kernighan regrets): the only way to define local variables is as function parameters, and if a function is called with fewer arguments than it has parameters, the others take on the default value (0 for numbers, `""` for strings). So you'll see these extra spaces a lot in AWK function definitions.
+The parameter names `f`, `n`, and `t` are prefixed with a bunch of spaces to show they're actually local variables, and not expected as arguments. This is an AWK quirk (which Kernighan regrets): the only way to define local variables is as function parameters, and if a function is called with fewer arguments than it has parameters, the extras take on the default value (0 for numbers, `""` for strings). So you'll see these extra spaces a lot in AWK function definitions.
 
-The next thing is quite neat: AWK supports shell-like `|` syntax to pipe the output of a program, one `getline` at a time, to a variable (in this case `f`). The `ls -t` command lists files in the current directory ordered by modification time, newest first. When piped, `ls` lists files one per line -- try `ls -t | cat`.
+The next thing is quite neat: AWK supports shell-like `|` syntax to pipe the output of a program, one `getline` at a time, to a variable (in this case `f`). The `ls -t` command lists files in the current directory ordered by modification time, newest first.
 
-After the loop that's assigned each file's age to `age[f]`, we call `close` to close the `ls` pipe and avoid too many open file handles.
+After the loop that's assigned each file's age to `age[f]`, we call `close` to close the `ls -t` pipe and avoid too many open file handles.
 
-Finally, we loop through the target names and assign an arbitrary large number to `age[n]` to pretend that files that haven't been created are really old and need to be updated.
+Finally, we loop through the rule names and assign an arbitrary large number to `age[n]` to pretend that files that haven't been created are really old and need to be updated.
 
 Next is the recursive `update` function, where the meat of the algorithm lives:
 
 ```awk
 function update(n,   changed,i,s) {
-    if (!(n in age)) error(n " does not exist")
-    if (!(n in names)) return 0
+    if (!(n in age))
+        error(n " does not exist")
+    if (!(n in names))
+        return 0
     changed = 0
     visited[n] = 1
     for (i = 1; i <= scnt[n]; i++) {
-        if (visited[s = slist[n, i]] == 0) update(s)
+        if (visited[s = slist[n, i]] == 0)
+            update(s)
         else if (visited[s] == 1)
             error(s " and " n " are circularly defined")
-        if (age[s] <= age[n]) changed++
+        if (age[s] <= age[n])
+            changed++
     }
     visited[n] = 2
     if (changed || scnt[n] == 0) {
@@ -276,23 +302,24 @@ function update(n,   changed,i,s) {
 }
 ```
 
-Once again you'll note the parameter list: `n` is an expected parameter (the name to update), and `changed,i,s` are the locals.
+Once again you'll note the parameter list: `n` is an expected argument (the name to update), and `changed,i,s` are the locals.
 
-After initial checks, we loop through the list of dependencies by iterating from `slist[n, 1]` to `slist[n, scnt[n]]`. If we haven't visited this dependency yet, we perform a depth-first traversal of the graph by recursively calling `update` to see if we need to update that dependency first. That's this line:
+After initial checks, we loop through the list of dependencies by iterating from `slist[n, 1]` to `slist[n, scnt[n]]`. If we haven't visited this dependency yet, we perform a depth-first traversal of the dependency graph by recursively calling `update` to see if we need to update that dependency first:
 
 ```awk
-if (visited[s = slist[n, i]] == 0) update(s)
+if (visited[s = slist[n, i]] == 0)
+    update(s)
 ```
 
-The recursion is terminated by the `if (!(n in names)) return 0` statement near the top. We stop when the file being updated isn't in the list of rule names -- a leaf node in the dependency graph.
+The recursion is terminated by the `if (!(n in names)) return 0` block near the top. We stop when the file being updated isn't in the list of rule names -- which is a leaf node in the dependency graph.
 
-The line `if (age[s] <= age[n]) changed++` increments the `changed` count if any dependency is newer than the age of the current file being updated.
+The block `if (age[s] <= age[n]) changed++` increments the `changed` count if any dependency is newer than the age of the current file being updated.
 
-After the recursion `for` loop, if any of the dependencies or sub-dependencies had changed, we run the associated command using `system()`, recompute the ages of all files, and `return 1` to the caller to indicate we did make an update.
+After the traversal loop, if any of the dependencies or sub-dependencies had changed, we run the associated command using `system()`, recompute the ages of all files, and `return 1` to the caller to indicate we did make an update.
 
 The `scnt[n] == 0` clause handles the case where the rule being updated doesn't have any dependencies specified, like the `print` rule in the example. In that case, always re-run its command.
 
-And there you have it! A minimalist Make in a screenful of code.
+And there you have it! A minimalist Make in one page of AWK.
 
 
 ## Python version
@@ -366,29 +393,29 @@ if __name__ == '__main__':
 It's very similar in structure to the original AWK version, though I made two simplifications which I think make it somewhat easier to understand:
 
 1. Simpler data structures to avoid the `slist` / `scnt` quirkiness -- in Python we can just use a dictionary of lists. ([See diff.](https://github.com/benhoyt/awkmake/commit/490e5d210bdd4a7ce61292c73f1ec3f06da090eb))
-2. Determine ages more directly using `os.stat()` to fetch file modification times (mtime), rather than using the `ls -t` trick. This also removes the need for the `age` map and the `ages` update function. ([See diff.](https://github.com/benhoyt/awkmake/commit/7bb6a6de06a329551678fb90073a268342baf049))
+2. Determine ages more directly using `os.stat()` to fetch file modification times (mtimes), rather than using the `ls -t` trick. This also removes the need for the `age` map and the `ages` function. ([See diff.](https://github.com/benhoyt/awkmake/commit/7bb6a6de06a329551678fb90073a268342baf049))
 
-I didn't plan for this, but if you don't count the `import` line, the global variable definitions, or the `if __name__ == '__main__'` dance, it's 50 lines of code -- exactly the same length as the AWK program!
+I didn't plan for this, but even if you include the `import` line and the `if __name__ == '__main__'` dance, it's 58 lines of code -- basically the same length as the AWK program.
 
-When making the Python version, I realized we could simplify the AWK version in similar ways:
+When making the Python version, I realized we could simplify the AWK version in a similar way:
 
-1. It's conceptually simpler to store the `slist` directly as an AWK array: a key-value map where the key is the rule name and the value is the list of dependencies as a space-separated string (just like in the `makefile`). We can use `split` as needed to turn the dependencies string into a list (an array from 1 to the number of deps). This avoids the need for `scnt` and `names` altogether. ([See diff.](https://github.com/benhoyt/awkmake/pull/1/commits/4d212811b807e25de6c2401d2366a27b99e6773a))
-2. Similar to the Python version, we can shell out to `stat` to get the mtime directly, instead of listing all files in age order with `ls -t`. I've used `stat --format %y` to do this. I believe this is a GNU extension, so it's not as portable as `ls -t`, but it's simpler and avoids the need for recomputing the `age` array. ([See diff.](https://github.com/benhoyt/awkmake/pull/1/commits/b577df2e14ae2aa0b3c70fc4584bdc8b946a3026))
+1. It's conceptually simpler to store the `slist` directly as an AWK array: a key-value map where the key is the rule name and the value is the list of dependencies as a space-separated string (just like in the `makefile`). We can use `split` as needed to turn the dependencies string into a list (an array from 1 to the number of dependencies). This avoids the need for `scnt` and `names` altogether. ([See diff.](https://github.com/benhoyt/awkmake/pull/2/commits/45b5c4de5ec4c5b09830fdf06b00f4e0c7f7886e))
+2. Similar to the Python version, we can get the mtime directly by shelling out to `stat`, instead of listing all files in age order with `ls -t`. I've used `stat --format %y` to do this. I believe this is a GNU extension, so it's not as portable as `ls -t`, but it's simpler and avoids the need for recomputing the `age` array. ([See diff.](https://github.com/benhoyt/awkmake/pull/2/commits/d5cd8cc3cdeebce953dc2b15c9fedca3eef5ceca))
 
-For what it's worth, the modified version is three lines shorter than the original. I think the simpler `slist` is clearer, and I like the more direct approach to fetching mtimes, though I realize the lack of portability of `stat --format` is a downside (macOS's `stat` looks [quite different](https://ss64.com/osx/stat.html)).
+For what it's worth, the modified version is four lines shorter than the original. I think the simpler `slist` is clearer, and I like the more direct approach to fetching mtimes, though I realize the lack of portability of `stat --format` is a downside (macOS's `stat` looks [quite different](https://ss64.com/osx/stat.html)).
 
 
 ## Conclusion
 
-The 50-line Make program is a neat little piece of code that shows how useful a language AWK is, even for medium-sized scripts.
+The AWK Make program is a neat little piece of code that shows how useful a language AWK is, even for medium-sized scripts.
 
-However, Python is definitely a nicer language for this kind of thing: it has much richer data structures, better tools like `os.stat`, and "normal" local variables.
+However, Python is definitely a nicer language for this kind of thing: it has much richer data types, better tools like `os.stat`, and local variables without quirky syntax.
 
 I consider AWK amazing, but I think it should remain where it excels: for exploratory data analysis and for one-liner data extraction scripts.
 
-As the author of GoAWK, which has had native CSV support for a while, I'm especially pleased to see both Kernighan's "one true AWK" and Gawk gain proper CSV support in the form of the `--csv` option. I'm not sure when the updated "one true AWK" will be released ([see README updates](https://github.com/onetrueawk/awk/commit/c76017e59eb71b5403d44fb974a83bf71462eb39#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)), but Gawk will [include this feature in version 5.3.0](http://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS), which is presumably coming out soon.
+As the author of GoAWK, which has had native CSV support for a while, I'm especially pleased to see both Kernighan's "one true AWK" and Gawk gain proper CSV support in the form of the `--csv` option. Kernighan's [AWK updates](https://github.com/onetrueawk/awk/commit/c76017e59eb71b5403d44fb974a83bf71462eb39#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5) will be merged soon, and Gawk will [include this feature in version 5.3.0](http://git.savannah.gnu.org/cgit/gawk.git/tree/NEWS), which is coming out soon.
 
-You can also view my [awkmake](https://github.com/benhoyt/awkmake) repo on GitHub, which contains the full source for both the original AWK book's Make program and my Python version, as well as a runnable example project based on the example in the AWK book.
+You can also view my [awkmake](https://github.com/benhoyt/awkmake) repo on GitHub, which contains the full source for both the AWK book's Make program and my Python version, as well as a runnable example project based on the example in the AWK book.
 
 
 {% include sponsor.html %}
