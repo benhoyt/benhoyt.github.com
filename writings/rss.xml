@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>The AWK book's 60-line version of Make</title>
+  <description>A discussion of the minimal version of Make included in 'The AWK Programming Language', as well as a Python port of the AWK program.</description>
+  <link>https://benhoyt.com/writings/awk-make/</link>
+  <guid>https://benhoyt.com/writings/awk-make/</guid>
+  <pubDate>Mon, 11 Sep 2023 09:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Using the WordStar diamond in 2023</title>
   <description>Describes the WordStar diamond, a wonderful set of key bindings from the 1970s, and how you can use it in 2023 on Linux or Windows.</description>
   <link>https://benhoyt.com/writings/wordstar-diamond/</link>
