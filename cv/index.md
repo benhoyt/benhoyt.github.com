@@ -21,9 +21,9 @@ permalink: /cv/
 
 I’m a software engineer with twenty years of experience developing web applications and services, as well as providing technical leadership for small teams of software developers.
 
-I’m fluent in Go, Python, C, SQL, HTML, and English. I’ve also written a good amount of JavaScript, C++, and x86 assembly. I learn quickly, care about detail, and love computer science and mathematics.
+I’m fluent in Go, Python, C, SQL, and English. I’ve also written a good amount of JavaScript, HTML, C++, and x86 assembly. I learn quickly, care about detail, and love computer science and mathematics.
 
-I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked in New York City from 2010 to 2019, and I’m open to remote work and some travel.
+I live in New Zealand, but have dual NZ and U.S. citizenship. I lived and worked in New York City from 2010 to 2019, and I’m open to remote work and some travel.
 
 
 ## Skills: what I do...
@@ -33,7 +33,8 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 * Develop backend web systems and services that perform well and are easy to use. I’ve used various languages and databases, and I’m experienced with microservices as well as the scaling and caching required for large sites.
 * Contribute to frontend development: I'm familiar with vanilla JavaScript, React, Elm, CSS, and other frontend technologies.
 * DevOps and scripting: configure Kubernetes, create Docker images, develop infrastructure as code, administer servers, and automate complex code deployments on Linux and Windows.
-* Contribute to open source projects, for example Python ([more here](/projects/)).
+* Provide Go and Python expertise from many years of experience with both languages.
+* Create and contribute to open source projects, for example [GoAWK](https://github.com/benhoyt/goawk), [Python's `os.scandir`](/writings/scandir/), [inih](https://github.com/benhoyt/inih), and [others](/projects/).
 
 ### Technical leadership
 
@@ -41,7 +42,7 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 * Manage hiring of new engineers. Review and interview candidates.
 * Mentor developers, review code, and help establish engineering best practices.
 * Communicate and document effectively, and relate well to people.
-* Give internal technical talks and training. Provide Go and Python expertise from many years of experience with both languages.
+* Give internal technical talks and training.
 
 
 ## Experience
@@ -100,13 +101,13 @@ I live in New Zealand, but have dual NZ / U.S. citizenship. I lived and worked i
 
 ## Education
 
-I have a B.E. in Electrical and Computer Engineering, and graduated from the [University of Canterbury](http://www.canterbury.ac.nz/) in 2002 with first class honors, <abbr title="Scale: A+ is 9, D is 0">GPA&nbsp;7.9/9</abbr>. For my final-year project I designed a small stack-based CPU in VHDL.
+I have a B.E. in Electrical and Computer Engineering, graduating from the [University of Canterbury](http://www.canterbury.ac.nz/) in 2002 with first class honors, <abbr title="Scale: A+ is 9, D is 0">GPA&nbsp;7.9/9</abbr>. For my final-year project I designed a small stack-based CPU using VHDL. I was dux (valedictorian) of [Havelock North High School](https://www.hnhs.school.nz/) in 1999.
 
 
 ## About me
 
 <p class="right-callout">I have also discovered a truly marvelous proof of <a href="https://en.wikipedia.org/wiki/Hofstadter's_law">Hofstadter’s Law</a>, but unfortunately this margin is too narrow to contain it.</p>
 
-My dad taught me how to program by teaching me the Tao of [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)). Two of my first projects were writing a Forth compiler in x86 assembly, and then writing a small 32-bit OS in my Forth. I love things small, fast, and light&nbsp;&ndash; and that’s paid off during my career.
+My dad taught me how to program by teaching me the Tao of [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)). Two of my first projects were writing a [Forth compiler](https://github.com/benhoyt/third) for DOS, and creating a [small 32-bit OS](https://github.com/benhoyt/benos) in Forth. I love things small, fast, and light&nbsp;&ndash; and that’s paid off during my career.
 
 Other than that, I enjoy reading and [writing](/writings/), and I once edited a [small print magazine](/prism-magazine/). I’m into unicycling, typography, and piano. I love my wife and family. I aim to keep the commandments, but you may find me breaking the conventions.
