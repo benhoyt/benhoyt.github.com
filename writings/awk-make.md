@@ -402,6 +402,8 @@ When making the Python version, I realized we could simplify the AWK version in 
 1. It's conceptually simpler to store the `slist` directly as an AWK array: a key-value map where the key is the rule name and the value is the list of dependencies as a space-separated string (just like in the `makefile`). We can use `split` as needed to turn the dependencies string into a list (an array from 1 to the number of dependencies). This avoids the need for `scnt` and `names` altogether. ([See diff.](https://github.com/benhoyt/awkmake/pull/2/commits/45b5c4de5ec4c5b09830fdf06b00f4e0c7f7886e))
 2. Similar to the Python version, we can get the mtime directly by shelling out to `stat`, instead of listing all files in age order with `ls -t`. I've used `stat --format %y` to do this. I believe this is a GNU extension, so it's not as portable as `ls -t`, but it's simpler and avoids the need for recomputing the `age` array. ([See diff.](https://github.com/benhoyt/awkmake/pull/2/commits/d5cd8cc3cdeebce953dc2b15c9fedca3eef5ceca))
 
+*Update: Volodymyr Gubarkov [pointed out](https://lobste.rs/s/rhjptp/awk_book_s_60_line_version_make#c_kzkfcm) that the `stat` version "adds multiple external process invocations", and he's quite right. It might be more direct, but it is significantly slower.*
+
 For what it's worth, the modified version is four lines shorter than the original. I think the simpler `slist` is clearer, and I like the more direct approach to fetching mtimes, though I realize the lack of portability of `stat --format` is a downside (macOS's `stat` looks [quite different](https://ss64.com/osx/stat.html)).
 
 
