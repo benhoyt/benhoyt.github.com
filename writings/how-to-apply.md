@@ -46,11 +46,11 @@ If you're not a native English speaker, that's okay -- I'd much rather see imper
 
 Don't write phrases like that one above: "leveraging a diverse set of technologies and tools such as Python and Golang". Your point will get lost in a sea of big words. Just say "I used Python and Go" -- the reviewer will thank you for it.
 
-As another example, one candidate said they:
+As another example, one candidate said something similar to the following. They:
 
 * had a *profound mastery* of Java (are you [James Gosling](https://en.wikipedia.org/wiki/James_Gosling)?)
 * their *journey commenced* (are you [Bilbo Baggins](https://en.wikipedia.org/wiki/Bilbo_Baggins)?)
-* they *skillfully constructed* programs (or was it Noah's ark?)
+* they *skillfully constructed* programs (are you [Stradivarius](https://en.wikipedia.org/wiki/Stradivarius)?)
 * they *extended their expertise* (not only an expert, but an extended one)
 * they *crafted* Lambda functions (I prefer hand-crafted and artisanal)
 * they *leveraged* Spring Boot (or did you just *use* it?)
@@ -151,7 +151,7 @@ I'm sure there are many other resume tips I could include here -- send me an ema
 
 ## Endnote
 
-I work at Canonical, and we have to choose the best from the tens of thousands of job applications we get every month. Our interview process has been much-maligned by the Reddit mob. I'd love it if our hiring process was shorter, but the written interview part (the part people seem to protest the most) I actually find quite useful.
+I work at Canonical, and we have to choose the best from the tens of thousands of job applications we get every month. A lot has been said about our interview process, not all of it very kind. I'd love it if our hiring process was shorter, but the written interview part (the part people seem to protest the most) I actually find quite useful.
 
 Canonical's head of documentation wrote an article about [how our written interview also reduces bias](https://canonical.com/blog/written-interviews) in the interview process.
 
