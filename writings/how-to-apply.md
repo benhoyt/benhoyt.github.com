@@ -2,22 +2,26 @@
 layout: default
 title: "How (not) to apply for a software job"
 permalink: /writings/how-to-apply/
-description: "Advice for how to (and how not to) apply for a software engineering job, particularly for the written parts of the interview process."
+description: "Advice for how to (and how not to) apply for a software engineering job, particularly for the written parts of the interview process. As a bonus, some tips for your resume/CV."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">September 2023</p>
 
 
-> **Go to:** [ChatGPT](#dont-use-chatgpt) \| [Flowery prose](#dont-use-flowery-prose) \| [Generics](#dont-be-generic) \| [Buzzwords](#dont-play-buzzword-bingo) \| [Resumes tips](#some-resume-tips) \| [Instructions](#dont-ignore-instructions)
+> **Go to:** [ChatGPT](#dont-use-chatgpt) \| [Flowery prose](#dont-use-flowery-prose) \| [Tell](#dont-tell-show) \| [Generics](#dont-be-generic) \| [Buzzwords](#dont-play-buzzword-bingo) \| [Instructions](#dont-ignore-instructions) \| [Resume tips](#some-resume-tips)
 
-I review a lot of resumes and written interviews, and many of them are badly written. Here are a few things *not* to do when applying for a software engineering role. I work for Canonical (see my [endnote](#endnote) about our process), but this is advice I believe is good when applying at any company.
+I review a lot of resumes and written interviews, and many of them are badly written. This article describes a few things *not* to do when applying for a software engineering role.
+
+I work for Canonical (see my [endnote](#endnote) about our process), but this is advice that I believe is good when applying at any company.
 
 Most of this is *writing* advice, useful when writing your resume, cover letter, and any other written parts of a job application. In fact, I'd argue that most of it applies to any kind of non-fiction writing.
+
+To set the scene, remember who you're writing for: a busy hiring manager or an engineer who's been tasked with reviewing your application (and hundreds of others). They have to make a decision based on limited information, and they want to hire people who stand out, who've built things, and who can communicate well.
 
 
 ## Don't use ChatGPT
 
-I know it's "just a tool", but hear me out.
+I know it's just a tool, but hear me out. Initially I qualified "Don't use ChatGPT" with "or if you do, use it carefully". But my strong recommendation is: just don't. At least as of September 2023, all it'll make you do is sound like a robot.
 
 When candidates first started (obviously) using AI for their applications, I would rule them out for "cheating". Since then, I've changed my approach: I evaluate all submissions as if they were written by humans, and if a submission is bad, I reject it.
 
@@ -35,11 +39,9 @@ Compare that to an engaging, personalised answer:
 
 Specific, engaging, and real! It could still be improved, for example, by describing how the automation helped the team: "this cut down our deployment time from 2 hours to 15 minutes". But it's already a lot better than the first version.
 
-Initially I qualified "Don't use ChatGPT" with "or if you do, be careful". But my strong recommendation is: just don't. At least as of September 2023, all it'll make you do is sound like a robot.
-
-Do better prompts help? A better prompt can improve the wording. However, it's not going to magically create content based on your personal experience. So just write that yourself. That said, running it through a spelling and grammar checker is a good idea.
-
 If you're not a native English speaker, that's okay -- I'd much rather see imperfect writing that reflects your experience than flawless prose that doesn't.
+
+Do better prompts help ChatGPT sound more real? Yes, a better prompt can improve the wording. However, it's not going to magically write text based on your personal experience. You can definitely use a spelling and grammar checker on your writing, but please, make sure it's *your* writing.
 
 
 ## Don't use flowery prose
@@ -48,22 +50,20 @@ Don't write phrases like that one above: "leveraging a diverse set of technologi
 
 As another example, one candidate said something similar to the following. They:
 
-* had a *profound mastery* of Java (are you [James Gosling](https://en.wikipedia.org/wiki/James_Gosling)?)
-* their *journey commenced* (are you [Bilbo Baggins](https://en.wikipedia.org/wiki/Bilbo_Baggins)?)
-* they *skillfully constructed* programs (are you [Stradivarius](https://en.wikipedia.org/wiki/Stradivarius)?)
+* had a *profound mastery* of Java (they're not [James Gosling](https://en.wikipedia.org/wiki/James_Gosling))
+* their *journey commenced* (they're not [Bilbo Baggins](https://en.wikipedia.org/wiki/Bilbo_Baggins))
+* they *skillfully constructed* programs (they're not [Stradivarius](https://en.wikipedia.org/wiki/Stradivarius))
 * they *extended their expertise* (not only an expert, but an extended one)
-* they *crafted* Lambda functions (I prefer hand-crafted and artisanal)
-* they *leveraged* Spring Boot (or did you just *use* it?)
+* they *crafted* Lambda functions (I prefer artisanal Lambdas)
+* they *leveraged* Spring Boot (or did they just *use* it?)
 * they *swiftly adapted* (this is getting old)
-* they *meticulously* read documentation (good, I will hire you as a proof-reader)
+* they *meticulously* read documentation (good, I will hire them as a proof-reader)
 * they *embraced* object-oriented programming (like everyone in the 90's)
-* and they *brought forth robust experience* (but do you bring robust [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) experience?)
+* and they *brought forth robust experience* (but do they bring robust [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) experience?)
 
-I suspected ChatGPT, but I'm not sure -- they might have just been using a thesaurus. Whatever the case, please don't turn up the adverbs and adjectives to 11.
+I suspected ChatGPT, but I'm not sure -- they may have just been using a thesaurus. Whatever the case, please don't turn up the adverbs and adjectives to 11.
 
-Don't tell readers what to think, show them what you've done. Writing "I skillfully constructed programs" is telling them what to think; writing "I built a fast subset of POSIX Make in 500 lines of Java" is showing them.
-
-I recommend leaving out the over-the-top adjectives and rewriting that list as follows:
+I recommend leaving out the over-the-top modifiers and rewriting that list as follows:
 
 * I'm experienced with Java
 * I started
@@ -75,6 +75,15 @@ I recommend leaving out the over-the-top adjectives and rewriting that list as f
 * I read the docs
 * I use object-oriented programming (or drop that entirely)
 * I gained experience
+
+
+## Don't tell. Show!
+
+This one is simple: don't tell readers what to think, show them what you've done. The bad examples above aren't just flowery prose, they also tell instead of show.
+
+Saying "I skillfully constructed programs" is telling readers what to think about you; writing "I built a fast subset of POSIX Make in 500 lines of Java" is showing them what you've built. If it's open source and you can link to the GitHub repo, all the better.
+
+Remember, you're writing for a hiring manager, who wants to see specific things you've accomplished.
 
 
 ## Don't be generic
@@ -89,7 +98,7 @@ This paragraph is far too generic:
 
 Try something like this instead:
 
-> I really like succinct specs and some up-front planning. When I was designing the new auth service, for example, I wrote a 3-page spec that included an architecture diagram and a brief description of the API endpoints. Before deploying to production, I think it's important to load test a real server, so I set up a similar staging environment and measure how many concurrent requests it can serve. Once in production, monitoring is crucial: I've used Datadog as well as open-source tools like Prometheus to detect and diagnose issues.
+> I really like succinct specs and some up-front planning. When I was designing the new auth service, for example, I wrote a 3-page spec that included an architecture diagram and a brief description of the API endpoints. Before deploying to production, I think it's important to load test a real server, so I set up a similar staging environment and measured how many concurrent requests it could serve. Once in production, monitoring is crucial: I've used Datadog as well as open-source tools like Prometheus to detect and diagnose issues.
 
 In short, don't be generic. Unless of course you're writing about [parametric polymorphism](https://en.wikipedia.org/wiki/Parametric_polymorphism). (Sorry, couldn't resist.)
 
@@ -113,7 +122,7 @@ This explains what your role is, but it also states what field you work in, what
 
 ## Don't ignore instructions
 
-This is a pretty simple one, and you'd think it goes without saying, but some candidates don't seem to be good at following instructions.
+You'd think this one goes without saying, but some candidates don't seem to be good at following instructions.
 
 For example, if the application form says "your written interview should be anonymous to help us reduce bias" and they head it up with their full name, that's not a great sign. We all make mistakes, so I don't discount these submissions just for that, but ignoring instructions won't count in your favour.
 
@@ -122,17 +131,27 @@ For example, if the application form says "your written interview should be anon
 
 All of the advice above also applies to what you write in your resume/CV. However, here are a few additional tips specific to resumes.
 
-### GitHub profiles
+### Check your GitHub profile
 
 If you link to your GitHub profile, make sure there's decent projects on it. If it's just a bunch of projects like `fork-of-popular-project-i-never-touched`, `random-university-assignment`, and `half-baked-data-science-script`, don't link to your profile at all.
 
 But if you have a couple of well-curated projects you're proud of, by all means, include the profile link.
 
-### Language
+### Show what you've built
+
+Generalising the advice about your GitHub profile: show what you've built. This is one of the strongest signals startups will look for, and it will work well for established companies too.
+
+If it's a project you've built, link to its website or GitHub project page. If it's some significant contributions to a popular open source project, describe that in a sentence or two and link to your PRs.
+
+But you can also show what you've built at a closed-source company by describing in clear detail what parts of the product you worked on. For example:
+
+> At Shopify, I redesigned their HTML email templates to a design that almost doubled click rate, from 15% to 27%.
+
+### Write in English (or the expected language)
 
 If the application form is in English, make sure your resume and cover letter are in English too. Our company communicates in English, so we require applications to be in that language so all of us can read them.
 
-### Skills
+### Skills: don't include them all
 
 Don't include a "skills" section that lists almost every programming language or framework under the sun:
 
@@ -146,12 +165,26 @@ I've been programming for almost 30 years and have used well over a dozen langua
 
 > I’m fluent in Go, Python, C, SQL, and English. I’ve also written a good amount of JavaScript, HTML, C++, and x86 assembly.
 
+### Make it stand out
+
+Make your resume PDF look professional, and not in the lawyers-and-suits sense. Try to give it a touch of good design -- I don't mean by making the background pink and green, but by paying some attention to layout and fonts.
+
+To quote a friend:
+
+> Don't make it look like a Word doc. If I see a wall of text, black-bordered tables, bad fonts and no spacing, it gives me "poor communicator" vibes pretty fast. Googling "resume template" gets some pretty decent options for low effort.
+
 I'm sure there are many other resume tips I could include here -- send me an email if you have suggestions.
 
 
 ## Endnote
 
-I work at Canonical, and we have to choose the best from the tens of thousands of job applications we get every month. A lot has been said about our interview process, not all of it very kind. I'd love it if our hiring process was shorter, but the written interview part (the part people seem to protest the most) I actually find quite useful.
+I work at Canonical, and we have to choose the best from the tens of thousands of job applications we get every month. A lot has been said online about our interview process, not all of it very kind. I'd love it if our hiring process was shorter, but the written interview part (the part people seem to protest the most) I actually find quite useful.
+
+Interestingly, while I was writing this article, Canonical added the following statement to our application form:
+
+> During this application process I agree to use only my own words. I understand that plagiarism, the use of AI or other generated content will disqualify my application.
+
+I believe avoiding ChatGPT will improve any application, but Canonical now *requires* that you avoid it. I suspect other companies with large numbers of applicants will follow suit.
 
 Canonical's head of documentation wrote an article about [how our written interview also reduces bias](https://canonical.com/blog/written-interviews) in the interview process.
 
