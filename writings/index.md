@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2023">2023</h2>
 
+* [How (not) to apply for a software job](/writings/how-to-apply/) gives advice for writing a software job application and resume/CV. (September)
 * [The AWK book's 60-line version of Make](/writings/awk-make/) discusses the minimal Make program in *The AWK Programming Language* and my Python port of it. (September)
 * [Using the WordStar diamond in 2023](/writings/wordstar-diamond/) explains the "Wordstar diamond" and how you can still use these key bindings from the 1970s on modern systems. (August)
 * [Name before type](/writings/name-before-type/) explains why a variables's name should come first in declarations, for example `age int` instead of `int age`. (August)
