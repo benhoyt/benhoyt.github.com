@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Using a Markov chain to generate readable nonsense with 20 lines of Python</title>
+  <description>Describes a simple Markov chain algorithm to generate reasonable-sounding but utterly nonsensical text, and presents some example outputs as well as a Python implementation.</description>
+  <link>https://benhoyt.com/writings/markov-chain/</link>
+  <guid>https://benhoyt.com/writings/markov-chain/</guid>
+  <pubDate>Sat, 11 Nov 2023 17:30:00 +0100</pubDate>
+ </item>
+
+ <item>
   <title>How (not) to apply for a software job</title>
   <description>Advice for how to (and how not to) apply for a software engineering job, particularly for the written parts of the interview process. As a bonus, some tips for your resume/CV.</description>
   <link>https://benhoyt.com/writings/how-to-apply/</link>
