@@ -220,7 +220,7 @@ Google was birthed out of the [PageRank algorithm](https://en.wikipedia.org/wiki
 
 In other words, if lots of other pages link to your page, it’ll rank better. And if those links are from high PageRank pages, even better. So you want to get authoritative websites to link to your pages as much as possible.
 
-The exception to this is [rel=nofollow](https://support.google.com/webmasters/answer/96569?hl=en) links: “nofollow” is an attribute sites add to their `<a>` link tags to signal to Google _not_ to follow or count this link in its ranking calculations. This is usually used for user-generated content such as blog or YouTube comments, which can be low quality and spammy.
+The exception to this is [rel=nofollow](https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links#nofollow) links: “nofollow” is an attribute sites add to their `<a>` link tags to signal to Google _not_ to follow or count this link in its ranking calculations. This is usually used for user-generated content such as blog or YouTube comments, which can be low quality and spammy.
 
 If sites like this didn’t use rel=nofollow, spammers would submit hundreds of links to their pages to artificially boost their rankings. And that is exactly what happened before “nofollow” was introduced.
 
