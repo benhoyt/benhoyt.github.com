@@ -13,6 +13,11 @@ rss_url: /writings/rss.xml
 Below are the programming-related articles I’ve written (see also my [**non-technical writings**](/writings/non-tech/)). The list includes the guest contributions I've written for LWN.net, and tech blog articles for several of the companies I’ve worked for.
 
 
+<h2 id="y2024">2024</h2>
+
+* [*Stray Pointers* interview](https://sites.libsyn.com/481983/discussing-programming-languages-with-ben-hoyt) ([YouTube](https://www.youtube.com/watch?v=6ZJYsPhmkg0)): not technical writing, but Jim Lawless interviewed me on his podcast. We discuss Forth, C, CGI, Python, Go, and AWK. (January)
+
+
 <h2 id="y2023">2023</h2>
 
 * [Generate text using a simple Markov chain](/writings/markov-chain/) algorithm in Python for fun and almost certainly no profit. (November)

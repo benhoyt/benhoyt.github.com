@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>"Stray Pointers" interview</title>
+  <description>Not technical writing, but Jim Lawless interviewed me on his "Stray Pointers" podcast. We discuss Forth, C, CGI, Python, Go, and AWK.</description>
+  <link>https://sites.libsyn.com/481983/discussing-programming-languages-with-ben-hoyt</link>
+  <guid>https://sites.libsyn.com/481983/discussing-programming-languages-with-ben-hoyt</guid>
+  <pubDate>Tue, 16 Jan 2024 17:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Using a Markov chain to generate readable nonsense with 20 lines of Python</title>
   <description>Describes a simple Markov chain algorithm to generate reasonable-sounding but utterly nonsensical text, and presents some example outputs as well as a Python implementation.</description>
   <link>https://benhoyt.com/writings/markov-chain/</link>
