@@ -15,7 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2024">2024</h2>
 
-* [*Stray Pointers* interview](https://sites.libsyn.com/481983/discussing-programming-languages-with-ben-hoyt) ([YouTube](https://www.youtube.com/watch?v=6ZJYsPhmkg0)): not technical writing, but Jim Lawless interviewed me on his podcast. We discuss Forth, C, CGI, Python, Go, and AWK. (January)
+* [*Stray Pointers* interview](/writings/stray-pointers-interview/): Jim Lawless interviewed me on his podcast (this is a transcription). We discuss Forth, C, CGI, Python, Go, and AWK. (January)
 
 
 <h2 id="y2023">2023</h2>

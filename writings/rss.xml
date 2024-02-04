@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Jim Lawless interviews Ben Hoyt on "Stray Pointers"</title>
+  <description>This is a transcription of Jim Lawless's interview with Ben Hoyt on his Stray Pointers podcast. We discuss Forth, C, CGI, Python, Go, and AWK.</description>
+  <link>https://benhoyt.com/writings/stray-pointers-interview/</link>
+  <guid>https://benhoyt.com/writings/stray-pointers-interview/</guid>
+  <pubDate>Sun,  4 Feb 2024 14:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>"Stray Pointers" interview</title>
   <description>Not technical writing, but Jim Lawless interviewed me on his "Stray Pointers" podcast. We discuss Forth, C, CGI, Python, Go, and AWK.</description>
   <link>https://sites.libsyn.com/481983/discussing-programming-languages-with-ben-hoyt</link>
