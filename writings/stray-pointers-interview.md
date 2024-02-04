@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Jim Lawless interviews Ben Hoyt on *Stray Pointers*"
+title: "Discussing Forth, C, CGI, Python, Go, and AWK on *Stray Pointers*"
 permalink: /writings/stray-pointers-interview/
-description: "This is a transcription of Jim Lawless's interview with Ben Hoyt on his Stray Pointers podcast. We discuss Forth, C, CGI, Python, Go, and AWK."
+description: "This is a transcription of Jim Lawless's interview with me (Ben Hoyt) on his Stray Pointers podcast. We discuss Forth, C, CGI, Python, Go, and AWK."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">January 2024</p>
