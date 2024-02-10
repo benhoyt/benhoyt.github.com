@@ -13,7 +13,7 @@ description: "How I switched my side project from using Amazon S3 for file hosti
 
 A year ago I switched my [GiftyWeddings.com](https://giftyweddings.com/) side project from being hosted on Amazon EC2 to using [Fly.io](https://fly.io/). I had [fun doing it](/writings/flyio/) and saved a few bucks a month.
 
-Last week someone from [Tigris](https://www.tigrisdata.com/) contacted me, asking if I'd like to try out a private beta of the S3-compatible storage service they've built on top of Fly.io infrastructure and have integrated with the `fly` CLI. (Tigris paid me a small amount to try their beta and write about it, but they didn't have any say in what I wrote.)
+Last week someone from [Tigris](https://www.tigrisdata.com/) contacted me, asking if I'd like to try out a private beta of the S3-compatible storage service they've built on top of Fly.io infrastructure and have integrated with the `fly` CLI. (Tigris paid me a small amount to try their beta and write about it, but they didn't have a say in the content.)
 
 I hadn't actually heard of Tigris, but this piqued my interest -- I've had a good experience with Fly.io, and I think it's great that more small companies are competing with the AWS Bezomoth.
 
