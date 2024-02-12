@@ -8,7 +8,7 @@ description: "How I switched my side project from using Amazon S3 for file hosti
 <p class="subtitle">February 2024</p>
 
 
-> **Go to:** [Buckets](#creating-a-bucket) \| [Endpoint](#endpoint-change) \| [Caching](#caching-differences) \| [Auth](#authentication-differences) \| [Copying](#copying-files-and-shadow-buckets) \| [DB migration](#database-migration) \| [Conclusion](#conclusion)
+> **Go to:** [Buckets](#creating-a-bucket) \| [Endpoint](#endpoint-change) \| [Caching](#caching-differences) \| [Auth](#authentication-differences) \| [Copying](#copying-files-and-shadow-buckets) \| [DB migration](#database-migration) \| [Final thoughts](#final-thoughts)
 
 
 A year ago I switched my [GiftyWeddings.com](https://giftyweddings.com/) side project from being hosted on Amazon EC2 to using [Fly.io](https://fly.io/). I had [fun doing it](/writings/flyio/) and saved a few bucks a month.
@@ -197,7 +197,15 @@ sqlite> SELECT count(*) FROM registry
 After that, the site was fully on Tigris and Fly.io, and 100% AWS-free!
 
 
-## Conclusion
+## Final thoughts
+
+### Performance
+
+I did a quick, unscientific test comparing the time taken to fetch an image from the old AWS bucket versus the new Tigris one. Tigris buckets are "global by default", so they can use the nearest Fly.io region (Sydney), which is much closer to New Zealand than the `us-west-1` region the AWS bucket was in.
+
+As expected, I saw significantly faster download times from Tigris: for a small image, about 1s on AWS compared to 300ms on Tigris. For medium-sized images, I was seeing more like 1.3s on AWS compared to 600ms on Tigris.
+
+### Pricing
 
 My AWS bill for Gifty -- which was solely S3 usage at this point -- is a few cents per month. I'm sure I cost them more in admin overhead than what I actually paid them. So pricing was not a concern for me, but still, Tigris pricing is similar to S3's:
 
@@ -206,10 +214,14 @@ My AWS bill for Gifty -- which was solely S3 usage at this point -- is a few cen
 
 Either way, Tigris gave me $150 free credit as part of the beta sign-up process. That's 7500 GB-months or 300 million GET requests -- almost certainly more than my small website will use in my lifetime.
 
+### Disclaimer and durability
+
 One thing you might want to know: when I signed up for their [**early access beta**](https://hello.tigrisdata.com/forms/early-access/), Tigris sent me an email saying, "Please avoid using this service for production workloads during the beta!"
 
 I asked if this was just a disclaimer to cover their backsides, or if it was more like "files will go missing randomly, and we'll delete all data nightly during the beta". They said it's more of a disclaimer, and that both Fly.io and Tigris are treating this as a production platform. Obviously there's a risk there, but I was happy with that, and they'll be out of beta soon.
 
 I also wondered about Tigris's durability compared to S3, who advertise their 99.999999999% durability of objects. Tigris certainly seems to have thought about their [architecture](https://www.tigrisdata.com/docs/concepts/architecture/) a lot, but I wonder if it's possible to measure their durability and compare to [S3's insane numbers](https://aws.amazon.com/blogs/aws/new-amazon-s3-reduced-redundancy-storage-rrs/)? Then again, is S3's eleven 9s number [actually meaningful](https://stackoverflow.com/a/4188501/68707)?
+
+### The end
 
 All that said, I had a very good experience doing the switchover, and haven't yet had any problems -- but I'm sure time will tell! I hope both Tigris and Fly.io continue to do well, and introduce some much-needed competition for the big cloud companies.
