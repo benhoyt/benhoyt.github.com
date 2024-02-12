@@ -108,6 +108,8 @@ When I starting using Tigris, and re-uploaded an image, I had to do a Ctrl-Shift
 
 I'm not sure this is a good default, but because they're trying to be a [CDN](https://en.wikipedia.org/wiki/Content_delivery_network) as well as a storage system, I can see why they chose that. It forces people to use caching techniques like [content-based filenames](https://github.com/benhoyt/cdnupload), which are a good thing.
 
+*Update: After reading this article, Tigris added a nice [page about caching](https://www.tigrisdata.com/docs/caching/) that documents this behaviour and their intention on this point.*
+
 In any case, it was a chance for me to improve Gifty's handling of uploads. I changed the code to add a short content-based hash to the filename: instead of using `{registryID}.jpg` as the key, I use `{registryID}-{contentHash}.jpg`, and it fixes the caching problem:
 
 ```go
