@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Switching from S3 to Tigris on Fly.io</title>
+  <description>How I switched my side project from using Amazon S3 for file hosting to using Tigris (which is built on Fly.io infrastructure). It was a good experience overall, but there were a few quirks.</description>
+  <link>https://benhoyt.com/writings/flyio-and-tigris/</link>
+  <guid>https://benhoyt.com/writings/flyio-and-tigris/</guid>
+  <pubDate>Tue, 13 Feb 2024 22:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Discussing Forth, C, CGI, Python, Go, and AWK on "Stray Pointers"</title>
   <description>This is a transcription of Jim Lawless's interview with Ben Hoyt on his Stray Pointers podcast. We discuss Forth, C, CGI, Python, Go, and AWK.</description>
   <link>https://benhoyt.com/writings/stray-pointers-interview/</link>
