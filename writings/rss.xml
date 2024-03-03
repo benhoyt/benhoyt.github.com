@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>The One Billion Row Challenge in Go: from 1m45s to 4s in nine solutions</title>
+  <description>How I solved the One Billion Row Challenge (1BRC) in Go nine times, from a simple unoptimised version that takes 1 minute 45 seconds, to an optimised and parallelised version that takes 4 seconds.</description>
+  <link>https://benhoyt.com/writings/go-1brc/</link>
+  <guid>https://benhoyt.com/writings/go-1brc/</guid>
+  <pubDate>Sun, 03 Mar 2024 16:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Switching from S3 to Tigris on Fly.io</title>
   <description>How I switched my side project from using Amazon S3 for file hosting to using Tigris (which is built on Fly.io infrastructure). It was a good experience overall, but there were a few quirks.</description>
   <link>https://benhoyt.com/writings/flyio-and-tigris/</link>
