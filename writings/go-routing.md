@@ -8,6 +8,9 @@ description: "Compares various routing techniques in Go, including five custom a
 <p class="subtitle">July 2020</p>
 
 
+> **Update March 2024:** Go 1.22 shipped with [significant enhancements](https://go.dev/blog/routing-enhancements) to the standard library's [`http.ServeMux`](https://pkg.go.dev/net/http#ServeMux) router. You can now specify patterns with a method and path variables, such as `mux.Handle("GET /{slug}/admin")`, and I've updated [the code](https://github.com/benhoyt/go-routing/blob/master/stdlib/route.go). For new work I'd recommend you ignore this article and use the standard library!
+
+
 There are many ways to do HTTP path routing in Go -- for better or worse. There's the standard library's [`http.ServeMux`](https://golang.org/pkg/net/http/#ServeMux), but it only supports basic prefix matching. There are many ways to do more advanced routing yourself, including Axel Wagner's interesting [`ShiftPath` technique](https://blog.merovius.de/2017/06/18/how-not-to-use-an-http-router.html). And then of course there are lots of third-party router libraries. In this article I'm going to do a comparison of several custom techniques and some off-the-shelf packages.
 
 I'll be upfront about my biases: I like simple and clear code, and I'm a bit allergic to large dependencies (and sometimes those are in tension). Most libraries with "framework" in the title don't do it for me, though I'm not opposed to using well-maintained libraries that do one or two things well.
