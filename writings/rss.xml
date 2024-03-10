@@ -8,8 +8,8 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
-  <title>The One Billion Row Challenge in Go: from 1m45s to 4s in nine solutions</title>
-  <description>How I solved the One Billion Row Challenge (1BRC) in Go nine times, from a simple unoptimised version that takes 1 minute 45 seconds, to an optimised and parallelised version that takes 4 seconds.</description>
+  <title>The One Billion Row Challenge in Go: from 1m45s to 3.4s in nine solutions</title>
+  <description>How I solved the One Billion Row Challenge (1BRC) in Go nine times, from a simple unoptimised version that takes 1 minute 45 seconds, to an optimised and parallelised version that takes 3.4 seconds.</description>
   <link>https://benhoyt.com/writings/go-1brc/</link>
   <guid>https://benhoyt.com/writings/go-1brc/</guid>
   <pubDate>Sun, 03 Mar 2024 16:00:00 +1300</pubDate>

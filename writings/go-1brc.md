@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "The One Billion Row Challenge in Go: from 1m45s to 4s in nine solutions"
+title: "The One Billion Row Challenge in Go: from 1m45s to 3.4s in nine solutions"
 permalink: /writings/go-1brc/
-description: "How I solved the One Billion Row Challenge (1BRC) in Go nine times, from a simple unoptimised version that takes 1 minute 45 seconds, to an optimised and parallelised version that takes 4 seconds."
+description: "How I solved the One Billion Row Challenge (1BRC) in Go nine times, from a simple unoptimised version that takes 1 minute 45 seconds, to an optimised and parallelised version that takes 3.4 seconds."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">March 2024</p>
@@ -30,7 +30,9 @@ Cracow;12.6
 
 The only catch: the input file has one billion rows (lines). That's about 13GB of data. I've already figured out that [disk I/O is no longer the bottleneck](/writings/io-is-no-longer-the-bottleneck/) -- it's usually memory allocations and parsing that slow things down in a program like this.
 
-**This article describes the nine solutions I wrote in Go, each faster than the previous.** The first, a simple and idiomatic solution, runs in 1 minute 45 seconds on my machine, while the last one runs in about 4 seconds. As I go, I'll show how I used Go's profiler to see where the time was being spent.
+**This article describes the nine solutions I wrote in Go, each faster than the previous.** The first, a simple and idiomatic solution, runs in 1 minute 45 seconds on my machine, while the last one runs in 3.4 seconds. As I go, I'll show how I used Go's profiler to see where the time was being spent.
+
+*Update: A friend noted that my original custom hash table had a bug: I was sizing the hash table array to 100,000, which isn't a power of two, but using `hash & (len(items)-1)` to determine the hash index. As a result, the hash table was far emptier and there were far more collisions than there should have been. I've [updated the code](https://github.com/benhoyt/go-1brc/commit/e9fe448f8b3cce4fa82c3c8af7ae2e901ef04903) and the numbers -- it took the time down from 3.9s to 3.4s.*
 
 The run-down of solutions is as follows, slowest to fastest:
 
@@ -44,7 +46,7 @@ The run-down of solutions is as follows, slowest to fastest:
 * [r8: parallelise r1](https://github.com/benhoyt/go-1brc/blob/master/r8.go)
 * [r9: parallelise r7](https://github.com/benhoyt/go-1brc/blob/master/r9.go)
 
-I wanted each of the solutions to be portable Go using only the standard library: no assembly, no [`unsafe`](https://pkg.go.dev/unsafe), and no memory-mapped files. And 4 seconds, or 3.2GB/s, was fast enough for me. For comparison, the fastest, heavily-optimised Java solution runs in just under a second on my machine -- not bad!
+I wanted each of the solutions to be portable Go using only the standard library: no assembly, no [`unsafe`](https://pkg.go.dev/unsafe), and no memory-mapped files. And 3.4 seconds, or 3.8GB/s, was fast enough for me. For comparison, the fastest, heavily-optimised Java solution runs in just under a second on my machine -- not bad!
 
 There are several other Go solutions out there already, and at least one [nice write-up](https://www.bytesizego.com/blog/one-billion-row-challenge-go). Mine is faster than some solutions, but slightly slower than the [fastest one](https://github.com/gunnarmorling/1brc/tree/main/src/main/go/AlexanderYastrebov). However, I didn't look at any of these before writing mine -- I wanted my solutions to be independent.
 
@@ -361,7 +363,7 @@ I've written about [how to implement a hash table in C](https://benhoyt.com/writ
 
 It's a simple implementation that uses the [FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function#FNV-1a_hash) hash algorithm with [linear probing](https://en.wikipedia.org/wiki/Linear_probing): if there's a collision, use the next empty slot.
 
-To simplify, I just pre-allocate a large number of hash buckets (I've used 100,000), to avoid having to write logic to resize the table. My code will panic if the table gets more than half full. I measured that we get around 2% hash collisions.
+To simplify, I just pre-allocate a large number of hash buckets (I've used 131,072, a power of two), to avoid having to write logic to resize the table. My code will panic if the table gets more than half full. I measured that we get around 0.2% hash collisions.
 
 It's a bunch more code this time -- hash table setup, the hashing itself, and the table probing and insertion:
 
@@ -371,8 +373,9 @@ type item struct {
     key  []byte
     stat *stats
 }
-items := make([]item, 100000) // hash buckets, linearly probed
-size := 0                     // number of active items in items slice
+const numBuckets = 1 << 17        // number of hash buckets (power of 2)
+items := make([]item, numBuckets) // hash buckets, linearly probed
+size := 0                         // number of active items in items slice
 
 buf := make([]byte, 1024*1024)
 readStart := 0
@@ -407,7 +410,7 @@ for {
         // ... same temperature parsing as r6 ...
 
         // Go to correct bucket in hash table.
-        hashIndex := int(hash & uint64(len(items)-1))
+        hashIndex := int(hash & uint64(numBuckets-1))
         for {
             if items[hashIndex].key == nil {
                 // Found empty slot, add new item (copying key).
@@ -423,7 +426,7 @@ for {
                     },
                 }
                 size++
-                if size > len(items)/2 {
+                if size > numBuckets/2 {
                     panic("too many items in hash table")
                 }
                 break
@@ -439,7 +442,7 @@ for {
             }
             // Slot already holds another key, try next slot (linear probe).
             hashIndex++
-            if hashIndex >= len(items) {
+            if hashIndex >= numBuckets {
                 hashIndex = 0
             }
         }
@@ -449,7 +452,7 @@ for {
 }
 ```
 
-The payoff for all this code is large: **the custom hash table cuts down the time from 41.3 seconds to 25.8s.**
+The payoff for all this code is large: **the custom hash table cuts down the time from 41.3 seconds to 22.1s.**
 
 ## Solution 8: process chunks in parallel
 
@@ -525,14 +528,14 @@ func r8ProcessPart(inputPath string, fileOffset, fileSize int64,
 }
 ```
 
-**Processing the input file in parallel provides a huge win over r1, taking the time from 1 minute 45 seconds to 24.3 seconds.** For comparison, the previous "optimised non-parallel" version, solution 7, took 25.8 seconds. So for this case, parallelisation is a bit faster than optimisation -- and quite a bit simpler.
+**Processing the input file in parallel provides a huge win over r1, taking the time from 1 minute 45 seconds to 22.6 seconds.** For comparison, the previous "optimised non-parallel" version, solution 7, took 22.1 seconds. So for this case, optimisation is a bit faster than parallelisation, but they're coincidentally very similar.
 
 
 ## Solution 9: all optimisations plus parallelisation
 
 For [solution 9](https://github.com/benhoyt/go-1brc/blob/master/r8.go), our last attempt, we'll simply combine all the previous optimisations from r1 through r7 with the parallelisation we did in r8.
 
-I've used the same `splitFile` function from r8, and the rest of the code is just copied from r7, so there's nothing new to show here. Except the results ... **this final version cut down the time from 24.3 seconds to 3.99 seconds, a huge win.**
+I've used the same `splitFile` function from r8, and the rest of the code is just copied from r7, so there's nothing new to show here. Except the results ... **this final version cut down the time from 22.6 seconds to 3.4 seconds, a huge win.**
 
 Interestingly, because all the real processing is now in one big function, `r9ProcessPart`, the profile graph is no longer particularly helpful. Here's what it looks like now:
 
@@ -546,7 +549,7 @@ If we want to profile further, we have to dive deeper than the function level th
 
 I find this report confusing. Why does `if items[hashIndex].key == nil` show as taking 5.01s, but the call to `bytes.Equal` shows as only 390ms. Surely a slice lookup is much cheaper than a function call? If you are a Go performance expert and can help me interpret it, I'm all ears!
 
-In any case, I'm sure there are crazier optimisations I could do, but I decided I'd leave it there. Processing a billion rows in 4 seconds, or 250 million rows per second, was good enough for me.
+In any case, I'm sure there are crazier optimisations I could do, but I decided I'd leave it there. Processing a billion rows in 3.4 seconds, or 290 million rows per second, was good enough for me.
 
 
 ## Table of results
@@ -561,16 +564,16 @@ r3      | parse temperatures by hand | 55.8s | 1.87
 r4      | fixed point integers       | 51.0s | 2.05
 r5      | avoid `bytes.Cut`          | 46.0s | 2.27
 r6      | avoid `bufio.Scanner`      | 41.3s | 2.53
-r7      | custom hash table          | 25.8s | 4.05
-r8      | parallelise r1             | 24.3s | 4.31
-r9      | parallelise r7             | 3.99s | 26.2
+r7      | custom hash table          | 22.1s | 4.57
+r8      | parallelise r1             | 22.6s | 4.40
+r9      | parallelise r7             | 3.44s | 29.3
 ------- | -------------------------- | ----- | ----
 [AY](https://github.com/gunnarmorling/1brc/blob/main/src/main/go/AlexanderYastrebov/calc.go) | fastest Go version | 2.90s | 36.2
 [TW](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_thomaswue.java) | fastest Java version | 0.953s | 110
 
 I'm in the same ballpark as [Alexander Yastrebov's Go version](https://github.com/gunnarmorling/1brc/blob/main/src/main/go/AlexanderYastrebov/calc.go). His solution looks similar to mine: break the file into chunks, use a custom hash table (he even uses FNV hashing), and parse temperatures as integers. However, he uses memory-mapped files, which I'd ruled out for portability reasons -- I'm guessing that's why his is a bit faster.
 
-Thomas Wuerthinger (with [credit to others](https://github.com/gunnarmorling/1brc/blob/c92346790e8548f52e81254227efc935356e5e53/src/main/java/dev/morling/onebrc/CalculateAverage_thomaswue.java#L32-L37)) created the [fastest overall solution](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_thomaswue.java) to the original challenge in Java. His runs in under a second on my machine, 4x as fast as my Go version. In addition to parallel processing and memory-mapped files, it looks like he's using unrolled loops, non-branching parsing code, and other low-level tricks.
+Thomas Wuerthinger (with [credit to others](https://github.com/gunnarmorling/1brc/blob/c92346790e8548f52e81254227efc935356e5e53/src/main/java/dev/morling/onebrc/CalculateAverage_thomaswue.java#L32-L37)) created the [fastest overall solution](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_thomaswue.java) to the original challenge in Java. His runs in under a second on my machine, almost 4x as fast as my Go version. In addition to parallel processing and memory-mapped files, it looks like he's using unrolled loops, non-branching parsing code, and other low-level tricks.
 
 It looks like Thomas is the founder of and a [significant contributor](https://github.com/oracle/graal/commits?author=thomaswue) to [GraalVM](https://www.graalvm.org/), a faster Java Virtual Machine with ahead-of-time compilation. So he's definitely an expert in his field. Nice work Thomas and co!
 
@@ -581,7 +584,7 @@ Does any of this matter?
 
 For the majority of day-to-day programming tasks, simple and idiomatic code is usually the best place to start. If you're calculating statistics over a billion temperatures, and you just need the answer once, 1 minute 45 seconds is probably fine.
 
-But if you're building a data processing pipeline, if you can make your code 4 times as fast, or even 26 times as fast, you'll not only make users happier, you'll save a lot on compute costs -- if the system is being well loaded, your compute costs could be 1/4 or 1/26 of the original!
+But if you're building a data processing pipeline, if you can make your code 4 times as fast, or even 29 times as fast, you'll not only make users happier, you'll save a lot on compute costs -- if the system is being well loaded, your compute costs could be 1/4 or 1/29 of the original!
 
 Or, if you're building a runtime like GraalVM, or an interpreter like my [GoAWK](https://github.com/benhoyt/goawk), this level of performance really does matter: if you speed up the interpreter, all your users' programs run that much faster too.
 

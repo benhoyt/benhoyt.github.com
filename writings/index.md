@@ -15,7 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2024">2024</h2>
 
-* [The One Billion Row Challenge in Go](/writings/go-1brc/) presents my nine Go solutions to this problem, which range in running time from 1m45s down to 4s. (March)
+* [The One Billion Row Challenge in Go](/writings/go-1brc/) presents my nine Go solutions to this problem, which range in running time from 1m45s down to 3.4s. (March)
 * [Switching from S3 to Tigris on Fly.io](/writings/flyio-and-tigris/) describes how I moved my side project from using Amazon S3 for file hosting to using Tigris. (February)
 * [*Stray Pointers* interview](/writings/stray-pointers-interview/): Jim Lawless interviewed me on his podcast (this is a transcription). We discuss Forth, C, CGI, Python, Go, and AWK. (January)
 
