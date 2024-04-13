@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Go performance from version 1.0 to 1.22</title>
+  <description>Shows how much the performance of Go has improved from version 1.0 through to 1.22 (including PGO) -- in its compiler, runtime, and libraries.</description>
+  <link>https://benhoyt.com/writings/writings/go-version-performance-2024/</link>
+  <guid>https://benhoyt.com/writings/writings/go-version-performance-2024/</guid>
+  <pubDate>Sat, 13 Apr 2024 18:00:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>The One Billion Row Challenge in Go: from 1m45s to 3.4s in nine solutions</title>
   <description>How I solved the One Billion Row Challenge (1BRC) in Go nine times, from a simple unoptimised version that takes 1 minute 45 seconds, to an optimised and parallelised version that takes 3.4 seconds.</description>
   <link>https://benhoyt.com/writings/go-1brc/</link>

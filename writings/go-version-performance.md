@@ -16,7 +16,7 @@ There are many ways programs written in Go have gotten faster: the Go team and e
 
 I tested by running GoAWK on two AWK programs which represent different extremes of what you can do with AWK: I/O and string processing, and number crunching.
 
-First, `countwords`, a string processing task that counts the frequencies of words in the input and prints out the words with their counts. This is the kind of thing that's typical for an AWK script. The input is a 10x concatenated version of the King James Bible (which I've [used before](/writings/count-words/) for performance comparisons) Here's the code:
+First, `countwords`, a string processing task that counts the frequencies of words in the input and prints out the words with their counts. This is the kind of thing that's typical for an AWK script. The input is a 10x concatenated version of the King James Bible (which I've [used before](/writings/count-words/) for performance comparisons). Here's the code:
 
 ```awk
 {
