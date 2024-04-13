@@ -10,8 +10,8 @@
  <item>
   <title>Go performance from version 1.0 to 1.22</title>
   <description>Shows how much the performance of Go has improved from version 1.0 through to 1.22 (including PGO) -- in its compiler, runtime, and libraries.</description>
-  <link>https://benhoyt.com/writings/writings/go-version-performance-2024/</link>
-  <guid>https://benhoyt.com/writings/writings/go-version-performance-2024/</guid>
+  <guid>https://benhoyt.com/writings/go-version-performance-2024/</guid>
+  <link>https://benhoyt.com/writings/go-version-performance-2024/</link>
   <pubDate>Sat, 13 Apr 2024 18:00:00 +1200</pubDate>
  </item>
 
