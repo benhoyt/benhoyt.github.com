@@ -432,7 +432,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 As a slightly more advanced example, here we build an HTTP server with a custom regex-based router in a few lines of code. 
 
+**Update:** this kind of custom routing code isn't needed anymore. Go 1.22 shipped with [enhancements to `http.ServeMux`](https://go.dev/doc/go1.22#enhanced_routing_patterns) that allow you to match on paths like `/user/{userId}` directly.
+
 ```go
+// NOTE: use the new http.ServeMux routing in Go 1.22!
+
 package main
 
 import (
