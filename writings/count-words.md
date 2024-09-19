@@ -952,7 +952,7 @@ I'm a heavy user of Andrew Gallant's excellent [ripgrep](https://github.com/Burn
 He more than delivered! He wrote simple and optimized versions, which are similar to the Go variants (and very close in speed). But then he wrote three additional versions (some of which use external dependencies):
 
 * [A "bonus" version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/bonus/main.rs) that is similar to the simple version but does Unicode-aware word segmentation and has a few other goodies. Andrew said this is how he'd write it if someone asked for a versatile version.
-* [A custom hash table version]((https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-customhashmap/main.rs)). It's an approximate port of my C version, and almost as fast.
+* [A custom hash table version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-customhashmap/main.rs). It's an approximate port of my C version, and almost as fast.
 * [A trie version](https://github.com/benhoyt/countwords/blob/8553c8f600c40a4626e966bc7e7e804097e6e2f4/rust/optimized-trie/main.rs) that uses a [trie data structure](https://en.wikipedia.org/wiki/Trie) instead of a hash table. Andrew (like me) thought this might be faster, but it turns out to be slightly slower.
 
 His simple version doesn't use any external dependencies, and is similar to the simple Go and C++ versions (his comments included)
