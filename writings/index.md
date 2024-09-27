@@ -122,60 +122,60 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 <h2 id="y2013">2013</h2>
 
 * [Saving 9 GB of RAM with Python’s \_\_slots\_\_](/writings/save-ram-with-python-slots/) describes the huge memory savings we got using `__slots__` on a single class. (November, Oyster.com)
-* [Yes, my credit card number *does* have spaces!](http://blog.brush.co.nz/2013/07/card-number/) rants about payment forms that don’t allow you to type the spaces in your credit card number. (July, Brush.co.nz)
+* [Yes, my credit card number *does* have spaces!](/writings/card-number/) rants about payment forms that don’t allow you to type the spaces in your credit card number. (July, Brush.co.nz)
 * [OpenSSL hangs CPU with Python <= 2.7.3 on Windows](/writings/openssl-python-windows/) details a serious bug in an older version of OpenSSL that causes O(N<sup>2</sup>) behaviour. (April, Oyster.com)
 * [An arm wrestle with Python’s garbage collector](/writings/pythons-garbage-collector/) describes how we eliminated 4.5 second stop-the-world GC pauses. (January, Oyster.com)
-* [Masterminds of Programming](http://blog.brush.co.nz/2013/01/masterminds-of-programming/) reviews an excellent book that interviews the creators of 17 important programming languages. (January, Brush.co.nz)
+* [Masterminds of Programming](/writings/masterminds-of-programming/) reviews an excellent book that interviews the creators of 17 important programming languages. (January, Brush.co.nz)
 
 
 <h2 id="y2012">2012</h2>
 
-* [C#'s async/await compared to protothreads in C++](http://blog.brush.co.nz/2012/11/async-await-protothreads-cpp/) looks at how two very different async constructs unroll to state machines in a similar way. (November, Brush.co.nz)
+* [C#'s async/await compared to protothreads in C++](/writings/async-await-protothreads-cpp/) looks at how two very different async constructs unroll to state machines in a similar way. (November, Brush.co.nz)
 
 
 <h2 id="y2011">2011</h2>
 
 * [CherryPy, ctypes, and being explicit](/writings/cherrypy-ctypes-and-being-explicit/) details a bug in CherryPy on Windows due to lack of `ctypes` argument types. (October, Oyster.com)
 * [How our photo search engine really works](/writings/how-our-photo-search-engine-really-works/) describes how I wrote Oyster's photo search engine. (July, Oyster.com)
-* [Should you use C++ for an embedded project?](http://blog.brush.co.nz/2011/01/cpp-embedded/) asks some hard questions about C versus C++ in small embedded systems. (January, Brush.co.nz)
+* [Should you use C++ for an embedded project?](/writings/cpp-embedded/) asks some hard questions about C versus C++ in small embedded systems. (January, Brush.co.nz)
 
 
 <h2 id="y2010">2010</h2>
 
-* [C++ for C programmers, part 2 of 2](http://blog.brush.co.nz/2010/08/cpp-2/) introduces the object-oriented features of C++, for C programmers. (August, Brush.co.nz)
-* [C++ for C programmers, part 1 of 2](http://blog.brush.co.nz/2010/05/cpp-1/) introduces the non-OO features of C++, for C programmers. (May, Brush.co.nz)
-* [Why I'm not moving to Linux just yet](http://blog.brush.co.nz/2010/04/not-linux-yet/) gave the reasons I wasn’t about to switch to Linux in 2010, notably poor font rendering and inconsistent UI. (April, Brush.co.nz)
+* [C++ for C programmers, part 2 of 2](/writings/cpp-2/) introduces the object-oriented features of C++, for C programmers. (August, Brush.co.nz)
+* [C++ for C programmers, part 1 of 2](/writings/cpp-1/) introduces the non-OO features of C++, for C programmers. (May, Brush.co.nz)
+* [Why I'm not moving to Linux just yet](/writings/not-linux-yet/) gave the reasons I wasn’t about to switch to Linux in 2010, notably poor font rendering and inconsistent UI. (April, Brush.co.nz)
 
 
 <h2 id="y2009">2009</h2>
 
-* [Go Forth and WikiReadit](http://blog.brush.co.nz/2009/12/wikireader/) asks Christopher Hall, one of the main software developers of the WikiReader, why he chose Forth for testing and sub-apps. (December, Brush.co.nz)
-* [Code generation with X-Macros in C](http://blog.brush.co.nz/2009/08/xmacros/) describes X Macros, a little-known but very useful way to use the C preprocessor to initialize code and data. (August, Brush.co.nz)
-* [Blast from the demoscene past](http://blog.brush.co.nz/2009/06/scene/) recalls the demoscene and two reasons that kind of coding still matters today. (June, Brush.co.nz)
-* [Knuth, goto, Python, and OOP](http://blog.brush.co.nz/2009/04/knuth/) shows how Donald Knuth predicted modules, Python-like use of indentation, and object-oriented programming. (April, Brush.co.nz)
-* [Cracking an INI file with a jackhammer](http://blog.brush.co.nz/2009/02/inih/) looks at some bloated INI file parsers in C and C++, then introduces my own, `inih`. (February, Brush.co.nz)
-* [RAII, AC/DC, and the "with" statement](http://blog.brush.co.nz/2009/02/raii-acdc/) explains RAII in C++, and why it’s a terrible acronym. (February, Brush.co.nz)
+* [Go Forth and WikiReadit](/writings/wikireader/) asks Christopher Hall, one of the main software developers of the WikiReader, why he chose Forth for testing and sub-apps. (December, Brush.co.nz)
+* [Code generation with X-Macros in C](/writings/xmacros/) describes X Macros, a little-known but very useful way to use the C preprocessor to initialize code and data. (August, Brush.co.nz)
+* [Blast from the demoscene past](/writings/scene/) recalls the demoscene and two reasons that kind of coding still matters today. (June, Brush.co.nz)
+* [Knuth, goto, Python, and OOP](/writings/knuth/) shows how Donald Knuth predicted modules, Python-like use of indentation, and object-oriented programming. (April, Brush.co.nz)
+* [Cracking an INI file with a jackhammer](/writings/inih/) looks at some bloated INI file parsers in C and C++, then introduces my own, `inih`. (February, Brush.co.nz)
+* [RAII, AC/DC, and the "with" statement](/writings/raii-acdc/) explains RAII in C++, and why it’s a terrible acronym. (February, Brush.co.nz)
 
 
 <h2 id="y2008">2008</h2>
 
-* [Helvetica: can a font be a film?](http://blog.brush.co.nz/2008/09/helvetica/) talks about Arial versus Helvetica, and about the film *Helvetica*. (September, Brush.co.nz)
-* [Protothreads and C++](http://blog.brush.co.nz/2008/07/protothreads/) introduces my port of Adam Dunkels’ protothreads to C++. (July, Brush.co.nz)
-* [Thank you, Adobe Reader 9!](http://blog.brush.co.nz/2008/07/adobe-reader-9/) is satire about how bloated Adobe Reader had become, even in 2008. (July, Brush.co.nz)
-* [Can modern software be snappy?](http://blog.brush.co.nz/2008/06/snappy-software/) discusses how software is slower and more bloated than ever, despite increasingly powerful computers. (June, Brush.co.nz)
-* [SOAP won't make you clean](http://blog.brush.co.nz/2008/02/soap-is-dirty/) talks about horribly complex SOAP APIs. (February, Brush.co.nz)
-* [Link rot, soft 404s, and DecentURL](http://blog.brush.co.nz/2008/01/soft404s/) describes a method for detecting "soft 404s", not-found pages which don't return HTTP 404. (January, Brush.co.nz)
-* [Ten quirky things about Python](http://blog.brush.co.nz/2008/01/ten-python-quirkies/) lists, um, ten quirky things about Python. (January, Brush.co.nz)
+* [Helvetica: can a font be a film?](/writings/helvetica/) talks about Arial versus Helvetica, and about the film *Helvetica*. (September, Brush.co.nz)
+* [Protothreads and C++](/writings/protothreads/) introduces my port of Adam Dunkels’ protothreads to C++. (July, Brush.co.nz)
+* [Thank you, Adobe Reader 9!](/writings/adobe-reader-9/) is satire about how bloated Adobe Reader had become, even in 2008. (July, Brush.co.nz)
+* [Can modern software be snappy?](/writings/snappy-software/) discusses how software is slower and more bloated than ever, despite increasingly powerful computers. (June, Brush.co.nz)
+* [SOAP won't make you clean](/writings/soap-is-dirty/) talks about horribly complex SOAP APIs. (February, Brush.co.nz)
+* [Link rot, soft 404s, and DecentURL](/writings/soft404s/) describes a method for detecting "soft 404s", not-found pages which don't return HTTP 404. (January, Brush.co.nz)
+* [Ten quirky things about Python](/writings/ten-python-quirkies/) lists, um, ten quirky things about Python. (January, Brush.co.nz)
 
 
 <h2 id="y2007">2007</h2>
 
-* [Recursive decent parsing [sic]](http://blog.brush.co.nz/2007/11/recursive-decent/) shows how to turn a simple BNF grammar into code. (November, Brush.co.nz)
-* [Ten things I love && hate about C](http://blog.brush.co.nz/2007/10/ten-things-about-c/) has a pretty self-explanatory title. (October, Brush.co.nz)
-* [nobraces: Python indentation for C](http://blog.brush.co.nz/2007/09/nobraces/) is a fun program that allows you to use Python-like indentation in C. (September, Brush.co.nz)
-* [Learning to write from Mr Green](http://blog.brush.co.nz/2007/09/learning-to-write/) talks about clear writing versus business jargon. (September, Brush.co.nz)
-* [The Case for case sensitivity](http://blog.brush.co.nz/2007/07/the-case-for-case-sensitivity/) counters Jeff Atwood's diatribe against case sensitivity in programming languages. (July, Brush.co.nz)
-* [How did you learn to program?](http://blog.brush.co.nz/2007/06/how-did-you-learn-to-program/) describes how I got into programming as a teenager. (June, Brush.co.nz)
+* [Recursive decent parsing [sic]](/writings/recursive-decent/) shows how to turn a simple BNF grammar into code. (November, Brush.co.nz)
+* [Ten things I love && hate about C](/writings/ten-things-about-c/) has a pretty self-explanatory title. (October, Brush.co.nz)
+* [nobraces: Python indentation for C](/writings/nobraces/) is a fun program that allows you to use Python-like indentation in C. (September, Brush.co.nz)
+* [Learning to write from Mr Green](/writings/learning-to-write/) talks about clear writing versus business jargon. (September, Brush.co.nz)
+* [The Case for case sensitivity](/writings/the-case-for-case-sensitivity/) counters Jeff Atwood's diatribe against case sensitivity in programming languages. (July, Brush.co.nz)
+* [How did you learn to program?](/writings/how-did-you-learn-to-program/) describes how I got into programming as a teenager. (June, Brush.co.nz)
 
 
 <h2 id="y1997">1997</h2>
