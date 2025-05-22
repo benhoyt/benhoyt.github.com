@@ -3,12 +3,9 @@ title: CherryPy, ctypes, and being explicit
 layout: default
 permalink: /writings/cherrypy-ctypes-and-being-explicit/
 description: Details a bug in CherryPy on Windows due to lack of ctypes argument types
-canonical_url: http://tech.oyster.com/cherrypy-ctypes-and-being-explicit/
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">October 2011</p>
-
-> [Original article on tech.oyster.com]({{ page.canonical_url }})
 
 Here at [Oyster.com][2] part of our web stack consists of [web.py][3] and [CherryPy][1], and on the whole we&#8217;ve found they&#8217;re fast and stable. However, a little while ago, the CherryPy server started intermittently raising an exception and bombing out &#8212; a WindowsError due to an invalid handle on an [obscure SetHandleInformation() call][4].
 

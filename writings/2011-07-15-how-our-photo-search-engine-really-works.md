@@ -3,12 +3,9 @@ title: How our photo search engine really works
 layout: default
 permalink: /writings/how-our-photo-search-engine-really-works/
 description: How I wrote Oyster.com's photo search engine in Python
-canonical_url: http://tech.oyster.com/how-our-photo-search-engine-really-works/
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">July 2011</p>
-
-> [Original article on tech.oyster.com]({{ page.canonical_url }})
 
 ![Oyster Shots](/images/OysterShots.jpg)
 
@@ -79,7 +76,7 @@ If `hotel_ids` is a set, as it should be here, this is an O(len(images)) operati
 
 ## Up next
 
-So there you have it (or some of it). In our [next blog entry][11], our lead front-end developer Alex will describe the fancy CSS and JavaScript he uses to make the front-end side of Oyster Shots so slick.
+So there you have it (or some of it). In our next blog entry, our lead front-end developer Alex will describe the fancy CSS and JavaScript he uses to make the front-end side of Oyster Shots so slick.
 
  [1]: http://www.oyster.com/shots/
  [2]: http://www.oyster.com/shots/?qa=location%3Anew-york-city+restaurants-and-bars
@@ -91,4 +88,3 @@ So there you have it (or some of it). In our [next blog entry][11], our lead fro
  [8]: http://www.oyster.com/shots/?qa=location%3Amiami+pool#image=61761
  [9]: http://www-cs-staff.stanford.edu/~uno/taocp.html#vol3
  [10]: http://hg.python.org/cpython/file/71a1f53c8203/Objects/dictobject.c
- [11]: http://tech.oyster.com/oyster-shots-on-the-front-end/

@@ -3,12 +3,9 @@ title: 'An arm wrestle with Python&#8217;s garbage collector'
 layout: default
 permalink: /writings/pythons-garbage-collector/
 description: How we eliminated 4.5 second stop-the-world GC pauses in Python's garbage collector
-canonical_url: http://tech.oyster.com/pythons-garbage-collector/
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">January 2013</p>
-
-> [Original article on tech.oyster.com]({{ page.canonical_url }})
 
 Most of Oyster.com is powered by Python and [web.py][1], but &#8212; perhaps surprisingly &#8212; this is the first time we&#8217;ve had to think about garbage collection. Actually, I think the fact that we&#8217;ve only run into this issue after several years on the platform is pretty good. So here&#8217;s the saga&#8230;
 

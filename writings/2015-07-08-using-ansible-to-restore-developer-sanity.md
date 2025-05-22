@@ -3,12 +3,9 @@ title: Using Ansible to restore developer sanity
 layout: default
 permalink: /writings/using-ansible-to-restore-developer-sanity/
 description: How we went from a deployment including 28 manual steps to a single Ansible command
-canonical_url: http://tech.oyster.com/using-ansible-to-restore-developer-sanity/
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">July 2015</p>
-
-> [Original article on tech.oyster.com]({{ page.canonical_url }})
 
 This time a year ago we were deploying new code to [Oyster.com][1] using a completely custom deployment system written in C++. And I don&#8217;t mean real C++; it was more like C with classes, where the original developers decided that `std::string` was &#8220;not fast enough&#8221; and wrote their own string <del>class</del> struct:
 
@@ -123,7 +120,6 @@ Pre-Ansible, we dreaded our 28-manual-step deployments. Post-Ansible, it&#8217;s
  [7]: http://www.fabfile.org/
  [8]: http://puppetlabs.com/
  [9]: https://docs.chef.io/chef_overview.html#chef-components
- [10]: http://tech.oyster.com/wp-content/uploads/2015/06/tower2_jobstatus.png
  [11]: https://github.com/ansible
  [12]: http://www.ansible.com/tower
  [13]: https://en.wikipedia.org/wiki/YAML

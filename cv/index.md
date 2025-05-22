@@ -72,7 +72,7 @@ I live in New Zealand, but have dual NZ and U.S. citizenship. I lived and worked
 ### [Oyster.com](https://www.oyster.com/) / [**TripAdvisor**](https://www.tripadvisor.com/) &ndash; Engineer and Technical Manager &ndash; Jun 2010 to Jun 2016:
 
 * Ported a legacy C++ web backend to Python. The change of language and tooling let us develop and release business-level features much quicker.
-* Helped design and implement a [JSON-based content management system](http://tech.oyster.com/when-building-your-own-cms-is-the-right-choice/) that let us publish immediately and gave us opportunities to boost revenue.
+* Helped design and implement a JSON-based content management system that let us publish immediately and gave us opportunities to boost revenue.
 * Co-developed two mobile apps: a cross-platform iOS and Android app using React Native, and Oyster’s older iPad app written in Objective-C.
 * Wrote Python and JavaScript libraries to display real-time pricing via TripAdvisor’s hotel pricing API, resulting in a large revenue increase.
 * Implemented the backend for various website features, including a tag-based [photo search engine](/writings/how-our-photo-search-engine-really-works/) and a hotel booking system.
