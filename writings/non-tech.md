@@ -7,6 +7,7 @@ permalink: /writings/non-tech/
 
 In addition to my [**technical writing**](/writings/), I sometimes write about things more philosophical or poetic (some of which are posted on [Aliens in the Apple](https://aliensintheapple.com/), the family blog we wrote when living in New York):
 
+* [Charlie Kirk](/writings/charlie-kirk/)'s murder really churned me up. A brief personal look at why. (Sep&nbsp;2025)
 * [Review of *The Penguin History of New Zealand*](/writings/nz-history/), Michael King's excellent tour of our country's history from the first Māori settlers in the 13th century to today. (Jun&nbsp;2021)
 * [Review of *Hillbilly Elegy*](/writings/hillbilly-elegy/) contains some of my thoughts on J.&nbsp;D.&nbsp;Vance's eye-opening and thought-provoking book. (Jul&nbsp;2020)
 * [Hacker Christianity](https://aliensintheapple.com/2013/12/22/hacker-christianity/), some thoughts on the intersection between Christianity and hacker culture, as well as a retelling of the Christian story in hacker terms. (Dec&nbsp;2013)
