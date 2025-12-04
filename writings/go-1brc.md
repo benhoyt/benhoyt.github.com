@@ -554,7 +554,7 @@ In any case, I'm sure there are crazier optimisations I could do, but I decided 
 
 ## Table of results
 
-Below is a table of all my Go solutions in one place, in addition to the fastest Go and fastest Java solutions. Each result is the best-of-five time for running the solution against the same billion-row input.
+Below is a table of all my Go solutions in one place, in addition to the fastest Go\* and fastest Java solutions. Each result is the best-of-five time for running the solution against the same billion-row input.
 
 Version | Summary                    | Time  | Times as fast as r1
 ------- | -------------------------- | ----- | -------------------
@@ -568,8 +568,10 @@ r7      | custom hash table          | 22.1s | 4.57
 r8      | parallelise r1             | 22.6s | 4.40
 r9      | parallelise r7             | 3.44s | 29.3
 ------- | -------------------------- | ----- | ----
-[AY](https://github.com/gunnarmorling/1brc/blob/main/src/main/go/AlexanderYastrebov/calc.go) | fastest Go version | 2.90s | 36.2
+[AY](https://github.com/gunnarmorling/1brc/blob/main/src/main/go/AlexanderYastrebov/calc.go) | fastest Go version\* | 2.90s | 36.2
 [TW](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_thomaswue.java) | fastest Java version | 0.953s | 110
+
+\**Update Dec 2025: François Pons created a [Go version](https://github.com/aytechnet/1brc) which looks like it's somewhat faster than the AY version, at least on Go 1.25. Among other things, it uses `sync/atomic` to minimise map overhead and avoid the "reduce" step.*
 
 I'm in the same ballpark as [Alexander Yastrebov's Go version](https://github.com/gunnarmorling/1brc/blob/main/src/main/go/AlexanderYastrebov/calc.go). His solution looks similar to mine: break the file into chunks, use a custom hash table (he even uses FNV hashing), and parse temperatures as integers. However, he uses memory-mapped files, which I'd ruled out for portability reasons -- I'm guessing that's why his is a bit faster.
 
