@@ -2,7 +2,7 @@
 layout: default
 title: "Jubilant: Python subprocess and Go codegen"
 permalink: /writings/jubilant/
-description: "This article discusses some design choices used in Jubilant: Python subprocess.run to wrap a CLI tool, a code generator to port Go structs to Python dataclasses, and the use of uv with a simple Makefile to run commands."
+description: "Discusses some design choices used in Jubilant: Python subprocess.run to wrap a CLI tool, a code generator to convert Go structs to Python dataclasses, and the use of uv with a simple Makefile to run commands."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">December 2025</p>
@@ -22,8 +22,8 @@ Plus, I'm *jubilant* about the name -- it was named by my colleague [Dave Wildin
 Jubilant is a Python API that uses [`subprocess.run`](https://docs.python.org/3/library/subprocess.html#subprocess.run) to shell out to the Juju client command. Here's a much-simplified example:
 
 ```python
-def deploy(charm: str):
-    subprocess.run(['juju', 'deploy', charm])
+def deploy(app: str):
+    subprocess.run(['juju', 'deploy', app])
 ```
 
 Haven't we been told not to do that? Isn't it a terrible idea?
@@ -34,7 +34,7 @@ In addition, most Juju CLI operations are inherently asynchronous, so the comple
 
 But doesn't spawning a new process have a lot of overhead? For this use case, relatively little (especially on Linux, where spawning new processes is fast). The `deploy` command might take a second or two, so adding a few milliseconds on top of that is no big deal.
 
-But what about stability? That was a real concern. But the Juju team commits to a stable CLI in a major version: they won't change the command-line arguments. They sometimes change the default text output, but they don't break the JSON output format, which is what Jubilant uses (`--format json`).
+But what about stability? That was a real concern. But the Juju team commits to a stable CLI within a major version: they won't change the command-line arguments. They sometimes change the default text output, but they don't break the JSON output format, which is what Jubilant uses (`--format json`).
 
 Jubilant doesn't replace all uses of python-libjuju, of course: if you want to stream something or subscribe to events, you're out of luck. But python-libjuju was used mainly to integration-test Juju operators (called "charms"), and Jubilant works great for that.
 
@@ -63,7 +63,7 @@ juju.deploy('mysql', config={'cluster-name': 'testclust'})
 juju.integrate('webapp', 'mysql')
 ```
 
-Positional CLI args become positional method args in Python. Named CLI arguments like `--config` become keyword arguments. And rich options, like key-value pairs such as `cluster-name=testclust`, become proper Python types like dictionaries.
+Positional CLI args become positional method args in Python, while CLI flags like `--config` become keyword arguments. And rich options, like key-value pairs such as `cluster-name=testclust`, become proper Python types like dictionaries.
 
 The `deploy` method is defined as follows:
 
@@ -117,7 +117,7 @@ def config(
     *,
     reset: Iterable[str] = (),
 ) -> Mapping[str, ConfigValue] | None:
-    # implementation here
+    # actual implementation here
 ```
 
 The overloads tell the type checker that you're only allowed to call `config()` in one of the following ways:
@@ -268,7 +268,7 @@ func getFields(t reflect.Type, m map[string][]FieldInfo, typeName string, level 
 }
 ```
 
-I knew I was just going run this once (and then maintain the Python dataclasses directly), so it's not exactly high-quality code. But it did what we needed: generate a big Python file of dataclasses, fields, and `_from_dict` methods -- and we knew they matched the source of truth exactly, with no typos.
+I knew I was just going to run this once (and then maintain the Python dataclasses directly), so it's not exactly high-quality code. But it did what we needed: generate a big Python file of dataclasses, fields, and `_from_dict` methods -- and we knew they matched the source of truth exactly, with no typos.
 
 What's the take-away? Don't be afraid to write little throw-away programs to help convert data structures from one language to another. The source of truth doesn't have to be some over-engineered schema language; a Go struct will do fine.
 
