@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Jubilant: Python subprocess and Go codegen</title>
+  <description>Discusses some design choices used in Jubilant: Python subprocess.run to wrap a CLI tool, a code generator to convert Go structs to Python dataclasses, and the use of uv with a simple Makefile to run commands.</description>
+  <guid>https://benhoyt.com/writings/jubilant/</guid>
+  <link>https://benhoyt.com/writings/jubilant/</link>
+  <pubDate>Sat, 13 Dec 2025 18:00:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Go performance from version 1.0 to 1.22</title>
   <description>Shows how much the performance of Go has improved from version 1.0 through to 1.22 (including PGO) -- in its compiler, runtime, and libraries.</description>
   <guid>https://benhoyt.com/writings/go-version-performance-2024/</guid>
