@@ -46,6 +46,7 @@ Let's say we want to test the `version` method (which runs `juju version` and pa
 
 ```python
 def version(self) -> Version:
+    # self.cli() is a helper that calls subprocess.run
     stdout = self.cli('version', '--format', 'json', '--all',
                       include_model=False)
     version_dict = json.loads(stdout)
