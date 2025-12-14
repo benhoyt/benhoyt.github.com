@@ -19,7 +19,7 @@ Plus, I'm *jubilant* about the name -- it was named by my colleague [Dave Wildin
 
 ## Subprocess.run
 
-Jubilant is a Python API that uses [`subprocess.run`](https://docs.python.org/3/library/subprocess.html#subprocess.run) to shell out to the Juju client command. Here's a much-simplified example:
+Jubilant is a Python API that uses [`subprocess.run`](https://docs.python.org/3/library/subprocess.html#subprocess.run) to shell out to the `juju` command. Here's a much-simplified example:
 
 ```python
 def deploy(app: str):
@@ -39,6 +39,45 @@ But what about stability? That was a real concern. But the Juju team commits to 
 Jubilant doesn't replace all uses of python-libjuju, of course: if you want to stream something or subscribe to events, you're out of luck. But python-libjuju was used mainly to integration-test Juju operators (called "charms"), and Jubilant works great for that.
 
 So for a tool with a complex API and a simple CLI, wrapping the CLI may just be the way to go. It's certainly been working well for us.
+
+### Unit tests with this approach
+
+Let's say we want to test the `version` method (which runs `juju version` and parses its output). The code under test looks like this:
+
+```python
+def version(self) -> Version:
+    stdout = self.cli('version', '--format', 'json', '--all',
+                      include_model=False)
+    version_dict = json.loads(stdout)
+    return Version._from_dict(version_dict)
+```
+
+To test, we use a mocked version of `subprocess.run`. We've made our [own little mock](https://github.com/canonical/jubilant/blob/53fe846d77954b47872476380a7da34d968f5362/tests/unit/mocks.py#L18); it's nicer to use than a generic `MagicMock`.
+
+Below is what a unit test looks like, using Pytest. This is a from [test_version.py](https://github.com/canonical/jubilant/blob/53fe846d77954b47872476380a7da34d968f5362/tests/unit/test_version.py#L10):
+
+```python
+def test_simple(run: mocks.Run):
+    version_dict = {
+        'version': '3.6.11-genericlinux-amd64',
+        'git-commit': '17876b918429f0063380cdf07dc47f98a890778b',
+    }
+    run.handle(['juju', 'version', '--format', 'json', '--all'],
+               stdout=json.dumps(version_dict))
+
+    juju = jubilant.Juju()
+    version = juju.version()
+
+    assert version == jubilant.Version(
+        3, 6, 11,
+        release='genericlinux',
+        arch='amd64',
+        git_commit='17876b918429f0063380cdf07dc47f98a890778b',
+    )
+    assert version.tuple == (3, 6, 11)
+```
+
+The `run.handle` call tells the mock, "when called with these CLI arguments, return the given output".
 
 
 ## A Pythonic wrapper, typed
