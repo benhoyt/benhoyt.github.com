@@ -8,7 +8,7 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
-  <title>Jubilant: Python subprocess and Go codegen</title>
+  <title>Don't fear Python subprocess or Go codegen</title>
   <description>Discusses some design choices used in Jubilant: Python subprocess.run to wrap a CLI tool, a code generator to convert Go structs to Python dataclasses, and the use of uv with a simple Makefile to run commands.</description>
   <guid>https://benhoyt.com/writings/jubilant/</guid>
   <link>https://benhoyt.com/writings/jubilant/</link>

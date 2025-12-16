@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Jubilant: Python subprocess and Go codegen"
+title: "Don't fear Python subprocess or Go codegen"
 permalink: /writings/jubilant/
 description: "Discusses some design choices used in Jubilant: Python subprocess.run to wrap a CLI tool, a code generator to convert Go structs to Python dataclasses, and the use of uv with a simple Makefile to run commands."
 ---
@@ -8,9 +8,7 @@ description: "Discusses some design choices used in Jubilant: Python subprocess.
 <p class="subtitle">December 2025</p>
 
 
-[Jubilant](https://github.com/canonical/jubilant/) is a Python API for [Juju](https://canonical.com/juju), a deployment and operations tool created by [Canonical](https://canonical.com).
-
-While Jubilant itself is very simple, this article describes some design choices that might be interesting to other developers: the use of Python's `subprocess.run`, code generation to create Python dataclasses from Go structs, and the use of Make and uv.
+[Jubilant](https://github.com/canonical/jubilant/) is a Python API that I created for [Juju](https://canonical.com/juju), a deployment and operations tool made by [Canonical](https://canonical.com). While Jubilant itself is very simple, this article describes some design choices that might be interesting to other developers: the use of Python's `subprocess.run`, code generation to create Python dataclasses from Go structs, and the use of Make and uv.
 
 I don't usually write directly about work stuff on this website, but why not? Almost everything we make at Canonical is open source, and Jubilant is no exception.
 
