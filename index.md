@@ -4,7 +4,10 @@ title: Ben Hoyt
 permalink: /
 ---
 
-<img class="right" src="/images/unicycling-glory-sepia-560.jpg" alt="Ben Hoyt unicycling on his wedding day" title="Me unicycling on my wedding day" />
+{% comment %}NOTE: for some reason, the img tag needs to be prefixed with space then tab (probably for Jekyll's Markdown parser). Don't remove this!{% endcomment %}
+<div style="float: right; width: 40%; margin: 0.5em 0 0.5em 2em; aspect-ratio: 560 / 798;">
+ 	<img src="/images/unicycling-glory-sepia-560.jpg" alt="Ben Hoyt unicycling on his wedding day" title="Me unicycling on my wedding day" />
+</div>
 
 
 # Ben Hoyt
