@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Every dependency you add is a supply chain attack waiting to happen</title>
+  <description>Dependencies are a huge supply chain security risk; the more of them you have, and the more often you update, the bigger the attack surface.</description>
+  <guid>https://benhoyt.com/writings/dependencies/</guid>
+  <link>https://benhoyt.com/writings/dependencies/</link>
+  <pubDate>Fri,  3 Apr 2026 00:45:00 +1300</pubDate>
+ </item>
+
+ <item>
   <title>Don't fear Python subprocess or Go codegen</title>
   <description>Discusses some design choices used in Jubilant: Python subprocess.run to wrap a CLI tool, a code generator to convert Go structs to Python dataclasses, and the use of uv with a simple Makefile to run commands.</description>
   <guid>https://benhoyt.com/writings/jubilant/</guid>

@@ -13,6 +13,11 @@ rss_url: /writings/rss.xml
 Below are the programming-related articles I’ve written (see also my [**non-technical writings**](/writings/non-tech/)). The list includes the guest contributions I've written for LWN.net, and tech blog articles for several of the companies I’ve worked for.
 
 
+<h2 id="y2026">2026</h2>
+
+* [Every dependency you add is a supply chain attack waiting to happen.](/writings/dependencies/) (April)
+
+
 <h2 id="y2025">2025</h2>
 
 * [Jubilant](/writings/jubilant/) is a Python library with some unique design choices: `subprocess.run` to wrap a CLI and code generation to convert Go structs to Python dataclasses. (December)
