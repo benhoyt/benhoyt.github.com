@@ -127,3 +127,5 @@ Interesting! There's already a specialOverrides field and delete calls on it. Th
 Now it started to get very confused. It had edited the code to add a specialOverrides map, but then forgot that it had done so. At this point, I just cancelled it.
 
 There are 19 "Actually"s. These are amazing machines, but I'd hate to have a friend who was this indecisive!
+
+More generally, I'd be interested to know how large language models and agents know when to stop. It's not surprising to me that a token predictor keeps predicting tokens...
