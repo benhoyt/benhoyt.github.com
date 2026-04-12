@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2026">2026</h2>
 
+* [Fun with an indecisive AI coding agent](/writings/indecisive-ai-agent/), in which Claude Opus can't make up its mind about how to fix a bug, and flip-flops 25 times. (April)
 * [Every dependency you add is a supply chain attack waiting to happen.](/writings/dependencies/) (April)
 
 

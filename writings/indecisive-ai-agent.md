@@ -30,7 +30,7 @@ Here are the options it came up:
 
 Every few seconds it would say "Actually, the simplest fix..." or "But no, the real issue is...". It went on and on until I cancelled it.
 
-To its credit, it proposed Option B most often (11 out of 26 times), and that's almost certainly the proper fix.
+To its credit, it proposed Option B most often (11 out of 26 times), and that's almost certainly the proper fix. [I've done it in this PR.](https://github.com/benhoyt/goawk/pull/279)
 
 For your interest, I'm including a version of the chat output below. It's heavily clipped to just show when it was suggesting another option. I've marked those in bold, like this: **Option A**.
 
@@ -50,9 +50,9 @@ The fix needs to happen in setSpecial and getSpecial — we need to preserve the
 
 However, a simpler and more targeted approach: the issue is specifically about for-in with special variables. But really the same problem would occur with any assignment like NR = "x" — it would lose the string. Let me think about the best fix.
 
-The cleanest fix is to store these special variables as value types ... **Option B**
+The cleanest fix is to store these special variables as value types ... but that's a large refactor. **Option B**
 
-A more surgical fix: store a "string override" for numeric specials when they're set via string. **Option C**
+A more surgical fix: store a "string override" for numeric specials when they're set via string. But that's hacky. **Option C**
 
 Actually, let me think about this differently. ...
 

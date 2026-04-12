@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Fun with an indecisive AI coding agent</title>
+  <description>In which I have some fun with Claude Opus 4.6, a seemingly indecisive AI coding agent.</description>
+  <guid>https://benhoyt.com/writings/indecisive-ai-agent/</guid>
+  <link>https://benhoyt.com/writings/indecisive-ai-agent/</link>
+  <pubDate>Mon, 13 Apr 2026 07:55:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Every dependency you add is a supply chain attack waiting to happen</title>
   <description>Dependencies are a huge supply chain security risk; the more of them you have, and the more often you update, the bigger the attack surface.</description>
   <guid>https://benhoyt.com/writings/dependencies/</guid>
