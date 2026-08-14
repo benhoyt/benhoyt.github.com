@@ -2,15 +2,15 @@
 layout: default
 title: "Updating a side project with AI in 275 commits"
 permalink: /writings/updating-gifty-with-ai/
-description: "I used Claude Opus 5 to make a big update to my GiftyWeddings.com website, taking it from a gift registry to a full website builder in 275 commits."
+description: "I used an AI agent to make a big update to my GiftyWeddings.com website, taking it from a gift registry to a full website builder in 275 commits."
 ---
 <h1>{{ page.title }}</h1>
 <p class="subtitle">August 2026</p>
 
 
-Recently my employer [Canonical](https://canonical.com/) had its mid-year break, where everyone gets two weeks off at roughly the same time. As a manager, I'd been using AI tools mostly for code review and technical design, rather than coding proper, and I wanted to change that.
+Recently [my employer](https://canonical.com/) had its mid-year break, where everyone gets two weeks off at roughly the same time. As a manager, I'd been using AI tools mostly for code review and technical exploration, rather than coding proper, and I wanted to change that.
 
-So I spent my time off hacking on [Gifty Weddings](https://giftyweddings.com/), my side project. I'd previously moved it to a [Go backend in 2016](https://benhoyt.com/writings/gifty/) and an [Elm frontend in 2019](https://benhoyt.com/writings/learning-elm/). But now I had two goals:
+So I spent my time off hacking on my side project, [Gifty Weddings](https://giftyweddings.com/). I'd previously moved it to a [Go backend in 2016](https://benhoyt.com/writings/gifty/) and an [Elm frontend in 2019](https://benhoyt.com/writings/learning-elm/). But now I had two goals:
 
 1. Upgrade it from just a wedding gift registry to a wedding website builder.
 2. Learn how to write high-quality code with AI tools.
@@ -24,13 +24,13 @@ In this article I'll talk about my skepticism of AI, but also what I think contr
 
 ## My skepticism
 
-I've been quite skeptical about AI for a while, first in the "early days" when an AI chatbot [fell in love](https://www.nytimes.com/2023/02/16/technology/bing-chatbot-microsoft-chatgpt.html) with a New York Times journalist, then even more when I started having to deal with tons of AI slop being served up by "contributors".
+I've been quite skeptical about AI for a while, first in the early days when an AI chatbot [fell in love](https://www.nytimes.com/2023/02/16/technology/bing-chatbot-microsoft-chatgpt.html) with a New York Times journalist, then even more when I started having to deal with tons of AI slop being served up by "contributors".
 
 I had tried it for coding back in 2024 and was not impressed. At that point, I spent more time fixing up what it did than I would have spent doing it myself.
 
 More recently, I gave it another try to build my wife's [interior design website](https://goldberryinteriors.com/) in basically one shot, and then to fix various bugs in [GoAWK](https://github.com/benhoyt/goawk) (including one where Opus 4.6 was [rather indecisive](https://benhoyt.com/writings/indecisive-ai-agent/)).
 
-Both of those times, I was impressed: in the website case, because I don't find writing CSS fun, and in the bug-fixing case, because it really sped up the process and gave me good ideas.
+Both of those times, I was impressed: in the website case, because I don't love writing CSS, and in the bug-fixing case, because it really sped up the process and gave me good ideas.
 
 
 ## My approach
@@ -97,4 +97,4 @@ Second, I enjoy the craft of programming, and I still felt I was getting that. I
 
 I still have plenty of concerns, and I hope we don't use them to build a [tower to reach heaven](https://lucumr.pocoo.org/2026/7/13/the-tower-keeps-rising/) so God has to take us down a peg or two. But I'm grateful for the new tools.
 
-One last thing: if you're getting married soon or know someone who is, I'd love it if you pointed them to the new [GiftyWeddings.com](https://giftyweddings.com/). If you want to get married but don't have anyone yet -- sorry, that's another website!
+One last thing: if you're getting married soon or know someone who is, I'd love it if you pointed them to the new [GiftyWeddings.com](https://giftyweddings.com/). If you want to get married but don't have anyone yet -- sorry, but that's another website!
