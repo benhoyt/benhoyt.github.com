@@ -8,6 +8,9 @@ description: "I used an AI agent to make a big update to my GiftyWeddings.com we
 <p class="subtitle">August 2026</p>
 
 
+**NOTE: this is a draft. I plan to publish it properly after the new GiftyWeddings.com site goes live, probably in late August.**
+
+
 Recently [my employer](https://canonical.com/) had its mid-year break, where everyone gets two weeks off at roughly the same time. As a manager, I'd been using AI tools mostly for code review and technical exploration, rather than coding proper, and I wanted to change that.
 
 So I spent my time off hacking on my side project, [Gifty Weddings](https://giftyweddings.com/). I'd previously moved it to a [Go backend in 2016](https://benhoyt.com/writings/gifty/) and an [Elm frontend in 2019](https://benhoyt.com/writings/learning-elm/). But now I had two goals:
