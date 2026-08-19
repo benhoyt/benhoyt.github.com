@@ -8,9 +8,6 @@ description: "I used an AI agent to make a big update to my GiftyWeddings.com we
 <p class="subtitle">August 2026</p>
 
 
-**NOTE: this is a draft. I plan to publish it properly after the new GiftyWeddings.com site goes live, probably in late August.**
-
-
 Recently [my employer](https://canonical.com/) had its mid-year break, where everyone gets two weeks off at roughly the same time. As a manager, I'd been using AI tools mostly for code review and technical exploration, rather than coding proper, and I wanted to change that.
 
 So I spent my time off hacking on my side project, [Gifty Weddings](https://giftyweddings.com/). I'd previously moved it to a [Go backend in 2016](https://benhoyt.com/writings/gifty/) and an [Elm frontend in 2019](https://benhoyt.com/writings/learning-elm/). But now I had two goals:
@@ -38,7 +35,7 @@ Both of those times, I was impressed: in the website case, because I don't love 
 
 ## My approach
 
-My approach starts with the fact that I'm a **fairly experienced web developer**. This means I can guide the process and review the agent's output effectively. As a side note, one of my biggest concerns with AI is that new developers will be tempted to shortcut this hard-won experience.
+I'm starting with the fact that I'm a **fairly experienced web developer**. This means I can guide the process and review the agent's output effectively. As a side note, one of my biggest concerns with AI is that new developers will be tempted to shortcut this hard-won experience.
 
 I was also **building on a foundation** of existing work. I started with the CSS stylesheet from my old site (which in turn is based on [Skeleton](http://getskeleton.com/)), most of an SQL database schema, and a plan of what I wanted to build. In addition, I wrote the initial Go server and several packages by hand, based heavily on the old Gifty codebase. I seeded it with the kind of code I wanted.
 
