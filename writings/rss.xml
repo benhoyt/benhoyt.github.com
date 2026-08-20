@@ -8,6 +8,14 @@
  <atom:link href="https://benhoyt.com/writings/rss.xml" rel="self" type="application/rss+xml" />
 
  <item>
+  <title>Updating a side project with AI in 275 commits</title>
+  <description>I used an AI agent to make a big update to my GiftyWeddings.com website, taking it from a gift registry to a full website builder in 275 commits.</description>
+  <guid>https://benhoyt.com/writings/updating-gifty-with-ai/</guid>
+  <link>https://benhoyt.com/writings/updating-gifty-with-ai/</link>
+  <pubDate>Fri, 21 Aug 2026 09:15:00 +1200</pubDate>
+ </item>
+
+ <item>
   <title>Fun with an indecisive AI coding agent</title>
   <description>In which I have some fun with Claude Opus 4.6, a seemingly indecisive AI coding agent.</description>
   <guid>https://benhoyt.com/writings/indecisive-ai-agent/</guid>

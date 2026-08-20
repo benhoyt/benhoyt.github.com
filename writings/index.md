@@ -15,6 +15,7 @@ Below are the programming-related articles I’ve written (see also my [**non-te
 
 <h2 id="y2026">2026</h2>
 
+* [Updating a side project with AI](/writings/updating-gifty-with-ai/) describes how (despite my skepticism) I used an AI coding agent to make a big update to my Gifty Weddings website in 275 small increments.
 * [Fun with an indecisive AI coding agent](/writings/indecisive-ai-agent/), in which Claude Opus can't make up its mind about how to fix a bug, and flip-flops 25 times. (April)
 * [Every dependency you add is a supply chain attack waiting to happen.](/writings/dependencies/) (April)
 
